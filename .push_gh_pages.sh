@@ -11,6 +11,7 @@ git config --global user.name "stephs-travis"
 git config --global user.email "steph@travis.ci"
 
 R CMD BATCH 'ghgenerate.R'
+cp ghgenerate.Rout out
 
 cd out
 git init
