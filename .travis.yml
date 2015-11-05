@@ -45,5 +45,5 @@ install:
   - Rscript -e 'if(!"rmarkdown" %in% rownames(installed.packages())) { install.packages("rmarkdown", dependencies = TRUE) }'
   - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
 
-build:
+script:
   - ./.push_gh_pages.sh
