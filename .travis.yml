@@ -44,4 +44,6 @@ install:
   - echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
   - Rscript -e 'if(!"rmarkdown" %in% rownames(installed.packages())) { install.packages("rmarkdown", dependencies = TRUE) }'
   - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
+
+build:
   - ./.push_gh_pages.sh
