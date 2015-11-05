@@ -7,10 +7,11 @@ GH_REPO="@github.com/stephlocke/isc-proposal.git"
 
 FULL_REPO="https://$GH_TOKEN$GH_REPO"
 
+git config --global user.name "stephs-travis"
+git config --global user.email "steph@travis.ci"
+
 cd out
 git init
-git config user.name "stephs-travis"
-git config user.email "travis"
 
 cd ../
 R CMD BATCH 'ghgenerate.R'
