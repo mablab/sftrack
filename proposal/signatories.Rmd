@@ -1,0 +1,18 @@
+# Signatories
+
+## Project team
+The following people submit this proposal to ISC:
+
+- Your Name (Project Lead)
+- AN Other (Project Second)
+
+## Contributors
+The following people have made direct contributions to this proposal:
+
+- 
+
+## Consulted
+The following people have helped shape the content throughout the process:
+
+- 
+

@@ -1,0 +1,14 @@
+---
+title: "`r proposal`"
+author: "`r author`"
+date: "`r Sys.Date()`"
+output: html_documentw
+---
+
+```{r setup, eval=TRUE, results='hide', echo=FALSE}
+knitr::opts_knit$set(warning = FALSE, message= FALSE)
+```
+
+
+```{r autodoc, child='proposal/signatories.Rmd', eval=TRUE}
+```

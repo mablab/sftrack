@@ -1,0 +1,50 @@
+# .travis.yml using container-based infrastructure (https://github.com/jtilly/R-travis-container-example)
+
+# use c as catch-all language
+language: c
+
+# use containers
+sudo: false
+
+# only run for pushes to master branch
+branches:
+  only:
+   - master
+
+# install R: use r-packages-precise (https://cran.r-project.org/bin/linux/ubuntu/precise/) 
+# as source which is white listed (https://github.com/travis-ci/apt-source-whitelist/)
+addons:
+  apt:
+    sources:
+    - r-packages-precise
+    packages:
+    - r-base-dev	
+    - r-recommended
+    - pandoc
+
+# cache local R libraries directory:
+cache:
+  directories:
+    - ~/Rlib
+
+env:
+ global:
+   - CRAN: http://cran.rstudio.com
+
+before_install:
+  - chmod 755 ./.push_gh_pages.sh
+  - chmod 755 ./ghgenerate.R
+
+
+# install the package and dependencies:
+# - create directory for R libraries (if not already exists)
+# - create .Renviron with location of R libraries
+# - install rmarkdown if not already installed
+# - update all installed packages
+# - execute proposal gen
+install:
+  - mkdir -p ~/Rlib
+  - echo 'R_LIBS=~/Rlib' > .Renviron
+  - Rscript -e 'if(!"rmarkdown" %in% rownames(installed.packages())) { install.packages("rmarkdown", dependencies = TRUE) }'
+  - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
+  - ./.push_gh_pages.sh
