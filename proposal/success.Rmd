@@ -1,0 +1,30 @@
+# Success
+<!-- 
+Projects should have a definition of done that is measurable, and a thorough understanding going in of what the risks are to delivery 
+-->
+
+## Definition of done
+<!-- 
+What does success look like? 
+-->
+
+## Measuring success
+<!-- 
+How will we know when success is achieved, what markers can we use along the way 
+-->
+
+## Future work
+<!-- 
+How could this be extended / developed in the future by yourself and/or the community in general?
+-->
+
+## Key risks
+<!-- 
+What sort of things could come up that can delay or break the project?
+
+ - [ ] People
+ - [ ] Processes
+ - [ ] Tooling & Technology
+ - [ ] Costs
+
+-->

@@ -1,0 +1,34 @@
+# Requirements
+<!-- 
+An idea of what is required to make the project actually happen
+-->
+
+## People
+<!--
+Who needs to be involved, what's the proposed structure, what will it take to get their involvement?
+-->
+
+## Processes
+<!-- 
+What processes need to be put in place e.g. codes of conduct, regular ISC meetings, handover to the community at large?
+-->
+
+## Tools & Tech
+<!--
+What is going to be needed to deliver this project? 
+
+Will cloud computing be used - if yes are there are necessary components that will be deciding factors between providers?
+
+Are there tools or tech that don't exist that will be produced to facilitate the project?
+-->
+
+## Funding
+<!-- 
+[TO DO] THE GUIDANCE IS PRETTY UNCLEAR, ESP IN LIGHT OF GABOR'S PROPOSAL VS AWARD SIZE
+
+-->
+
+## Summary
+<!--
+A summary of the requirements that contextualises the costs
+-->
