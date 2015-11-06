@@ -17,6 +17,7 @@ addons:
     - r-recommended
     - texlive
     - lmodern
+    - texlive-extras
 
 # cache local R libraries directory:
 cache:
