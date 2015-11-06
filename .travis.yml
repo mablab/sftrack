@@ -15,14 +15,14 @@ addons:
     packages:
     - r-base-dev	
     - r-recommended
-#    - pandoc
+    - texlive
 
 # cache local R libraries directory:
 cache:
   directories:
     - ~/Rlib
     - $HOME/bin
-    - $HOME/texlive
+#    - $HOME/texlive
 
 before_install:
   - export PATH=$HOME/bin:$PATH
@@ -41,7 +41,7 @@ install:
   - mkdir -p $HOME/bin
   - echo 'R_LIBS=~/Rlib' > .Renviron
   - echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
-  - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-texlive | bash"
+#  - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-texlive | bash"
   - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-pandoc | bash"
   - Rscript -e 'if(!"rmarkdown" %in% rownames(installed.packages())) { install.packages("rmarkdown", dependencies = TRUE) }'
   - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
