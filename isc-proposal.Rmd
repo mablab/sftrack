@@ -2,7 +2,7 @@
 title: "`r proposal`"
 author: "`r author`"
 date: "`r Sys.Date()`"
-output: html_documentw
+output: html_document
 ---
 
 ```{r setup, eval=TRUE, results='hide', echo=FALSE}
