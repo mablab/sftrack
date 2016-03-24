@@ -1,49 +1,8 @@
-# .travis.yml using container-based infrastructure (https://github.com/jtilly/R-travis-container-example)
-
-# use c as catch-all language
-language: c
-
-# use containers
-sudo: false
-
-# install R: use r-packages-precise (https://cran.r-project.org/bin/linux/ubuntu/precise/) 
-# as source which is white listed (https://github.com/travis-ci/apt-source-whitelist/)
-addons:
-  apt:
-    sources:
-    - r-packages-precise
-    packages:
-    - r-base-dev	
-    - r-recommended
-
-# cache local R libraries directory:
-cache:
-  directories:
-    - ~/Rlib
-    - $HOME/bin
-    - $HOME/texlive
-
-before_install:
-  - export PATH=$HOME/bin:$HOME/texlive/bin/x86_64-linux:$PATH
-  - chmod 755 ./.push_gh_pages.sh
-  - chmod 755 ./ghgenerate.R
-
-
-# install the package and dependencies:
-# - create directory for R libraries (if not already exists)
-# - create .Renviron with location of R libraries
-# - install rmarkdown if not already installed
-# - update all installed packages
-# - execute proposal gen
+language: r
+cache: packages
 install:
-  - mkdir -p ~/Rlib
-  - mkdir -p $HOME/bin
-  - echo 'R_LIBS=~/Rlib' > .Renviron
-  - echo 'options(repos = "http://cran.rstudio.com")' > .Rprofile
-  - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-texlive | bash"
-  - "wget -q -O - https://github.com/yihui/crandalf/raw/master/inst/scripts/install-pandoc | bash"
-  - Rscript -e 'if(!"rmarkdown" %in% rownames(installed.packages())) { install.packages("rmarkdown", dependencies = TRUE) }'
-  - Rscript -e 'update.packages(ask = FALSE, instlib = "~/Rlib")'
-
+  - Rscript -e 'install.packages("rmarkdown")'
+  - chmod 755 .push_gh_pages.sh
+  - chmod 755 ghgenerate.R
 script:
   - ./.push_gh_pages.sh
