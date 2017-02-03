@@ -3,7 +3,7 @@
 rm -rf out || exit 0;
 mkdir out;
 
-GH_REPO="@github.com/stephlocke/isc-proposal.git"
+GH_REPO="@github.com/$TRAVIS_REPO_SLUG.git"
 
 FULL_REPO="https://$GH_TOKEN$GH_REPO"
 
