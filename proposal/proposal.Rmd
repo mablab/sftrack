@@ -18,3 +18,62 @@ Depending on project type the detail section should include:
  - [ ] Architecture
  - [ ] Assumptions
 -->
+
+
+### Definitions
+
+A trajectory can be defined as the (continuous) curve made by moving
+objects (Turchin 1998). This curve is sampled (recorded) at discrete
+times with 4D vertices of coordinates (spatial coordinates: x, y [, z]
+and temporal coordinate t) which makes a path. 
+
+Citing Turchin (p.129):
+
+"A path is the complete spatio-temporal record of a followed organism,
+from the beginning to the end of observations. Each path is
+represented as a series of straight-line moves, where a move is
+defined as the displacement between two consecutive stopping
+points. […] Treating moves as straight lines is an idealization." 
+
+Turchin defines a step as the "artificial" straight-line segment
+during an arbitrary and regular time interval. In practice however, we
+are dealing with step data, not moves, and the sampling is not
+necessarily at regular intervals. 
+
+A trajectory is thus composed of steps that form a path.
+
+As a corollary, a trajectory already assumes connection between
+sequential points — and a straight-line segment is the most
+parsimonious approach (other approaches exist in other fields, such as
+splines and Bezier curves, but do they have any real
+application?). One should not use a trajectory if the sets of points
+are not considered close enough (i.e. when connecting the dots does
+not make sense). This is a subjective decision from the user though,
+which is object dependent, as well as scale dependent (see Turchin
+1998 and Benhamou 2014).
+
+
+### Model proposed
+
+First of all, a sftraj is a (data) model of a trajectory. It is thus a
+data representation of steps forming a path. The implementation aims
+at using existing building blocks as much as possible, as to not
+reinvent the wheel, and allow to use existing tools and functions on
+these building blocks. 
+
+A data model should rely on both steps (elementary unit) and path (the
+whole trajectory), and allow for several trajectories in the same
+object: 
+  * sftraj/sf/data.frame object 
+  * with sf_column (list-column) of class sfc_TRAJECTORY (attributes
+    crs and timezone) 
+  * each single element of it being a LINESTRING [Z]M with imposed
+    constraints (x,y,z geographic coordinates, time as timestamp or
+    integer) 
+
+Ideally, the sfc_TRAJECTORY should behave as a MULTILINESTRING [Z] or
+a POSIXct whenever needed (i.e. only (x,y) or (t) are extracted and
+used). For instance: 
+  * plot functions will most often use only 2D coordinates of vertices
+    combined
+  * time functions will work on the time coordinate
