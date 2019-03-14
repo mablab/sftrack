@@ -21,8 +21,10 @@ Depending on project type the detail section should include:
 
 This round:
 
-  * Class definition
-  * Accessors
+  * Class(es) definition
+  * Creators and converters from basic objects (data.frames, sf,
+    sftraj)
+  * Accessors and summaries (`print`, `summary`)
   * Basic plot (static)
   * CRAN package
 
@@ -91,6 +93,10 @@ used). For instance:
   * plot functions will most often use only 2D coordinates of vertices
     combined
   * time functions will work on the time coordinate
+
+Nesting is an essential part of the data model, as it allows any
+user-defined boundaries of a path, e.g. at the individual level, or
+(behavioral) state, or year, etc. (including nested levels).
 
 
 ### Budget
