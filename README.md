@@ -1,5 +1,48 @@
-# isc-proposal
-[![Build Status](https://travis-ci.org/stephlocke/isc-proposal.svg?branch=master)](https://travis-ci.org/stephlocke/isc-proposal)
+# sftraj (ISC proposal)
+<!-- [![Build Status](https://travis-ci.org/stephlocke/isc-proposal.svg?branch=master)](https://travis-ci.org/stephlocke/isc-proposal) -->
+
+**Deadline is April 1, 2019.**
+
+
+## Resources
+
+  * [R Consortium
+    RFP](https://www.r-consortium.org/projects/call-for-proposals)
+  * [GitHub template](https://github.com/RConsortium/isc-proposal)
+
+  * [Package
+    'trajectories'](https://cran.r-project.org/package=trajectories)
+    - [Support sf?](https://github.com/edzer/trajectories/issues/22)
+    - [vignette](https://cran.r-project.org/web/packages/trajectories/vignettes/article.pdf)
+  * [Package 'sf']
+    - [vignette](https://r-spatial.github.io/sf/articles/sf1.html)
+    - [How attributes relate to
+    geometries](https://r-spatial.github.io/sf/articles/sf1.html#how-attributes-relate-to-geometries):
+    Attributes are either constant (same over spatial extent of
+    geometry), aggregated (summary over the geometry), or identity
+    (only apply to the geometry as a whole, can not be meaningfully
+    split).
+    - [Manipulating Simple
+      Features](https://r-spatial.github.io/sf/articles/sf4.html)
+    - [How does sf deal with secondary geometry
+      columns?](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns)
+    - [Tidy storm trajectories
+      (sf)](https://www.r-spatial.org/r/2017/08/28/nest.html)
+  *
+    [List-columns](https://r4ds.had.co.nz/many-models.html#list-columns-1)
+  * [Notes on design of trajectory class based on the sf
+    package](https://github.com/bart1/sfTraj/blob/master/notes.md)
+  * [Units of Measurement for R Vectors: an
+    Introduction](https://cran.r-project.org/web/packages/units/vignettes/units.html)
+  * [errors](https://www.enchufa2.es/archives/errors-0-0-1.html)
+
+
+
+
+
+---
+
+# Original notes from template
 
 This repository is a boilerplate repository that helps you prepare your proposal for the [R Consortium](https://www.r-consortium.org).
 
