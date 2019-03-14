@@ -32,6 +32,7 @@ Future rounds:
 
   * units/errors
   * dynamic visualization
+  * cleaning/interpolating
   * help for package developers
   * formalizing a R movement community
 
@@ -69,27 +70,27 @@ which is object dependent, as well as scale dependent (see Turchin
 1998 and Benhamou 2014).
 
 
-### Model proposed
+### Proposed model
 
-First of all, a sftraj is a (data) model of a trajectory. It is thus a
-data representation of steps forming a path. The implementation aims
+First of all, a `sftraj` is a (data) model of a trajectory. It is thus
+a data representation of steps forming a path. The implementation aims
 at using existing building blocks as much as possible, as to not
 reinvent the wheel, and allow to use existing tools and functions on
-these building blocks. 
+these building blocks.
 
 A data model should rely on both steps (elementary unit) and path (the
 whole trajectory), and allow for several trajectories in the same
 object: 
-  * sftraj/sf/data.frame object 
-  * with sf_column (list-column) of class sfc_TRAJECTORY (attributes
-    crs and timezone) 
-  * each single element of it being a LINESTRING [Z]M with imposed
+  * `sftraj`/`sf`/`data.frame` object 
+  * with `sf_column` (list-column) of class `sfc_TRAJECTORY`
+    (attributes `crs` and `timezone`)
+  * each single element of it being a `LINESTRING [Z]M` with imposed
     constraints (x,y,z geographic coordinates, time as timestamp or
-    integer) 
+    integer)
 
-Ideally, the sfc_TRAJECTORY should behave as a MULTILINESTRING [Z] or
-a POSIXct whenever needed (i.e. only (x,y) or (t) are extracted and
-used). For instance: 
+Ideally, the `sfc_TRAJECTORY` should behave as a `MULTILINESTRING [Z]`
+or a `POSIXct` whenever needed (i.e. only (x,y) or (t) are extracted
+and used). For instance:
   * plot functions will most often use only 2D coordinates of vertices
     combined
   * time functions will work on the time coordinate
@@ -97,15 +98,3 @@ used). For instance:
 Nesting is an essential part of the data model, as it allows any
 user-defined boundaries of a path, e.g. at the individual level, or
 (behavioral) state, or year, etc. (including nested levels).
-
-
-### Budget
-
-Total: $10,000
-
-Salary: $8,929
-
-Salary for Data Scientist (Biological Scientist II) for .14 FTE (7.2
-weeks)
-
-IDC (12% at UF): $1,071
