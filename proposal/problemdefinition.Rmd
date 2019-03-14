@@ -11,3 +11,11 @@ It is important to cover:
 -->
 
 
+The movement community in R is at the same time very dynamic and very
+fragmented (Joo et al. 2019). Partly, this is because of a lack of a
+modern infrastructure to deal with trajectory objects in R. To date,
+attempts at creating classes in R are either outdated and relying on
+previous generation standards, or too specific to be used in general
+cases. We aim to develop a generic and flexible trajectory class based
+on `sf`, as a cornerstone for the development of a more cohesive
+movement community in R.
