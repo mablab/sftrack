@@ -19,6 +19,20 @@ Depending on project type the detail section should include:
  - [ ] Assumptions
 -->
 
+This round:
+
+  * Class definition
+  * Accessors
+  * Basic plot (static)
+  * CRAN package
+
+Future rounds:
+
+  * units/errors
+  * dynamic visualization
+  * help for package developers
+  * formalizing a R movement community
+
 
 ### Definitions
 
@@ -77,3 +91,15 @@ used). For instance:
   * plot functions will most often use only 2D coordinates of vertices
     combined
   * time functions will work on the time coordinate
+
+
+### Budget
+
+Total: $10,000
+
+Salary: $8,929
+
+Salary for Data Scientist (Biological Scientist II) for .14 FTE (7.2
+weeks)
+
+IDC (12% at UF): $1,071
