@@ -28,6 +28,8 @@
       columns?](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns)
     - [Tidy storm trajectories
       (sf)](https://www.r-spatial.org/r/2017/08/28/nest.html)
+  * Package `trackeR`
+    - [vignette](https://cran.r-project.org/web/packages/trackeR/vignettes/trackeR.pdf)
   *
     [List-columns](https://r4ds.had.co.nz/many-models.html#list-columns-1)
   * [Notes on design of trajectory class based on the sf
