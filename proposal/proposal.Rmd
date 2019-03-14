@@ -98,3 +98,39 @@ and used). For instance:
 Nesting is an essential part of the data model, as it allows any
 user-defined boundaries of a path, e.g. at the individual level, or
 (behavioral) state, or year, etc. (including nested levels).
+
+
+### Expectations
+
+
+#### `trackeR` model (from Ioannis Kosmidis)
+
+Overall, what our `trackeRdata` object does and what I guess I would
+expect by a new object that sets the standards for (2D–3D) trajectory
+data is that the object:
+
+  * can carry /all available movement information/ that have been
+    recorded (time, lon, lat, speed, distance, altitude)
+  * have methods that allow the user to
+    - infer speed from distance and time (and elevation for 3D)
+    - infer distance from speed and time (and elevation for 3D)
+    - infer distance and speed from time, lon, lat, altitude (and
+      elevation for 3D)
+    - impute speed/distance from past/future observations if time,
+      lon, lat are missing (speeds in humans are extremely predictable
+      from past/future speed and I guess the same is true for many
+      types of trajectory data)
+    - correct altitude data (for 2D)
+    - correct coordinate data (by smoothing)
+  * is unit-aware (for speed, distance, altitude) and allows changing
+    those units
+  * allows for extra variables (e.g. power, cadence and the likes in
+    the context of athlete trajectories) that are recorded at
+    timestamp level
+  * allow for variables that are recorded at trajectory level
+    (e.g. athlete name and sport in `trackeR` case), /without/ having
+    to repeat that over all timestamps in a trajectory; so here a
+    single `tibble` for each trajectory is not a good idea, I think.
+
+Note (from Mathieu Basille): Check [attribute-geometry-relationship](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns),
+and how this could be used for interpolation.
