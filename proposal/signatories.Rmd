@@ -13,6 +13,7 @@ Who are the people responsible for actually delivering the project if the propos
   * Mathieu Basille
   * Matt Boone
   * Rocío Joo
+  * Emiel van Loon
 
 
 ## Contributors
@@ -24,7 +25,6 @@ Who are the people who have actively helped with this proposal but won't necessa
   * Bart Kranstauber
   * Ioannis Kosmidis
   * Balázs Dukai
-  * Emiel van Loon
 
 
 ## Consulted
