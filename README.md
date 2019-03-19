@@ -1,5 +1,7 @@
-# sftraj (ISC proposal)
+# sftraj: A central class for movement data
 <!-- [![Build Status](https://travis-ci.org/stephlocke/isc-proposal.svg?branch=master)](https://travis-ci.org/stephlocke/isc-proposal) -->
+
+ISC proposal
 
 **Deadline is April 1, 2019.**
 
