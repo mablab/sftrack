@@ -8,6 +8,17 @@ This is where the proposal should be outlined.
 At a high-level address what your proposal is and how it will address the problem identified. Highlight any benefits to the R Community that follow from solving the problem. This should be your most compelling section.
 -->
 
+Trajectories can be very broad, so it can be framed into something
+useful for a lot of fields: movement and synchrony (could be thought
+of trajectories as well) in music, sports, medicine, etc. It can be
+animal, boats, planes, cars, human beings using their phones, sport
+players (or parts of their bodies), the hand of a musician playing a
+violin in 3D (which can also be applied for video games), or someone
+playing keyboards (the entire movement of an orchestra could end up
+being studied as collective movement), the eye of a person that may
+change its focus from one object to the other, etc.
+
+
 ## Detail
 <!--
 Go into more detail about the specifics of the project and it delivers against the problem.
@@ -30,6 +41,7 @@ This round:
 
 Future rounds:
 
+  * conversion to main existing classes
   * units/errors
   * dynamic visualization
   * cleaning/interpolating
@@ -41,8 +53,10 @@ Future rounds:
 
 A trajectory can be defined as the (continuous) curve made by moving
 objects (Turchin 1998). This curve is sampled (recorded) at discrete
-times with 4D vertices of coordinates (spatial coordinates: x, y [, z]
+times with 4D vertices of coordinates (spatial coordinates: x, y, z,
 and temporal coordinate t) which makes a path. 
+
+[starting from "tracking data"]
 
 Citing Turchin (p.129):
 
