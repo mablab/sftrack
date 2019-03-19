@@ -73,6 +73,8 @@ necessarily at regular intervals.
 
 A trajectory is thus composed of steps that form a path.
 
+[dual of perspective: tracking data ←→ movement data]
+
 As a corollary, a trajectory already assumes connection between
 sequential points — and a straight-line segment is the most
 parsimonious approach (other approaches exist in other fields, such as
