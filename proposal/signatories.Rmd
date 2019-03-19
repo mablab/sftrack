@@ -10,13 +10,37 @@ An optional section would be for R-Core signatories where changes to R are propo
 Who are the people responsible for actually delivering the project if the proposal gets accepted and are already signed up and rearing to go?
 -->
 
+  * Mathieu Basille
+  * Matt Boone
+  * Rocío Joo
+
+
 ## Contributors
 <!-- 
 Who are the people who have actively helped with this proposal but won't necessarily be on the core project team later?
 -->
+
+  * Edzer Pebesma
+  * Bart Kranstauber
+  * Ioannis Kosmidis
+  * Balázs Dukai
+  * Emiel van Loon
+
 
 ## Consulted
 <!-- 
 Who has been given the opportunity to provide feedback on the proposal? This should include any R Consortium & ISC members who the proposal has been discussed with.
 -->
 
+  * Ferdinando Urbano
+  * Francesca Cagnacci
+  * Hamish Campbell
+  * Clément Calenge
+  * Henning Teickner
+  * Brett McClintock
+  * Theo Michelot
+  * Ross Dwyer
+  * Vinay Udyawer
+
+From the R consortium:
+  * Hadley Wickham
