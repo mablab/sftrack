@@ -5,12 +5,23 @@ This section provides the ISC with a view of the support received from the commu
 An optional section would be for R-Core signatories where changes to R are proposed.
 -->
 
+The core project team will work to code the proposed package,
+implement the data model, and ensure successful outcome of the
+project. All contributors to the proposal and people who have been
+consulted for it (listed below), as well as other relevant people
+working on movement, will also be consulted during the different
+phases of the work, and will be invited to contribute further to the
+realization of the project.
+
+**Note: relevant R packages to which people contributed are indicated
+within brackets.**
+
 ## Project team
 <!-- 
 Who are the people responsible for actually delivering the project if the proposal gets accepted and are already signed up and rearing to go?
 -->
 
-  * Mathieu Basille
+  * Mathieu Basille (`hab`, `rpostgis`, `rpostgisLT`)
   * Matt Boone
   * Rocío Joo
   * Emiel van Loon
@@ -21,10 +32,10 @@ Who are the people responsible for actually delivering the project if the propos
 Who are the people who have actively helped with this proposal but won't necessarily be on the core project team later?
 -->
 
-  * Edzer Pebesma
-  * Bart Kranstauber
-  * Ioannis Kosmidis
-  * Balázs Dukai
+  * Balázs Dukai (`rpostgisLT`)
+  * Ioannis Kosmidis (`trackeR`)
+  * Bart Kranstauber (`move`)
+  * Edzer Pebesma (`sf` and `trajectories`) 
 
 
 ## Consulted
@@ -32,15 +43,16 @@ Who are the people who have actively helped with this proposal but won't necessa
 Who has been given the opportunity to provide feedback on the proposal? This should include any R Consortium & ISC members who the proposal has been discussed with.
 -->
 
-  * Ferdinando Urbano
   * Francesca Cagnacci
-  * Hamish Campbell
-  * Clément Calenge
+  * Clément Calenge (`adehabitatHR`, `adehabitatLT`)
+  * Hamish Campbell (`VTrack`)
+  * Ross Dwyer (`Digiroo2`, `VTrack`)
+  * Brett McClintock (`moveHMM`, `momentuHMM`) 
+  * Théo Michelot (`moveHMM`, `momentuHMM`) 
   * Henning Teickner
-  * Brett McClintock
-  * Theo Michelot
-  * Ross Dwyer
-  * Vinay Udyawer
+  * Vinay Udyawer (`VTrack`)
+  * Ferdinando Urbano
 
 From the R consortium:
+
   * Hadley Wickham

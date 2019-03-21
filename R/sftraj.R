@@ -1,3 +1,34 @@
+## move
+library(move)
+data <- read.csv(system.file("extdata","ricky.csv.gz",package="move"))
+ricky <- move(x = data$location.long, y = data$location.lat,
+    time = as.POSIXct(data$timestamp, format = "%Y-%m-%d %H:%M:%OS",
+        tz = "UTC"), proj = CRS("+proj=longlat"), data = data,
+    animal = data$individual.local.identifier, sensor = data$sensor)
+ricky
+
+## trip
+library(trip)
+d <- data.frame(x=1:10,y=rnorm(10), tms=Sys.time() + 1:10, id=gl(2, 5))
+coordinates(d) <- ~x+y
+proj4string(d) <- CRS("+proj=laea +ellps=sphere")
+tr <- trip(d, c("tms", "id"))
+summary(tr)
+
+## trajectories
+library("trajectories")
+
+## trackeR
+library("trackeR")
+filepath <- system.file("extdata/tcx/", "2013-06-01-183220.TCX", package = "trackeR")
+runDF <- readTCX(file = filepath, timezone = "GMT")
+runTr0 <- trackeRdata(runDF)
+runTr0
+str(runTr0)
+
+
+
+## sftraj
 library(tidyr)
 
 set.seed <- 42
@@ -63,3 +94,4 @@ str(nc)
 
 str(nc$geometry)
 attributes(nc$geometry)
+

@@ -97,9 +97,7 @@ and describes the semantics of the model and its scope; the logical
 data model translates this into general data concepts; the physical
 data model implements it in coding terms and solutions (here in R).
 
-![Data model](https://github.com/mablab/sftraj/blob/master/figures/data-model.png?raw=true)
-
-**Fig.1: Proposed data model**
+![Proposed data model](figures/data-model.png)
 
 
 **Conceptual data model**

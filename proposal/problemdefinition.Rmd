@@ -10,12 +10,102 @@ It is important to cover:
  - [ ] Why it should be tackled
 -->
 
+Movement defined broadly plays a central role in various fields, such
+as sport, ecology, music or medicine. Moving objects can thus take
+many forms, such as animals or humans; cars, boats or planes; the hand
+of a musician playing a violin in 3 dimensions; the entire movement of
+an orchestra or a flock of starlings; the eye of a person that changes
+its focus from one object to the other; etc. Sampling all these
+movements result in the same type of data called *tracking data*, in
+the form of geographic ($x,y,z$) and temporal coordinates
+($t$). Despite this common nature, there is a critical lack of
+standard infrastructure to deal with movement.
 
-The movement community in R is at the same time very dynamic and very
-fragmented (Joo et al. 2019). Partly, this is because of a lack of a
-modern infrastructure to deal with trajectory objects in R. To date,
-attempts at creating classes in R are either outdated and relying on
-previous generation standards, or too specific to be used in general
-cases. We aim to develop a generic and flexible trajectory class based
-on `sf`, as a cornerstone for the development of a more cohesive
-movement community in R.
+The advent of miniaturized tracking devices has resulted in the
+collection of ever-increasing quantities of tracking data. In
+parallel, the use of R for movement studies is also increasing while
+most other platforms are declining (for instance, in the field of
+Movement Ecology, we count more than 70 % of studies using R in 2018,
+i.e. roughly three times more than its closest contender, and still
+rising; Fig.1). The movement community in R is at the same time very
+dynamic and very fragmented (Joo et al. 2019); we have listed 57
+packages that process, visualize and analyze tracking data, one third
+of which worked in isolation, not being linked to any other tracking
+package. This is in part due to a lack of a modern infrastructure to
+deal with trajectory objects in R.
+
+![Use of R in Movement Ecology (on a total of 4417
+papers)](figures/move-eco-r_2.png)
+
+To date, existing classes in R for movement data are either outdated,
+relying on outdated standards, or too complicated to be used in a
+broad array of situations. Previous attempts notably include the
+following classes:
+
+  * `ltraj` (package `adehabitatLT`): Developed as early as 2006, this
+    was the first class dedicated to movement that relied on a
+    conceptual data model, based on the idea of successive steps,
+    i.e. the straight-line segment connecting two successive locations
+    (Calenge et al. 2009). However, the class itself is largely
+    outdated, relying on an *ad-hoc* `list` structure, which is
+    complicated to use, requiring to frequently go back and forth
+    between `ltraj` and `data.frame` classes.
+  * `trip` (package `trip`): Also developed in 2006, `trip` is a S4
+    class directly extending `sp`'s `SpatialPointsDataFrame` class to
+    connect series of points with a column of timestamps. The
+    connection is made through a `TimeOrderedRecords` object that
+    identifies which data columns corresponds to timestamps and
+    identity of the moving object, making it a lightweight solution,
+    however with limited flexibility for nested structures (e.g. split
+    individual trajectories into different parts). Also, `sp` has been
+    essentially superseded by the new package `sf` for spatial classes
+    recently.
+  * `Move` (package `move`): Released in 2012, it is a complete S4
+    class focusing on animal movement data from the Movebank
+    repository (http://www.movebank.org), but which can also be used
+    on any tracking data. `Move` objects are fairly complex however,
+    lacking the flexibility of simpler classes, and being further
+    arranged into `MoveBurst` (track split into different parts) and
+    `MoveStack` (several tracks from different individual)
+    classes. Moreover, `Move` objects also relies on spatial classes
+    from `sp`.
+  * `Track` (package `trajectories`): Released in 2014, this is
+    another example of formalizing a movement class as a S4 class,
+    following roughly the same logic as described in the package
+    `move`, with a complex nested class structure of `Track` objects
+    (a single track from one individual), which are combined into
+    `Tracks` (several tracks from the same individual) and
+    `TracksCollection` (several individuals). `Track` also extend
+    spatial classes from `sp`, as well as around the spatio-temporal
+    classes from the `spacetime` package.
+  * `trackeRdata` (package `trackeR`): More recently released in 2016,
+    this package focuses on running and cycling data from GPS-enabled
+    tracking devices, and provide a specific class dedicated to
+    athlete activity. Similarly to `ltraj`s from `adehabitatLT`,
+    `trackeRdata` are lists with locations stored 
+    as `zoo` objects (from the package of the same name), which are
+    ordered, but not spatial, observations. This *ad-hoc* structure
+    makes `trackeRdata` rather complicated to use.
+
+Based on years of experience, and broad feedback from the movement
+community, we thus aim to develop a central trajectory class to
+support all stages of movement studies (pre-processing,
+post-processing and analysis). We propose a `sftraj` package offering
+a generic and flexible approach based on simple `data.frame`s using
+`sf` spatial building blocks, as a cornerstone for the development of
+a more cohesive movement community in R. The only aim of the package
+will be to present this central class and basic functions to build,
+handle, summarize and plot movement data.
+
+
+**References:**
+
+- Calenge, C., Dray, S., & Royer-Carenzi, M. (2009). The concept of
+  animals' trajectories from a data analysis perspective. Ecological
+  Informatics, 4,
+  34–41. http://dx.doi.org/10.1016/j.ecoinf.2008.10.002
+
+- Joo, R., Boone, M. E., Clay, T. A., Patrick, S. C.,
+  Clusella-Trullas, S., & Basille, M. (2018). Navigating through the R
+  packages for movement. arXiv, 1901.05935,
+  https://arxiv.org/abs/1901.05935
