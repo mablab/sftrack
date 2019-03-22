@@ -8,7 +8,7 @@ Projects should have a definition of done that is measurable, and a thorough und
 What does success look like? 
 -->
 
-Publication of a package that is acclaimed both by users and developers.
+Publication of a package that is adopted both by users and developers.
 
 
 ## Measuring success
@@ -16,7 +16,7 @@ Publication of a package that is acclaimed both by users and developers.
 How will we know when success is achieved, what markers can we use along the way 
 -->
 
-During the work: Total contributions (# users, # code contributions, #
+During the work: Total contributions (# contributors, # code contributions, #
 comments/edits/feedback)
 
 After the work: 
@@ -31,14 +31,17 @@ How could this be extended / developed in the future by yourself and/or the comm
 
 Future rounds:
 
-  * conversion to main existing classes
-  * units/errors
-  * dynamic visualization
-  * cleaning/interpolating
-  * help for package developers
+  * help for package developers to develop conversion to main existing
+    classes (see intro)
+
+  * dynamic visualization (based on rpostgisLT)
   * formalizing a R movement community
+
   * part of rOpenSci
   * R Journal paper
+
+  * units/errors
+  * cleaning/interpolating
 
 
 ## Key risks
