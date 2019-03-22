@@ -37,12 +37,19 @@ tolerance and inclusiveness.
 We will also adopt a "release early, release often" philosophy, where
 we publicly provide developments of new ideas and functions. This will
 come hand in hand with regular blog posts on the [MabLab
-website](https://mablab.org/) to communicate progress.
+website](https://mablab.org/) to communicate progress, and constant
+communication on Twitter by the core team.
 
 Finally, at all stages but especially at the first one ("Use cases"),
-we will seek feedback from the Movement community. Public development
-on GitHub will allow the use of the issue system to initiate and
-discuss each use case with (and from) the community.
+we will seek feedback from the Movement community. While working on
+the review of R tracking packages, we have been successful in
+mobilizing the Movement community through Twitter notably; for
+instance, 225 persons filled out our survey on package usage and
+documentation. We will use this already established connection to
+reach out further, and invite the largest number of people to
+contribute and provide feedback. Public development on GitHub will
+allow the use of the issue system to initiate and discuss each use
+case with and from the community.
 
 
 ## Tools & Tech
