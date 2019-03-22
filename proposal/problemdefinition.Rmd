@@ -34,7 +34,7 @@ of which worked in isolation, not being linked to any other tracking
 package. This is in part due to a lack of a modern infrastructure to
 deal with trajectory objects in R.
 
-```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Use of R in Movement Ecology (on a total of 4417 papers).", fig.align = "center"}
+```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Use of R in Movement Ecology (on a total of 4417 papers).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
 ```
 

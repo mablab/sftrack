@@ -5,19 +5,28 @@ This section provides the ISC with a view of the support received from the commu
 An optional section would be for R-Core signatories where changes to R are proposed.
 -->
 
+The **Project team** lists the core members of the work, who will be
+instrumental in progress and completion of the
+project. **Contributors** actively helped with this proposal, and
+**Consulted** have been given the opportunity to provide feedback—all
+will be consulted early during the work, and will be invited to
+contribute to the package.
+
 **Note: relevant R packages to which people contributed are indicated
-within parentheses.**
+within brackets.**
 
 ## Project team
 <!-- 
 Who are the people responsible for actually delivering the project if the proposal gets accepted and are already signed up and rearing to go?
 -->
 
-  * Mathieu Basille (`hab`, `rpostgis`, `rpostgisLT`)
-  * Matt Boone
-  * Clément Calenge (`adehabitatHR`, `adehabitatLT`)
-  * Rocío Joo
-  * Emiel van Loon
+  * Mathieu Basille, University of Florida, USA [`hab`, `rpostgis`,
+    `rpostgisLT`]
+  * Matt Boone, University of Florida, USA
+  * Clément Calenge, Office national de la chasse et de la faune
+    sauvage, France [`adehabitatHR`, `adehabitatLT`]
+  * Rocío Joo, University of Florida, USA
+  * Emiel van Loon, University of Amsterdam, the Netherlands.
 
 
 ## Contributors
@@ -25,10 +34,10 @@ Who are the people responsible for actually delivering the project if the propos
 Who are the people who have actively helped with this proposal but won't necessarily be on the core project team later?
 -->
 
-  * Balázs Dukai (`rpostgisLT`)
-  * Ioannis Kosmidis (`trackeR`)
-  * Bart Kranstauber (`move`)
-  * Edzer Pebesma (`sf` and `trajectories`) 
+  * Balázs Dukai [`rpostgisLT`]
+  * Ioannis Kosmidis [`trackeR`]
+  * Bart Kranstauber [`move`]
+  * Edzer Pebesma [`sf` and `trajectories`] 
 
 
 ## Consulted
@@ -37,12 +46,12 @@ Who has been given the opportunity to provide feedback on the proposal? This sho
 -->
 
   * Francesca Cagnacci
-  * Hamish Campbell (`VTrack`)
-  * Ross Dwyer (`Digiroo2`, `VTrack`)
-  * Brett McClintock (`moveHMM`, `momentuHMM`) 
-  * Théo Michelot (`moveHMM`, `momentuHMM`) 
+  * Hamish Campbell [`VTrack`]
+  * Ross Dwyer [`Digiroo2`, `VTrack`]
+  * Brett McClintock [`moveHMM`, `momentuHMM`] 
+  * Théo Michelot [`moveHMM`, `momentuHMM`] 
   * Henning Teickner
-  * Vinay Udyawer (`VTrack`)
+  * Vinay Udyawer [`VTrack`]
   * Ferdinando Urbano
 
 From the R consortium:
