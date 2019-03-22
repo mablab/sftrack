@@ -8,7 +8,8 @@ Projects should have a definition of done that is measurable, and a thorough und
 What does success look like? 
 -->
 
-Publication of a package that is adopted both by users and developers.
+Publication of a R package that provide usable classes for movement
+data, and opens the way to cohesive movement community in R.
 
 
 ## Measuring success
@@ -16,12 +17,22 @@ Publication of a package that is adopted both by users and developers.
 How will we know when success is achieved, what markers can we use along the way 
 -->
 
-During the work: Total contributions (# contributors, # code contributions, #
-comments/edits/feedback)
+Beyond the deliverables listed above, success can be measured both
+during and after the work.
+
+During the work:
+
+  * Contributions of the movement community during the early stage
+    (use case): number of contributors and contributions
+  * Beta testing from the user community: number of testers and issues
+    submitted
+  * Code contribution: number of contributors and contributions.
 
 After the work: 
-* DL (e.g. using RStudio metrics) → users
-* wide use in tracking packages → developers
+
+  * From a user perspective: number of downloads (e.g. using RStudio
+    metrics)
+  * From a developer perspective: use in tracking packages.
 
 
 ## Future work
@@ -34,7 +45,7 @@ Future rounds:
   * help for package developers to develop conversion to main existing
     classes (see intro)
 
-  * dynamic visualization (based on rpostgisLT)
+  * dynamic visualization (based on `rpostgisLT`)
   * formalizing a R movement community
 
   * part of rOpenSci
@@ -56,4 +67,6 @@ What sort of things could come up that can delay or break the project?
 -->
 
 Main risk is absence of adoption by the community (both users and
-developers). A very open approach…
+developers). A very open approach from the very beginning will ensure
+broad participation of the community, and early adoption and
+contribution to the work.

@@ -94,3 +94,9 @@ University of Florida.
 A summary of the requirements that contextualises the costs
 -->
 
+Salary to support a Data Scientist is requested to have one person
+committed to the project, who will dedicate set chunks of time to the
+work. This seems required to ensure project completion in the proposed
+timeline. Six weeks FTE of work is a reasonable amount of time, which
+matches proposed deliverables. All other contributions, from core team
+members and other contributors, will be in-kind.
