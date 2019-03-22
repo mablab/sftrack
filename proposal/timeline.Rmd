@@ -24,10 +24,11 @@ Covering the actual delivery of the project this section should provide at least
 Including target dates is really important as you need to be committed and the ISC need to have a means of tracking delivery
 -->
 
-July–August: Defining use cases
-September–October: Defining class structure, and implement basic package
-November: adding accessors and summaries + documentation
-December: CRAN, vignette + documentation
+July: Defining use cases
+August–September: Defining class structure, and implement basic package
+October: adding accessors and summaries + documentation
+November: vignette + documentation
+December: CRAN
 
 
 ## Other aspects
