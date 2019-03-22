@@ -8,10 +8,42 @@ An idea of what is required to make the project actually happen
 Who needs to be involved, what's the proposed structure, what will it take to get their involvement?
 -->
 
+The core project team will initiate and lead the necessary
+consultation, code the proposed package, implement the data model, and
+ensure successful outcome of the project. All contributors to the
+proposal and people who have been consulted for it (listed below), as
+well as other relevant people working on movement, will also be
+consulted during the different phases of the work, and will be invited
+to contribute further to the realization of the project.
+
+In particular, we request $10,000 in salary for 0.15 FTE of Matt
+Boone. Matt is a Data Scientist with a solid experience in R, and will
+be the main developer and contributor to the codebase. As all other
+contributions will be in-kind, having Matt fully dedicating some of
+his time ensures successful completion of the project.
+
+
 ## Processes
 <!-- 
 What processes need to be put in place e.g. codes of conduct, regular ISC meetings, handover to the community at large?
 -->
+
+As this project aims ultimately at building a R Movement community, we
+will adopt a community-based code of conduct. The recently updated
+[code of conduct of rOpenSci](https://ropensci.org/code-of-conduct/)
+will serve as a basis, as we share foundational values of openness,
+tolerance and inclusiveness.
+
+We will also adopt a "release early, release often" philosophy, where
+we publicly provide developments of new ideas and functions. This will
+come hand in hand with regular blog posts on the [MabLab
+website](https://mablab.org/) to communicate progress.
+
+Finally, at all stages but especially at the first one ("Use cases"),
+we will seek feedback from the Movement community. Public development
+on GitHub will allow the use of the issue system to initiate and
+discuss each use case with (and from) the community.
+
 
 ## Tools & Tech
 <!--
@@ -22,23 +54,32 @@ Will cloud computing be used - if yes are there are necessary components that wi
 Are there tools or tech that don't exist that will be produced to facilitate the project?
 -->
 
+No technical constraint is foreseen. All team members are already
+equiped with enough computer power to work on the project.
+Development will happen publicly on GitHub, and will be open to the
+entire movement community. Main hurdles may happen with respect to the
+structure of `sf` objects, which will resolved directly with the
+consultation and/or collaboration of Edzer Pebesma, author of the `sf`
+package.
+
+
 ## Funding
 <!-- 
 [TO DO] THE GUIDANCE IS PRETTY UNCLEAR, ESP IN LIGHT OF GABOR'S PROPOSAL VS AWARD SIZE
 
 -->
 
-Total: $10,000
+We request a total of $10,000 to support 0.15 FTE (7.2 weeks) of Matt
+Boone, Data Scientist (Biological Scientist II) in the MabLab at the
+University of Florida.
 
-Salary: $8,929
-
-Salary for Data Scientist (Biological Scientist II) for .14 FTE (7.2
-weeks)
-
-IDC (12% at UF): $1,071
+* Salary: $7,369
+* Fringe rate (35.70 %): $2,631
+* **Total award = $10,000**
 
 
 ## Summary
 <!--
 A summary of the requirements that contextualises the costs
 -->
+

@@ -5,16 +5,8 @@ This section provides the ISC with a view of the support received from the commu
 An optional section would be for R-Core signatories where changes to R are proposed.
 -->
 
-The core project team will work to code the proposed package,
-implement the data model, and ensure successful outcome of the
-project. All contributors to the proposal and people who have been
-consulted for it (listed below), as well as other relevant people
-working on movement, will also be consulted during the different
-phases of the work, and will be invited to contribute further to the
-realization of the project.
-
 **Note: relevant R packages to which people contributed are indicated
-within brackets.**
+within parentheses.**
 
 ## Project team
 <!-- 
