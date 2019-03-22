@@ -8,15 +8,15 @@ This is where the proposal should be outlined.
 At a high-level address what your proposal is and how it will address the problem identified. Highlight any benefits to the R Community that follow from solving the problem. This should be your most compelling section.
 -->
 
-Trajectories can be very broad, so it can be framed into something
-useful for a lot of fields: movement and synchrony (could be thought
-of trajectories as well) in music, sports, medicine, etc. It can be
-animal, boats, planes, cars, human beings using their phones, sport
-players (or parts of their bodies), the hand of a musician playing a
-violin in 3D (which can also be applied for video games), or someone
-playing keyboards (the entire movement of an orchestra could end up
-being studied as collective movement), the eye of a person that may
-change its focus from one object to the other, etc.
+Based on years of experience, and broad feedback from the movement
+community, we aim to develop a central trajectory class to support all
+stages of movement studies (pre-processing, post-processing and
+analysis). We propose a `sftraj` package offering a generic and
+flexible approach based on simple `data.frame`s using `sf` spatial
+building blocks, as a cornerstone for the development of a more
+cohesive movement community in R. The only aim of the package will be
+to present this central class and basic functions to build, handle,
+summarize and plot movement data.
 
 
 ## Detail
@@ -30,37 +30,14 @@ Depending on project type the detail section should include:
  - [ ] Assumptions
 -->
 
-Must have:
-
-  * Class(es) definition
-  * Creators and converters from basic objects (data.frames, sf,
-    sftraj)
-  * Accessors and summaries (`print`, `summary`)
-  * Full documentation
-  * Installable package (GitHub)
-  
-Should have:
-
-  * CRAN package
-  * Vignette
-
-Could have:
-
-  * Basic plot (static)
-
-Won't have:
-
-  * See future work.
-
 
 ### Definitions
 
 A trajectory can be defined as the (continuous) curve made by moving
-objects (Turchin 1998). This curve is sampled (recorded) at discrete
-times with 4D vertices of coordinates (spatial coordinates: x, y, z,
-and temporal coordinate t) which makes a path. 
-
-[starting from "tracking data"]
+objects (Turchin 1998). In practice, this curve is sampled (recorded)
+at discrete times with 4D vertices of coordinates (3-dimensional
+spatial coordinates and temporal coordinate), which define tracking
+data of the form $(x, y, z, t)$.
 
 Citing Turchin (p.129):
 
@@ -101,10 +78,11 @@ and describes the semantics of the model and its scope; the logical
 data model translates this into general data concepts; the physical
 data model implements it in coding terms and solutions (here in R).
 
-![Proposed data model](figures/data-model.png)
+```{r data-model, echo = FALSE, out.width = "100%", fig.cap = "Proposed data model.", fig.align = "center"}
+knitr::include_graphics("figures/data-model.png")
+```
 
-
-**Conceptual data model**
+  * **Conceptual data model**
 
 The trajectory is the continuous curve traced by the movement of an
 object through time (Fig.1A). In practice, a trajectory is sampled at
@@ -116,7 +94,7 @@ the step as the elementary unit of movement, which scale up to
 movement modes, movement phases, and all the way up to the individual
 lifetime track.
 
-**Logical data model**
+  * **Logical data model**
 
 The elementary unit of movement, the step, is at the core of the
 logical data model (Fig.1B). Data are provided as tidy data, in a data
@@ -129,7 +107,7 @@ be stored as additional variables, some of them potentially defining
 trajectory nesting, in case of several trajectories being stored in
 the step column.
 
-**Physical data model**
+  * **Physical data model**
 
 The data model of a trajectory is a model — it is thus an idealized 
 representation of steps forming a path. The implementation aims at
@@ -165,42 +143,9 @@ extracted and used). For instance:
   * time functions will work on the time coordinate.
 
 
-### Work in progress
+<!-- ### Work in progress -->
 
-See GitHub issues.
+<!-- See GitHub issues. -->
 
-
-### Use cases
-
-
-#### `trackeR` model (from Ioannis Kosmidis)
-
-Overall, what our `trackeRdata` object does and what I guess I would
-expect by a new object that sets the standards for (2D–3D) trajectory
-data is that the object:
-
-  * can carry /all available movement information/ that have been
-    recorded (time, lon, lat, speed, distance, altitude)
-  * have methods that allow the user to
-    - infer speed from distance and time (and elevation for 3D)
-    - infer distance from speed and time (and elevation for 3D)
-    - infer distance and speed from time, lon, lat, altitude (and
-      elevation for 3D)
-    - impute speed/distance from past/future observations if time,
-      lon, lat are missing (speeds in humans are extremely predictable
-      from past/future speed and I guess the same is true for many
-      types of trajectory data)
-    - correct altitude data (for 2D)
-    - correct coordinate data (by smoothing)
-  * is unit-aware (for speed, distance, altitude) and allows changing
-    those units
-  * allows for extra variables (e.g. power, cadence and the likes in
-    the context of athlete trajectories) that are recorded at
-    timestamp level
-  * allow for variables that are recorded at trajectory level
-    (e.g. athlete name and sport in `trackeR` case), /without/ having
-    to repeat that over all timestamps in a trajectory; so here a
-    single `tibble` for each trajectory is not a good idea, I think.
-
-Note (from Mathieu Basille): Check [attribute-geometry-relationship](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns),
-and how this could be used for interpolation.
+<!-- Note (from Mathieu Basille): Check [attribute-geometry-relationship](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns), -->
+<!-- and how this could be used for interpolation. -->

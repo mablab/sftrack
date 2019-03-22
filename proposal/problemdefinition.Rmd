@@ -34,8 +34,9 @@ of which worked in isolation, not being linked to any other tracking
 package. This is in part due to a lack of a modern infrastructure to
 deal with trajectory objects in R.
 
-![Use of R in Movement Ecology (on a total of 4417
-papers)](figures/move-eco-r_2.png)
+```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Use of R in Movement Ecology (on a total of 4417 papers).", fig.align = "center"}
+knitr::include_graphics("figures/move-eco-r_2.png")
+```
 
 To date, existing classes in R for movement data are either outdated,
 relying on outdated standards, or too complicated to be used in a
@@ -61,8 +62,8 @@ following classes:
     essentially superseded by the new package `sf` for spatial classes
     recently.
   * `Move` (package `move`): Released in 2012, it is a complete S4
-    class focusing on animal movement data from the Movebank
-    repository (http://www.movebank.org), but which can also be used
+    class focusing on animal movement data from the [Movebank
+    repository](http://www.movebank.org), but which can also be used
     on any tracking data. `Move` objects are fairly complex however,
     lacking the flexibility of simpler classes, and being further
     arranged into `MoveBurst` (track split into different parts) and
@@ -86,16 +87,6 @@ following classes:
     as `zoo` objects (from the package of the same name), which are
     ordered, but not spatial, observations. This *ad-hoc* structure
     makes `trackeRdata` rather complicated to use.
-
-Based on years of experience, and broad feedback from the movement
-community, we thus aim to develop a central trajectory class to
-support all stages of movement studies (pre-processing,
-post-processing and analysis). We propose a `sftraj` package offering
-a generic and flexible approach based on simple `data.frame`s using
-`sf` spatial building blocks, as a cornerstone for the development of
-a more cohesive movement community in R. The only aim of the package
-will be to present this central class and basic functions to build,
-handle, summarize and plot movement data.
 
 
 **References:**

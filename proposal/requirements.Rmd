@@ -16,7 +16,7 @@ well as other relevant people working on movement, will also be
 consulted during the different phases of the work, and will be invited
 to contribute further to the realization of the project.
 
-In particular, we request $10,000 in salary for 0.15 FTE of Matt
+In particular, we request \$10,000 in salary for 0.15 FTE of Matt
 Boone. Matt is a Data Scientist with a solid experience in R, and will
 be the main developer and contributor to the codebase. As all other
 contributions will be in-kind, having Matt fully dedicating some of
@@ -34,13 +34,7 @@ will adopt a community-based code of conduct. The recently updated
 will serve as a basis, as we share foundational values of openness,
 tolerance and inclusiveness.
 
-We will also adopt a "release early, release often" philosophy, where
-we publicly provide developments of new ideas and functions. This will
-come hand in hand with regular blog posts on the [MabLab
-website](https://mablab.org/) to communicate progress, and constant
-communication on Twitter by the core team.
-
-Finally, at all stages but especially at the first one ("Use cases"),
+At all stages but especially at the first one ("Use cases"),
 we will seek feedback from the Movement community. While working on
 the review of R tracking packages, we have been successful in
 mobilizing the Movement community through Twitter notably; for
@@ -76,13 +70,23 @@ package.
 
 -->
 
-We request a total of $10,000 to support 0.15 FTE (7.2 weeks) of Matt
+<!-- We request a total of \$10,000 to support 0.15 FTE (8 weeks) of Matt -->
+<!-- Boone, Data Scientist (Biological Scientist II) in the MabLab at the -->
+<!-- University of Florida. -->
+
+<!-- * Salary: \$7,369 -->
+<!-- * Fringe rate (35.70 %): \$2,631 -->
+<!-- * **Total award = \$10,000** -->
+
+We request a total of \$7,457 to support 0.115 FTE (6 weeks) of Matt
 Boone, Data Scientist (Biological Scientist II) in the MabLab at the
 University of Florida.
 
-* Salary: $7,369
-* Fringe rate (35.70 %): $2,631
-* **Total award = $10,000**
+* Salary: \$5,495
+* Fringe rate (35.70 %): \$1,962
+* **Direct total cost**: \$7,457
+* Indirect cost (34.1 %): \$2,543
+* **Total award**: \$10,000
 
 
 ## Summary

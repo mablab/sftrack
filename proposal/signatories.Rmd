@@ -15,6 +15,7 @@ Who are the people responsible for actually delivering the project if the propos
 
   * Mathieu Basille (`hab`, `rpostgis`, `rpostgisLT`)
   * Matt Boone
+  * Clément Calenge (`adehabitatHR`, `adehabitatLT`)
   * Rocío Joo
   * Emiel van Loon
 
@@ -36,7 +37,6 @@ Who has been given the opportunity to provide feedback on the proposal? This sho
 -->
 
   * Francesca Cagnacci
-  * Clément Calenge (`adehabitatHR`, `adehabitatLT`)
   * Hamish Campbell (`VTrack`)
   * Ross Dwyer (`Digiroo2`, `VTrack`)
   * Brett McClintock (`moveHMM`, `momentuHMM`) 

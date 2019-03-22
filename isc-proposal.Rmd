@@ -7,6 +7,7 @@ output: html_document
 
 ```{r setup, eval=TRUE, results='hide', echo=FALSE}
 knitr::opts_knit$set(warning = FALSE, message= FALSE)
+library(knitr)
 ```
 
 
