@@ -30,6 +30,8 @@ ISC proposal
       columns?](https://r-spatial.github.io/sf/articles/sf6.html#how-does-sf-deal-with-secondary-geometry-columns)
     - [Tidy storm trajectories
       (sf)](https://www.r-spatial.org/r/2017/08/28/nest.html)
+    - [Notes from Bart](https://github.com/bart1/sfTraj/) (nesting,
+      time, trajectory properties)
   * Package `trackeR`
     - [vignette](https://cran.r-project.org/web/packages/trackeR/vignettes/trackeR.pdf)
   *

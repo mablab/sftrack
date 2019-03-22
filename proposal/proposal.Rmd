@@ -165,6 +165,11 @@ extracted and used). For instance:
   * time functions will work on the time coordinate.
 
 
+### Work in progress
+
+See GitHub issues.
+
+
 ### Use cases
 
 
