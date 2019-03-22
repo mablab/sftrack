@@ -8,15 +8,38 @@ Projects should have a definition of done that is measurable, and a thorough und
 What does success look like? 
 -->
 
+Publication of a package that is acclaimed both by users and developers.
+
+
 ## Measuring success
 <!-- 
 How will we know when success is achieved, what markers can we use along the way 
 -->
 
+During the work: Total contributions (# users, # code contributions, #
+comments/edits/feedback)
+
+After the work: 
+* DL (e.g. using RStudio metrics) → users
+* wide use in tracking packages → developers
+
+
 ## Future work
 <!-- 
 How could this be extended / developed in the future by yourself and/or the community in general?
 -->
+
+Future rounds:
+
+  * conversion to main existing classes
+  * units/errors
+  * dynamic visualization
+  * cleaning/interpolating
+  * help for package developers
+  * formalizing a R movement community
+  * part of rOpenSci
+  * R Journal paper
+
 
 ## Key risks
 <!-- 
@@ -28,3 +51,6 @@ What sort of things could come up that can delay or break the project?
  - [ ] Costs
 
 -->
+
+Main risk is absence of adoption by the community (both users and
+developers). A very open approach…
