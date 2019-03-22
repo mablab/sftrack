@@ -10,6 +10,12 @@ Covering the planning phase, this section should provide a relatively detailed p
  - [ ] Reporting framework
 -->
 
+Collaboration platform:
+
+  * GitLab in the lab; synchronized with GitHub publicly
+  * Code of conduct (from rOpenSci)
+  * License: GNU AGPL-3 or MIT
+
 
 ## Technical delivery
 <!--
@@ -17,6 +23,12 @@ Covering the actual delivery of the project this section should provide at least
 
 Including target dates is really important as you need to be committed and the ISC need to have a means of tracking delivery
 -->
+
+July–August: Defining use cases
+September–October: Defining class structure, and implement basic package
+November: adding accessors and summaries + documentation
+December: CRAN, vignette + documentation
+
 
 ## Other aspects
 <!--
