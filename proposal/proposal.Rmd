@@ -30,23 +30,27 @@ Depending on project type the detail section should include:
  - [ ] Assumptions
 -->
 
-This round:
+Must have:
 
   * Class(es) definition
   * Creators and converters from basic objects (data.frames, sf,
     sftraj)
   * Accessors and summaries (`print`, `summary`)
-  * Basic plot (static)
+  * Full documentation
+  * Installable package (GitHub)
+  
+Should have:
+
   * CRAN package
+  * Vignette
 
-Future rounds:
+Could have:
 
-  * conversion to main existing classes
-  * units/errors
-  * dynamic visualization
-  * cleaning/interpolating
-  * help for package developers
-  * formalizing a R movement community
+  * Basic plot (static)
+
+Won't have:
+
+  * See future work.
 
 
 ### Definitions
@@ -161,7 +165,7 @@ extracted and used). For instance:
   * time functions will work on the time coordinate.
 
 
-### Expectations
+### Use cases
 
 
 #### `trackeR` model (from Ioannis Kosmidis)
