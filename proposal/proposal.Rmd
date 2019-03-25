@@ -33,28 +33,33 @@ Depending on project type the detail section should include:
 
 ### Definitions
 
-A trajectory can be defined as the (continuous) curve made by moving
-objects (Turchin 1998). In practice, this curve is sampled (recorded)
-at discrete times with 4D vertices of coordinates (3-dimensional
-spatial coordinates and temporal coordinate), which define tracking
-data of the form $(x, y, z, t)$.
+A *trajectory* can be defined as the (continuous) curve made by moving
+objects (Turchin 1998), which can be decomposed as a series of
+straight-line segments called *moves* between stopping points where
+the object turns. Moves can be of varying length and associated time
+span, depending on the nature of the movement. Treating moves as
+straight lines is an "idealization", but at sufficient resolution, no
+significant information is lost.
 
-Citing Turchin (p.129):
+<!-- Turchin p.129 -->
 
-"A path is the complete spatio-temporal record of a followed organism,
-from the beginning to the end of observations. Each path is
-represented as a series of straight-line moves, where a move is
-defined as the displacement between two consecutive stopping
-points. […] Treating moves as straight lines is an idealization." 
+In practice, this curve is sampled (recorded) at discrete times with
+4D vertices of coordinates (3-dimensional spatial coordinates and
+temporal coordinate), which define *tracking data* of the form $(x, y,
+z, t)$, or, according to Turchin (1998), a "path [i.e.] the complete
+spatio-temporal record of a followed organism, from the beginning to
+the end of observations".
 
-Turchin defines a step as the "artificial" straight-line segment
-during an arbitrary and regular time interval. In practice however, we
-are dealing with step data, not moves, and the sampling is not
-necessarily at regular intervals. 
+<!-- Is that the opposite? I.e. path in real world; trajectory sampled? -->
 
-A trajectory is thus composed of steps that form a path.
-
-[dual perspective: tracking data ←→ movement data]
+Turchin then defines *steps* as the straight-line segments formed by
+successive vertices at regular sampling interval. Let us generalized
+to all time intervals, as sampling is not necessarily at regular
+intervals. In most cases, a step does not correspond to a move.  A
+trajectory is thus recorded by a series of points (tracking data),
+which forms steps, and ultimately a path. It is important to recognize
+this dual perspective, between tracking data (points) and movement
+data (steps).
 
 As a corollary, a trajectory already assumes connection between
 sequential points — and a straight-line segment is the most
