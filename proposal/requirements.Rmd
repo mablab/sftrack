@@ -70,23 +70,23 @@ package.
 
 -->
 
-<!-- We request a total of \$10,000 to support 0.15 FTE (8 weeks) of Matt -->
-<!-- Boone, Data Scientist (Biological Scientist II) in the MabLab at the -->
-<!-- University of Florida. -->
-
-<!-- * Salary: \$7,369 -->
-<!-- * Fringe rate (35.70 %): \$2,631 -->
-<!-- * **Total award = \$10,000** -->
-
-We request a total of \$7,457 to support 0.115 FTE (6 weeks) of Matt
+We request a total of \$10,000 to support 0.15 FTE (8 weeks) of Matt
 Boone, Data Scientist (Biological Scientist II) in the MabLab at the
 University of Florida.
 
-* Salary: \$5,495
-* Fringe rate (35.70 %): \$1,962
-* **Direct total cost**: \$7,457
-* Indirect cost (34.1 %): \$2,543
-* **Total award**: \$10,000
+* Salary: \$7,369
+* Fringe rate (35.70 %): \$2,631
+* **Total award = \$10,000**
+
+<!-- We request a total of \$7,457 to support 0.115 FTE (6 weeks) of Matt -->
+<!-- Boone, Data Scientist (Biological Scientist II) in the MabLab at the -->
+<!-- University of Florida. -->
+
+<!-- * Salary: \$5,495 -->
+<!-- * Fringe rate (35.70 %): \$1,962 -->
+<!-- * **Direct total cost**: \$7,457 -->
+<!-- * Indirect cost (34.1 %): \$2,543 -->
+<!-- * **Total award**: \$10,000 -->
 
 
 ## Summary
