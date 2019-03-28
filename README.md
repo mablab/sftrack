@@ -41,6 +41,10 @@ ISC proposal
   * [Units of Measurement for R Vectors: an
     Introduction](https://cran.r-project.org/web/packages/units/vignettes/units.html)
   * [errors](https://www.enchufa2.es/archives/errors-0-0-1.html)
+  * Joachim Gudmundsson, Patrick Laube, Thomas Wolle (2012)
+    Chap. 22. Computational Movement Analysis. (p.725)
+  * Charles Roswell (2012) Chap. 1. Modeling of Geographic
+    Information. (p.3) → UML
 
 
 
