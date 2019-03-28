@@ -15,7 +15,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="conceptual-model.svg">
+   sodipodi:docname="conceptual-model.svg"
+   inkscape:export-filename="/home/mathieu/Work/Grants/2019-03 R Consortium - sftraj/figures/conceptual-model.png"
+   inkscape:export-xdpi="119.1798"
+   inkscape:export-ydpi="119.1798">
   <defs
      id="defs2">
     <marker
@@ -116,11 +119,11 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="10.795304"
-     inkscape:cx="533.09419"
-     inkscape:cy="201.19635"
+     inkscape:zoom="1.9083583"
+     inkscape:cx="412.33702"
+     inkscape:cy="374.96286"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"

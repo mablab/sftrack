@@ -36,10 +36,14 @@ Depending on project type the detail section should include:
 A *trajectory* can be defined as the (continuous) curve made by moving
 objects (Turchin 1998), which can be decomposed as a series of
 straight-line segments called *moves* between stopping points where
-the object turns. Moves can be of varying length and associated time
-span, depending on the nature of the movement. Treating moves as
-straight lines is an "idealization", but at sufficient resolution, no
-significant information is lost.
+the object turns (Fig. 1). Moves can be of varying length and
+associated time span, depending on the nature of the
+movement. Treating moves as straight lines is an "idealization", but
+at sufficient resolution, no significant information is lost.
+
+```{r definitions, echo = FALSE, out.width = "50%", fig.cap = "Definition of elements of movement.", fig.align = "center"}
+knitr::include_graphics("figures/definitions.png")
+```
 
 <!-- Turchin p.129 -->
 
@@ -59,7 +63,7 @@ intervals. In most cases, a step does not correspond to a move.  A
 trajectory is thus recorded by a series of points (tracking data),
 which forms steps, and ultimately a path. It is important to recognize
 this dual perspective, between tracking data (points) and movement
-data (steps).
+data (steps) (Fig. 1).
 
 As a corollary, a trajectory already assumes connection between
 sequential points — and a straight-line segment is the most
@@ -83,10 +87,6 @@ and describes the semantics of the model and its scope; the logical
 data model translates this into general data concepts; the physical
 data model implements it in coding terms and solutions (here in R).
 
-```{r data-model, echo = FALSE, out.width = "100%", fig.cap = "Proposed data model.", fig.align = "center"}
-knitr::include_graphics("figures/data-model.png")
-```
-
   * **Conceptual data model**
 
 The trajectory is the continuous curve traced by the movement of an
@@ -97,12 +97,16 @@ straight-line segment connecting two successive vertices. Conceptual
 models of movement, from Turchin 1998 to Nathan et al. 2008, consider
 the step as the elementary unit of movement, which scale up to
 movement modes, movement phases, and all the way up to the individual
-lifetime track.
+lifetime track (Fig. 2).
+
+```{r data-model, echo = FALSE, out.width = "80%", fig.cap = "Proposed conceptual model.", fig.align = "center"}
+knitr::include_graphics("figures/conceptual-model.png")
+```
 
   * **Logical data model**
 
 The elementary unit of movement, the step, is at the core of the
-logical data model (Fig.1B). Data are provided as tidy data, in a data
+logical data model (Fig. 3). Data are provided as tidy data, in a data
 frame of observations (rows) and variables (columns). One of the
 variables is the step column which stores one or several trajectories,
 and is composed of steps. The step is the elementary observation and
@@ -111,6 +115,10 @@ line. Ancillary data measured at the beginning or along the step can
 be stored as additional variables, some of them potentially defining
 trajectory nesting, in case of several trajectories being stored in
 the step column.
+
+```{r implementation, echo = FALSE, out.width = "70%", fig.cap = "Proposed implementation.", fig.align = "center"}
+knitr::include_graphics("figures/implementation.png")
+```
 
   * **Physical data model**
 

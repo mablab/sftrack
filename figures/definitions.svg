@@ -16,9 +16,9 @@
    id="svg8"
    sodipodi:docname="definitions.svg"
    inkscape:version="0.92.1 r15371"
-   inkscape:export-filename="/home/mathieu/Work/Grants/2019-03 R Consortium - sftraj/figures/data-model.png"
-   inkscape:export-xdpi="73.394188"
-   inkscape:export-ydpi="73.394188">
+   inkscape:export-filename="/home/mathieu/Work/Grants/2019-03 R Consortium - sftraj/figures/definitions.png"
+   inkscape:export-xdpi="165.27565"
+   inkscape:export-ydpi="165.27565">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1588833"
-     inkscape:cx="600.79908"
-     inkscape:cy="236.97277"
+     inkscape:zoom="1.1093126"
+     inkscape:cx="415.02137"
+     inkscape:cy="233.52117"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -545,7 +545,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>

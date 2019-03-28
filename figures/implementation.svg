@@ -14,11 +14,11 @@
    viewBox="0 0 179.12017 126.84651"
    version="1.1"
    id="svg8"
-   sodipodi:docname="logical-model.svg"
+   sodipodi:docname="implementation.svg"
    inkscape:version="0.92.1 r15371"
-   inkscape:export-filename="/home/mathieu/Work/Grants/2019-03 R Consortium - sftraj/figures/data-model.png"
-   inkscape:export-xdpi="73.394188"
-   inkscape:export-ydpi="73.394188">
+   inkscape:export-filename="/home/mathieu/Work/Grants/2019-03 R Consortium - sftraj/figures/implementation.png"
+   inkscape:export-xdpi="145.17548"
+   inkscape:export-ydpi="145.17548">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1588833"
-     inkscape:cx="-104.65652"
-     inkscape:cy="124.03026"
+     inkscape:zoom="1.1093126"
+     inkscape:cx="214.38291"
+     inkscape:cy="120.57866"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
