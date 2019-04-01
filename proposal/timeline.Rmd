@@ -10,48 +10,48 @@ Covering the planning phase, this section should provide a relatively detailed p
  - [ ] Reporting framework
 -->
 
-as a cornerstone for the development of a more
-cohesive movement community in R
+The `sftraj` package is meant to be a cornerstone for the development
+of a more cohesive movement community in R. For this to happen, we
+will involve all voluntary contributors from the community, and work
+in the open all along. For instance, a collaborative platform already
+in place relies on a public [GitHub
+repository](https://github.com/mablab/sftraj). We will add a code of
+conduct based on the principles of
+[rOpenSci](https://ropensci.org/code-of-conduct/) to ensure a good
+collaborative environment, and adopt the MIT license for the package,
+as to allow wide acceptation by other package developers.
 
-Collaboration platform:
+The first stage of the work (see timeline below) will specifically
+involve the movement community in R. During this stage, we will open
+contributions of *use cases* for the package (using GitHub's issue
+system), which will function as practical goals for the development of
+the package. For instance, a new object that sets the standards for
+trajectory data from the perspective of the `trackeR` package should
+have the following features:
 
-  * GitLab in the lab; synchronized on public [GitHub
-    repository](https://github.com/mablab/sftraj) (already available)
-  * Code of conduct (from rOpenSci)
-  * License: MIT, to allow wide acceptation by other package
-    developers
+  1. can carry all recorded movement information (time, longitude,
+     latitude, speed, distance, altitude);
+  2. have methods that allow the user to
+    - infer speed from distance and time (and elevation for 3D)
+    - infer distance from speed and time (and elevation for 3D)
+    - infer distance and speed from time, lon, lat, altitude (and
+      elevation for 3D)
+    - impute speed/distance from past/future observations if time,
+      lon, lat are missing
+    - correct altitude data (for 2D)
+    - correct coordinate data (by smoothing)
+  3. is unit-aware (for speed, distance, altitude) and allows changing
+     those units;
+  4. allows for extra variables (e.g. power, cadence and the likes in
+  5. the context of athlete trajectories) that are recorded at
+     timestamp level;
+  6. allow for variables that are recorded at trajectory level
+     (e.g. athlete name and sport), without having to repeat that over
+     all timestamps in a trajectory.
 
-### Use cases
-
-Example of use cases that will be developed during the first stage of
-the work:
-
-  * **`trackeR` model**: From the perspective of the `trackeR`
-    package, a new object that sets the standards for trajectory data
-    should have the following features:
-    1. can carry all available movement information that have been
-       recorded (time, longitude, latitude, speed, distance,
-       altitude);
-    2. have methods that allow the user to
-      - infer speed from distance and time (and elevation for 3D)
-      - infer distance from speed and time (and elevation for 3D)
-      - infer distance and speed from time, lon, lat, altitude (and
-        elevation for 3D)
-      - impute speed/distance from past/future observations if time,
-        lon, lat are missing (speeds in humans are extremely
-        predictable from past/future speed and I guess the same is
-        true for many types of trajectory data)
-      - correct altitude data (for 2D)
-      - correct coordinate data (by smoothing)
-    3. is unit-aware (for speed, distance, altitude) and allows
-       changing those units
-    4. allows for extra variables (e.g. power, cadence and the likes
-       in
-    5. the context of athlete trajectories) that are recorded at
-       timestamp level
-    6. allow for variables that are recorded at trajectory level
-       (e.g. athlete name and sport), without having to repeat that
-       over all timestamps in a trajectory.
+Once all use cases will be available, the package specifications and
+development will aim at addressing them all, to make sure the solution
+provided is relevant for a maximum of users and package developers.
 
 
 ## Technical delivery
@@ -68,9 +68,9 @@ from a minimum viable product to future development:
   * **Must have** (requirements necessary for project completion,
     i.e. the minimum viable product)
     * Use cases defined [month 1–2]
-    * Class(es) definition [month 3]
+    * Data model revisited and classes definition [month 3]
     * Creators and converters from basic objects (`data.frames`, `sf`,
-      `sftraj`) [month 4]
+      `sftrack`, `sftraj`) [month 4]
     * Installable package (GitHub) [months 4–6]
     * Accessors and summaries (`print`, `summary`) [month 5]
     * Full function documentation and unit testing [months 5–6]
@@ -95,9 +95,13 @@ Covering non-technical activities like on-going publicity, paper preparation, di
  - [ ] ISC meetings
 -->
 
-We will adopt a "release early, release often" philosophy, where we
-publicly provide developments of new ideas and functions. This will
-come hand in hand with regular blog posts on the [MabLab
-website](https://mablab.org/) to communicate progress (basically for
-each deliverable), and constant communication on Twitter by the core
-team.
+As we want this project to be as open as possible, we will adopt a
+"release early, release often" philosophy, where we publicly provide
+developments of new ideas and functions. This will come hand in hand
+with regular blog posts on the [MabLab website](https://mablab.org/)
+to communicate progress (basically for each stage and deliverable),
+and constant communication on Twitter by the core team. Twitter and
+emails will also be largely used to reach out to the community, as we
+have successfully done in the past for the R tracking package review
+(Joo *et al.* 2019) and the Movement Ecology synthesis (Joo *et al.*
+*in prep*).
