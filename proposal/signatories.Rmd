@@ -21,7 +21,7 @@ Who are the people responsible for actually delivering the project if the propos
   * **Mathieu Basille**, Assistant Professor at the University of
     Florida, USA [`hab`, `rpostgis`, `rpostgisLT`]
   * **Matt Boone**, Data Scientist at the University of Florida, USA
-  * **Clément Calenge**, Statistical analyst at the *Office national
+  * **Clément Calenge**, Statistical Analyst at the *Office national
     de la chasse et de la faune sauvage*, France [`adehabitatHR`,
     `adehabitatLT`]
   * **Rocío Joo**, Postdoctoral Associate at the University of
@@ -39,8 +39,8 @@ Who are the people who have actively helped with this proposal but won't necessa
     [`rpostgisLT`]
   * **Ioannis Kosmidis**, University of Warwick, UK [`trackeR`]
   * **Bart Kranstauber**, University of Zurich, Switzerland [`move`]
-  * **Edzer Pebesma**, University of Munster, Germany[`sf` and
-    `trajectories`]
+  * **Edzer Pebesma**, University of Munster, Germany[`sf`,
+    `spacetime` and `trajectories`]
 
 
 ## Consulted

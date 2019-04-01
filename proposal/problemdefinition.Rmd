@@ -12,31 +12,30 @@ It is important to cover:
 
 Movement defined broadly plays a central role in fields as diverse as
 transportation, sport, ecology, music, medicine, and data science
-(Gudmundsson *et al.* 2012). As a matter of fact, miniaturized
-tracking devices (thanks to global navigation satellite system (GNSS)
-and radio-frequency identification (RFID)) have become nearly
-ubiquitous, and resulted in an ever-increasing volume of localization
-data from very different moving objects, such as humans or animals;
-cars, boats or planes; the hand of a musician playing a violin in 3
-dimensions; the entire movement of an orchestra or a flock of
-starlings; the eye of a person that changes its focus from one object
-to the other; etc. Sampling all these movements result in the same
-type of data called *tracking data*, in the form of geographic
-($x,y,z$) and temporal coordinates ($t$) (Joo *et al.* 2019). Despite
-this common nature, there is a critical lack of standard
-infrastructure to deal with movement.
+(Gudmundsson *et al.* 2012). As a matter of fact, thanks to global
+navigation satellite system (GNSS) and radio-frequency identification
+(RFID), miniaturized tracking devices have become nearly ubiquitous,
+and resulted in an ever-increasing volume of localization data from
+various moving objects, such as humans or animals; cars, boats or
+planes; the hand of a musician playing a violin in 3 dimensions; the
+entire movement of an orchestra or a flock of starlings; or the eye of
+a person that changes its focus from one object to the other. Sampling
+all these movements results in the same type of data called *tracking
+data*, in the form of geographic ($x,y,z$) and temporal coordinates
+($t$) (Joo *et al.* 2018). Despite this common nature, there is a
+critical lack of standard infrastructure to deal with movement.
 
 While the collection of tracking data is growing on a daily basis, the
 use of R for movement studies has also increased sharply, in contrast
 to the decline of most other platforms—for instance, in the field of
 Movement Ecology, we counted more than 70 % of studies using R in
 2018, i.e. roughly three times more than its closest contender, and
-the trend is still rising (Fig.1). The movement community in R is at
-the same time very dynamic and very fragmented (Joo *et al.* 2019); we
+the trend is still rising (Fig.1). The Movement community in R is at
+the same time very dynamic and very fragmented (Joo *et al.* 2018); we
 have listed 57 packages that process, visualize and analyze tracking
 data, one third of which worked in isolation, not being linked to any
 other tracking package. This is in part due to a lack of a modern
-infrastructure to deal with trajectory objects in R.
+infrastructure to deal with trajectories in R.
 
 ```{r r-moveco, echo = FALSE, out.width = "40%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo et al., in prep.).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
@@ -75,24 +74,23 @@ following classes:
     classes. Moreover, `Move` objects also relies on spatial classes
     from `sp`.
   * `Track` (package `trajectories`): Released in 2014, this is
-    another example of formalizing a movement class as a S4 class,
-    following roughly the same logic as described in the package
-    `move`, with a complex nested class structure of `Track` objects
-    (a single track from one individual), which are combined into
-    `Tracks` (several tracks from the same individual) and
-    `TracksCollection` (several individuals). `Track` also extend
-    spatial classes from `sp`, and builds upon spatio-temporal classes
-    from the `spacetime` package.
+    another example of formalizing a movement object as a S4 class,
+    following roughly the same logic as the package `move`, with a
+    complex nested class structure of `Track` objects (a single track
+    from one individual), which are combined into `Tracks` (several
+    tracks from the same individual) and `TracksCollection` (several
+    individuals). `Track` also extends spatial classes from `sp`, and
+    builds upon spatio-temporal classes from the `spacetime` package.
   * `trackeRdata` (package `trackeR`): More recently released in 2016,
     this package focuses on running and cycling data from GPS-enabled
     tracking devices, and provide a specific class dedicated to
-    athlete activity. Similarly to `ltraj`s from `adehabitatLT`,
-    `trackeRdata` are lists with locations stored 
-    as `zoo` objects (from the package of the same name), which are
-    ordered, but not spatial, observations. This *ad-hoc* structure
-    makes `trackeRdata` rather complicated to use.
+    athlete activity. Similarly to `ltraj` from `adehabitatLT`,
+    `trackeRdata` are lists with locations stored as `zoo` objects
+    (from the package of the same name), which are ordered, but not
+    spatial, observations. This *ad-hoc* structure makes `trackeRdata`
+    rather complicated to use.
 
 Given the ubiquitous nature of tracking data, the fragmentation of the
-ecosystem of R packages dealing with such data, and the difficulty of
+ecosystem of R packages dealing with such data, and the complexity of
 use of existing attempts at handling these data, it seems timely and
 relevant to address the issue from a data perspective.

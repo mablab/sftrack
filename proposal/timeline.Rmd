@@ -15,11 +15,9 @@ of a more cohesive Movement community in R. For this to happen, we
 will involve all voluntary contributors from the community, and work
 in the open all along. For instance, a collaborative platform already
 in place relies on a public [GitHub
-repository](https://github.com/mablab/sftraj). We will add a code of
-conduct based on the principles of
-[rOpenSci](https://ropensci.org/code-of-conduct/) to ensure a good
-collaborative environment, and adopt the MIT license for the package,
-as to allow wide acceptation by other package developers.
+repository](https://github.com/mablab/sftraj). We will adopt the MIT
+license for the package, as to allow more contributions, and wide
+acceptation by other package developers.
 
 The first stage of the work (see timeline below) will specifically
 involve the Movement community in R. During this stage, we will open
@@ -27,10 +25,10 @@ contributions of *use cases* for the package (using GitHub's issue
 system), which set practical goals for the development of the
 package. Use cases describe the workflow that is expected from both
 users' and developers' perspectives, and thus the capabilities that a
-trajectory package needs to offer.  Once all use cases will be
-available, the package specifications and development will aim at
-addressing them all, to make sure the solution provided is relevant
-for a wide array of users and package developers.
+trajectory package needs to offer.  The package specifications and
+development will aim at addressing all use cases described, to make
+sure the solution provided is relevant for a wide array of users and
+package developers.
 
 <!-- For instance, a new object that sets the standards for -->
 <!-- trajectory data from the perspective of the `trackeR` package should -->
@@ -69,8 +67,8 @@ method to determine what will be delivered from this project, starting
 from a minimum viable product to future development:
 
   * **Must have** (requirements necessary for project completion,
-    i.e. the minimum viable product)
-    * Use cases defined [month 1–2]
+    i.e. the minimum viable product):
+    * Use cases described [month 1–2]
     * Data model revisited and classes definition [month 3]
     * Creators and converters from basic objects (`data.frames`, `sf`,
       `sftrack`, `sftraj`) [month 4]
@@ -104,5 +102,5 @@ website](https://mablab.org/) to communicate progress (basically for
 each stage and deliverable), and constant communication on Twitter by
 the core team. Twitter and emails will also be largely used to reach
 out to the community, as we have successfully done in the past for the
-R tracking package review (Joo *et al.* 2019) and the Movement Ecology
+R tracking package review (Joo *et al.* 2018) and the Movement Ecology
 synthesis (Joo *et al.* *in prep*).

@@ -50,11 +50,12 @@ development already include:
   * Full-fledged package: submission to
     [CRAN](https://cran.r-project.org/) and to
     [rOpenSci](https://ropensci.org/).
-  * Preparation of a detailed article to present the technical choices
-    and the solution offered by `sftraj`, in order to favor adoption
-    by users and package developers. Prepared for the R Journal.
+  * Preparation of a detailed article (targeting the R journal) to
+    present the technical choices and the solution offered by
+    `sftraj`, in order to favor adoption by users and package
+    developers.
   * Keep the conversation open with package developers, and help them
-    developing conversion tools to main existing classes.
+    develop conversion tools to major existing classes.
   * Dynamic visualization of trajectories, allowing keyboard- and
     mouse-controlled exploration of trajectories, step by step (based
     on the solution provided in `rpostgisLT`).
@@ -93,7 +94,7 @@ contributed to the development of this proposal.
 Finally, there are inherent risks related to unforeseen problems that
 will arise and the extra time necessary to address them. This project
 has been framed with discrete manageable goals for every month of the
-period of work. Using the MoSCoW method, we defined reasonable
-deliverables, as well as optional and desirable requirements if time
+period of work. We defined reasonable deliverables with the MoSCoW
+method, including optional and desirable requirements if time
 allows. We also made sure to keep unrealistic requirements out of the
 scope of this grant (see *Future work* above).

@@ -8,20 +8,19 @@ An idea of what is required to make the project actually happen
 Who needs to be involved, what's the proposed structure, what will it take to get their involvement?
 -->
 
-The core project team, and primarily Matt Boone, will initiate and
-lead the necessary consultation, code the proposed package, implement
-the data model, and ensure successful outcome of the project. All
-contributors to the proposal and people who have been consulted for it
-(listed above), and more broadly the entire community working on
-movement, will also be consulted during the different phases of the
-work, and will be invited to contribute further to the realization of
-the project.
+The core project team will initiate and lead the necessary
+consultation, code the proposed package, implement the data model, and
+ensure successful outcome of the project. All contributors to the
+proposal and people who have been consulted for it (listed above), and
+more broadly the entire Movement community, will also be consulted
+during the different phases of the work, and will be invited to
+contribute further to the realization of the project.
 
 In particular, we request \$10,000 in salary for 1.84 months of Matt
 Boone, Data Scientist at the University of Florida. Matt has a solid
 experience in R, and will be the main developer and contributor to the
 codebase. As all other contributions will be in-kind, having Matt
-fully dedicated ensures successful completion of the project.
+fully dedicated guarantees successful completion of the project.
 
 
 ## Processes
@@ -33,21 +32,19 @@ As this project ultimately aims at building a R Movement community, we
 will adopt a community-based code of conduct. The recently updated
 [code of conduct of rOpenSci](https://ropensci.org/code-of-conduct/)
 will serve as a basis, as we share foundational values of openness,
-tolerance and inclusiveness.
-
-As we want this project to be as open as possible, we will adopt a
-"release early, release often" philosophy to provide most recent
-developments to the community, and allow for early testing of the
-`sftraj` package.  At all stages but especially at the first one (*Use
-cases*), we will seek feedback from the Movement community. While
-working on the review of R tracking packages, we have been successful
-in mobilizing the Movement community through Twitter notably; for
-instance, 225 persons filled out our survey on package usage and
+tolerance and inclusiveness. We will adopt a "release early, release
+often" philosophy to provide most recent developments to the
+community, and allow for early testing of the `sftraj` package.  At
+all stages but especially at the first one (*Use cases*), we will seek
+feedback from the Movement community. While working on the review of R
+tracking packages (Joo *et al.* 2018), we have been successful in
+mobilizing the Movement community through Twitter and emails notably;
+for instance, 225 persons filled out our survey on package usage and
 documentation. We will use this already established connection to
-reach out further, and invite the largest number of people to
+further reach out, and invite the largest number of people to
 contribute and provide feedback. Public development on GitHub will
-allow the use of the issue system to initiate and discuss each use
-case with and from the community.
+also allow the use of the issue system to initiate and discuss each
+use case with and from the community.
 
 
 ## Tools & Tech
