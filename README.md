@@ -1,4 +1,4 @@
-# sftraj: A central class for movement data
+# sftraj: A central class for tracking and movement data
 <!-- [![Build Status](https://travis-ci.org/stephlocke/isc-proposal.svg?branch=master)](https://travis-ci.org/stephlocke/isc-proposal) -->
 
 ISC proposal
