@@ -4,6 +4,7 @@ subtitle: "Submitted to: `r sponsor`"
 author: "`r author`"
 date: "`r Sys.Date()`"
 output: html_document
+urlcolor: blue
 ---
 
 ```{r setup, eval=TRUE, results='hide', echo=FALSE}

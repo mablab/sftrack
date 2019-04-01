@@ -26,6 +26,22 @@ runTr0 <- trackeRdata(runDF)
 runTr0
 str(runTr0)
 
+## spacetime
+library(adehabitatLT)
+data("puechabonsp")
+locs <- puechabonsp$relocs
+xy <- coordinates(locs)
+da <- as.character(locs$Date)
+da <- as.POSIXct(strptime(as.character(locs$Date),"%y%m%d", tz = "GMT"))
+ltr <- as.ltraj(xy, da, id = locs$Name)
+foo <- function(dt) dt > 100*3600*24
+l2 <- cutltraj(ltr, "foo(dt)", nextr <- TRUE)
+library(spacetime)
+sttdf <- as(l2, "STTDF")
+stplot(sttdf, by = "time*id")
+str(sttdf)
+summary(sttdf)
+
 
 
 ## sftraj
