@@ -8,25 +8,25 @@ An optional section would be for R-Core signatories where changes to R are propo
 The **Project team** lists the core members of the work, who will be
 instrumental in progress and completion of the
 project. **Contributors** actively helped with this proposal, and
-**Consulted** have been given the opportunity to provide feedback—all
-will be consulted early during the work, and will be invited to
-contribute to the package.
-
-**Note: relevant R packages to which people contributed are indicated
-within brackets.**
+**Consulted** have been given the opportunity to provide
+feedback. **Note: relevant R packages to which people contributed are
+indicated within brackets.**
 
 ## Project team
 <!-- 
 Who are the people responsible for actually delivering the project if the proposal gets accepted and are already signed up and rearing to go?
 -->
 
-  * **Mathieu Basille**, University of Florida, USA [`hab`,
-    `rpostgis`, `rpostgisLT`]
-  * **Matt Boone**, University of Florida, USA
-  * **Clément Calenge**, Office national de la chasse et de la faune
-    sauvage, France [`adehabitatHR`, `adehabitatLT`]
-  * **Rocío Joo**, University of Florida, USA
-  * **Emiel van Loon**, University of Amsterdam, the Netherlands.
+  * **Mathieu Basille**, Assistant Professor at the University of
+    Florida, USA [`hab`, `rpostgis`, `rpostgisLT`]
+  * **Matt Boone**, Data Scientist at the University of Florida, USA
+  * **Clément Calenge**, Statistical analyst at the *Office national
+    de la chasse et de la faune sauvage*, France [`adehabitatHR`,
+    `adehabitatLT`]
+  * **Rocío Joo**, Postdoctoral Associate at the University of
+    Florida, USA
+  * **Emiel van Loon**, Assistant Professor at the University of
+    Amsterdam, the Netherlands.
 
 
 ## Contributors
