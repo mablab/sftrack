@@ -99,7 +99,7 @@ the step as the elementary unit of movement, which scale up to
 movement modes, movement phases, and all the way up to the individual
 lifetime track (Fig. 2).
 
-```{r data-model, echo = FALSE, out.width = "80%", fig.cap = "Proposed conceptual model.", fig.align = "center"}
+```{r data-model, echo = FALSE, out.width = "80%", fig.cap = "Proposed conceptual model.", fig.align = "center", fig.pos = "!t"}
 knitr::include_graphics("figures/conceptual-model.png")
 ```
 
@@ -154,6 +154,11 @@ extracted and used). For instance:
   * plot functions will most often use only 2D coordinates of vertices
     combined;
   * time functions will work on the time coordinate.
+
+
+
+
+<!-- ∘ attribute "singletons" for 010 points -->
 
 
 <!-- ### Work in progress -->

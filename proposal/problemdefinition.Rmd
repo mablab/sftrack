@@ -38,7 +38,7 @@ of which worked in isolation, not being linked to any other tracking
 package. This is in part due to a lack of a modern infrastructure to
 deal with trajectory objects in R.
 
-```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo *et al.*, *in prep.*).", fig.align = "center", fig.pos = "!b"}
+```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo et al., in prep.).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
 ```
 
@@ -96,21 +96,3 @@ Given the ubiquitous nature of tracking data, the fragmentation of the
 ecosystem of R packages dealing with such data, and the difficulty of
 use of existing attempts at handling these data, it seems timely and
 relevant to address the issue from a data perspective.
-
-
-**References:**
-
-- Calenge, C., Dray, S., & Royer-Carenzi, M. (2009). The concept of
-  animals' trajectories from a data analysis perspective. Ecological
-  Informatics, 4,
-  34–41. http://dx.doi.org/10.1016/j.ecoinf.2008.10.002
-
-- Gudmundsson, J., Laube, P., & Wolle, T. (2011). Computational
-  Movement Analysis. *In* Springer Handbook of Geographic Information,
-  Kresse and Danko *Eds*, Springer-Verlag Berlin
-  Heidelberg. pp. 423–438. http://dx.doi.org/10.1007/978-3-540-72680-7_22
-
-- Joo, R., Boone, M. E., Clay, T. A., Patrick, S. C.,
-  Clusella-Trullas, S., & Basille, M. (2018). Navigating through the R
-  packages for movement. arXiv, 1901.05935,
-  https://arxiv.org/abs/1901.05935

@@ -29,3 +29,6 @@ library(knitr)
 
 ```{r autodoc, child='proposal/success.Rmd', eval=TRUE}
 ```
+
+```{r autodoc, child='proposal/references.Rmd', eval=TRUE}
+```
