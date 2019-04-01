@@ -9,8 +9,9 @@ The **Project team** lists the core members of the work, who will be
 instrumental in progress and completion of the
 project. **Contributors** actively helped with this proposal, and
 **Consulted** have been given the opportunity to provide
-feedback. **Note: relevant R packages to which people contributed are
-indicated within brackets.**
+feedback. Signatories are listed by alphabetical order.  **Note:
+relevant R packages to which people contributed are indicated within
+brackets.**
 
 ## Project team
 <!-- 

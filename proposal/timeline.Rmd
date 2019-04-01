@@ -64,18 +64,18 @@ from a minimum viable product to future development:
 
   * **Must have** (requirements necessary for project completion,
     i.e. the minimum viable product)
-    * Use cases defined [month 1]
-    * Class(es) definition [month 2]
+    * Use cases defined [month 1–2]
+    * Class(es) definition [month 3]
     * Creators and converters from basic objects (`data.frames`, `sf`,
-      `sftraj`) [month 3]
-    * Installable package (GitHub) [months 3–6]
-    * Accessors and summaries (`print`, `summary`) [month 4]
-    * Full function documentation and unit testing [months 4–5]
+      `sftraj`) [month 4]
+    * Installable package (GitHub) [months 4–6]
+    * Accessors and summaries (`print`, `summary`) [month 5]
+    * Full function documentation and unit testing [months 5–6]
   * **Should have** (important requirements not necesary for project
     completion):
-    * Vignette [month 5]
-    * CRAN package [month 6]
+    * Vignette [month 6]
   * **Could have** (desirable requirements developed if time allows):
+    * CRAN package
     * Basic plot (static)
   * **Won't have** (requirements that are not planned at this stage):
     * See section on *Future work*.

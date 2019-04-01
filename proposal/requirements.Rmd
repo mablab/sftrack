@@ -8,13 +8,14 @@ An idea of what is required to make the project actually happen
 Who needs to be involved, what's the proposed structure, what will it take to get their involvement?
 -->
 
-The core project team will initiate and lead the necessary
-consultation, code the proposed package, implement the data model, and
-ensure successful outcome of the project. All contributors to the
-proposal and people who have been consulted for it (listed below), as
-well as other relevant people working on movement, will also be
-consulted during the different phases of the work, and will be invited
-to contribute further to the realization of the project.
+The core project team, and primarily Matt Boone, will initiate and
+lead the necessary consultation, code the proposed package, implement
+the data model, and ensure successful outcome of the project. All
+contributors to the proposal and people who have been consulted for it
+(listed below), as well as other relevant people working on movement,
+will also be consulted during the different phases of the work, and
+will be invited to contribute further to the realization of the
+project.
 
 In particular, we request \$10,000 in salary for 0.15 FTE of Matt
 Boone. Matt is a Data Scientist with a solid experience in R, and will

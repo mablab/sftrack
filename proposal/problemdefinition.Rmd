@@ -26,17 +26,17 @@ type of data called *tracking data*, in the form of geographic
 this common nature, there is a critical lack of standard
 infrastructure to deal with movement.
 
-While the collection of tracking data <<<, In parallel, the use of R
-for movement studies has also greatly increased, in contrast to the
-decline of most other platforms—for instance, in the field of Movement
-Ecology, we count more than 70 % of studies using R in 2018,
-i.e. roughly three times more than its closest contender, and still
-rising (Fig.1). The movement community in R is at the same time very
-dynamic and very fragmented (Joo *et al.* 2019); we have listed 57
-packages that process, visualize and analyze tracking data, one third
-of which worked in isolation, not being linked to any other tracking
-package. This is in part due to a lack of a modern infrastructure to
-deal with trajectory objects in R.
+While the collection of tracking data is growing on a daily basis, the
+use of R for movement studies has also sharply increased, in contrast
+to the decline of most other platforms—for instance, in the field of
+Movement Ecology, we counted more than 70 % of studies using R in
+2018, i.e. roughly three times more than its closest contender, and
+the trend is still rising (Fig.1). The movement community in R is at
+the same time very dynamic and very fragmented (Joo *et al.* 2019); we
+have listed 57 packages that process, visualize and analyze tracking
+data, one third of which worked in isolation, not being linked to any
+other tracking package. This is in part due to a lack of a modern
+infrastructure to deal with trajectory objects in R.
 
 ```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo et al., in prep.).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
@@ -68,10 +68,10 @@ following classes:
   * `Move` (package `move`): Released in 2012, it is a complete S4
     class focusing on animal movement data from the [Movebank
     repository](http://www.movebank.org), but which can also be used
-    on any tracking data. `Move` objects are fairly complex however,
-    lacking the flexibility of simpler classes, and being further
-    arranged into `MoveBurst` (track split into different parts) and
-    `MoveStack` (several tracks from different individual)
+    on any tracking data. However, `Move` objects have a fairly
+    complex structure, lack the flexibility of simpler classes, and
+    are further arranged into `MoveBurst` (track split into different
+    parts) and `MoveStack` (several tracks from different individual)
     classes. Moreover, `Move` objects also relies on spatial classes
     from `sp`.
   * `Track` (package `trajectories`): Released in 2014, this is
