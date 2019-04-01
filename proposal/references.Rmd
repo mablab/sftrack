@@ -1,5 +1,10 @@
 # References
 
+- Biljecki, F., Ledoux, H., & van Oosterom, P. (2013). Transportation
+  mode-based segmentation and classification of movement
+  trajectories. International Journal of Geographical Information
+  Science, 27, 385–407. http://dx.doi.org/10.1080/13658816.2012.692791
+
 - Calenge, C., Dray, S., & Royer-Carenzi, M. (2009). The concept of
   animals' trajectories from a data analysis perspective. Ecological
   Informatics, 4,
@@ -19,3 +24,12 @@
   C. (2009). On the use of telemetry in habitat selection studies. *In*
   D. Barculo, & Daniels J. (Eds.), Telemetry: Research, Technology and
   Applications (pp. 37–55), Nova Science Publishers Inc.
+
+- Roswell, C. (2011). Modeling of geographic information. *In* Kresse
+  W, & Danko D. M. (Eds.), Springer Handbook of Geographic Information
+  (pp. 3–6), Springer-Verlag Berlin
+  Heidelberg. http://dx.doi.org/10.1007/978-3-540-72680-7_1
+
+- Turchin, P. (1998). Quantitative analysis of movement: measuring and
+  modeling population redistribution in animals and plants. Sinauer
+  Associates.

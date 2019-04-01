@@ -38,9 +38,9 @@ objects (Turchin 1998, Fig. 2). In practice, this curve is sampled
 (recorded) at discrete times to collect a 4D *location* (vertices
 composed of 3-dimensional spatial coordinates plus the temporal
 coordinate), which define *tracking data* of the form $(x, y, z, t)$,
-or, according to Turchin (1998), a *path*, i.e. the "complete
-spatio-temporal record of a followed organism, from the beginning to
-the end of observations".
+or a *track* or *path*, i.e. the "complete spatio-temporal record of a
+followed organism, from the beginning to the end of observations"
+(Turchin 1998, Biljecki *et al.* 2013).
 
 ```{r definitions, echo = FALSE, out.width = "50%", fig.cap = "Definition of elements of movement.", fig.align = "center"}
 knitr::include_graphics("figures/definitions.png")
@@ -54,7 +54,7 @@ successive locations. Treating movement steps as straight lines is an
 approaches exist in some fields, such as splines and Bezier curves),
 but at sufficient resolution, no significant information is lost.
 
-Movement is thus recorded by a series of locations in a path, and is
+Movement is thus recorded by a series of locations in a track, and is
 abstracted as sequential steps in a trajectory. It is important to
 recognize this dual perspective, between tracking data (locations) and
 movement data (steps) (Fig. 1).
@@ -66,11 +66,15 @@ A data model is an abstract model that organizes elements of data and
 standardizes how they relate to one another and to properties of the
 real world entities (here a moving object). 
 
+We followed the approach
+UML
+(Roswell 2011)
+
 
 The trajectory is the continuous curve traced by the movement of an
 object through time (Fig.1A). In practice, a trajectory is sampled at
 given times with 4-dimensional vertices of coordinates 
-$(x, y [, z], t)$, which define a path made of sequential steps, i.e. the
+$(x, y [, z], t)$, which define a track made of sequential steps, i.e. the
 straight-line segment connecting two successive vertices. Conceptual
 models of movement, from Turchin 1998 to Nathan et al. 2008, consider
 the step as the elementary unit of movement, which scale up to
@@ -105,10 +109,15 @@ cohesive movement community in R
 
    
 The data model of a trajectory is a model — it is thus an idealized 
-representation of steps forming a path. The implementation aims at
+representation of steps forming a track. The implementation aims at
 using existing building blocks as much as possible, as to not reinvent
 the wheel, and allow to use existing tools and functions on these
 building blocks.
+
+The implementation is complicated by the fact that a full
+correspondence between a *track* and a *trajectory* needs to be
+achieved, while
+
 
 `sf` provides the core spatial classes. Tracking data can be
 considered as `POINTS [Z]M`, i.e. points with longitude, latitude,
@@ -137,6 +146,10 @@ extracted and used). For instance:
     combined;
   * time functions will work on the time coordinate.
 
+nesting
+for example journeys, which we define as connections between two relevant locations
+related to an individual or a household, for example the movement from home to work and
+from work to shopping (Biljecki *et al.* 2013)
 
 
 

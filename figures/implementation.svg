@@ -26,9 +26,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="1"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.1093126"
-     inkscape:cx="214.38291"
-     inkscape:cy="120.57866"
+     inkscape:zoom="1.5688049"
+     inkscape:cx="204.95619"
+     inkscape:cy="209.66602"
      inkscape:document-units="mm"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -614,7 +614,17 @@
          x="320.72955"
          y="64.19783"
          style="font-weight:bold;font-size:7.76111126px;line-height:7.4083333px;stroke-width:0.26458332px"
-         id="tspan3455">Time zone</tspan></text>
+         id="tspan4680">Time zone</tspan><tspan
+         sodipodi:role="line"
+         x="320.72955"
+         y="69.434982"
+         style="font-weight:bold;font-size:7.76111126px;line-height:7.4083333px;stroke-width:0.26458332px"
+         id="tspan4684" /><tspan
+         sodipodi:role="line"
+         x="320.72955"
+         y="75.8395"
+         style="font-weight:bold;font-size:7.76111126px;line-height:7.4083333px;stroke-width:0.26458332px"
+         id="tspan4686">Singletons</tspan></text>
     <text
        id="text3567"
        y="66.310799"
