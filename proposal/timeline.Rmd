@@ -10,6 +10,9 @@ Covering the planning phase, this section should provide a relatively detailed p
  - [ ] Reporting framework
 -->
 
+as a cornerstone for the development of a more
+cohesive movement community in R
+
 Collaboration platform:
 
   * GitLab in the lab; synchronized on public [GitHub
