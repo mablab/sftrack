@@ -100,8 +100,8 @@ tools and functions on these building blocks. We thus propose to base
 our classes on simple `data.frame`s using `sf` spatial <!-- ` -->
 building blocks. That way, data are provided as tidy data, in a data
 frame of observations (rows) and variables (columns). One of the
-variables is the `sf_track` or `sf_traj` column, which will store
-tracking data (tracks) and movement data (trajectories), respectively
+variables is the track or trajectory column, which will store tracking
+data (tracks) and movement data (trajectories), respectively
 (Fig. 4). The location or step is the elementary observation and
 composes each row of the data frame. Ancillary data associated to the
 location or the step can be stored as additional variables, some of
@@ -117,19 +117,19 @@ altitude, and timestamps. If the exact time of the location is known,
 timestamps can be stored as `POSIXct`. Two successive `POINTS ZM`
 define a `LINESTRING ZM`, i.e. the straight-line segment between two
 successive locations. As the `M` coordinate has been little tested,
-its relevance and usefulness will be assessed early in the
-project. Alternatively, timestamps will be stored separately from the
+its relevance and usefulness will be assessed early in the project;
+alternatively, timestamps will be stored separately from the
 geographic data.
 
-Two new classes of `data.frame`s will be define, in order <!-- ` -->
-to store tracking data (`c("sftrack", "sf", "data.frame")`) or
-movement data (`c("sftraj", "sf", "data.frame")`).  Correspondingly,
-the step column (list-column) will be of class `sfc_TRACK` or
-`sfc_TRAJECTORY`, with a unique Coordinate Reference System (CRS) and
-timezone in the two (constant) attributes `crs` and `timezone`,
-respectively. The implementation is further complicated by the fact
-that a full correspondence between a *track* and a *trajectory* needs
-to be achieved, while there is no bidirectional navigation between a
+Two new classes of `data.frame`s will be defined to store <!-- ` -->
+tracking data (`c("sftrack", "sf", "data.frame")`) or movement data
+(`c("sftraj", "sf", "data.frame")`).  Correspondingly, the step column
+(list-column) will be of class `sfc_TRACK` or `sfc_TRAJECTORY`, with a
+unique Coordinate Reference System (CRS) and timezone in the two
+(constant) attributes `crs` and `timezone`, respectively. The
+implementation is further complicated by the fact that a full
+correspondence between a *track* and a *trajectory* needs to be
+achieved, while there is no bidirectional navigation between a
 Location and a Step.  An additional attributes `Singletons`
 specifically for `sftraj` will thus contain locations that do not form
 a step, i.e. in the case of a location surrounded by two missing
