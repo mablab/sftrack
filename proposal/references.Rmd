@@ -6,11 +6,16 @@
   34–41. http://dx.doi.org/10.1016/j.ecoinf.2008.10.002
 
 - Gudmundsson, J., Laube, P., & Wolle, T. (2011). Computational
-  Movement Analysis. *In* Springer Handbook of Geographic Information,
-  Kresse and Danko *Eds*, Springer-Verlag Berlin
-  Heidelberg. pp. 423–438. http://dx.doi.org/10.1007/978-3-540-72680-7_22
+  Movement Analysis. *In* Kresse W, & Danko D. M. (Eds.), Springer
+  Handbook of Geographic Information (pp. 423–438), Springer-Verlag
+  Berlin Heidelberg. http://dx.doi.org/10.1007/978-3-540-72680-7_22
 
 - Joo, R., Boone, M. E., Clay, T. A., Patrick, S. C.,
   Clusella-Trullas, S., & Basille, M. (2018). Navigating through the R
   packages for movement. arXiv, 1901.05935,
   https://arxiv.org/abs/1901.05935
+
+- Martin, J., Tolon, V., Van Moorter, B., Basille, M., & Calenge,
+  C. (2009). On the use of telemetry in habitat selection studies. *In*
+  D. Barculo, & Daniels J. (Eds.), Telemetry: Research, Technology and
+  Applications (pp. 37–55), Nova Science Publishers Inc.

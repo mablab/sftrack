@@ -12,11 +12,11 @@ Based on years of experience, and broad feedback from the movement
 community, we aim to develop a central trajectory class to support all
 stages of movement studies (pre-processing, post-processing and
 analysis). We propose a `sftraj` package offering a generic and
-flexible approach based on simple `data.frame`s using `sf` spatial
-building blocks, as a cornerstone for the development of a more
-cohesive movement community in R. The only aim of the package will be
-to present this central class and basic functions to build, handle,
-summarize and plot movement data.
+flexible approach . The only aim of the package will be to present
+this central class and basic functions to build, handle, summarize and
+plot movement data. Our project relies on three complementary pillars:
+a broad involvement of the movement community, a robust conceptual
+data model, and a `sf`-based implementation in R. <!-- ` -->
 
 
 ## Detail
@@ -34,65 +34,43 @@ Depending on project type the detail section should include:
 ### Definitions
 
 A *trajectory* can be defined as the (continuous) curve made by moving
-objects (Turchin 1998), which can be decomposed as a series of
-straight-line segments called *moves* between stopping points where
-the object turns (Fig. 1). Moves can be of varying length and
-associated time span, depending on the nature of the
-movement. Treating moves as straight lines is an "idealization", but
-at sufficient resolution, no significant information is lost.
+objects (Turchin 1998, Fig. 2). In practice, this curve is sampled
+(recorded) at discrete times to collect a 4D *location* (vertices
+composed of 3-dimensional spatial coordinates plus the temporal
+coordinate), which define *tracking data* of the form $(x, y, z, t)$,
+or, according to Turchin (1998), a *path*, i.e. the "complete
+spatio-temporal record of a followed organism, from the beginning to
+the end of observations".
 
 ```{r definitions, echo = FALSE, out.width = "50%", fig.cap = "Definition of elements of movement.", fig.align = "center"}
 knitr::include_graphics("figures/definitions.png")
 ```
 
-<!-- Turchin p.129 -->
+Considering the temporal autocorrelation between successive locations
+as part of the movement information (Martin *et al.* 2009), we can
+then defines *steps* as the straight-line segments between two
+successive locations. Treating movement steps as straight lines is an
+"idealization" and the most parsimonious approach (other complex
+approaches exist in some fields, such as splines and Bezier curves),
+but at sufficient resolution, no significant information is lost.
 
-In practice, this curve is sampled (recorded) at discrete times with
-4D vertices of coordinates (3-dimensional spatial coordinates and
-temporal coordinate), which define *tracking data* of the form $(x, y,
-z, t)$, or, according to Turchin (1998), a "path [i.e.] the complete
-spatio-temporal record of a followed organism, from the beginning to
-the end of observations".
-
-<!-- Is that the opposite? I.e. path in real world; trajectory sampled? -->
-
-Turchin then defines *steps* as the straight-line segments formed by
-successive vertices at regular sampling interval. Let us generalized
-to all time intervals, as sampling is not necessarily at regular
-intervals. In most cases, a step does not correspond to a move.  A
-trajectory is thus recorded by a series of points (tracking data),
-which forms steps, and ultimately a path. It is important to recognize
-this dual perspective, between tracking data (points) and movement
-data (steps) (Fig. 1).
-
-As a corollary, a trajectory already assumes connection between
-sequential points — and a straight-line segment is the most
-parsimonious approach (other approaches exist in other fields, such as
-splines and Bezier curves, but do they have any real
-application?). One should not use a trajectory if the sets of points
-are not considered close enough (i.e. when connecting the dots does
-not make sense). This is a subjective decision from the user though,
-which is object dependent, as well as scale dependent (see Turchin
-1998 and Benhamou 2014).
+Movement is thus recorded by a series of locations in a path, and is
+abstracted as sequential steps in a trajectory. It is important to
+recognize this dual perspective, between tracking data (locations) and
+movement data (steps) (Fig. 1).
 
 
-### Proposed data model of a trajectory
+### Conceptual data model
 
 A data model is an abstract model that organizes elements of data and
 standardizes how they relate to one another and to properties of the
-real world entities (here a trajectory). Following the approach of the
-ANSI, we can define three kinds of data models: conceptual, logical,
-and physical. The conceptual data model is the highest-level model,
-and describes the semantics of the model and its scope; the logical
-data model translates this into general data concepts; the physical
-data model implements it in coding terms and solutions (here in R).
+real world entities (here a moving object). 
 
-  * **Conceptual data model**
 
 The trajectory is the continuous curve traced by the movement of an
 object through time (Fig.1A). In practice, a trajectory is sampled at
-given times with 4-dimensional vertices of coordinates $(x, y [, z],
-t)$, which define a path made of sequential steps, i.e. the
+given times with 4-dimensional vertices of coordinates 
+$(x, y [, z], t)$, which define a path made of sequential steps, i.e. the
 straight-line segment connecting two successive vertices. Conceptual
 models of movement, from Turchin 1998 to Nathan et al. 2008, consider
 the step as the elementary unit of movement, which scale up to
@@ -103,7 +81,8 @@ lifetime track (Fig. 2).
 knitr::include_graphics("figures/conceptual-model.png")
 ```
 
-  * **Logical data model**
+
+### Implementation in R
 
 The elementary unit of movement, the step, is at the core of the
 logical data model (Fig. 3). Data are provided as tidy data, in a data
@@ -120,8 +99,11 @@ the step column.
 knitr::include_graphics("figures/implementation.png")
 ```
 
-  * **Physical data model**
+based on simple `data.frame`s using `sf` spatial
+building blocks, as a cornerstone for the development of a more
+cohesive movement community in R
 
+   
 The data model of a trajectory is a model — it is thus an idealized 
 representation of steps forming a path. The implementation aims at
 using existing building blocks as much as possible, as to not reinvent
