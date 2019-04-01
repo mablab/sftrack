@@ -10,31 +10,35 @@ It is important to cover:
  - [ ] Why it should be tackled
 -->
 
-Movement defined broadly plays a central role in various fields, such
-as sport, ecology, music or medicine. Moving objects can thus take
-many forms, such as animals or humans; cars, boats or planes; the hand
-of a musician playing a violin in 3 dimensions; the entire movement of
-an orchestra or a flock of starlings; the eye of a person that changes
-its focus from one object to the other; etc. Sampling all these
-movements result in the same type of data called *tracking data*, in
-the form of geographic ($x,y,z$) and temporal coordinates
-($t$). Despite this common nature, there is a critical lack of
-standard infrastructure to deal with movement.
+Movement defined broadly plays a central role in fields as diverse as
+transportation, sport, ecology, music, medicine, and data science
+(Gudmundsson *et al.* 2012). As a matter of fact, miniaturized
+tracking devices (thanks to global navigation satellite system (GNSS)
+and radio-frequency identification (RFID)) have become nearly
+ubiquitous, and resulted in an ever-increasing volume of localization
+data from very different moving objects, such as humans or animals;
+cars, boats or planes; the hand of a musician playing a violin in 3
+dimensions; the entire movement of an orchestra or a flock of
+starlings; the eye of a person that changes its focus from one object
+to the other; etc. Sampling all these movements result in the same
+type of data called *tracking data*, in the form of geographic
+($x,y,z$) and temporal coordinates ($t$) (Joo *et al.* 2019). Despite
+this common nature, there is a critical lack of standard
+infrastructure to deal with movement.
 
-The advent of miniaturized tracking devices has resulted in the
-collection of ever-increasing quantities of tracking data. In
-parallel, the use of R for movement studies is also increasing while
-most other platforms are declining (for instance, in the field of
-Movement Ecology, we count more than 70 % of studies using R in 2018,
+While the collection of tracking data <<<, In parallel, the use of R
+for movement studies has also greatly increased, in contrast to the
+decline of most other platforms—for instance, in the field of Movement
+Ecology, we count more than 70 % of studies using R in 2018,
 i.e. roughly three times more than its closest contender, and still
-rising; Fig.1). The movement community in R is at the same time very
-dynamic and very fragmented (Joo et al. 2019); we have listed 57
+rising (Fig.1). The movement community in R is at the same time very
+dynamic and very fragmented (Joo *et al.* 2019); we have listed 57
 packages that process, visualize and analyze tracking data, one third
 of which worked in isolation, not being linked to any other tracking
 package. This is in part due to a lack of a modern infrastructure to
 deal with trajectory objects in R.
 
-```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Use of R in Movement Ecology (on a total of 4417 papers).", fig.align = "center", fig.pos = "!b"}
+```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo *et al.*, *in prep.*).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
 ```
 
@@ -47,10 +51,10 @@ following classes:
     was the first class dedicated to movement that relied on a
     conceptual data model, based on the idea of successive steps,
     i.e. the straight-line segment connecting two successive locations
-    (Calenge et al. 2009). However, the class itself is largely
+    (Calenge *et al.* 2009). However, the class itself is largely
     outdated, relying on an *ad-hoc* `list` structure, which is
-    complicated to use, requiring to frequently go back and forth
-    between `ltraj` and `data.frame` classes.
+    complicated to use, requiring to go back and forth between `ltraj`
+    and `data.frame` classes frequently.
   * `trip` (package `trip`): Also developed in 2006, `trip` is a S4
     class directly extending `sp`'s `SpatialPointsDataFrame` class to
     connect series of points with a column of timestamps. The
@@ -59,8 +63,8 @@ following classes:
     identity of the moving object, making it a lightweight solution,
     however with limited flexibility for nested structures (e.g. split
     individual trajectories into different parts). Also, `sp` has been
-    essentially superseded by the new package `sf` for spatial classes
-    recently.
+    essentially superseded by the more recent package `sf` for spatial
+    classes.
   * `Move` (package `move`): Released in 2012, it is a complete S4
     class focusing on animal movement data from the [Movebank
     repository](http://www.movebank.org), but which can also be used
@@ -88,6 +92,11 @@ following classes:
     ordered, but not spatial, observations. This *ad-hoc* structure
     makes `trackeRdata` rather complicated to use.
 
+Given the ubiquitous nature of tracking data, the fragmentation of the
+ecosystem of R packages dealing with such data, and the difficulty of
+use of existing attempts at handling these data, it seems timely and
+relevant to address the issue from a data perspective.
+
 
 **References:**
 
@@ -95,6 +104,11 @@ following classes:
   animals' trajectories from a data analysis perspective. Ecological
   Informatics, 4,
   34–41. http://dx.doi.org/10.1016/j.ecoinf.2008.10.002
+
+- Gudmundsson, J., Laube, P., & Wolle, T. (2011). Computational
+  Movement Analysis. *In* Springer Handbook of Geographic Information,
+  Kresse and Danko *Eds*, Springer-Verlag Berlin
+  Heidelberg. pp. 423–438. http://dx.doi.org/10.1007/978-3-540-72680-7_22
 
 - Joo, R., Boone, M. E., Clay, T. A., Patrick, S. C.,
   Clusella-Trullas, S., & Basille, M. (2018). Navigating through the R
