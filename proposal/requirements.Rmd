@@ -12,16 +12,16 @@ The core project team, and primarily Matt Boone, will initiate and
 lead the necessary consultation, code the proposed package, implement
 the data model, and ensure successful outcome of the project. All
 contributors to the proposal and people who have been consulted for it
-(listed below), as well as other relevant people working on movement,
-will also be consulted during the different phases of the work, and
-will be invited to contribute further to the realization of the
-project.
+(listed above), and more broadly the entire community working on
+movement, will also be consulted during the different phases of the
+work, and will be invited to contribute further to the realization of
+the project.
 
-In particular, we request \$10,000 in salary for 0.15 FTE of Matt
-Boone. Matt is a Data Scientist with a solid experience in R, and will
-be the main developer and contributor to the codebase. As all other
-contributions will be in-kind, having Matt fully dedicating some of
-his time ensures successful completion of the project.
+In particular, we request \$10,000 in salary for 1.84 months of Matt
+Boone, Data Scientist at the University of Florida. Matt has a solid
+experience in R, and will be the main developer and contributor to the
+codebase. As all other contributions will be in-kind, having Matt
+fully dedicated ensures successful completion of the project.
 
 
 ## Processes
@@ -29,16 +29,19 @@ his time ensures successful completion of the project.
 What processes need to be put in place e.g. codes of conduct, regular ISC meetings, handover to the community at large?
 -->
 
-As this project aims ultimately at building a R Movement community, we
+As this project ultimately aims at building a R Movement community, we
 will adopt a community-based code of conduct. The recently updated
 [code of conduct of rOpenSci](https://ropensci.org/code-of-conduct/)
 will serve as a basis, as we share foundational values of openness,
 tolerance and inclusiveness.
 
-At all stages but especially at the first one ("Use cases"),
-we will seek feedback from the Movement community. While working on
-the review of R tracking packages, we have been successful in
-mobilizing the Movement community through Twitter notably; for
+As we want this project to be as open as possible, we will adopt a
+"release early, release often" philosophy to provide most recent
+developments to the community, and allow for early testing of the
+`sftraj` package.  At all stages but especially at the first one (*Use
+cases*), we will seek feedback from the Movement community. While
+working on the review of R tracking packages, we have been successful
+in mobilizing the Movement community through Twitter notably; for
 instance, 225 persons filled out our survey on package usage and
 documentation. We will use this already established connection to
 reach out further, and invite the largest number of people to
@@ -57,12 +60,9 @@ Are there tools or tech that don't exist that will be produced to facilitate the
 -->
 
 No technical constraint is foreseen. All team members are already
-equiped with enough computer power to work on the project.
-Development will happen publicly on GitHub, and will be open to the
-entire movement community. Main hurdles may happen with respect to the
-structure of `sf` objects, which will resolved directly with the
-consultation and/or collaboration of Edzer Pebesma, author of the `sf`
-package.
+equipped with enough computer power to work on the project.  The
+development platform (GitHub) is already set up and public, and will
+remain open to the entire Movement community.
 
 
 ## Funding
@@ -71,8 +71,8 @@ package.
 
 -->
 
-We request a total of \$10,000 to support 0.15 FTE (8 weeks) of Matt
-Boone, Data Scientist (Biological Scientist II) in the MabLab at the
+We request a total of \$10,000 to support 1.84 months of Matt Boone,
+Data Scientist (Biological Scientist II) in the MabLab at the
 University of Florida.
 
 * Salary: \$7,369
@@ -98,6 +98,6 @@ A summary of the requirements that contextualises the costs
 Salary to support a Data Scientist is requested to have one person
 committed to the project, who will dedicate set chunks of time to the
 work. This seems required to ensure project completion in the proposed
-timeline. Six weeks FTE of work is a reasonable amount of time, which
+timeline. Almost 8 weeks of work is a reasonable amount of time, which
 matches proposed deliverables. All other contributions, from core team
 members and other contributors, will be in-kind.

@@ -42,7 +42,7 @@ or a *track* or *path*, i.e. the "complete spatio-temporal record of a
 followed organism, from the beginning to the end of observations"
 (Turchin 1998, Biljecki *et al.* 2013).
 
-```{r definitions, echo = FALSE, out.width = "50%", fig.cap = "Definition of elements of movement.", fig.align = "center"}
+```{r definitions, echo = FALSE, out.width = "40%", fig.cap = "Definition of elements of movement.", fig.align = "center", fig.pos = "!t"}
 knitr::include_graphics("figures/definitions.png")
 ```
 
@@ -87,7 +87,7 @@ Step. However, navigation is bidirectional between a Track and a
 Trajectory, as it is necessary to enforce direct correspondence of
 both objects.
 
-```{r data-model, echo = FALSE, out.width = "80%", fig.cap = "Proposed conceptual model.", fig.align = "center", fig.pos = "!t"}
+```{r data-model, echo = FALSE, out.width = "75%", fig.cap = "Proposed conceptual model.", fig.align = "center", fig.pos = "!t"}
 knitr::include_graphics("figures/conceptual-model.png")
 ```
 
@@ -107,19 +107,20 @@ composes each row of the data frame. Ancillary data associated to the
 location or the step can be stored as additional variables, some of
 them potentially grouping locations or steps into higher units.
 
-```{r implementation, echo = FALSE, out.width = "70%", fig.cap = "Proposed implementation of movement data in R. Tracking data are essentially similar, but do not have the 'Singletons' attribute.", fig.align = "center"}
+```{r implementation, echo = FALSE, out.width = "65%", fig.cap = "Proposed implementation of movement data in R. Tracking data are essentially similar, but do not have the 'Singletons' attribute.", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/implementation.png")
 ```   
 
-`sf` provides the core spatial classes. Tracking data can be
-considered as `POINTS ZM`, i.e. points with longitude, latitude,
+The package `sf` provides the core spatial classes: Tracking data can
+be considered as `POINTS ZM`, i.e. points with longitude, latitude,
 altitude, and timestamps. If the exact time of the location is known,
 timestamps can be stored as `POSIXct`. Two successive `POINTS ZM`
 define a `LINESTRING ZM`, i.e. the straight-line segment between two
 successive locations. As the `M` coordinate has been little tested,
 its relevance and usefulness will be assessed early in the project;
 alternatively, timestamps will be stored separately from the
-geographic data.
+geographic data. The `tsibble` package also presents an approach to
+deal with time series that will need to be further investigated.
 
 Two new classes of `data.frame`s will be defined to store <!-- ` -->
 tracking data (`c("sftrack", "sf", "data.frame")`) or movement data

@@ -62,6 +62,6 @@ Who has been given the opportunity to provide feedback on the proposal? This sho
     Australia [`VTrack`]
   * **Ferdinando Urbano**, Freelancer, Italy
 
-From the R consortium:
+From the R Consortium:
 
   * **Hadley Wickham**

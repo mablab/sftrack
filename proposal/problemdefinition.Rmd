@@ -27,7 +27,7 @@ this common nature, there is a critical lack of standard
 infrastructure to deal with movement.
 
 While the collection of tracking data is growing on a daily basis, the
-use of R for movement studies has also sharply increased, in contrast
+use of R for movement studies has also increased sharply, in contrast
 to the decline of most other platforms—for instance, in the field of
 Movement Ecology, we counted more than 70 % of studies using R in
 2018, i.e. roughly three times more than its closest contender, and
@@ -38,7 +38,7 @@ data, one third of which worked in isolation, not being linked to any
 other tracking package. This is in part due to a lack of a modern
 infrastructure to deal with trajectory objects in R.
 
-```{r r-moveco, echo = FALSE, out.width = "50%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo et al., in prep.).", fig.align = "center", fig.pos = "!b"}
+```{r r-moveco, echo = FALSE, out.width = "40%", fig.cap = "Main software used in Movement Ecology in the past ten years (2009–2018). Based on an extensive review of the literature, we listed 4417 papers of Movement Ecology, and extracted the software for analysis. Our review highlights the rise of R at the expense of all major contenders (Joo et al., in prep.).", fig.align = "center", fig.pos = "!b"}
 knitr::include_graphics("figures/move-eco-r_2.png")
 ```
 
@@ -81,8 +81,8 @@ following classes:
     (a single track from one individual), which are combined into
     `Tracks` (several tracks from the same individual) and
     `TracksCollection` (several individuals). `Track` also extend
-    spatial classes from `sp`, as well as around the spatio-temporal
-    classes from the `spacetime` package.
+    spatial classes from `sp`, and builds upon spatio-temporal classes
+    from the `spacetime` package.
   * `trackeRdata` (package `trackeR`): More recently released in 2016,
     this package focuses on running and cycling data from GPS-enabled
     tracking devices, and provide a specific class dedicated to
