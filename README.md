@@ -5,7 +5,7 @@
 **Proposal submitted on April 1, 2019.**
 
 The final proposal submitted to the R Consortium's Infrastructure
-Steering Committee (ISC) can be found at `/out/`, both as a [PDF](out/isc-proposal.pdf) and
+Steering Committee (ISC) can be found in `/out/`, both as a [PDF](out/isc-proposal.pdf) and
 [HTML](out/isc-proposal.html) files.
 
 
