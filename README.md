@@ -1,5 +1,7 @@
 # sftraj: A central class for tracking and movement data
 
+![sftraj logo](Figures/sftraj-200.png "sftraj logo")
+
 This is the homepage for the development of `sftraj`, an R package
 offering a generic and flexible approach for a **central trajectory
 class to support all stages of movement studies (pre-processing,
