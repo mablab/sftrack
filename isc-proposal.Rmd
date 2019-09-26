@@ -1,0 +1,35 @@
+---
+title: "`r proposal`"
+subtitle: "Submitted to: `r sponsor`"
+author: "`r author`"
+date: "`r Sys.Date()`"
+output: html_document
+urlcolor: blue
+---
+
+```{r setup, eval=TRUE, results='hide', echo=FALSE}
+knitr::opts_knit$set(warning = FALSE, message= FALSE)
+library(knitr)
+```
+
+
+```{r autodoc, child='proposal/signatories.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/problemdefinition.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/proposal.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/timeline.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/requirements.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/success.Rmd', eval=TRUE}
+```
+
+```{r autodoc, child='proposal/references.Rmd', eval=TRUE}
+```

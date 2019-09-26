@@ -1,0 +1,8 @@
+language: r
+cache: packages
+install:
+  - Rscript -e 'install.packages("rmarkdown")'
+  - chmod 755 .push_gh_pages.sh
+  - chmod 755 ghgenerate.R
+script:
+  - ./.push_gh_pages.sh
