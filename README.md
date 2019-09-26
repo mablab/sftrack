@@ -1,86 +1,130 @@
 # sftraj: A central class for tracking and movement data
-<!-- [![Build Status](https://travis-ci.org/stephlocke/isc-proposal.svg?branch=master)](https://travis-ci.org/stephlocke/isc-proposal) -->
+
+This is the homepage for the development of `sftraj`, an R package
+offering a generic and flexible approach for a **central trajectory
+class to support all stages of movement studies (pre-processing,
+post-processing and analysis). The only aim of the package will be to
+present this central class and basic functions to build, handle,
+summarize and plot movement data**. Our project relies on three
+complementary pillars: a broad involvement of the movement community,
+a robust conceptual data model, and a sf-based implementation in R.
 
 
-**Proposal submitted on April 1, 2019.**
+## Project plan
 
-The final proposal submitted to the R Consortium's Infrastructure
-Steering Committee (ISC) can be found in `/out/`, both as a [PDF](out/isc-proposal.pdf) and
-[HTML](out/isc-proposal.html) files.
+All of the work is going to happen openly on GitHub, on this
+repository. The code will be released under the [MIT
+license](https://opensource.org/licenses/MIT) for the package, a fully
+open license that allows for more contributions, and wide acceptation
+by other package developers. Last but not least, we abide by a strict
+[code of conduct](CODE_OF_CONDUCT.md) to enforce a safe and inclusive
+environment for the community interested in `sftraj`.
 
+The time frame of this project is over 6 months, until
+March 2020. Following the [MoSCoW
+method](https://en.wikipedia.org/wiki/MoSCoW_method), we determined
+what will be delivered from this project, starting from a minimum
+viable product to future development:
 
-# Proposal Dates for 2019
+### Must have
 
-According to the [call for proposal](https://www.r-consortium.org/projects/call-for-proposals):
+*Must have* are requirements necessary for project completion, which
+define together our minimum viable product, i.e. a usable `sftraj`
+package:
+ 
+* Use cases described [month 1–2]
+* Data model revisited and classes definition [month 3]
+* Creators and converters from basic objects (data.frames, sf,
+  trajectories) [month 4]
+* Installable package (GitHub) [months 4–6]
+* Accessors and summaries (print, summary) [month 5]
+* Full function documentation and unit testing [months 5–6]
 
-**Spring Grant cycle**
+### Should have
 
-  * March 1, 2019 – Grant Application period opens
-  * April 1, 2019 – Grant Application period close, 11:59pm US Eastern
-    Time
-  * May 15, 2019 – All accepted grantees are contacted by the ISC
-  * July 1, 2019 – Deadline for acceptance of grant and
-    contract. Public notification of grantees occurs shortly
-    thereafter.
+*Should have* are important requirements, which are however not
+necessary for project completion:
 
+* Vignette [month 6]
 
----
+### Could have
 
-# Original notes from template
+*Could have* are desirable requirements developed if time allows:
 
-This repository is a boilerplate repository that helps you prepare your proposal for the [R Consortium](https://www.r-consortium.org).
+* Package on [CRAN](https://cran.r-project.org/) (the package will be
+  installable from GitHub as a *must have*)
+* Basic plot (static) of trajectory object
 
-## Background 
-Set up in 2015, the R Consortium is an organisation set up to help support the R Foundation, the R Community, and R users.
+### Won't have
 
-> The primary purpose of the R Consortium (collectively, the “Purpose”) is to: 
->
->(a) advance the worldwide promotion of and support for the R open source language and environment as the preferred language for statistical computing and graphics (the “Environment”);
->
->(b) establish, maintain, seek support for, and develop infrastructure projects and technical and infrastructure collaboration initiatives related to the Environment, and such other initiatives as may be appropriate to support, enable and promote the Environment; 
->
->(c) encourage and increase user adoption, involvement with, and contribution to, the Environment; 
->
->(d) facilitate communication and collaboration among users and developers of the Environment, the R Consortium and the R Foundation for Statistical Computing (the “R Foundation”); 
->
->(e) support and maintain policies set by the Board; and 
->
->(f) undertake such other activities as may from time to time be appropriate to further the purposes and achieve the goals set forth above.  
->
->In furtherance of these efforts, the R Consortium shall seek to solicit the participation of all interested parties on a fair, equitable and open basis.
-> *[R Consortium Bylaws, Section 1.4](https://www.r-consortium.org/about/governance/bylaws)*
+*Won’t have* are requirements that are identified, but not planned at
+this stage of the work:
 
-Delivery of the technical aspects for R Consortium's projects is overseen by the Infrastructure Steering Committee (ISC). The ISC is set up to receive, select, and manage projects that deliver upon the aims of the Consortium. The ISC will have an ongoing call for proposals and will select proposals to move into project stage approximately every six months. Within the process notes, it does say that if a proposal is unlikely to get funded then the proposers will be notified as soon as possible, partially so that re-submission can happen in the event fixable issues.
-
-## Proposals
-Here we detail useful guidance notes on making proposals to the ISC but you should always consult the [ISC Proposal page](https://www.r-consortium.org/about/isc/proposals) as there could be updates.
-
-- Try to complete as many of the sections of this boilerplate document as possible. Each section is included either for practical purposes or has been specifically requested by the ISC
-- Add relevant additional sections, like the letter of support from an R Core member if you want a change to R itself
-- Proposals should be 2-5 pages when in PDF form
-- You *can* submit a proposal on your own, but it's really recommended to get engagement from the community (and the ISC) first
-- Proposals should be emailed to [proposal@r-consortium.org](proposal@r-consortium.org)
-
-## Making your proposal
-This is a boilerplate repository that you will need to fork, title appropriately and start filling in.
-
-- Use the github [fork command](https://github.com/stephlocke/isc-proposal#fork-destination-box)
-- Go to the repository settings and change the name to reflect your proposal
-- Create a new Rstudio project from version control and use the git URL for the repo
-- Write an overview of the proposal instead of this boilerplate for the README
-- Start completing the relevant Rmd pages of the proposal
-- Use `ghgenerate.R` to build the document
-- Regularly commit and push the changes to github
-- Solicit feedback and contributions from others
-
-### Automatically generate your proposal
-You can configure this to produce the needed documents and publish them to the github.io for browsing and posterity. This assumes a reasonable amount of comfort with using Travis-CI but if you're not, please check out my [post on auto-deploying documents](http://itsalocke.com/automated-documentation-hosting-on-github-via-travis-ci/) for background.
-
-- Turn on [Travis-CI](https://travis-ci.org) for the repository
-- Add an environment variable called GH_TOKEN to the travis environment, set the value to an OAuth key generated by github to allow "public repo" privileges only
-- Amend the `.push_gh_pages.sh` and `ghgenerate.R` with the details of your repository and preferred commit details
-- Use the gh-pages branch to host your proposal online and to retrieve the HTML or PDF variants for emailing
+* Full-fledged package, including submission to
+  [CRAN](https://cran.r-project.org/) and
+  [rOpenSci](https://ropensci.org/).
+* Preparation of a detailed article (targeting the [R
+  Journal](https://journal.r-project.org/)) to present the technical
+  choices and the solution offered by `sftraj`, in order to favor
+  adoption by users and package developers.
+* Broad adoption by package developers, by continuing open
+  conversation with them, and help them develop conversion tools to
+  major existing classes.
+* Dynamic visualization of trajectories, allowing keyboard- and
+  mouse-controlled exploration of trajectories, step by step (based on
+  the solution provided in `rpostgisLT`).
 
 
-## License
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">ISC Boilerplate</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="https://github.com/stephlocke" property="cc:attributionName" rel="cc:attributionURL">Stephanie Locke</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/RConsortium/isc-proposal" rel="dct:source">https://github.com/RConsortium/isc-proposal</a>.
+## How can you help?
+
+Although we proposed a well devised work plan, the very first step
+will decide if the package is successful and meet the requirements for
+broad acceptance by the movement community. Even before we start
+writing a single line of code, we need to precisely understand what is
+expected from such a package. This is the *raison d'être* of the use
+cases mentioned above. And this is why your contribution would be much
+critical, whether you are a package developer, an R guru, or simply a
+casual R user interested in movement data.
+
+**We need your feedback!**
+
+The idea is to collect all possible use cases for a trajectory object
+in R. We know they are multiple, and will contribute our own use cases
+— however, we want `sftraj` to be as useful as possible, and to act as
+a center piece for movement in R, so we need you to tell us how you
+would use it. For this, we ask you to fill out special issues in the
+GitHub tracker of the package, following the ['Use case'
+template](https://github.com/mablab/sftraj/issues/new?assignees=&labels=use+case&template=use-case.md&title=%5BUse+case%5D).
+
+Use cases do not need to be very complicated, but need to present a
+specific use in human terms, the technical requirements associated to
+it, and the input and output of the use case. Such use case could look
+like this:
+
+> **[Use case] Fill in missing locations in a sequence**
+> 
+> **Use case:** 
+> Filling in missing locations in a sequence with gaps
+> (for instance coming from GPS with failed fixes); in other words
+> adding missing values, i.e. timestamps with no geographic
+> coordinates
+> 
+> **Requirements:**
+> 
+> - (t) as POSIXt object, ordered in time 
+> 
+> - Sequence identification present (optional, if several sequences)
+>   to allow for potential gaps or different ids between sequences
+> 
+> - `sftraj` capable of handling/storing missing values
+> 
+> **Input:**
+> a `sftraj` object
+> 
+> **Output:**
+> a `sftraj` object with additional timestamps (but otherwise
+> identical in every way to the original `sftraj`)
+> 
+> **Additional information:**
+> See `adehabitatLT::setNA`, which does exactly that on `ltraj`
+> objects.
