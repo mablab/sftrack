@@ -2,7 +2,7 @@
 name: Use case
 about: Describe a specific use case for sftraj
 title: "[Use case] Change this title"
-labels: ''
+labels: use-case
 assignees: ''
 
 ---
