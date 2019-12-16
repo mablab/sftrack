@@ -36,6 +36,7 @@ new_time_tj <- function(time = c(),
   id <- factor(id)
   unique_q <- tapply(timez, id, function(x)
     any(duplicated(x)))
+
   if (any(unique_q)) {
     stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
   }
