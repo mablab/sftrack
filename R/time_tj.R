@@ -12,24 +12,60 @@
 # timez <- raccoon_data$acquisition_time
 #
 # new_time_tj(timez)
-new_time_tj <- function(time = c(),tz='UTC',...) {
+# Constructor
+new_time_tj <- function(time = c(),
+  id = c(),
+  ...,
+  tz = 'UTC') {
   # Check if its unique and ordered
   # Built to be either posix or time
-  # Build
-  structure(as.POSIXct(time,origin='1970-01-01 00:00.00 UTC', tz = tz),
-    order_att = order(as.POSIXct(time,origin='1970-01-01 00:00.00 UTC')),
-    class = c("time_tj",'POSIXct')
+  # Buildedr
+  stopifnot(is(time2, 'integer') | is(time2, 'POSIXct'))
+
+  if (is.integer(time)) {
+    timez <- time
+    time_class <- 'integer'
+  }
+
+  if (is(time2, 'POSIXct')) {
+    timez <- as.numeric(as.POSIXct(time, tz = tz))
+    time_class <- 'posix'
+  }
+
+  #check if time and IDs are unique
+  id <- factor(id)
+  unique_q <- tapply(timez, id, function(x)
+    any(duplicated(x)))
+  if (any(unique_q)) {
+    stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
+  }
+
+  structure(
+    timez,
+    order_att = order(timez),
+    time_class = time_class,
+    class = c("time_tj", 'POSIXct')
   )
 }
-as.data.frame.time_tj <- function(x,...){
+
+
+
+# Methods
+as.data.frame.time_tj <- function(x, ...) {
   ret = data.frame(row.names = seq_along(x))
   ret$time = x
   ret
 }
 
-# ################3
+# # ################3
 # # Test bed
 # timez <- df1$acquisition_time
+# id <- df1$sensor_code
 #
-# new_time_tj(timez)
+# pp <- new_time_tj(timez,id)
+# attributes(pp)
 #
+# time2 <- as.POSIXct(timez[c(1,1)])
+# here <- new_time_tj(time2, id = id[1:2])
+#
+# here <- new_time_tj(timez, id = id)

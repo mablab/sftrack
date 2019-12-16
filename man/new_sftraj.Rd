@@ -4,7 +4,7 @@
 \alias{new_sftraj}
 \title{sftraj Class
 new_sftraj()
-This is the highest level class that collects the error and burst class.
+This is the highest level class that collects the error, time, and burst class.
 It converts x,y,z data into an sftraj object and gives it an sf$geometry column,
 and creates and error, time, and burst column as well of each respective class.}
 \usage{
@@ -31,7 +31,7 @@ and adds the appropriate columns.}
 \description{
 sftraj Class
 new_sftraj()
-This is the highest level class that collects the error and burst class.
+This is the highest level class that collects the error, time, and burst class.
 It converts x,y,z data into an sftraj object and gives it an sf$geometry column,
 and creates and error, time, and burst column as well of each respective class.
 }
