@@ -5,8 +5,8 @@
 #' Currently know the details of what the error class
 #' will look like.
 #'
-#' @param error
-#'
+#' @param error error
+#' @export new_error_tj
 #' @examples
 #' new_error_tj()
 new_error_tj <- function(error = NA,...) {

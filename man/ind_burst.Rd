@@ -7,7 +7,9 @@
 ind_burst(id = c(), burst = NULL, ...)
 }
 \arguments{
-\item{burst}{}
+\item{id}{id}
+
+\item{burst}{burst}
 }
 \description{
 This class holds bursts, which is a place-holder name

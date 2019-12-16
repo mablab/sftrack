@@ -8,7 +8,7 @@ new_error_tj()}
 new_error_tj(error = NA, ...)
 }
 \arguments{
-\item{error}{}
+\item{error}{error}
 }
 \description{
 This class exists as a placeholder. We do not
