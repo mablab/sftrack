@@ -6,19 +6,19 @@ Authors@R:
            family = "Boone",
            role = c("aut", "cre"),
            email = "m.boone@ufl.edu",
-           comment = c(ORCID = "0000-0002-8070-4715"))
+           comment = c(ORCID = "0000-0002-8070-4715")),
 person(given = "Rocio",
            family = "Joo",
            role = c("aut"),
-           email = "rocio.joo@ufl.edu")
+           email = "rocio.joo@ufl.edu"),
 person(given = "Clement",
            family = "Calenge",
            role = c("aut"),
-           email = clement.calenge@oncfs.gouv.fr)
+           email = clement.calenge@oncfs.gouv.fr),
 person(given = "Emiel",
            family = "Van Loon",
            role = c("aut"),
-           email = "e.e.vanloon@uva.nl")
+           email = "e.e.vanloon@uva.nl"),
 person(given = "Mathieu",
            family = "Basille",
            role = c("aut", "cre"),
