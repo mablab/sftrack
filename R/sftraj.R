@@ -45,7 +45,7 @@ new_sftraj<-
         data.frame(
           id = seq_len(nrow(data)),
           data,
-          time_traj = new_time_tj(time,tz),
+          time_traj = new_time_tj(time,id=id,tz=tz),
          burst = make_multi_burst(id=id, burst=burst),
          error = error
         ),

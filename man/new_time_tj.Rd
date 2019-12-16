@@ -5,7 +5,7 @@
 \title{Methods for time traj class
 new_time_tj()}
 \usage{
-new_time_tj(time = c(), tz = "UTC", ...)
+new_time_tj(time = c(), id = c(), ..., tz = "UTC")
 }
 \arguments{
 \item{time}{vector of time or as.POSIX format object.}
