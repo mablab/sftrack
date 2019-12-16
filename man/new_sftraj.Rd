@@ -3,10 +3,7 @@
 \name{new_sftraj}
 \alias{new_sftraj}
 \title{sftraj Class
-new_sftraj()
-This is the highest level class that collects the error, time, and burst class.
-It converts x,y,z data into an sftraj object and gives it an sf$geometry column,
-and creates and error, time, and burst column as well of each respective class.}
+new_sftraj()}
 \usage{
 new_sftraj(data = data.frame(), proj4 = NA, time = NA, id = NA,
   burst = NULL, error = NA, coords = c("x", "y", "z"), tz = NULL)
@@ -31,8 +28,6 @@ and adds the appropriate columns.}
 \item{tz}{timezone component, same as as.POSIX}
 }
 \description{
-sftraj Class
-new_sftraj()
 This is the highest level class that collects the error, time, and burst class.
 It converts x,y,z data into an sftraj object and gives it an sf$geometry column,
 and creates and error, time, and burst column as well of each respective class.
