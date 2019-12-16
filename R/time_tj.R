@@ -27,7 +27,7 @@ new_time_tj <- function(time = c(),
     time_class <- 'integer'
   }
 
-  if (is(time2, 'POSIXct')) {
+  if (is(time, 'POSIXct')) {
     timez <- as.numeric(as.POSIXct(time, tz = tz))
     time_class <- 'posix'
   }
