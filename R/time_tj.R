@@ -20,7 +20,7 @@ new_time_tj <- function(time = c(),
   # Check if its unique and ordered
   # Built to be either posix or time
   # Buildedr
-  stopifnot(is(time2, 'integer') | is(time2, 'POSIXct'))
+  stopifnot(is(time, 'integer') | is(time, 'POSIXct'))
 
   if (is.integer(time)) {
     timez <- time
