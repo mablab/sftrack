@@ -2,7 +2,7 @@ Package: sftraj
 Title: Movement class that integrates with the package sf
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Matthew",
+    c(person(given = "Matthew",
            family = "Boone",
            role = c("aut", "cre"),
            email = "m.boone@ufl.edu",
@@ -22,7 +22,7 @@ person(given = "Emiel",
 person(given = "Mathieu",
            family = "Basille",
            role = c("aut", "cre"),
-           email = "basille@ufl.edu")
+           email = "basille@ufl.edu"))
 Description: 
 License: 
 Encoding: UTF-8
