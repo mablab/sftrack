@@ -11,12 +11,12 @@
 #' @param time vector of time
 #' @param id vector of ids for the data
 #' @param burst list of named vectors
-#' @param error
+#' @param error error vector
 #' @param coords vector of three column names for the x,y,z coordinates, in that order.
 #' @param tz timezone component, same as as.POSIX
 #'
 #' @import sf
-#'
+#' @export new_sftraj
 #' @examples
 #'  data(raccoon_data)
 #'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))

@@ -24,6 +24,8 @@ and adds the appropriate columns.}
 
 \item{burst}{list of named vectors}
 
+\item{error}{error vector}
+
 \item{coords}{vector of three column names for the x,y,z coordinates, in that order.}
 
 \item{tz}{timezone component, same as as.POSIX}

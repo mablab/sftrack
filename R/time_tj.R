@@ -6,7 +6,7 @@
 #'
 #' @param time vector of time or as.POSIX format object.
 #' @param tz as.POSIX time zone. Not necessary if an integer vector
-#'
+#' @export new_time_tj
 #' @examples
 #' data(raccoon_data)
 # timez <- raccoon_data$acquisition_time
