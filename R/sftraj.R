@@ -20,8 +20,8 @@
 #' @examples
 #'  data(raccoon_data)
 #'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' my_traj <- new_sftraj(df1, time =raccoon_data$acquisition_time, id = raccoon_data$sensor_code,
-#   error = NA, coords = c('x','y','height'), tz = 'UTC',
+#' my_traj <- new_sftraj(raccoon_data, time =raccoon_data$acquisition_time, id = raccoon_data$sensor_code,
+#   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #   burst =burstz)
 ######################
 # Builder
