@@ -9,9 +9,9 @@
 #' @export new_time_tj
 #' @examples
 #' data(raccoon_data)
-# timez <- raccoon_data$acquisition_time
-#
-# new_time_tj(timez)
+#' timez <- as.POSIXct(raccoon_data$acquisition_time)
+#' id <- raccoon_data$sensor_code
+#' tj <- new_time_tj(time=timez, id=id)
 # Constructor
 new_time_tj <- function(time = c(),
   id = c(),
@@ -52,6 +52,7 @@ new_time_tj <- function(time = c(),
 
 
 # Methods
+#' @export
 as.data.frame.time_tj <- function(x, ...) {
   ret = data.frame(row.names = seq_along(x))
   ret$time = x

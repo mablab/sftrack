@@ -20,9 +20,9 @@
 #' @examples
 #'  data(raccoon_data)
 #'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' my_traj <- new_sftraj(raccoon_data, time =raccoon_data$acquisition_time, id = raccoon_data$sensor_code,
-#   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
-#   burst =burstz)
+#' my_traj <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+#'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+#'   burst =burstz)
 ######################
 # Builder
 #
@@ -57,6 +57,7 @@ new_sftraj<-
     )
   }
 
+#' @export
 print.sftraj <- function(x,...){
   cat('this is a sftraj object\n')
   cat(paste0('proj : ',attr(pp,'projection'),'\n'))
@@ -88,10 +89,13 @@ print.sftraj <- function(x,...){
 # pp$time[1]
 # burstz[['id']] <- df1$sensor_code
 # burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burstz)
+# data <- raccoon_data
+# error <- NA
 # pp <- data.frame(
-#   id = seq_len(nrow(df1)),
-#   df1,
-#   time_traj = new_time_tj(df1$acquisition_time,tz='UTC'),
-#   burst = multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'])))
+#   id = seq_len(nrow(data)),
+#   data,
+#   time_traj = new_time_tj(time,id=id,tz=tz),
+#   burst = make_multi_burst(id=id, burst=burst),
+#   error = error
 # )
-#
+

@@ -18,4 +18,7 @@ object, but with extra checks that the time is unique and ordered.
 }
 \examples{
 data(raccoon_data)
+timez <- as.POSIXct(raccoon_data$acquisition_time)
+id <- raccoon_data$sensor_code
+tj <- new_time_tj(time=timez, id=id)
 }

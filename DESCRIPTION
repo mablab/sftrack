@@ -44,3 +44,5 @@ LazyData: true
 RoxygenNote: 6.1.1
 URL: https://mablab.org/sftraj/, https://github.com/mablab/sftraj
 BugReports: https://github.com/mablab/sftraj/issues
+Suggests: 
+    testthat (>= 2.1.0)

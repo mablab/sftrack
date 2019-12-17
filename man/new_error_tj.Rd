@@ -16,5 +16,5 @@ Currently know the details of what the error class
 will look like.
 }
 \examples{
-new_error_tj()
+er <- new_error_tj()
 }
