@@ -22,7 +22,8 @@ Authors@R:
            family = "Basille",
            role = c("aut", "cre"),
            email = "basille@ufl.edu"))
-Description: Movement class that integrates with the package sf
+Description: Movement classes that integrate with the package sf. 
+It deals with objects composed of spatial, time and individual ID information.
 License: 
 Encoding: UTF-8
 LazyData: true
