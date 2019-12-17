@@ -25,6 +25,6 @@ make_bulti_burst()
 \examples{
  data(raccoon_data)
  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
+ mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 
 }

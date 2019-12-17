@@ -17,13 +17,13 @@
 #' @examples
 #'  data(raccoon_data)
 #'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#'  make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
+#'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 #'
 ind_burst<- function(id = c(), burst = NULL,...) {
   # Check if id is the only list
-  if(is.null(burst)){burst = as.character(id)} else{burst = burst}
-  structure(list(id = as.character(id),
-    burst = burst) ,
+  if(is.null(burst)){burst = list(id=id)} else{burst = burst}
+  structure(list(id = as.factor(id),
+    burst = lapply(burst, as.factor)) ,
     class = c("ind_burst")
   )
 }
@@ -46,14 +46,17 @@ make_multi_burst <- function(id, burst=NULL){
   return(ret)
 }
 
+#' @export
 c.ind_burst <- function(..., recursive = FALSE){
   ind_burst(c(unlist(lapply(list(...), unclass))))
 }
 
+#' @export
 c.multi_burst <- function(..., recursive = FALSE){
   multi_burst(c(unlist(lapply(list(...), unclass))))
 }
 
+#' @export
 as.data.frame.multi_burst <- function(x,...){
   ret = data.frame(row.names = seq_along(x))
   ret$burst  = multi_burst(x)

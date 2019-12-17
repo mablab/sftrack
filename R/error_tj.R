@@ -8,7 +8,7 @@
 #' @param error error
 #' @export new_error_tj
 #' @examples
-#' new_error_tj()
+#' er <- new_error_tj()
 new_error_tj <- function(error = NA,...) {
   # Check if id is the only list
   structure(error,
@@ -16,6 +16,7 @@ new_error_tj <- function(error = NA,...) {
   )
 }
 
+#' @export
 as.data.frame.error_tj <- function(x,...){
   ret = data.frame(row.names = seq_along(x))
   ret$error = x

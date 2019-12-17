@@ -2,8 +2,7 @@
 % Please edit documentation in R/sftraj.R
 \name{new_sftraj}
 \alias{new_sftraj}
-\title{sftraj Class
-new_sftraj()}
+\title{sftraj Class}
 \usage{
 new_sftraj(data = data.frame(), proj4 = NA, time = NA, id = NA,
   burst = NULL, error = NA, coords = c("x", "y", "z"), tz = NULL)
@@ -35,5 +34,7 @@ and creates and error, time, and burst column as well of each respective class.
 \examples{
  data(raccoon_data)
  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-my_traj <- new_sftraj(raccoon_data, time =raccoon_data$acquisition_time, id = raccoon_data$sensor_code,
+my_traj <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+  error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+  burst =burstz)
 }
