@@ -28,7 +28,7 @@ Authors@R:
              email = "basille@ufl.edu",
              comment = c(ORCID = "0000-0001-9366-7127")))
 Depends:
-    R (>= 3.3.0),
+    R (>= 3.5.0),
 Imports:
     sf
 Description: Movement classes for tracking data and trajectories,
