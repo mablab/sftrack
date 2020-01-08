@@ -38,7 +38,7 @@ new_time_tj <- function(time = c(),
     any(duplicated(x)))
 
   if (any(unique_q)) {
-    stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
+    stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q],'\n'))
   }
 
   structure(
