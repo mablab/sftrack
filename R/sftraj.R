@@ -39,7 +39,7 @@ new_sftraj<-
   ) {
     burst[['id']] <- id
     burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
-
+    if(is.na(error)){error <- rep(NA,nrow(data))}
     structure(
       sf::st_as_sf(
         data.frame(
@@ -47,7 +47,7 @@ new_sftraj<-
           data,
           time_traj = new_time_tj(time,id=id,tz=tz),
          burst = make_multi_burst(id=id, burst=burst),
-         error = error
+         error = new_error_tj(error)
         ),
         coords = coords,
         dim = 'XYZ'
@@ -60,9 +60,9 @@ new_sftraj<-
 #' @export
 print.sftraj <- function(x,...){
   cat('this is a sftraj object\n')
-  cat(paste0('proj : ',attr(pp,'projection'),'\n'))
-  cat(paste0('unique ids : ', paste(unique(sapply(pp$burst, function(x) x$id)),sep=','), '\n'))
-  cat(paste0('bursts : ', length(pp$burst[[1]]$burst), '\n'))
+  cat(paste0('proj : ',attr(x,'projection'),'\n'))
+  cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),sep=','), '\n'))
+  cat(paste0('bursts : ', length(x$burst[[1]]$burst), '\n'))
     n <- ifelse(nrow(x)>10,10,nrow(x))
     cat(paste("First", n, "features:\n"))
     y <- x[1:n, , drop = FALSE]
