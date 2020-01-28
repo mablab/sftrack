@@ -19,14 +19,28 @@
 #'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 #'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 #'
-ind_burst<- function(id = c(), burst = NULL,...) {
+ind_burst<- function(id = c(), burst = NULL,new_levels = NULL,...) {
+  # new_levels <- list(month = 1:12, height = 1:10)
   # Check if id is the only list
   if(is.null(burst)){burst = list(id=id)} else{burst = burst}
+  # Convert bursts to factors
+  new_burst <- lapply(burst, as.factor)
+
+  # override any levels requested
+  if(!is.null(new_levels)){
+    for(i in names(new_levels)){
+      new_burst[[i]] <- factor(burst[[i]], levels = new_levels[[i]])
+    }
+  }
+
   structure(list(id = as.factor(id),
-    burst = lapply(burst, as.factor)) ,
+    burst = new_burst) ,
     class = c("ind_burst")
   )
 }
+
+#ind_burst(id=1, burst=list(month=3, height=10))
+
 multi_burst <- function(x){
   structure(x,
     class = c('multi_burst'))
@@ -35,16 +49,20 @@ multi_burst <- function(x){
 ## Constructor
 make_multi_burst <- function(id, burst=NULL){
   if(!is.null(burst)){
+  new_levels <- lapply(burst, unique)
   burst[['id']] <- id
   burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
-  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'])))
+  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'], new_levels=new_levels)))
   }
   if(is.null(burst)){
+
     burst_list <- lapply(id,function(x) list(id=x))
   ret <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=NULL)))
   }
   return(ret)
 }
+
+#make_multi_burst(id=id, burst=burstz)
 
 #' @export
 c.ind_burst <- function(..., recursive = FALSE){

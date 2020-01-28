@@ -1,40 +1,31 @@
-library(sf)
-library(sftraj)
-df1 <- read.csv('/home/matt/Downloads/data-1576521725288.csv')
-#df1 <- df1[df1$sensor_code=='CJ11',]
-df2 <- st_as_sf(df1, coords=c('latitude','longitude'))
-burstz <- list(month = as.POSIXlt(df1$utc_date)$mon, height =as.numeric(df1$height>5))
-# Make a step geometry
-# Must be ordered, does not descriminate!
-make_step_geom <- function(burst = data_sf$burst, geometry = data_sf$geometry){
-  # Need to check if time is ordered, if not throw an error
 
-  burst = data_sf$burst
-  idz <- sapply(burst, function(x) x$id)
-  unique_idz <- levels(idz)[table(idz)>0]
-
-  step_geometry <- rep(NA,length(geometry))
-  for(i in unique_idz){
-    #  i <- unique_idz[1]
-    subz <- idz==i
-
-    #We cant actually inject a null point and have it convert to line string, so we have to deal with that later
-
-    x1 <- geometry[subz][1:(sum(subz)-1)]
-
-    x2 <- geometry[subz][2:sum(subz)]
-    first_point <- min(which(subz))
-    #subz[first_point] <- FALSE
-    x3 <- mapply(function(x,y) { st_linestring(rbind(x, y)) }, x1, x2, SIMPLIFY = F)
-
-    step_geometry[subz] <- c(st_sfc(st_linestring(x = matrix(numeric(0), 0, 3), dim = "XYZ")),st_sfc(x3))
-
-  }
-  return(st_sfc(step_geometry))
-}
-
-make_step_geom()
-# Whats the bare minimum you need for the class
+#####################################
+#' sftstep Class
+#'
+#' @description This is the highest level class that collects the error, time, and burst class.
+#' It converts x,y,z data into an sfstep object and gives it an sf$geometry column. This
+#' column is a list of line segments representing each step. It also creates and error, time, and burst column as well of each respective class.
+#'
+#' @param data Data.frame input, these columns will remain unchanged, and any columns refered to
+#' in later parameters are not deleted from this column. The function simply copies the data.frame
+#' and adds the appropriate columns.
+#' @param proj4 projection (for sf)
+#' @param time vector of time
+#' @param id vector of ids for the data
+#' @param burst list of named vectors
+#' @param error error vector
+#' @param coords vector of three column names for the x,y,z coordinates, in that order.
+#' @param tz timezone component, same as as.POSIX
+#'
+#' @import sf
+#' @export new_sfstep
+#' @examples
+#'  data(raccoon_data)
+#'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+#' my_step <- new_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+#'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+#'   burst =burstz)
+######################
 new_sfstep<-
   function(data = data.frame(),
     proj4 = NA,
@@ -47,11 +38,11 @@ new_sfstep<-
   )  {
     coords = c('longitude', 'latitude','height')
 
-    data = df1
-    time = as.POSIXct(df1$acquisition_time)
-    id = df1$sensor_code
-    error = error
-    tz = NULL
+    # data = df1
+    # time = as.POSIXct(df1$acquisition_time)
+    # id = df1$sensor_code
+    # error = error
+    # tz = NULL
 
     #convert to sf object
     # tapply(timez, idz, duplicated)
@@ -65,15 +56,19 @@ new_sfstep<-
     data_sf <- data_sf[torder,]
     # Function to make the step geometry column
 
-    data_sf$step_geometry <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
+    step_geometry <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
     structure(
       data_sf1 <- sf::st_sf(
         data_sf,
-        geometry=data_sf$step_geometry
+        geometry=step_geometry
       ),
       projection = proj4,
       class = c("sfstep", 'data.frame')
     )
 
   }
+
+# sfs1 <- new_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+#   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+#   burst =burstz)
