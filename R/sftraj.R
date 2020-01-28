@@ -37,9 +37,6 @@ new_sftraj<-
     coords = c('x','y','z'),
     tz = NULL
   ) {
-    burst[['id']] <- id
-    burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
-
     structure(
       sf::st_as_sf(
         data.frame(
