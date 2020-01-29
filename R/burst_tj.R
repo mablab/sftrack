@@ -16,14 +16,14 @@
 #' @export make_multi_burst
 #' @examples
 #'  data(raccoon_data)
-#'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+#'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 #'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 #'
-ind_burst<- function(id = c(), burst = NULL,new_levels = NULL,...) {
+ind_burst<- function(burst, new_levels = NULL,...) {
   # new_levels <- list(month = 1:12, height = 1:10)
   # Check if id is the only list
-  if(is.null(burst)){burst = list(id=id)} else{burst = burst}
-  # Convert bursts to factors
+  if(!'id' %in% names(burst)){stop('There is no id column')}
+
   new_burst <- lapply(burst, as.factor)
 
   # override any levels requested
@@ -33,13 +33,12 @@ ind_burst<- function(id = c(), burst = NULL,new_levels = NULL,...) {
     }
   }
 
-  structure(list(id = as.factor(id),
-    burst = new_burst) ,
+  structure(new_burst ,
     class = c("ind_burst")
   )
 }
 
-#ind_burst(id=1, burst=list(month=3, height=10))
+#ind_burst(burst=list(id=1,month=3, height=10))
 
 multi_burst <- function(x){
   structure(x,
@@ -47,22 +46,20 @@ multi_burst <- function(x){
 }
 
 ## Constructor
-make_multi_burst <- function(id, burst=NULL){
-  if(!is.null(burst)){
+make_multi_burst <- function(burst=NULL){
+  if(length(burst)>1){
   new_levels <- lapply(burst, unique)
-  burst[['id']] <- id
   burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
-  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'], new_levels=new_levels)))
+  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(burst=x, new_levels=new_levels)))
   }
-  if(is.null(burst)){
-
+  if(length(burst)==1){
     burst_list <- lapply(id,function(x) list(id=x))
-  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=NULL)))
+  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(burst = x)))
   }
   return(ret)
 }
 
-#make_multi_burst(id=id, burst=burstz)
+#make_multi_burst(burst=burstz)
 
 #' @export
 c.ind_burst <- function(..., recursive = FALSE){

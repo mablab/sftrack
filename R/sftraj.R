@@ -31,19 +31,20 @@ new_sftraj<-
   function(data = data.frame(),
     proj4 = NA,
     time = NA,
-    id = NA,
     burst = NULL,
     error = NA,
     coords = c('x','y','z'),
     tz = NULL
   ) {
+    mb <- make_multi_burst(burst=burst)
+    time_tj <- new_time_tj(time,id=burst$id,tz=tz)
     structure(
       sf::st_as_sf(
         data.frame(
           id = seq_len(nrow(data)),
           data,
-          time_traj = new_time_tj(time,id=id,tz=tz),
-         burst = make_multi_burst(id=id, burst=burst),
+          time = time_tj ,
+         burst = mb,
          error = error
         ),
         coords = coords,
@@ -57,12 +58,16 @@ new_sftraj<-
 #' @export
 print.sftraj <- function(x,...){
   cat('this is a sftraj object\n')
-  cat(paste0('proj : ',attr(pp,'projection'),'\n'))
-  cat(paste0('unique ids : ', paste(unique(sapply(pp$burst, function(x) x$id)),sep=','), '\n'))
-  cat(paste0('bursts : ', length(pp$burst[[1]]$burst), '\n'))
-    n <- ifelse(nrow(x)>10,10,nrow(x))
-    cat(paste("First", n, "features:\n"))
-    y <- x[1:n, , drop = FALSE]
+  cat(paste0('proj : ',attr(x,'projection'),'\n'))
+  cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
+  cat(paste0('bursts : ', length(x$burst[[1]]), '\n'))
+  n <- ifelse(nrow(x)>10,10,nrow(x))
+  row_l <- length(colnames(x)!=c('time','burst','error','geometry'))
+  p <- ifelse(row_l>6,6,row_l)
+  cat(paste("First", n, "features w/",p+4, "truncated columns:\n"))
+  y <- cbind(x[1:n,colnames(x)[1:p]],
+    data.frame('...' = rep('...',n)),
+    x[1:n,c('time','burst','error','geometry')])
   print.data.frame(y, ...)
 }
 # ################################################

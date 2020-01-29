@@ -1,10 +1,10 @@
 #' step geom calculator
 #'
-#' @description This calculates step geom as individual line segments
+#' @description This calculates step geom as individual line segments. It implies your bursts
 #'
-#' @param burst list of named vectors
+#' @param burst_id burst object
 #' @param geometry the geometery data from either sf or sf_traj. Must be an sf geometry class
-#' @param timez time obviously
+#' @param timez time object
 #' @export make_step_geom
 #' @examples
 #' burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
@@ -14,43 +14,47 @@
 #'
 #'make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
-make_step_geom <- function(burst = NA, timez = NA, geometry = NA){
+make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
   # Need to check if time is ordered, if not throw an error
-
-  # burst = data_sf$burst
+  # burst_id = lapply(data_sf$burst, function(x)x[active_burst]
   # geometry = data_sf$geometry
-  idz <- sapply(burst, function(x) x$id)
+
+  #if theres more than one burst, then we combine bursts
+  if(length(burst_id[[1]]) > 1) { message('more than one burst selected, bursts will be combined for step geometry') }
+    idz <- factor(paste0(burst_id))
+  #
   unique_idz <- levels(idz)[table(idz)>0]
-  
+
   step_geometry <- rep(NA,length(geometry))
   for(i in unique_idz){
     #  i <- unique_idz[1]
     subz <- idz==i
     # need to order step geometry
-    
+
     order_t <- order(timez[subz])
-    if( !isTRUE(all.equal(order_t, seq_len(sum(subz)))) ){ message('time was not ordered') }
-    geometry <- geometry[order_t]
-    
+    if( !isTRUE(all.equal(order_t, seq_len(sum(subz)))) ){ message(paste0('time was not ordered for: ',i)) }
+
+    sub_geom <- geometry[subz]
+    sub_geom <- geometry[order_t]
     #We cant actually inject a null point and have it convert to line string, so we have to deal with that later
-    
-    x1 <- geometry[subz][1:(sum(subz)-1)]
-    x2 <- geometry[subz][2:sum(subz)]
+
+    x1 <- sub_geom[1:(length(sub_geom)-1)]
+    x2 <- sub_geom[2:(length(sub_geom))]
     first_point <- min(which(subz))
     #subz[first_point] <- FALSE
     x3 <- mapply(function(x,y) { st_linestring(rbind(x, y)) }, x1, x2, SIMPLIFY = F)
-    x3 <- x3[order(order_t)]
-    step_geometry[subz] <- c(st_sfc(st_linestring(x = matrix(numeric(0), 0, 3), dim = "XYZ")),st_sfc(x3))
-    
+    sf_x <- c(st_sfc(st_linestring(x = matrix(numeric(0), 0, 3), dim = "XYZ")),st_sfc(x3))
+    step_geometry[subz] <- sf_x[order(order_t)]
+
   }
   return(st_sfc(step_geometry))
 }
-# 
+#
 # burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 # data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
 #      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #      burst =burstz)
-# 
+#
 # here <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
 ###############
