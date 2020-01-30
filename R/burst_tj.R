@@ -20,7 +20,10 @@
 #'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 #'
 ind_burst<- function(burst, new_levels = NULL,...) {
-  # new_levels <- list(month = 1:12, height = 1:10)
+  # new_levels <- list(month = 0:11)
+  # burst=burstz
+  if(!is.null(new_levels) & !is.list(new_levels)){ stop('new_levels must be a list')}
+  if(!is.null(new_levels) &!all(names(new_levels)%in%names(burst))){ stop('not all levels found in burst')}
   # Check if id is the only list
   if(!'id' %in% names(burst)){stop('There is no id column')}
 
@@ -46,16 +49,21 @@ multi_burst <- function(x){
 }
 
 ## Constructor
-make_multi_burst <- function(burst=NULL){
-  if(length(burst)>1){
-  new_levels <- lapply(burst, unique)
+make_multi_burst <- function(burst=NULL, new_levels=NULL){
+  # new_levels <- list(month = 1:12, height = 1:10)
+  # burst=burstz
+
   burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
-  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(burst=x, new_levels=new_levels)))
+  burst_levels <- lapply(burst, unique)
+
+  #override levels if provided
+  if(!is.null(new_levels)){
+    old_names <- names(burst_levels)
+    new_names <- names(new_levels)
+    for(i in new_names){burst_levels[old_names==i] <- new_levels[i]}
   }
-  if(length(burst)==1){
-    burst_list <- lapply(id,function(x) list(id=x))
-  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(burst = x)))
-  }
+  ret <- multi_burst(lapply(burst_list, function(x) ind_burst(burst=x, new_levels=burst_levels)))
+
   return(ret)
 }
 

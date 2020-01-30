@@ -8,7 +8,7 @@
 #' @export make_step_geom
 #' @examples
 #' burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+#' data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #'     burst =burstz)
 #'
@@ -16,8 +16,11 @@
 
 make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
   # Need to check if time is ordered, if not throw an error
-  # burst_id = lapply(data_sf$burst, function(x)x[active_burst]
+  # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+  # data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
+  # burst_id = burst_id = c('id')
   # geometry = data_sf$geometry
+  # timez = data_sf$time
 
   #if theres more than one burst, then we combine bursts
   if(length(burst_id[[1]]) > 1) { message('more than one burst selected, bursts will be combined for step geometry') }
@@ -35,7 +38,7 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
     if( !isTRUE(all.equal(order_t, seq_len(sum(subz)))) ){ message(paste0('time was not ordered for: ',i)) }
 
     sub_geom <- geometry[subz]
-    sub_geom <- geometry[order_t]
+    sub_geom <- sub_geom[order_t]
     #We cant actually inject a null point and have it convert to line string, so we have to deal with that later
 
     x1 <- sub_geom[1:(length(sub_geom)-1)]
@@ -43,7 +46,7 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
     first_point <- min(which(subz))
     #subz[first_point] <- FALSE
     x3 <- mapply(function(x,y) { st_linestring(rbind(x, y)) }, x1, x2, SIMPLIFY = F)
-    sf_x <- c(st_sfc(st_linestring(x = matrix(numeric(0), 0, 3), dim = "XYZ")),st_sfc(x3))
+    sf_x <- c(st_sfc(st_linestring(rbind(x1[[1]],x1[[1]]), dim = "XYZ")),st_sfc(x3))
     step_geometry[subz] <- sf_x[order(order_t)]
 
   }
@@ -56,8 +59,4 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
 #      burst =burstz)
 #
 # here <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
-
-###############
-#' step calculations
-#'
 

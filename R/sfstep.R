@@ -63,7 +63,7 @@ new_sfstep<-
       ),
       active_burst = active_burst,
       projection = proj4,
-      class = c("sfstep", 'data.frame')
+      class = c("sfstep", 'sf','data.frame')
     )
 
   }
@@ -73,6 +73,7 @@ new_sfstep<-
 #   burst =burstz)
 #' @export
 print.sfstep <- function(x,...){
+  x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm
   cat('this is a sfstep object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
@@ -81,8 +82,10 @@ print.sfstep <- function(x,...){
   row_l <- length(colnames(x)!=c('time','burst','error','geometry'))
   p <- ifelse(row_l>6,6,row_l)
   cat(paste("First", n, "features w/",p+4, "truncated columns:\n"))
-  y <- cbind(x[1:n,colnames(x)[1:p]],
+  if(ncol(x)>10){
+    y <- cbind(x[1:n,colnames(x)[1:p]],
     data.frame('...' = rep('...',n)),
     x[1:n,c('time','burst','error','geometry')])
-  print.data.frame(y, ...)
+} else y <- x
+print.data.frame(y, ...)
 }

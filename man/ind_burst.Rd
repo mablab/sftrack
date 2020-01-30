@@ -4,12 +4,12 @@
 \alias{ind_burst}
 \title{Burst Class}
 \usage{
-ind_burst(id = c(), burst = NULL, ...)
+ind_burst(burst, new_levels = NULL, ...)
 }
 \arguments{
-\item{id}{id}
-
 \item{burst}{burst}
+
+\item{id}{id}
 }
 \description{
 This class holds bursts, which is a place-holder name
@@ -24,7 +24,7 @@ make_bulti_burst()
 }
 \examples{
  data(raccoon_data)
- burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+ burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 
 }
