@@ -48,21 +48,24 @@ new_sfstep<-
 
     data_sf <- new_sftraj(data, time =time,
       error = NA, coords = coords, tz = 'UTC',
-      burst = burst)
+      burst = burst,active_burst = active_burst)
     # have to decide when and where we order datasets
     # torder <- order(time)
     # data_sf <- data_sf[torder,]
     # Function to make the step geometry column
 
     step_geometry <- make_step_geom(burst = lapply(data_sf$burst, function(x)x[active_burst]), geometry = data_sf$geometry)
+    data_sf$geometry <- step_geometry
 
     structure(
       data_sf1 <- sf::st_sf(
         data_sf,
-        geometry=step_geometry
+        sf_column_name='geometry'
       ),
       active_burst = active_burst,
       projection = proj4,
+      burst_labels = attr(data_sf,'burst_labels'),
+      label_row_id = attr(data_sf,'label_row_id'),
       class = c("sfstep", 'sf','data.frame')
     )
 
@@ -77,7 +80,7 @@ print.sfstep <- function(x,...){
   cat('this is a sfstep object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
-  cat(paste0('active bursts : ', paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
+  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))
   row_l <- length(colnames(x)!=c('time','burst','error','geometry'))
   p <- ifelse(row_l>6,6,row_l)
