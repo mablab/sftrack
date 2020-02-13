@@ -10,6 +10,8 @@ ind_burst(burst, new_levels = NULL, ...)
 \item{burst}{burst}
 
 \item{id}{id}
+
+\item{newlevels}{a list of new levels if youd like to override the precalculated levels in a burst. ex. list(id = c('new','levels'))}
 }
 \description{
 This class holds bursts, which is a place-holder name

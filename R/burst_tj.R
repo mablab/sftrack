@@ -11,6 +11,7 @@
 #'
 #' @param id id
 #' @param burst burst
+#' @param newlevels a list of new levels if youd like to override the precalculated levels in a burst. ex. list(id = c('new','levels'))
 #' @export ind_burst
 #' @export multi_burst
 #' @export make_multi_burst

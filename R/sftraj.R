@@ -19,8 +19,8 @@
 #' @export new_sftraj
 #' @examples
 #'  data(raccoon_data)
-#'  burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' my_traj <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+#'  burstz <- list( id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+#' my_traj <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #'   burst =burstz)
 ######################
@@ -37,22 +37,37 @@ new_sftraj<-
     tz = NULL,
     active_burst = 'id'
   ) {
+
+    # Make multi burst
     mb <- make_multi_burst(burst=burst)
     time_tj <- new_time_tj(time,id=burst$id,tz=tz)
-    structure(
+
+    # Order data frame for later
+    torder <- do.call(order,append(burst[active_burst], list(time)))
+    # id label should be the first mentioned in the burst
+    active_burst <- c('id',active_burst[active_burst!='id'])
+    new_data <- data.frame(
+      traj_id = NA,
+      data,
+      time = time_tj ,
+      burst = mb,
+      error = error
+    )
+    new_data <- new_data[torder,]
+    traj_id <- seq_len(nrow(new_data))
+    new_data$traj_id = traj_id
+    burst_labels = factor(sapply(new_data$burst,function(x)paste0(unlist(x[active_burst]),collapse='_')))
+    ret <- structure(
       sf::st_as_sf(
-        data.frame(
-          traj_id = seq_len(nrow(data)),
-          data,
-          time = time_tj ,
-         burst = mb,
-         error = error
-        ),
+        new_data,
         coords = coords,
-        dim = 'XYZ'
+        dim = 'XYZ',
+        na.fail = FALSE
       ),
       projection = proj4,
       active_burst = active_burst,
+      burst_labels = burst_labels,
+      label_traj_id = traj_id,
       class = c("sftraj", "sf",'data.frame')
     )
   }
@@ -63,7 +78,7 @@ print.sftraj <- function(x,...){
   cat('This is an sftraj object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
-  cat(paste0('bursts : ', length(x$burst[[1]]), '\n'))
+  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))
   row_l <- length(!colnames(x)%in%c('time','burst','error','geometry'))
   p <- ifelse(row_l>6,6,row_l)
