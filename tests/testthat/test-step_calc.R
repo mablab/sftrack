@@ -6,7 +6,7 @@ test_that("step geometry calculates correctly", {
     z = 0:3,
     timez = Sys.time() + 60*60*(1:4)
   )
-  geom_ans <- c( 27,27,-80,-80,0, 0 ,27,27,-80,-81,0,1,27,27,-82,-82,2,2,27,27,-82,-83,2,3)
+  geom_ans <- c( 27,27,-80,-81,0,1,27,-81,1,NA,NA,NA,27,27,-82,-83,2,3,27,-83,3,NA,NA,NA)
   my_traj <- new_sftraj(data = df1,burst=list(id=df1$id), time = df1$timez)
 
   my_step_geom <- make_step_geom(burst_id = my_traj$burst, geometry = my_traj$geometry, timez = my_traj$time)
@@ -14,7 +14,7 @@ test_that("step geometry calculates correctly", {
 
   expect_equal(unlist(my_step_geom), geom_ans)
   # object is an sf line string
-  expect_equal(class(my_step_geom)[1], 'sfc_LINESTRING')
+  expect_equal(class(my_step_geom)[1], c('sfc_GEOMETRY'))
 
   # multiple bursts become combined
   df1 <- data.frame(
@@ -30,5 +30,7 @@ test_that("step geometry calculates correctly", {
   my_step_geom <- suppressMessages(make_step_geom(burst_id = my_traj$burst, geometry = my_traj$geometry, timez = my_traj$time))
 
   expect_equal(unlist(my_step_geom), geom_ans)
+
+  #
 })
 

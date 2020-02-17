@@ -38,7 +38,7 @@ new_sfstep<-
   )  {
     # data = raccoon_data
     # time = as.POSIXct(raccoon_data$acquisition_time)
-    # error = error
+    # error = NA
     # tz = NULL
     # coords = c('longitude', 'latitude','height')
     # burst = burstz
@@ -54,7 +54,7 @@ new_sfstep<-
     # data_sf <- data_sf[torder,]
     # Function to make the step geometry column
 
-    step_geometry <- make_step_geom(burst = lapply(data_sf$burst, function(x)x[active_burst]), geometry = data_sf$geometry)
+    step_geometry <- make_step_geom(burst = lapply(data_sf$burst, function(x,active_burst)x[active_burst]), geometry = data_sf$geometry)
     data_sf$geometry <- step_geometry
 
     structure(

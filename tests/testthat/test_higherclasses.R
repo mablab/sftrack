@@ -8,8 +8,9 @@ test_that("sf step is built correct", {
     z = 0:3,
     timez = Sys.time() + 60*60*(1:4)
   )
-  my_sfstep <- suppressMessages(new_sfstep(data = df1,burst=list(id=df1$id, month = df1$month), time = df1$timez, active_burst = c('id','month')))
-  expect_equal(unlist(my_sfstep$geometry), c( 27,27,-80,-80,0, 0 ,27,27,-80,-81,0,1,27,27,-82,-82,2,2,27,27,-82,-83,2,3))
+  my_sfstep <- suppressMessages(new_sfstep(data = df1,burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month')))
+  expect_equal(unlist(my_sfstep$geometry), c( 27,27,-80,-81,0,1,27,-81,1,NA,NA,NA,27,27,-82,-83,2,3,27,-83,3,NA,NA,NA))
 })
 
 

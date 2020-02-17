@@ -4,7 +4,7 @@
 \alias{ind_burst}
 \title{Burst Class}
 \usage{
-ind_burst(burst, new_levels = NULL, ...)
+ind_burst(burst, new_levels = NULL, active_burst = NULL, ...)
 }
 \arguments{
 \item{burst}{burst}
