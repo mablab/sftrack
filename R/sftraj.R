@@ -39,7 +39,7 @@ new_sftraj<-
   ) {
 
     # Make multi burst
-    mb <- make_multi_burst(burst=burst)
+    mb <- make_multi_burst(burst=burst, active_burst = active_burst)
     time_tj <- new_time_tj(time,id=burst$id,tz=tz)
 
     # Order data frame for later
@@ -49,7 +49,7 @@ new_sftraj<-
     new_data <- data.frame(
       traj_id = NA,
       data,
-      time = time_tj ,
+      time = time_tj,
       burst = mb,
       error = error
     )
