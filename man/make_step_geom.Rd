@@ -7,18 +7,18 @@
 make_step_geom(burst_id = NA, timez = NA, geometry = NA)
 }
 \arguments{
-\item{burst_id}{burst object}
+\item{burst_id}{burst object thats subsetted by only the bursts we want to use to calculate one step_geom}
 
 \item{timez}{time object}
 
-\item{geometry}{the geometery data from either sf or sf_traj. Must be an sf geometry class}
+\item{geometry}{the geometery data from either sf or sf_track. Must be an sf geometry class}
 }
 \description{
 This calculates step geom as individual line segments. It implies your bursts
 }
 \examples{
 burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
     burst =burstz)
 

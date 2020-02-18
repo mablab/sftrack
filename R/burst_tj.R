@@ -20,11 +20,17 @@
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 #'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
 #'
-ind_burst<- function(burst, new_levels = NULL,active_burst = NULL, ...) {
+ind_burst<- function(burst, new_levels = NULL,active_burst = NULL) {
   # new_levels <- list(month = 0:11)
   # burst=list(id=1, month=2)
+  # burst=list(id=factor('CJ11'), month=2)
   if(!is.null(new_levels) & !is.list(new_levels)){ stop('new_levels must be a list')}
-  if(!is.null(new_levels) &!all(names(new_levels)%in%names(burst))){ stop('not all levels found in burst')}
+  check_levels <- all(sapply(names(new_levels),
+    function(x){
+      burst[[x]]%in%new_levels[[x]]
+    }
+  ))
+  if(!is.null(new_levels) &! check_levels   ){ stop('not all levels found in burst')}
   # Check if id is the only list
   if(!'id' %in% names(burst)){stop('There is no id column')}
 
@@ -38,14 +44,15 @@ ind_burst<- function(burst, new_levels = NULL,active_burst = NULL, ...) {
     }
   }
 
+  labelz <- paste0(sapply(burst[active_burst], as.character), collapse='_')
   structure(new_burst ,
-    label = paste0(burst,collapse='_'),
+    label = labelz,
     active_burst = active_burst,
     class = c("ind_burst")
   )
 }
 
-#ind_burst(burst=list(id=1,month=3, height=10))
+# ind_burst(burst=list(id='CJ11',month=3, height=10))
 
 multi_burst <- function(x,active_burst){
   structure(x,
@@ -57,7 +64,7 @@ multi_burst <- function(x,active_burst){
 make_multi_burst <- function(burst=NULL, new_levels=NULL, active_burst='id'){
   # new_levels <- list(month = 1:12, height = 1:10)
   # burst=burstz
-
+active_burst=active_burst
   burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burst)
   burst_levels <- lapply(burst, unique)
 
@@ -67,8 +74,10 @@ make_multi_burst <- function(burst=NULL, new_levels=NULL, active_burst='id'){
     new_names <- names(new_levels)
     for(i in new_names){burst_levels[old_names==i] <- new_levels[i]}
   }
-  ret <- multi_burst(lapply(burst_list,
-    function(x,...active_burst) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
+  # ret <- multi_burst(lapply(burst_list,
+  #   function(x,...active_burst) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
+    ret <- multi_burst(lapply(burst_list,
+      function(x,...) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
 
   return(ret)
 }
@@ -88,8 +97,25 @@ c.multi_burst <- function(..., recursive = FALSE){
 #' @export
 as.data.frame.multi_burst <- function(x,...){
   ret = data.frame(row.names = seq_along(x))
-  ret$burst  = multi_burst(x,active_burst)
+  ret$burst  = multi_burst(x,active_burst=attr(x, 'active_burst'))
   ret
+}
+
+#' @export
+print.ind_burst <- function(x,...){
+  cat(paste0('Active burst : ',attr(x,'label')))
+}
+
+#' make burst labels
+#'
+#' @description Pulls burst labels from a multi_burst
+#'
+#' @param burst A burst object
+
+#' @export burst_labels
+
+burst_labels <- function(burst){
+  vapply(burst, FUN = function(x) attr(x,'label'),vector('character',length=1))
 }
 
 #########

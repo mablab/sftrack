@@ -1,7 +1,7 @@
-#' sftraj Class
-#'
+#' sftrack Class
+#' @title Sftrack Class
 #' @description This is the highest level class that collects the error, time, and burst class.
-#' It converts x,y,z data into an sftraj object and gives it an sf$geometry column,
+#' It converts x,y,z data into an sftrack object and gives it an sf$geometry column,
 #' and creates and error, time, and burst column as well of each respective class.
 #'
 #' @param data Data.frame input, these columns will remain unchanged, and any columns refered to
@@ -16,18 +16,18 @@
 #' @param tz timezone component, same as as.POSIX
 #'
 #' @import sf
-#' @export new_sftraj
+#' @export new_sftrack
 #' @examples
 #'  data(raccoon_data)
 #'  burstz <- list( id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' my_traj <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#' my_track <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #'   burst =burstz)
 ######################
 # Builder
 #
 
-new_sftraj<-
+new_sftrack<-
   function(data = data.frame(),
     proj4 = NA,
     time = NA,
@@ -56,7 +56,7 @@ new_sftraj<-
     new_data <- new_data[torder,]
     traj_id <- seq_len(nrow(new_data))
     new_data$traj_id = traj_id
-    burst_labels = factor(sapply(new_data$burst,function(x)paste0(unlist(x[active_burst]),collapse='_')))
+
     ret <- structure(
       sf::st_as_sf(
         new_data,
@@ -66,16 +66,14 @@ new_sftraj<-
       ),
       projection = proj4,
       active_burst = active_burst,
-      burst_labels = burst_labels,
-      label_traj_id = traj_id,
-      class = c("sftraj", "sf",'data.frame')
+      class = c("sftrack", "sf",'data.frame')
     )
   }
 
 #' @export
-print.sftraj <- function(x,...){
+print.sftrack <- function(x,...){
   x <- as.data.frame(x)
-  cat('This is an sftraj object\n')
+  cat('This is an sftrack object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
@@ -95,11 +93,36 @@ print.sftraj <- function(x,...){
 # library(sf)
 
 ## Test data set
-# df1 <- read.csv('/home/matt/Documents/sftraj/data_raccoon.csv')
+# df1 <- read.csv('/home/matt/Documents/sftrack/data_raccoon.csv')
 # colnames(df1)[colnames(df1)=='latitude'] <- 'y'
 # colnames(df1)[colnames(df1)=='longitude'] <- 'x'
 #df1$m <- as.numeric(as.POSIXlt(df1$acquisition_time))
 #df1$z <- df1$height
-# # sf1 <- new_sftraj(df1[,], proj4 = 4236, time = df1$acquisition_time, time_column = 'acquisition_time')
+# # sf1 <- new_sftrack(df1[,], proj4 = 4236, time = df1$acquisition_time, time_column = 'acquisition_time')
 # # sf1
 
+#' @export step2track
+step2track <-    function(my_step){
+
+  geometry <- my_step$geometry
+
+  new_geom <- lapply(geometry, function(x){
+    if(c('GEOMETRYCOLLECTION')%in%class(x)){
+      return(st_point(unlist(x)[1:3], dim = 'XYZ'))
+    }
+    if(c('LINESTRING')%in%class(x)){
+      return(st_point(x[c(1,3,5)], dim = 'XYZ'))
+    }
+  })
+  my_step$geometry <- st_sfc(new_geom)
+
+  structure(
+    data_sf1 <- sf::st_sf(
+      my_step,
+      sf_column_name='geometry'
+    ),
+    active_burst = attr(my_step, 'active_burst'),
+    projection = attr(my_step, 'projection'),
+    class = c("sftrack", 'sf','data.frame')
+  )
+}
