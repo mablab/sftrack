@@ -1,7 +1,4 @@
-
-#####################################
-#' sftstep Class
-#'
+#' @title Sfstep Class
 #' @description This is the highest level class that collects the error, time, and burst class.
 #' It converts x,y,z data into an sfstep object and gives it an sf$geometry column. This
 #' column is a list of line segments representing each step. It also creates and error, time, and burst column as well of each respective class.
@@ -46,28 +43,15 @@ new_sfstep<-
 
     #convert to sf object
 
-    data_sf <- new_sftraj(data, time =time,
+    data_sf <- new_sftrack(data, time =time,
       error = NA, coords = coords, tz = 'UTC',
-      burst = burst,active_burst = active_burst)
+      burst = burst,active_burst = active_burst, )
     # have to decide when and where we order datasets
     # torder <- order(time)
     # data_sf <- data_sf[torder,]
     # Function to make the step geometry column
 
-    step_geometry <- make_step_geom(burst = lapply(data_sf$burst, function(x,active_burst)x[active_burst]), geometry = data_sf$geometry)
-    data_sf$geometry <- step_geometry
-
-    structure(
-      data_sf1 <- sf::st_sf(
-        data_sf,
-        sf_column_name='geometry'
-      ),
-      active_burst = active_burst,
-      projection = proj4,
-      burst_labels = attr(data_sf,'burst_labels'),
-      label_row_id = attr(data_sf,'label_row_id'),
-      class = c("sfstep", 'sf','data.frame')
-    )
+track2step(data_sf)
 
   }
 
@@ -91,4 +75,23 @@ print.sfstep <- function(x,...){
     x[1:n,c('time','burst','error','geometry')])
 } else y <- x
 print.data.frame(y, ...)
+}
+
+
+#'
+#' @export track2step
+track2step <-    function(data_sf){
+  step_geometry <- make_step_geom(burst_id = lapply(data_sf$burst, function(x)x[names(x)%in%attr(data_sf,'active_burst')]), geometry = data_sf$geometry,
+    timez= data_sf$time)
+  data_sf$geometry <- step_geometry
+
+  structure(
+    data_sf1 <- sf::st_sf(
+      data_sf,
+      sf_column_name='geometry'
+    ),
+    active_burst = attr(data_sf, 'active_burst'),
+    projection = attr(data_sf, 'projection'),
+    class = c("sfstep", 'sf','data.frame')
+  )
 }

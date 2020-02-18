@@ -2,13 +2,13 @@
 #'
 #' @description This calculates step geom as individual line segments. It implies your bursts
 #'
-#' @param burst_id burst object
-#' @param geometry the geometery data from either sf or sf_traj. Must be an sf geometry class
+#' @param burst_id burst object thats subsetted by only the bursts we want to use to calculate one step_geom
+#' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
 #' @param timez time object
 #' @export make_step_geom
 #' @examples
 #' burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#' data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #'     burst =burstz)
 #'
@@ -17,7 +17,7 @@
 make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
   # Need to check if time is ordered, if not throw an error
   # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-  # data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
+  # data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
   # burst_id = burst_id = c('id')
   # geometry = data_sf$geometry
   # timez = data_sf$time
@@ -45,7 +45,7 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
     x2 <- c(st_sfc(sub_geom[2:(length(sub_geom))]),st_sfc(st_point(c(NA_real_, NA_real_,NA_real_),dim='XYZ')))
     first_point <- min(which(subz))
     #subz[first_point] <- FALSE
-    st_geometrycollection(list(st_point(), st_point(), st_linestring()))
+    #st_geometrycollection(list(st_point(), st_point(), st_linestring()))
     x3 <- mapply(function(x,y) {
       # x <- x1[[12]]
       # y <- x2[[12]]
@@ -64,9 +64,10 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
 }
 #
 # burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-# data_sf <- new_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+# data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
 #      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #      burst =burstz)
 #
 # here <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
+
 

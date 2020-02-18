@@ -2,7 +2,7 @@
 % Please edit documentation in R/sfstep.R
 \name{new_sfstep}
 \alias{new_sfstep}
-\title{sftstep Class}
+\title{Sfstep Class}
 \usage{
 new_sfstep(data = data.frame(), proj4 = NA, time = NA, id = NA,
   burst = NULL, error = NA, coords = c("x", "y", "z"), tz = NULL,

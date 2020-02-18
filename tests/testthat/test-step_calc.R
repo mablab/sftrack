@@ -7,9 +7,9 @@ test_that("step geometry calculates correctly", {
     timez = Sys.time() + 60*60*(1:4)
   )
   geom_ans <- c( 27,27,-80,-81,0,1,27,-81,1,NA,NA,NA,27,27,-82,-83,2,3,27,-83,3,NA,NA,NA)
-  my_traj <- new_sftraj(data = df1,burst=list(id=df1$id), time = df1$timez)
+  my_track <- new_sftrack(data = df1,burst=list(id=df1$id), time = df1$timez)
 
-  my_step_geom <- make_step_geom(burst_id = my_traj$burst, geometry = my_traj$geometry, timez = my_traj$time)
+  my_step_geom <- make_step_geom(burst_id = my_track$burst, geometry = my_track$geometry, timez = my_track$time)
   # order was done correctly
 
   expect_equal(unlist(my_step_geom), geom_ans)
@@ -25,9 +25,9 @@ test_that("step geometry calculates correctly", {
     z = 0:3,
     timez = Sys.time() + 60*60*(1:4)
   )
-  my_traj <- new_sftraj(data = df1,burst=list(id=df1$id, month = df1$month), time = df1$timez)
+  my_track <- new_sftrack(data = df1,burst=list(id=df1$id, month = df1$month), time = df1$timez)
 
-  my_step_geom <- suppressMessages(make_step_geom(burst_id = my_traj$burst, geometry = my_traj$geometry, timez = my_traj$time))
+  my_step_geom <- suppressMessages(make_step_geom(burst_id = my_track$burst, geometry = my_track$geometry, timez = my_track$time))
 
   expect_equal(unlist(my_step_geom), geom_ans)
 
