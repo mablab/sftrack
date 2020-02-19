@@ -53,10 +53,10 @@ ind_burst<- function(burst, new_levels = NULL,active_burst = NULL) {
 }
 
 # ind_burst(burst=list(id='CJ11',month=3, height=10))
-
-multi_burst <- function(x,active_burst){
-  structure(x,
+multi_burst <- function(x=list(),active_burst){
+    structure(x,
     active_burst = active_burst,
+    sort_index = factor(sapply(x, function(x) attr(x, 'label'))),
     class = c('multi_burst'))
 }
 
@@ -76,14 +76,27 @@ active_burst=active_burst
   }
   # ret <- multi_burst(lapply(burst_list,
   #   function(x,...active_burst) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
-    ret <- multi_burst(lapply(burst_list,
-      function(x,...) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
+    ret <- lapply(burst_list,
+      function(x,...) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst))
+    # structure(ret,
+    #   active_burst = active_burst,
+    #   sort_index = factor(sapply(ret, function(x) attr(x, 'label'))),
+    #   class = c('multi_burst'))
+    multi_burst(ret, active_burst = active_burst)
 
-  return(ret)
 }
 
 #make_multi_burst(burst=burstz, active_burst=c('id','month'))
+#' @export
+ind_2_multi_burst <- function(x=list()){
+  ret <- x
+  ## Need to write in a function that checks if all bursts are the same
 
+  if(length(unique(burst_labels(ret)))>1){stop('There are more than one possible active burst')}
+  active_burst <- attr(ret[[1]], 'active_burst')
+
+  multi_burst(ret, active_burst = active_burst)
+}
 #' @export
 c.ind_burst <- function(..., recursive = FALSE){
   ind_burst(c(unlist(lapply(list(...), unclass))))
@@ -97,7 +110,7 @@ c.multi_burst <- function(..., recursive = FALSE){
 #' @export
 as.data.frame.multi_burst <- function(x,...){
   ret = data.frame(row.names = seq_along(x))
-  ret$burst  = multi_burst(x,active_burst=attr(x, 'active_burst'))
+  ret$burst  = x
   ret
 }
 
@@ -106,6 +119,23 @@ print.ind_burst <- function(x,...){
   cat(paste0('Active burst : ',attr(x,'label')))
 }
 
+#' @export
+str.multi_burst <- function(object,...){
+  n <- length(object)
+  cat(paste0(class(object)[1], " of length ", n))
+  if (n > 0) {
+    cat("; first list element: ")
+    str(object[[1]], ...)
+  }
+}
+# str.multi_burst(my_track$burst)
+
+#' @export
+"[.multi_burst" <- function (x, i, j, ...) {
+  multi_burst(NextMethod(), active_burst = attr(x,'active_burst'))
+}
+
+# mb[1:10]
 #' make burst labels
 #'
 #' @description Pulls burst labels from a multi_burst
@@ -118,6 +148,9 @@ burst_labels <- function(burst){
   vapply(burst, FUN = function(x) attr(x,'label'),vector('character',length=1))
 }
 
+burst_sort <- function(burst){
+  attr(burst, 'sort_index')
+}
 #########
 # # test bed
 # tt <- sapply(x, function(x)x)

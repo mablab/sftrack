@@ -41,7 +41,7 @@ new_sftrack<-
     # Make multi burst
     mb <- make_multi_burst(burst=burst, active_burst = active_burst)
     time_tj <- new_time_tj(time,id=burst$id,tz=tz)
-
+    if(is.na(error)){error <- rep(NA, nrow(data))}
     # Order data frame for later
     torder <- do.call(order,append(burst[active_burst], list(time)))
     # id label should be the first mentioned in the burst
@@ -51,13 +51,13 @@ new_sftrack<-
       data,
       time = time_tj,
       burst = mb,
-      error = error
+      error = new_error_tj(error)
     )
     new_data <- new_data[torder,]
     traj_id <- seq_len(nrow(new_data))
     new_data$traj_id = traj_id
 
-    ret <- structure(
+    structure(
       sf::st_as_sf(
         new_data,
         coords = coords,
