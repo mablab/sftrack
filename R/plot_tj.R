@@ -1,3 +1,6 @@
+#' Methods for plot an sftraj
+#'
+#' @export plot.sftrack
 plot.sftrack <- function(x,...){
 plot(x$geometry)
 burst_srt <- burst_sort(x$burst)
@@ -11,6 +14,7 @@ new_clrs <- rainbow(length(unique(burst_srt)))
 }
 
 # plot(my_track)
+#' @export geom_sftraj
 geom_sftraj <- function(data,...){
   sub <- data[!sapply(data$geometry, function(x) all(is.na(x[[1]]))),]
   geom_sf(data = sub, aes(color=burst_sort(sub$burst)))
