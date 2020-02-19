@@ -5,7 +5,7 @@
 #' @param data ltraj object created from adehabitatLT
 #' @param proj4 projection (for sf)
 #' @param tz timezone component, same as as.POSIX
-#' @export new_sftrack
+#' @export ltraj2track
 #' @examples
 #' library(adehabitatLT)
 #' data(raccoon_data)
