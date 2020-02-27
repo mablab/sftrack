@@ -10,7 +10,6 @@
 #' @examples
 #' er <- new_error_tj()
 new_error_tj <- function(error = NA,...) {
-  # Check if id is the only list
   structure(error,
     class = c("error_tj")
   )
