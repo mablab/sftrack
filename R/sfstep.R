@@ -17,10 +17,10 @@
 #' @export new_sfstep
 #' @examples
 #'  data(raccoon_data)
-#'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#' my_step <- new_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-#'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
-#'   burst =burstz)
+#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#'  my_step <- new_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#'    error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+#'    burst =burstz)
 ######################
 new_sfstep<-
   function(data = data.frame(),
@@ -80,18 +80,9 @@ print.data.frame(y, ...)
 
 #'
 #' @export track2step
-track2step <-    function(data_sf){
+geom_track2Step <-    function(){
   step_geometry <- make_step_geom(burst_id = lapply(data_sf$burst, function(x)x[names(x)%in%attr(data_sf,'active_burst')]), geometry = data_sf$geometry,
     timez= data_sf$time)
   data_sf$geometry <- step_geometry
 
-  structure(
-    data_sf1 <- sf::st_sf(
-      data_sf,
-      sf_column_name='geometry'
-    ),
-    active_burst = attr(data_sf, 'active_burst'),
-    projection = attr(data_sf, 'projection'),
-    class = c("sfstep", 'sf','data.frame')
-  )
 }

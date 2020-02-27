@@ -5,18 +5,13 @@
 #' object, but with extra checks that the time is unique and ordered.
 #'
 #' @param time vector of time or as.POSIX format object.
-#' @param tz as.POSIX time zone. Not necessary if an integer vector
 #' @export new_time_tj
 #' @examples
 #' data(raccoon_data)
 #' timez <- as.POSIXct(raccoon_data$acquisition_time)
-#' id <- raccoon_data$sensor_code
-#' tj <- new_time_tj(time=timez, id=id)
+#' tj <- new_time_tj(time=timez)
 # Constructor
-new_time_tj <- function(time = c(),
-  id = c(),
-  ...,
-  tz = 'UTC') {
+new_time_tj <- function(time = c()) {
   # Check if its unique and ordered
   # Built to be either posix or time
   # Buildedr
@@ -28,22 +23,21 @@ new_time_tj <- function(time = c(),
   }
 
   if (is(time, 'POSIXct')) {
-    timez <- as.numeric(as.POSIXct(time, tz = tz))
+    timez <- as.numeric(as.POSIXct(time))
     time_class <- 'posix'
   }
-
-  #check if time and IDs are unique
-  id <- factor(id)
-  unique_q <- tapply(timez, id, function(x)
-    any(duplicated(x)))
-
-  if (any(unique_q)) {
-    stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
-  }
+ ## Possibly here we can change NA to some special value
+  # #check if time and IDs are unique
+  # id <- factor(id)
+  # unique_q <- tapply(timez, id, function(x)
+  #   any(duplicated(x)))
+  #
+  # if (any(unique_q)) {
+  #   stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
+  # }
 
   structure(
     timez,
-    order_att = order(timez),
     time_class = time_class,
     class = c("time_tj", 'POSIXct')
   )
