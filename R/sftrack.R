@@ -1,37 +1,46 @@
-#' sftrack Class
-#' @title Sftrack Class
-#' @description This is the highest level class that collects the error, time, and burst class.
-#' It converts x,y,z data into an sftrack object and gives it an sf$geometry column,
-#' and creates and error, time, and burst column as well of each respective class.
+#' @title as_sftrack
+#' @description This generic has multiple inputs and gathers relevant information
+#' to sftrack class.
+#' It converts x,y,z data into an sftrack object and gives it an sf$geometry column. This
+#' column is a list of points. It also creates and error, time, and burst column as well of each respective class.
 #'
 #' @param data Data.frame input, these columns will remain unchanged, and any columns refered to
 #' in later parameters are not deleted from this column. The function simply copies the data.frame
 #' and adds the appropriate columns.
 #' @param proj4 projection (for sf)
 #' @param time vector of time
-#' @param id vector of ids for the data
-#' @param burst list of named vectors
+#' @param burst list of named vectors one of which must be named id
 #' @param error error vector
 #' @param coords vector of three column names for the x,y,z coordinates, in that order.
 #' @param tz timezone component, same as as.POSIX
 #'
 #' @import sf
+#' @export as_sftrack
 #' @export new_sftrack
 #' @examples
-#'  data(raccoon_data)
-#'  burstz <- list( id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#' my_track <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-#'   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+#'
+#' data(raccoon_data)
+#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#'   # Input is a data.frame
+#' my_track <- as_sfrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#'   error = NA, coords = c('longitude','latitude','height'),
 #'   burst =burstz)
+#'   # Input is a ltraj
+#'
+#'   # Input is a sf object
+#'
+#'   # Input is an sftrack object
 ######################
 # Builder
-#
+#' @exportMethod as_sftrack
 as_sftrack <- function(data,...) {
   UseMethod('as_sftrack')
 }
 
 
 new_sftrack <- function(data, burst, time, geometry, error) {
+  if(sum(is.na(error)==1)){error <- rep(NA, nrow(data))}
+
   data_sf <- st_as_sf(cbind(data, burst, time, geometry = geometry, error))
   structure(
     data_sf,
@@ -43,13 +52,14 @@ new_sftrack <- function(data, burst, time, geometry, error) {
 
 ########################
 # Methods
-
+#' @export
 as_sftrack.data.frame <- function(
   data,
   burst,
+  active_burst = 'id',
   error = NA,
   time,
-  coords
+  coords = c('x','y','z')
 ){
   # data(raccoon_data)
   # data <- raccoon_data
@@ -60,7 +70,7 @@ as_sftrack.data.frame <- function(
   # calculate point geom
   geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
   # pull out other relevant info
-  burst = make_multi_burst(burst)
+  burst = make_multi_burst(burst, active_burst = active_burst)
   error = new_error_tj(error)
   time = new_time_tj(time)
 
@@ -87,7 +97,7 @@ as_sftrack.data.frame <- function(
 #   coords = c('latitude','longitude','height')
 # )
 
-#' @export as_sftrack.sfstep
+#' @export
 as_sftrack.sfstep <- function(data){
 
   geometry <- data$geometry
@@ -131,14 +141,12 @@ as_sftrack.sfstep <- function(data){
 
 ### Ltraj
 #' @export as_sftrack.ltraj
-#' @examples
 # library(adehabitatLT)
 # data(raccoon_data)
 # ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
 #  id = raccoon_data$sensor_code, typeII = TRUE,
 #  infolocs = raccoon_data[,1:6] )
 # as_sftrack(data = ltraj_df)
-
 
 as_sftrack.ltraj <- function(data){
   # This is done so we dont have to import adehabitat. (instead of ld())

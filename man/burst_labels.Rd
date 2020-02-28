@@ -10,5 +10,5 @@ burst_labels(burst)
 \item{burst}{A burst object}
 }
 \description{
-Pulls burst labels from a multi_burst
+These functions access bursts in various ways
 }

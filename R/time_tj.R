@@ -26,15 +26,15 @@ new_time_tj <- function(time = c()) {
     timez <- as.numeric(as.POSIXct(time))
     time_class <- 'posix'
   }
- ## Possibly here we can change NA to some special value
-  # #check if time and IDs are unique
-  # id <- factor(id)
-  # unique_q <- tapply(timez, id, function(x)
-  #   any(duplicated(x)))
-  #
-  # if (any(unique_q)) {
-  #   stop(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
-  # }
+ # ## Possibly here we can change NA to some special value
+ #  # #check if time and IDs are unique
+ #  id <- factor(id)
+ #  unique_q <- tapply(timez, id, function(x)
+ #    any(duplicated(x)))
+ #
+ #  if (any(unique_q)) {
+ #    warning(paste0('time is not unique for individuals: ', names(unique_q)[unique_q]))
+ #  }
 
   structure(
     timez,
