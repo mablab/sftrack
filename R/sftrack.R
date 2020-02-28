@@ -26,50 +26,158 @@
 ######################
 # Builder
 #
+as_sftrack <- function(data,...) {
+  UseMethod('as_sftrack')
+}
 
-new_sftrack<-
-  function(data = data.frame(),
-    proj4 = NA,
-    time = NA,
-    burst = NULL,
-    error = NA,
-    coords = c('x','y','z'),
-    tz = NULL,
-    active_burst = 'id'
-  ) {
 
-    # Make multi burst
-    mb <- make_multi_burst(burst=burst, active_burst = active_burst)
-    time_tj <- new_time_tj(time,id=burst$id,tz=tz)
-    if(is.na(error)){error <- rep(NA, nrow(data))}
-    # Order data frame for later
-    torder <- do.call(order,append(burst[active_burst], list(time)))
-    # id label should be the first mentioned in the burst
-    active_burst <- c('id',active_burst[active_burst!='id'])
-    new_data <- data.frame(
-      traj_id = NA,
-      data,
-      time = time_tj,
-      burst = mb,
-      error = new_error_tj(error)
-    )
-    new_data <- new_data[torder,]
-    traj_id <- seq_len(nrow(new_data))
-    new_data$traj_id = traj_id
+new_sftrack <- function(data, burst, time, geometry, error) {
+  data_sf <- st_as_sf(cbind(data, burst, time, geometry = geometry, error))
+  structure(
+    data_sf,
+    active_burst = attr(burst, 'active_burst'),
+    projection = attr(geometry, 'proj4'),
+    class = c("sftrack", 'sf','data.frame')
+  )
+}
 
-    structure(
-      sf::st_as_sf(
-        new_data,
-        coords = coords,
-        dim = 'XYZ',
-        na.fail = FALSE
-      ),
-      projection = proj4,
-      active_burst = active_burst,
-      class = c("sftrack", "sf",'data.frame')
-    )
+########################
+# Methods
+
+as_sftrack.data.frame <- function(
+  data,
+  burst,
+  error = NA,
+  time,
+  coords
+){
+  # data(raccoon_data)
+  # data <- raccoon_data
+  # burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+  # error = rep(NA, nrow(data))
+  # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
+  # coords = c('latitude','longitude','height')
+  # calculate point geom
+  geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  # pull out other relevant info
+  burst = make_multi_burst(burst)
+  error = new_error_tj(error)
+  time = new_time_tj(time)
+
+  ret <- new_sftrack(
+    data = data ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = geom$geometry
+  )
+  #Sanity check
+
+  #
+  return(ret)
+}
+#data.frame
+# data(raccoon_data)
+#
+# df <- as_sftrack(
+#   data = raccoon_data ,
+#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
+#   error = rep(NA, nrow(data)),
+#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
+#   coords = c('latitude','longitude','height')
+# )
+
+#' @export as_sftrack.sfstep
+as_sftrack.sfstep <- function(data){
+
+  geometry <- data$geometry
+
+  new_geom <- lapply(geometry, function(x){
+    if(c('GEOMETRYCOLLECTION')%in%class(x)){
+      return(st_point(unlist(x)[1:3], dim = 'XYZ'))
+    }
+    if(c('LINESTRING')%in%class(x)){
+      return(st_point(x[c(1,3,5)], dim = 'XYZ'))
+    }
+  })
+  geometry <- st_sfc(new_geom)
+  burst <- data$burst
+  error <- data$error
+  time <- data$utc_time
+
+  ret <- new_sftrack(
+    data = data ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = geometry
+  )
+
+  return(ret)
+}
+
+
+#data.frame
+# data(raccoon_data)
+#
+# as_sftrack(
+#   data = raccoon_data ,
+#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
+#   error = rep(NA, nrow(data)),
+#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
+#   coords = c('latitude','longitude','height')
+# )
+
+
+### Ltraj
+#' @export as_sftrack.ltraj
+#' @examples
+# library(adehabitatLT)
+# data(raccoon_data)
+# ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
+#  id = raccoon_data$sensor_code, typeII = TRUE,
+#  infolocs = raccoon_data[,1:6] )
+# as_sftrack(data = ltraj_df)
+
+
+as_sftrack.ltraj <- function(data){
+  # This is done so we dont have to import adehabitat. (instead of ld())
+  # But it could go either way depending
+  new_data <- lapply(seq_along(data), function(x) {
+    sub <- data[x]
+    attributes(sub[[1]])
+    id <-  attr(sub[[1]], 'burst')
+    infolocs <- infolocs(sub)
+    date <- sub[[1]]$date
+    coords <- c('x','y')
+    data.frame(sub[[1]][,coords],z=0,date,id,infolocs)
   }
+  )
+  df1 <- do.call(rbind, new_data)
+  time = df1$date
+  burst = list(id=df1$id)
+  coords = c('x','y','z')
+  geom <- st_as_sf(df1[,coords], coords = coords , na.fail = FALSE)
+  # pull out other relevant info
+  burst = make_multi_burst(burst)
+  error = new_error_tj(error)
+  time = new_time_tj(time)
 
+  ret <- new_sftrack(
+    data = df1 ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = geom$geometry
+  )
+  #Sanity check? Necessary?
+
+  #
+  return(ret)
+}
+
+
+# Methods for 'sftrack' class
 #' @export
 print.sftrack <- function(x,...){
   x <- as.data.frame(x)
@@ -88,41 +196,7 @@ print.sftrack <- function(x,...){
   } else y <- x
   print.data.frame(y, ...)
 }
-# ################################################
-# # Test bed
-# library(sf)
 
-## Test data set
-# df1 <- read.csv('/home/matt/Documents/sftrack/data_raccoon.csv')
-# colnames(df1)[colnames(df1)=='latitude'] <- 'y'
-# colnames(df1)[colnames(df1)=='longitude'] <- 'x'
-#df1$m <- as.numeric(as.POSIXlt(df1$acquisition_time))
-#df1$z <- df1$height
-# # sf1 <- new_sftrack(df1[,], proj4 = 4236, time = df1$acquisition_time, time_column = 'acquisition_time')
-# # sf1
+# Sumary
+#summary.sftrack
 
-#' @export step2track
-step2track <-    function(my_step){
-
-  geometry <- my_step$geometry
-
-  new_geom <- lapply(geometry, function(x){
-    if(c('GEOMETRYCOLLECTION')%in%class(x)){
-      return(st_point(unlist(x)[1:3], dim = 'XYZ'))
-    }
-    if(c('LINESTRING')%in%class(x)){
-      return(st_point(x[c(1,3,5)], dim = 'XYZ'))
-    }
-  })
-  my_step$geometry <- st_sfc(new_geom)
-
-  structure(
-    data_sf1 <- sf::st_sf(
-      my_step,
-      sf_column_name='geometry'
-    ),
-    active_burst = attr(my_step, 'active_burst'),
-    projection = attr(my_step, 'projection'),
-    class = c("sftrack", 'sf','data.frame')
-  )
-}

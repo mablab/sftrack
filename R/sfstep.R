@@ -22,42 +22,129 @@
 #'    error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #'    burst =burstz)
 ######################
-new_sfstep<-
-  function(data = data.frame(),
-    proj4 = NA,
-    time = NA,
-    id = NA,
-    burst = NULL,
-    error = NA,
-    coords = c('x','y','z'),
-    tz = NULL,
-    active_burst = 'id'
-  )  {
-    # data = raccoon_data
-    # time = as.POSIXct(raccoon_data$acquisition_time)
-    # error = NA
-    # tz = NULL
-    # coords = c('longitude', 'latitude','height')
-    # burst = burstz
-    # active_burst = c('id','month')
+as_sfstep <- function(data,...) {
+  UseMethod('as_sfstep')
+}
 
-    #convert to sf object
+new_sfstep <- function(data, burst, time, geometry, error) {
+  data_sf <- st_as_sf(cbind(data, burst, time, geometry = step_geometry, error))
+  structure(
+    data_sf,
+    active_burst = attr(burst, 'active_burst'),
+    projection = attr(geometry, 'proj4'),
+    class = c("sfstep", 'sf','data.frame')
+  )
+}
 
-    data_sf <- new_sftrack(data, time =time,
-      error = NA, coords = coords, tz = 'UTC',
-      burst = burst,active_burst = active_burst, )
-    # have to decide when and where we order datasets
-    # torder <- order(time)
-    # data_sf <- data_sf[torder,]
-    # Function to make the step geometry column
+#########################
+# Methods
+as_sfstep.data.frame <- function(
+  data,
+  burst,
+  error = NA,
+  time,
+  coords
+){
+  # data(raccoon_data)
+  # data <- raccoon_data
+  # burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+  # error = rep(NA, nrow(data))
+  # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
+  # coords = c('latitude','longitude','height')
+  # calculate point geom if not already a geom
+  geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  # pull out other relevant info
+  burst = make_multi_burst(burst)
+  error = new_error_tj(error)
+  time = new_time_tj(time)
 
-track2step(data_sf)
+  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
+    timez= time)
 
+  ret <- new_sfstep(
+    data = data ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = step_geometry
+  )
+  #Sanity check
+
+  #
+  return(ret)
+}
+# data.frame
+# as_sfstep(
+#   data = raccoon_data ,
+#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
+#   error = rep(NA, nrow(data)),
+#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
+#   coords = c('latitude','longitude','height')
+# )
+
+
+## Track
+as_sfstep.sftrack <-function(data){
+  burst <- data$burst
+  geometry <-  data$geometry
+  time = data$time
+  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geometry,
+    timez = time)
+
+  ret <- new_sfstep(
+    data = data ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = step_geometry
+  )
+
+  return(ret)
+}
+
+
+
+as_sfstep.ltraj <- function(data){
+  # This is done so we dont have to import adehabitat. (instead of ld())
+  # But it could go either way depending
+  new_data <- lapply(seq_along(data), function(x) {
+    sub <- data[x]
+    attributes(sub[[1]])
+    id <-  attr(sub[[1]], 'burst')
+    infolocs <- infolocs(sub)
+    date <- sub[[1]]$date
+    coords <- c('x','y')
+    data.frame(sub[[1]][,coords],z=0,date,id,infolocs)
   }
+  )
+  df1 <- do.call(rbind, new_data)
+  time = df1$date
+  burst = list(id=df1$id)
+  error = rep(NA, nrow(df1))
+  coords = c('x','y','z')
+  geom <- st_as_sf(df1[,coords], coords = coords, na.fail = FALSE )
 
-# sfs1 <- new_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
-#   error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
-#   burst =burstz)
+  #
+  burst = make_multi_burst(burst)
+  error = new_error_tj(error)
+  time = new_time_tj(time)
+  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
+    timez= time)
+
+  ret <- new_sfstep(
+    data = df1 ,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = step_geometry
+  )
+
+  #Sanity check? Necessary?
+
+  #
+  return(ret)
+}
+
 #' @export
 print.sfstep <- function(x,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm
@@ -77,12 +164,3 @@ print.sfstep <- function(x,...){
 print.data.frame(y, ...)
 }
 
-
-#'
-#' @export track2step
-geom_track2Step <-    function(){
-  step_geometry <- make_step_geom(burst_id = lapply(data_sf$burst, function(x)x[names(x)%in%attr(data_sf,'active_burst')]), geometry = data_sf$geometry,
-    timez= data_sf$time)
-  data_sf$geometry <- step_geometry
-
-}
