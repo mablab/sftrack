@@ -16,10 +16,15 @@
 #' @export multi_burst
 #' @export make_multi_burst
 #' @examples
+#' # Make a single burst
+#' ind_burst(burst=list(id='CJ11',month=3, height=10))
+#'
+#' # Make a multi burst
 #'  data(raccoon_data)
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-#'  mb1 <- make_multi_burst(id=raccoon_data$sensor_code,burst=burstz)
-#'
+#'  mb1 <- make_multi_burst(burst=burstz, active_burst=c('id','month'))
+#'  str(mb1)
+
 ind_burst <- function(burst,
   new_levels = NULL,
   active_burst = NULL) {
@@ -83,6 +88,7 @@ make_multi_burst <-
     active_burst = 'id') {
     # new_levels <- list(month = 1:12, height = 1:10)
     # burst=burstz
+    burst = burst
     active_burst = active_burst
     burst_list <-
       do.call(function(...)
@@ -115,25 +121,33 @@ make_multi_burst <-
   }
 
 #make_multi_burst(burst=burstz, active_burst=c('id','month'))
-#' @export
-ind_2_multi_burst <- function(x = list()) {
-  ret <- x
-  ## Need to write in a function that checks if all bursts are the same
 
-  if (length(unique(burst_labels(ret))) > 1) {
+# This function replaces c.ind_bursts functinoality. So might be deleted eventually
+#' @export
+ind_2_multi_burst <- function(...) {
+  ret <- list(...)
+  if (length(unique_active_bursts(ret)) > 1) {
     stop('There are more than one possible active burst')
   }
   active_burst <- attr(ret[[1]], 'active_burst')
-
+  # need this to recheck the levels if necessary
   multi_burst(ret, active_burst = active_burst)
 }
 #' @export
-c.ind_burst <- function(..., recursive = FALSE) {
-  ind_burst(c(unlist(lapply(
-    list(...), unclass
-  ))))
+# c.ind_burst <- function(..., recursive = FALSE) {
+#   ind_burst(c(unlist(lapply(
+#     list(...), unclass
+#   ))))
+# }
+c.ind_burst <- function(...) {
+  ret <- list(...)
+  if (length(unique_active_bursts(ret)) > 1) {
+    stop('There are more than one possible active burst')
+  }
+  active_burst <- attr(ret[[1]], 'active_burst')
+# need this to recheck the levels if necessary
+  multi_burst(ret, active_burst = active_burst)
 }
-
 #' @export
 c.multi_burst <- function(..., recursive = FALSE) {
   multi_burst(c(unlist(lapply(
@@ -172,11 +186,13 @@ str.multi_burst <- function(object, ...) {
 # mb[1:10]
 #' make burst labels
 #'
-#' @description Pulls burst labels from a multi_burst
+#' @description These functions access bursts in various ways
 #'
 #' @param burst A burst object
 
 #' @export burst_labels
+#' @export burst_sort
+#' @export burst_select
 
 burst_labels <- function(burst) {
   vapply(
@@ -197,25 +213,6 @@ burst_select <- function(burst){
   # should also pull out select bursts, or perhaps `multi.burst[` already does this
   lapply(burst, function(x) x[names(x)%in%attr(burst,'active_burst')])
 }
-#########
-# # test bed
-# tt <- sapply(x, function(x)x)
-#
-# ind_burst(id = 1, burst=3)
-# p <- ind_burst(id = 1)
-# burstz <- list(month = as.POSIXlt(df1$utc_date)$mon, height =as.numeric(df1$height>5))
-# burstz[['id']] <- df1$sensor_code
-# burst_list <- do.call(function(...) mapply(list,...,SIMPLIFY=F), burstz)
-#
-# pp <- mapply(ind_burst, id=df1$sensor_code)
-# tt <- sapply(burst_list, names)
-# names()!='id'
-# pp <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'])))
-# pp
-#
-# pp <- multi_burst(lapply(burst_list, function(x) ind_burst(id = x$id, burst=x[names(x)!='id'])))
-# attributes(pp)
-# ###############
-# pp <- make_multi_burst(id=df1$sensor_code,burst=burstz)
-#
-# lapply(pp, function(x) x$burst$month)
+
+#' @export
+unique_active_bursts <- function(burst) unique(vapply(burst, function(x) paste0(attr(x,'active_burst'), collapse=', '),character(1)))

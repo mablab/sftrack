@@ -5,12 +5,10 @@
 \title{Methods for time traj class
 new_time_tj()}
 \usage{
-new_time_tj(time = c(), id = c(), ..., tz = "UTC")
+new_time_tj(time = c())
 }
 \arguments{
 \item{time}{vector of time or as.POSIX format object.}
-
-\item{tz}{as.POSIX time zone. Not necessary if an integer vector}
 }
 \description{
 This class is a time object that can either be an integer vector or an as.POSIXct
@@ -19,6 +17,5 @@ object, but with extra checks that the time is unique and ordered.
 \examples{
 data(raccoon_data)
 timez <- as.POSIXct(raccoon_data$acquisition_time)
-id <- raccoon_data$sensor_code
-tj <- new_time_tj(time=timez, id=id)
+tj <- new_time_tj(time=timez)
 }

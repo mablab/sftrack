@@ -17,9 +17,9 @@ make_step_geom(burst_id = NA, timez = NA, geometry = NA)
 This calculates step geom as individual line segments. It implies your bursts
 }
 \examples{
-burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-     error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
+burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+data_sf <- as_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+     error = NA, coords = c('longitude','latitude','height'),
     burst =burstz)
 
 make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
