@@ -16,8 +16,7 @@
 #'
 #' @import sf
 #' @export as_sfstep
-#' @export new_sfstep
-#'  @examples
+#' @examples
 #'
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
@@ -35,7 +34,7 @@
 as_sfstep <- function(data,...) {
   UseMethod('as_sfstep')
 }
-
+#' @export new_sfstep
 new_sfstep <- function(data, burst, time, geometry, error) {
   if(sum(is.na(error)==1)){error <- rep(NA, nrow(data))}
 

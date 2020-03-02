@@ -108,10 +108,11 @@ burst labels allows access to the burst labels which are a combination of the ac
 burst_labels(mb1)[1:10]
 ```
 
-**The rest is not done quite complete**  
+ 
 Can combine multiple ind_bursts to create a multi_burst
-
-mb2 <- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 1, year = 2018))) 
+```{r}
+mb2 <- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 2, year = 2018))) 
 str(mb2)
-
+```
+**The rest is not done quite complete** 
 And can redefine burst levels

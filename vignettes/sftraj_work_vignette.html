@@ -368,9 +368,6 @@ summary {
 
 <pre class="r"><code>devtools::load_all(&quot;/home/matt/r_programs/sftraj&quot;)</code></pre>
 <pre><code>## Loading sftraj</code></pre>
-<pre><code>## Warning in setup_ns_exports(path, export_all, export_imports): Objects
-## listed as exports, but not present in namespace: ltraj2track, step2track,
-## track2step</code></pre>
 <p>Load data and create appropriate variables for import. We’ll set 0’s to NA manually for now.</p>
 <p><strong>data</strong> is a data frame<br />
 <strong>burst</strong> is a list with multiple named vectors to group the data by<br />
@@ -616,10 +613,16 @@ str(mb1)</code></pre>
 <pre class="r"><code>burst_labels(mb1)[1:10]</code></pre>
 <pre><code>##  [1] &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot;
 ##  [8] &quot;CJ11_0&quot; &quot;CJ11_0&quot; &quot;CJ11_0&quot;</code></pre>
-<p><strong>The rest is not done quite complete</strong><br />
-Can combine multiple ind_bursts to create a multi_burst</p>
-<p>mb2 &lt;- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 1, year = 2018))) str(mb2)</p>
-<p>And can redefine burst levels</p>
+<p>Can combine multiple ind_bursts to create a multi_burst</p>
+<pre class="r"><code>mb2 &lt;- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 2, year = 2018))) 
+str(mb2)</code></pre>
+<pre><code>## multi_burst of length 2; first list element: List of 2
+##  $ id  : Factor w/ 2 levels &quot;1&quot;,&quot;2&quot;: 1
+##  $ year: Factor w/ 1 level &quot;2018&quot;: 1
+##  - attr(*, &quot;label&quot;)= chr &quot;1_2018&quot;
+##  - attr(*, &quot;active_burst&quot;)= chr [1:2] &quot;id&quot; &quot;year&quot;
+##  - attr(*, &quot;class&quot;)= chr &quot;ind_burst&quot;</code></pre>
+<p><strong>The rest is not done quite complete</strong> And can redefine burst levels</p>
 </div>
 
 
