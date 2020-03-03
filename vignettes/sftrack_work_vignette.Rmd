@@ -1,0 +1,129 @@
+---
+title: "sftrack working vignette"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+devtools::load_all("/home/matt/r_programs/sftrack")
+
+```
+
+Load data and create appropriate variables for import. We'll set 0's to NA manually for now.  
+
+**data** is a data frame  
+**burst** is a list with multiple named vectors to group the data by  
+**active_burst** is a vector of the burst names you want to be activated for analysis  
+**error** is a vector of the error data  
+**time** is a vector of POSIXct or integer for the time  
+**coords** is a vector of the columns for the x,y,z coordinates  
+
+```{r}
+data("raccoon_data")
+raccoon_data$latitude[raccoon_data$latitude==0] <- NA
+raccoon_data$longitude[raccoon_data$longitude==0] <- NA
+raccoon_data$height[raccoon_data$height==0] <- NA
+burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+active_burst = c('id','month')
+error = rep(NA, nrow(raccoon_data))
+time = as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
+coords = c('latitude','longitude','height')
+```
+
+###############################################
+
+Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
+```{r}
+# sftrack
+my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftrack
+
+
+# sftraj
+my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftraj
+
+
+```
+
+This generic function also converts ltraj objects  
+```{r, message = FALSE}
+library(adehabitatLT)
+
+ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
+ id = raccoon_data$sensor_code, typeII = TRUE,
+ infolocs = raccoon_data[,1:6] )
+
+as_sftrack(ltraj_df)
+as_sftraj(ltraj_df)
+
+
+```
+
+
+### inter class conversion
+This function also converts between the `sftrack` and `sftraj` data type
+
+```{r}
+new_sftrack <- as_sftrack(my_sftraj)
+new_sftrack
+new_sftraj <- as_sftraj(my_sftrack)
+new_sftraj
+
+all.equal(my_sftraj,new_sftraj)
+all.equal(my_sftrack,new_sftrack)
+```
+
+
+## Plotting
+
+Currently there are some plotting methods. Base plotting is basic, but assumes the active_burst is the grouping/coloring variable  
+
+```{r}
+plot(my_sftraj)
+```
+
+
+You can also plot in ggplot, but right now its only using the geom_sftraj function. We can figure this out at a later date. But the method is very simple,
+you just have to tell geom_sf() what the grouping variable is.
+
+```{r}
+library(ggplot2)
+ggplot() + geom_sftraj(data = my_sftraj)
+```
+
+## Bursts  
+
+Bursts are a big point in the class. They are made in a similar vain to the `sfc` and `sfg` in `sf`. `ind_burst` is a singular birst. Its whats
+stored at the row level. A `multi-burst` is a collection of `ind_bursts` and exists at the column level. Bursts also have an `active_burst` argument, which turns on and off certain bursts for analysis and plotting purposes.
+
+
+```{r}
+mb1 <- make_multi_burst(burst=burst, active_burst=c('id','month'))
+str(mb1)
+```
+
+
+Burst select allows you access to the active_burst
+
+```{r}
+burst_select(mb1)[1]
+```
+
+burst labels allows access to the burst labels which are a combination of the active bursts with '_' seperator
+
+```{r}
+burst_labels(mb1)[1:10]
+```
+
+ 
+Can combine multiple ind_bursts to create a multi_burst
+```{r}
+mb2 <- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 2, year = 2018))) 
+str(mb2)
+```
+**The rest is not done quite complete** 
+And can redefine burst levels

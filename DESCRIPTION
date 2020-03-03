@@ -1,4 +1,4 @@
-Package: sftraj
+Package: sftrack
 Title: Central classes for movement data
 Version: 0.0.0.9000
 Date: 2019-12-17
@@ -28,7 +28,7 @@ Authors@R:
              email = "basille@ufl.edu",
              comment = c(ORCID = "0000-0001-9366-7127")))
 Depends:
-    R (>= 3.5.0),
+    R (>= 3.2.0),
 Imports:
     sf
 Description: Movement classes for tracking data and trajectories,
@@ -42,7 +42,7 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-URL: https://mablab.org/sftraj/, https://github.com/mablab/sftraj
-BugReports: https://github.com/mablab/sftraj/issues
+URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
+BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
     testthat (>= 2.1.0)
