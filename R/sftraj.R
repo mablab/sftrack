@@ -30,6 +30,7 @@
 #'
 #'   # Input is an sftrack object
 ######################
+
 #' @exportMethod as_sftraj
 as_sftraj <- function(data,...) {
   UseMethod('as_sftraj')
@@ -130,6 +131,7 @@ as_sftraj.ltraj <- function(data){
     date <- sub[[1]]$date
     coords <- c('x','y')
     data.frame(sub[[1]][,coords],z=0,date,id,infolocs)
+
   }
   )
   df1 <- do.call(rbind, new_data)
@@ -165,6 +167,7 @@ print.sftraj <- function(x,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
   cat('this is a sftraj object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
+
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))
@@ -177,5 +180,6 @@ print.sftraj <- function(x,...){
     x[1:n,c('time','burst','error','geometry')])
 } else y <- x
 print.data.frame(y,...)
+
 }
 
