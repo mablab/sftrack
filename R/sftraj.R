@@ -1,7 +1,7 @@
-#' @title as_sfstep
+#' @title as_sftraj
 #' @description This generic has multiple inputs and gathers relevant information
-#' to sfstep class.
-#' It converts x,y,z data into an sfstep object and gives it an sf$geometry column. This
+#' to sftraj class.
+#' It converts x,y,z data into an sftraj object and gives it an sf$geometry column. This
 #' column is a list of line segments representing each step. It also creates and error, time, and burst column as well of each respective class.
 #'
 #' @param data Data.frame input, these columns will remain unchanged, and any columns refered to
@@ -15,13 +15,13 @@
 #' @param tz timezone component, same as as.POSIX
 #'
 #' @import sf
-#' @export as_sfstep
+#' @export as_sftraj
 #' @examples
 #'
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_step <- as_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#' my_step <- as_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'   error = NA, coords = c('longitude','latitude','height'),
 #'   burst =burstz)
 #'   # Input is a ltraj
@@ -30,12 +30,12 @@
 #'
 #'   # Input is an sftrack object
 ######################
-#' @exportMethod as_sfstep
-as_sfstep <- function(data,...) {
-  UseMethod('as_sfstep')
+#' @exportMethod as_sftraj
+as_sftraj <- function(data,...) {
+  UseMethod('as_sftraj')
 }
-#' @export new_sfstep
-new_sfstep <- function(data, burst, time, geometry, error) {
+#' @export new_sftraj
+new_sftraj <- function(data, burst, time, geometry, error) {
   if(sum(is.na(error)==1)){error <- rep(NA, nrow(data))}
 
   data_sf <- st_as_sf(cbind(data, burst, time, geometry = geometry, error))
@@ -43,14 +43,14 @@ new_sfstep <- function(data, burst, time, geometry, error) {
     data_sf,
     active_burst = attr(burst, 'active_burst'),
     projection = attr(geometry, 'proj4'),
-    class = c("sfstep", 'sf','data.frame')
+    class = c("sftraj", 'sf','data.frame')
   )
 }
 
 #########################
 # Methods
 #' @export
-as_sfstep.data.frame <- function(
+as_sftraj.data.frame <- function(
   data,
   burst,
   active_burst = 'id',
@@ -74,7 +74,7 @@ as_sfstep.data.frame <- function(
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
     timez= time)
 
-  ret <- new_sfstep(
+  ret <- new_sftraj(
     data = data ,
     burst = burst,
     error = error,
@@ -87,7 +87,7 @@ as_sfstep.data.frame <- function(
   return(ret)
 }
 # data.frame
-# as_sfstep(
+# as_sftraj(
 #   data = raccoon_data ,
 #   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
 #   error = rep(NA, nrow(data)),
@@ -98,15 +98,16 @@ as_sfstep.data.frame <- function(
 
 ## Track
 #' @export
-as_sfstep.sftrack <-function(data){
+as_sftraj.sftrack <-function(data){
   burst <- data$burst
   geometry <-  data$geometry
   time = data$time
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geometry,
     timez = time)
-
-  ret <- new_sfstep(
-    data = data ,
+  new_data <- as.data.frame(data)
+  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst','time','error')]
+  ret <- new_sftraj(
+    data = new_data,
     burst = burst,
     error = error,
     time = time,
@@ -118,7 +119,7 @@ as_sfstep.sftrack <-function(data){
 
 
 #' @export
-as_sfstep.ltraj <- function(data){
+as_sftraj.ltraj <- function(data){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -145,7 +146,7 @@ as_sfstep.ltraj <- function(data){
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
     timez= time)
 
-  ret <- new_sfstep(
+  ret <- new_sftraj(
     data = df1 ,
     burst = burst,
     error = error,
@@ -160,9 +161,9 @@ as_sfstep.ltraj <- function(data){
 }
 
 #' @export
-print.sfstep <- function(x,...){
+print.sftraj <- function(x,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
-  cat('this is a sfstep object\n')
+  cat('this is a sftraj object\n')
   cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))

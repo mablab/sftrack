@@ -77,6 +77,7 @@ structure(
   class = c("ind_burst")
 )
 }
+
 # ind_burst(burst=list(id='CJ11',month=3, height=10))
 multi_burst <- function(x = list(), active_burst) {
   structure(
@@ -110,19 +111,14 @@ make_multi_burst <-
         burst_levels[old_names == i] <- new_levels[i]
       }
     }
-    # ret <- multi_burst(lapply(burst_list,
-    #   function(x,...active_burst) ind_burst(burst=x, new_levels=burst_levels, active_burst = active_burst)), active_burst=active_burst)
-    ret <- lapply(burst_list,
+   ret <- lapply(burst_list,
       function(x, ...)
         make_ind_burst(
           burst = x,
           new_levels = burst_levels,
           active_burst = active_burst
         ))
-    # structure(ret,
-    #   active_burst = active_burst,
-    #   sort_index = factor(sapply(ret, function(x) attr(x, 'label'))),
-    #   class = c('multi_burst'))
+
     multi_burst(ret, active_burst = active_burst)
 
   }

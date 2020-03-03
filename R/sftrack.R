@@ -98,7 +98,7 @@ as_sftrack.data.frame <- function(
 # )
 
 #' @export
-as_sftrack.sfstep <- function(data){
+as_sftrack.sftraj <- function(data){
 
   geometry <- data$geometry
 
@@ -113,10 +113,11 @@ as_sftrack.sfstep <- function(data){
   geometry <- st_sfc(new_geom)
   burst <- data$burst
   error <- data$error
-  time <- data$utc_time
-
+  time <- data$time
+  new_data <- as.data.frame(data)
+  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst','time','error')]
   ret <- new_sftrack(
-    data = data ,
+    data = new_data,
     burst = burst,
     error = error,
     time = time,

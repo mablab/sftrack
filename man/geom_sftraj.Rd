@@ -3,24 +3,24 @@
 \name{geom_sftraj}
 \alias{geom_sftraj}
 \title{geom_sftraj()
-This function can be added to ggplot() to plot an sftrack and sfstep
+This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function}
 \usage{
 geom_sftraj(data, ...)
 }
 \arguments{
-\item{data}{the sfstep or sftrack object.}
+\item{data}{the sftraj or sftrack object.}
 }
 \description{
 geom_sftraj()
-This function can be added to ggplot() to plot an sftrack and sfstep
+This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function
 }
 \examples{
 
 data(raccoon_data)
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-my_step <- as_sfstep(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+my_step <- as_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
   error = NA, coords = c('longitude','latitude','height'),
   burst =burstz)
 library(ggplot2)
