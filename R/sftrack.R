@@ -1,8 +1,8 @@
-#' @title as_sftraj
+#' @title as_sftrack
 #' @description This generic has multiple inputs and gathers relevant information
-#' to sftraj class.
-#' It converts x,y,z data into an sftraj object and gives it an sf$geometry column. This
-#' column is a list of line segments representing each step. It also creates and error, time, and burst column as well of each respective class.
+#' to sftrack class.
+#' It converts x,y,z data into an sftrack object and gives it an sf$geometry column. This
+#' column is a list of points. It also creates and error, time, and burst column as well of each respective class.
 #'
 #' @param data Data.frame input, these columns will remain unchanged, and any columns refered to
 #' in later parameters are not deleted from this column. The function simply copies the data.frame
@@ -15,13 +15,14 @@
 #' @param tz timezone component, same as as.POSIX
 #'
 #' @import sf
-#' @export as_sftraj
+#' @export as_sftrack
+#' @export new_sftrack
 #' @examples
 #'
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_step <- as_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#' my_track <- as_sfrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
 #'   error = NA, coords = c('longitude','latitude','height'),
 #'   burst =burstz)
 #'   # Input is a ltraj
@@ -30,13 +31,14 @@
 #'
 #'   # Input is an sftrack object
 ######################
-
-#' @exportMethod as_sftraj
-as_sftraj <- function(data,...) {
-  UseMethod('as_sftraj')
+# Builder
+#' @exportMethod as_sftrack
+as_sftrack <- function(data,...) {
+  UseMethod('as_sftrack')
 }
-#' @export new_sftraj
-new_sftraj <- function(data, burst, time, geometry, error) {
+
+
+new_sftrack <- function(data, burst, time, geometry, error) {
   if(sum(is.na(error)==1)){error <- rep(NA, nrow(data))}
 
   data_sf <- st_as_sf(cbind(data, burst, time, geometry = geometry, error))
@@ -44,14 +46,14 @@ new_sftraj <- function(data, burst, time, geometry, error) {
     data_sf,
     active_burst = attr(burst, 'active_burst'),
     projection = attr(geometry, 'proj4'),
-    class = c("sftraj", 'sf','data.frame')
+    class = c("sftrack", 'sf','data.frame')
   )
 }
 
-#########################
+########################
 # Methods
 #' @export
-as_sftraj.data.frame <- function(
+as_sftrack.data.frame <- function(
   data,
   burst,
   active_burst = 'id',
@@ -65,30 +67,74 @@ as_sftraj.data.frame <- function(
   # error = rep(NA, nrow(data))
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
-  # calculate point geom if not already a geom
+  # calculate point geom
+
   geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  # Force calculation of empty geometries.
+  attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
   burst = make_multi_burst(burst, active_burst = active_burst)
   error = new_error_tj(error)
   time = new_time_tj(time)
 
-  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
-    timez= time)
-
-  ret <- new_sftraj(
+  ret <- new_sftrack(
     data = data ,
     burst = burst,
     error = error,
     time = time,
-    geometry = step_geometry
+    geometry = geom$geometry
   )
   #Sanity check
 
   #
   return(ret)
 }
-# data.frame
-# as_sftraj(
+#data.frame
+# data(raccoon_data)
+#
+# df <- as_sftrack(
+#   data = raccoon_data ,
+#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
+#   error = rep(NA, nrow(data)),
+#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
+#   coords = c('latitude','longitude','height')
+# )
+
+#' @export
+as_sftrack.sftraj <- function(data){
+
+  geometry <- data$geometry
+
+  new_geom <- lapply(geometry, function(x){
+    if(c('GEOMETRYCOLLECTION')%in%class(x)){
+      return(st_point(unlist(x)[1:3], dim = 'XYZ'))
+    }
+    if(c('LINESTRING')%in%class(x)){
+      return(st_point(x[c(1,3,5)], dim = 'XYZ'))
+    }
+  })
+  geometry <- st_sfc(new_geom)
+  burst <- data$burst
+  error <- data$error
+  time <- data$time
+  new_data <- as.data.frame(data)
+  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst','time','error')]
+  ret <- new_sftrack(
+    data = new_data,
+    burst = burst,
+    error = error,
+    time = time,
+    geometry = geometry
+  )
+
+  return(ret)
+}
+
+
+#data.frame
+# data(raccoon_data)
+#
+# as_sftrack(
 #   data = raccoon_data ,
 #   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
 #   error = rep(NA, nrow(data)),
@@ -97,30 +143,16 @@ as_sftraj.data.frame <- function(
 # )
 
 
-## Track
-#' @export
-as_sftraj.sftrack <-function(data){
-  burst <- data$burst
-  geometry <-  data$geometry
-  time = data$time
-  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geometry,
-    timez = time)
-  new_data <- as.data.frame(data)
-  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst','time','error')]
-  ret <- new_sftraj(
-    data = new_data,
-    burst = burst,
-    error = error,
-    time = time,
-    geometry = step_geometry
-  )
+### Ltraj
+#' @export as_sftrack.ltraj
+# library(adehabitatLT)
+# data(raccoon_data)
+# ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
+#  id = raccoon_data$sensor_code, typeII = TRUE,
+#  infolocs = raccoon_data[,1:6] )
+# as_sftrack(data = ltraj_df)
 
-  return(ret)
-}
-
-
-#' @export
-as_sftraj.ltraj <- function(data){
+as_sftrack.ltraj <- function(data){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -131,43 +163,38 @@ as_sftraj.ltraj <- function(data){
     date <- sub[[1]]$date
     coords <- c('x','y')
     data.frame(sub[[1]][,coords],z=0,date,id,infolocs)
-
   }
   )
   df1 <- do.call(rbind, new_data)
   time = df1$date
   burst = list(id=df1$id)
-  error = rep(NA, nrow(df1))
   coords = c('x','y','z')
-  geom <- st_as_sf(df1[,coords], coords = coords, na.fail = FALSE )
-
-  #
+  geom <- st_as_sf(df1[,coords], coords = coords , na.fail = FALSE)
+  # pull out other relevant info
   burst = make_multi_burst(burst)
   error = new_error_tj(error)
   time = new_time_tj(time)
-  step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
-    timez= time)
 
-  ret <- new_sftraj(
+  ret <- new_sftrack(
     data = df1 ,
     burst = burst,
     error = error,
     time = time,
-    geometry = step_geometry
+    geometry = geom$geometry
   )
-
   #Sanity check? Necessary?
 
   #
   return(ret)
 }
 
-#' @export
-print.sftraj <- function(x,...){
-  x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
-  cat('this is a sftraj object\n')
-  cat(paste0('proj : ',attr(x,'projection'),'\n'))
 
+# Methods for 'sftrack' class
+#' @export
+print.sftrack <- function(x,...){
+  x <- as.data.frame(x)
+  cat('This is an sftrack object\n')
+  cat(paste0('proj : ',attr(x,'projection'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))
@@ -175,11 +202,13 @@ print.sftraj <- function(x,...){
   p <- ifelse(row_l>6,6,row_l)
   cat(paste("First", n, "features w/",p+4, "truncated columns:\n"))
   if(ncol(x)>10){
-    y <- cbind(x[1:n,colnames(x)[1:p]],
+  y <- cbind(x[1:n,colnames(x)[1:p]],
     data.frame('...' = rep('...',n)),
     x[1:n,c('time','burst','error','geometry')])
-} else y <- x
-print.data.frame(y,...)
-
+  } else y <- x
+  print.data.frame(y, ...)
 }
+
+# Sumary
+#summary.sftrack
 
