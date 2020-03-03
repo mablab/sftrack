@@ -68,7 +68,10 @@ as_sftrack.data.frame <- function(
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
   # calculate point geom
+
   geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  # Force calculation of empty geometries.
+  attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
   burst = make_multi_burst(burst, active_burst = active_burst)
   error = new_error_tj(error)

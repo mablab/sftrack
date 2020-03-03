@@ -1,5 +1,5 @@
 ---
-title: "sftraj working vignette"
+title: "sftrack working vignette"
 output: html_document
 ---
 
@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-devtools::load_all("/home/matt/r_programs/sftraj")
+devtools::load_all("/home/matt/r_programs/sftrack")
 
 ```
 
@@ -38,11 +38,15 @@ coords = c('latitude','longitude','height')
 Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
 ```{r}
 # sftrack
-my_track <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
-my_track
-# sfstep
-my_step <- as_sfstep(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
-my_step
+my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftrack
+
+
+# sftraj
+my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftraj
+
+
 ```
 
 This generic function also converts ltraj objects  
@@ -54,16 +58,23 @@ ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSI
  infolocs = raccoon_data[,1:6] )
 
 as_sftrack(ltraj_df)
-as_sfstep(ltraj_df)
+as_sftraj(ltraj_df)
+
+
 ```
 
 
 ### inter class conversion
-This function also converts between the `sftrack` and `sfstep` data type
+This function also converts between the `sftrack` and `sftraj` data type
 
 ```{r}
-as_sftrack(my_step)
-as_sfstep(data=my_track)
+new_sftrack <- as_sftrack(my_sftraj)
+new_sftrack
+new_sftraj <- as_sftraj(my_sftrack)
+new_sftraj
+
+all.equal(my_sftraj,new_sftraj)
+all.equal(my_sftrack,new_sftrack)
 ```
 
 
@@ -72,7 +83,7 @@ as_sfstep(data=my_track)
 Currently there are some plotting methods. Base plotting is basic, but assumes the active_burst is the grouping/coloring variable  
 
 ```{r}
-plot(my_step)
+plot(my_sftraj)
 ```
 
 
@@ -81,7 +92,7 @@ you just have to tell geom_sf() what the grouping variable is.
 
 ```{r}
 library(ggplot2)
-ggplot() + geom_sftraj(data = my_step)
+ggplot() + geom_sftraj(data = my_sftraj)
 ```
 
 ## Bursts  
