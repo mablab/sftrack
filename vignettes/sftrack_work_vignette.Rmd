@@ -31,6 +31,7 @@ active_burst = c('id','month')
 error = rep(NA, nrow(raccoon_data))
 time = as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
 coords = c('latitude','longitude','height')
+crs = '+init=epsg:4326'
 ```
 
 ###############################################
@@ -38,12 +39,12 @@ coords = c('latitude','longitude','height')
 Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
 ```{r}
 # sftrack
-my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords ,crs = crs)
 my_sftrack
 
 
 # sftraj
-my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords )
+my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords, crs = crs )
 my_sftraj
 
 

@@ -14,7 +14,7 @@
 #'
 #' make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
-make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
+make_step_geom <- function(burst_id, timez, geometry){
   # Need to check if time is ordered, if not throw an error
   # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
   # data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
@@ -60,7 +60,8 @@ make_step_geom <- function(burst_id = NA, timez = NA, geometry = NA){
     step_geometry[subz] <- sf_x[order(order_t)]
 
   }
-  return(st_sfc(step_geometry))
+
+  return(st_sfc(step_geometry,crs = attr(geometry,'crs')))
 }
 #
 # burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
