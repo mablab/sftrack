@@ -45,7 +45,7 @@ new_sftrack <- function(data, burst, time, geometry, error) {
   structure(
     data_sf,
     active_burst = attr(burst, 'active_burst'),
-    projection = attr(geometry, 'proj4'),
+    crs = attr(geometry, 'crs'),
     class = c("sftrack", 'sf','data.frame')
   )
 }
@@ -59,7 +59,8 @@ as_sftrack.data.frame <- function(
   active_burst = 'id',
   error = NA,
   time,
-  coords = c('x','y','z')
+  coords = c('x','y','z'),
+  crs = NA
 ){
   # data(raccoon_data)
   # data <- raccoon_data
@@ -69,7 +70,7 @@ as_sftrack.data.frame <- function(
   # coords = c('latitude','longitude','height')
   # calculate point geom
 
-  geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  geom <- st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
@@ -152,7 +153,7 @@ as_sftrack.sftraj <- function(data){
 #  infolocs = raccoon_data[,1:6] )
 # as_sftrack(data = ltraj_df)
 
-as_sftrack.ltraj <- function(data){
+as_sftrack.ltraj <- function(data, crs = NA){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -169,7 +170,7 @@ as_sftrack.ltraj <- function(data){
   time = df1$date
   burst = list(id=df1$id)
   coords = c('x','y','z')
-  geom <- st_as_sf(df1[,coords], coords = coords , na.fail = FALSE)
+  geom <- st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
   burst = make_multi_burst(burst)
   error = new_error_tj(error)
@@ -194,7 +195,7 @@ as_sftrack.ltraj <- function(data){
 print.sftrack <- function(x,...){
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
-  cat(paste0('proj : ',attr(x,'projection'),'\n'))
+  cat(paste0('proj : ',attr(x,'crs'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))

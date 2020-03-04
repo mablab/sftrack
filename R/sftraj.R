@@ -43,7 +43,7 @@ new_sftraj <- function(data, burst, time, geometry, error) {
   structure(
     data_sf,
     active_burst = attr(burst, 'active_burst'),
-    projection = attr(geometry, 'proj4'),
+    crs = attr(geometry, 'crs'),
     class = c("sftraj", 'sf','data.frame')
   )
 }
@@ -57,7 +57,8 @@ as_sftraj.data.frame <- function(
   active_burst = 'id',
   error = NA,
   time,
-  coords = c('x','y','z')
+  coords = c('x','y','z'),
+  crs = NA
 ){
   # data(raccoon_data)
   # data <- raccoon_data
@@ -66,7 +67,7 @@ as_sftraj.data.frame <- function(
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
   # calculate point geom if not already a geom
-  geom <- st_as_sf(data[,coords], coords = coords, na.fail = FALSE)
+  geom <- st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
   # pull out other relevant info
   burst = make_multi_burst(burst, active_burst = active_burst)
   error = new_error_tj(error)
@@ -120,7 +121,7 @@ as_sftraj.sftrack <-function(data){
 
 
 #' @export
-as_sftraj.ltraj <- function(data){
+as_sftraj.ltraj <- function(data, crs = NA){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -139,7 +140,7 @@ as_sftraj.ltraj <- function(data){
   burst = list(id=df1$id)
   error = rep(NA, nrow(df1))
   coords = c('x','y','z')
-  geom <- st_as_sf(df1[,coords], coords = coords, na.fail = FALSE )
+  geom <- st_as_sf(df1[,coords], coords = coords, crs = crs, na.fail = FALSE )
 
   #
   burst = make_multi_burst(burst)
@@ -166,7 +167,7 @@ as_sftraj.ltraj <- function(data){
 print.sftraj <- function(x,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
   cat('this is a sftraj object\n')
-  cat(paste0('proj : ',attr(x,'projection'),'\n'))
+  cat(paste0('proj : ',attr(x,'crs'),'\n'))
 
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
