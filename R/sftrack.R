@@ -45,7 +45,6 @@ new_sftrack <- function(data, burst, time, geometry, error) {
   structure(
     data_sf,
     active_burst = attr(burst, 'active_burst'),
-    crs = attr(geometry, 'crs'),
     class = c("sftrack", 'sf','data.frame')
   )
 }
