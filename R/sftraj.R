@@ -132,19 +132,20 @@ as_sftraj.ltraj <- function(data, crs = NA){
     infolocs <- infolocs(sub)
     time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],z=0,id,time,infolocs)
+    data.frame(sub[[1]][,coords],id,time,infolocs)
 
   }
   )
   df1 <- do.call(rbind, new_data)
   burst = list(id=df1$id)
   error = NA
-  coords = c('x','y','z')
+  time = 'time'
+  coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords, crs = crs, na.fail = FALSE )
   #
   burst = make_multi_burst(burst)
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
-    time_data = data[, time, drop = T])
+    time_data = df1[, time])
 
   ret <- new_sftraj(
     data = df1 ,

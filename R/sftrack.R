@@ -105,14 +105,19 @@ as_sftrack.sftraj <- function(data){
 
   geometry <- data$geometry
 
+  point_d <- class(geometry[[1]])[1]
+  nd <- which(point_d==c(NA, 'XY', 'XYZ'))
+  d_seq <- seq(1,(2*nd),by = 2)
   new_geom <- lapply(geometry, function(x){
+
     if(c('GEOMETRYCOLLECTION')%in%class(x)){
-      return(sf::st_point(unlist(x)[1:3], dim = 'XYZ'))
+      return(unclass(x)[[1]])
     }
     if(c('LINESTRING')%in%class(x)){
-      return(sf::st_point(x[c(1,3,5)], dim = 'XYZ'))
+      return(sf::st_point(x[d_seq], dim = point_d))
     }
   })
+
   crs <- attr(geometry, 'crs')
   geometry <- sf::st_sfc(new_geom, crs = crs)
   burst <- data$burst
@@ -163,13 +168,13 @@ as_sftrack.ltraj <- function(data, crs = NA){
     infolocs <- infolocs(sub)
     time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],z=0,id,time,infolocs)
+    data.frame(sub[[1]][,coords],id,time,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
   time = 'time'
   burst = list(id=df1$id)
-  coords = c('x','y','z')
+  coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
   burst = make_multi_burst(burst)
