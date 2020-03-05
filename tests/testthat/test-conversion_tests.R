@@ -38,6 +38,13 @@ test_that("sftrack conversions", {
   #new_sftraj
   conv_back_sftrack <- as_sftrack(new_sftraj)
   expect_equal(my_sftrack,conv_back_sftrack)
+
+  #check coordinate dimensions get carried over
+  my_sftrack_2d <- suppressMessages(as_sftrack(data = df1,burst=list(id=df1$id, month = df1$month),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y')))
+  new_sftraj <- as_sftraj(my_sftrack_2d)
+  conv_back_sftrack_2d <- as_sftrack(new_sftraj)
+  expect_equal(class(conv_back_sftrack_2d$geometry[[1]])[1],'XY')
 })
 
 
