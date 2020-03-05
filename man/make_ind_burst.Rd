@@ -26,7 +26,7 @@ make_bulti_burst()
 }
 \examples{
 # Make a single burst
-make_ ind_burst(burst=list(id='CJ11',month=3, height=10))
+make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 
 # Make a multi burst
  data(raccoon_data)

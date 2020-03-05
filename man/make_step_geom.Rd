@@ -4,23 +4,23 @@
 \alias{make_step_geom}
 \title{step geom calculator}
 \usage{
-make_step_geom(burst_id = NA, timez = NA, geometry = NA)
+make_step_geom(burst_id, time_data, geometry)
 }
 \arguments{
 \item{burst_id}{burst object thats subsetted by only the bursts we want to use to calculate one step_geom}
 
-\item{timez}{time object}
-
 \item{geometry}{the geometery data from either sf or sf_track. Must be an sf geometry class}
+
+\item{timez}{time object}
 }
 \description{
 This calculates step geom as individual line segments. It implies your bursts
 }
 \examples{
 burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-data_sf <- as_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-     error = NA, coords = c('longitude','latitude','height'),
-    burst =burstz)
+data_sf <- as_sftrack(raccoon_data, time = 'acquisition_time',
+  error = NA, coords = c('longitude','latitude','height'),
+  burst =burstz)
 
-make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
+make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
 }

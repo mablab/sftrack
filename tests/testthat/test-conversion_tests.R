@@ -9,11 +9,11 @@ test_that("sftraj conversions", {
     timez = Sys.time() + 60*60*(1:4)
   )
   my_sftraj <- suppressMessages(as_sftraj(data = df1,burst=list(id=df1$id, month = df1$month),
-    time = df1$timez, active_burst = c('id','month'), coords = c('x','y','z')))
- my_sftraj
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y','z')))
+#  my_sftraj
  # sftraj -> sftrack -> sftraj
   new_sftrack <- as_sftrack(my_sftraj)
-  new_sftrack
+  # new_sftrack
   conv_back_sftraj <- as_sftraj(new_sftrack)
   expect_equal(my_sftraj,conv_back_sftraj)
 
@@ -31,11 +31,11 @@ test_that("sftrack conversions", {
     timez = Sys.time() + 60*60*(1:4)
   )
   my_sftrack <- suppressMessages(as_sftrack(data = df1,burst=list(id=df1$id, month = df1$month),
-    time = df1$timez, active_burst = c('id','month'), coords = c('x','y','z')))
-  my_sftrack
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y','z')))
+  #my_sftrack
   # sftrack -> sftraj -> sftrack
   new_sftraj <- as_sftraj(my_sftrack)
-  new_sftraj
+  #new_sftraj
   conv_back_sftrack <- as_sftrack(new_sftraj)
   expect_equal(my_sftrack,conv_back_sftrack)
 })
