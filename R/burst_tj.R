@@ -17,7 +17,7 @@
 #' @export make_multi_burst
 #' @examples
 #' # Make a single burst
-#' make_ ind_burst(burst=list(id='CJ11',month=3, height=10))
+#' make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 #'
 #' # Make a multi burst
 #'  data(raccoon_data)
@@ -213,3 +213,5 @@ burst_select <- function(burst){
 
 #' @export
 unique_active_bursts <- function(burst) unique(vapply(burst, function(x) paste0(attr(x,'active_burst'), collapse=', '),character(1)))
+
+

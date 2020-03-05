@@ -18,11 +18,10 @@
 #' @export as_sftrack
 #' @export new_sftrack
 #' @examples
-#'
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_track <- as_sfrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
+#' my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude','height'),
 #'   burst =burstz)
 #'   # Input is a ltraj
@@ -38,13 +37,14 @@ as_sftrack <- function(data,...) {
 }
 
 
-new_sftrack <- function(data, burst, time, geometry, error) {
-  if(sum(is.na(error)==1)){error <- rep(NA, nrow(data))}
+new_sftrack <- function(data, burst, time, geometry, error = NA) {
 
-  data_sf <- st_as_sf(cbind(data, burst, time, geometry = geometry, error))
+  data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
   structure(
     data_sf,
     active_burst = attr(burst, 'active_burst'),
+    time = time,
+    error = error,
     class = c("sftrack", 'sf','data.frame')
   )
 }
@@ -69,13 +69,13 @@ as_sftrack.data.frame <- function(
   # coords = c('latitude','longitude','height')
   # calculate point geom
 
-  geom <- st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
+  geom <- sf::st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
   burst = make_multi_burst(burst, active_burst = active_burst)
-  error = new_error_tj(error)
-  time = new_time_tj(time)
+
+  time_exists(data, time)
 
   ret <- new_sftrack(
     data = data ,
@@ -107,18 +107,19 @@ as_sftrack.sftraj <- function(data){
 
   new_geom <- lapply(geometry, function(x){
     if(c('GEOMETRYCOLLECTION')%in%class(x)){
-      return(st_point(unlist(x)[1:3], dim = 'XYZ'))
+      return(sf::st_point(unlist(x)[1:3], dim = 'XYZ'))
     }
     if(c('LINESTRING')%in%class(x)){
-      return(st_point(x[c(1,3,5)], dim = 'XYZ'))
+      return(sf::st_point(x[c(1,3,5)], dim = 'XYZ'))
     }
   })
-  geometry <- st_sfc(new_geom)
+  crs <- attr(geometry, 'crs')
+  geometry <- sf::st_sfc(new_geom, crs = crs)
   burst <- data$burst
-  error <- data$error
-  time <- data$time
+  error <- attr(data, 'error')
+  time <- attr(data, 'time')
   new_data <- as.data.frame(data)
-  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst','time','error')]
+  new_data <- new_data[ ,!colnames(new_data) %in%c('geometry','burst')]
   ret <- new_sftrack(
     data = new_data,
     burst = burst,
@@ -156,24 +157,23 @@ as_sftrack.ltraj <- function(data, crs = NA){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
-    sub <- data[x]
+    sub <- data[x,]
     attributes(sub[[1]])
     id <-  attr(sub[[1]], 'burst')
     infolocs <- infolocs(sub)
-    date <- sub[[1]]$date
+    time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],z=0,date,id,infolocs)
+    data.frame(sub[[1]][,coords],z=0,id,time,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
-  time = df1$date
+  time = 'time'
   burst = list(id=df1$id)
   coords = c('x','y','z')
-  geom <- st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
+  geom <- sf::st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
   burst = make_multi_burst(burst)
-  error = new_error_tj(error)
-  time = new_time_tj(time)
+  error = NA
 
   ret <- new_sftrack(
     data = df1 ,
@@ -198,13 +198,13 @@ print.sftrack <- function(x,...){
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   n <- ifelse(nrow(x)>10,10,nrow(x))
-  row_l <- length(!colnames(x)%in%c('time','burst','error','geometry'))
-  p <- ifelse(row_l>6,6,row_l)
-  cat(paste("First", n, "features w/",p+4, "truncated columns:\n"))
+  row_l <- length(!colnames(x)%in%c('burst','geometry'))
+  p <- ifelse(row_l>8,8,row_l)
+  cat(paste("First", n, "features w/",p+2, "truncated columns:\n"))
   if(ncol(x)>10){
   y <- cbind(x[1:n,colnames(x)[1:p]],
     data.frame('...' = rep('...',n)),
-    x[1:n,c('time','burst','error','geometry')])
+    x[1:n,c('burst','geometry')])
   } else y <- x
   print.data.frame(y, ...)
 }

@@ -26,11 +26,12 @@ data("raccoon_data")
 raccoon_data$latitude[raccoon_data$latitude==0] <- NA
 raccoon_data$longitude[raccoon_data$longitude==0] <- NA
 raccoon_data$height[raccoon_data$height==0] <- NA
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
 burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 active_burst = c('id','month')
-error = rep(NA, nrow(raccoon_data))
-time = as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
-coords = c('latitude','longitude','height')
+error = NA
+time = 'acquisition_time'
+coords = c('longitude','latitude','height')
 crs = '+init=epsg:4326'
 ```
 
@@ -123,7 +124,9 @@ burst_labels(mb1)[1:10]
  
 Can combine multiple ind_bursts to create a multi_burst
 ```{r}
-mb2 <- c(ind_burst(list(id = 1, year = 2018)),ind_burst(list(id = 2, year = 2018))) 
+a = ind_burst(list(id = 1, year = 2018))
+b = ind_burst(list(id = 2, year = 2018))
+mb2 <- c(a, b) 
 str(mb2)
 ```
 **The rest is not done quite complete** 

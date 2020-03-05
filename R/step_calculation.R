@@ -8,34 +8,32 @@
 #' @export make_step_geom
 #' @examples
 #' burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#' data_sf <- as_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-#'      error = NA, coords = c('longitude','latitude','height'),
-#'     burst =burstz)
+#' data_sf <- as_sftrack(raccoon_data, time = 'acquisition_time',
+#'   error = NA, coords = c('longitude','latitude','height'),
+#'   burst =burstz)
 #'
-#' make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
+#' make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
 
-make_step_geom <- function(burst_id, timez, geometry){
+make_step_geom <- function(burst_id, time_data, geometry){
   # Need to check if time is ordered, if not throw an error
-  # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-  # data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
-  # burst_id = burst_id = c('id')
-  # geometry = data_sf$geometry
-  # timez = data_sf$time
+  # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon)
+  # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
+  # burst_id = burst_select(make_multi_burst(burstz, active_burst = c('id')))
+  # time_data = raccoon_data$acquisition_time
 
   #if theres more than one burst, then we combine bursts
   if(length(burst_id[[1]]) > 1) { message('more than one burst selected, bursts will be combined for step geometry') }
   idz <- factor(paste0(burst_id))
   #
   unique_idz <- levels(idz)[table(idz)>0]
-
+  ordered(burst_id, time_data, return = FALSE)
   step_geometry <- rep(NA,length(geometry))
+
   for(i in unique_idz){
     #  i <- unique_idz[1]
     subz <- idz==i
     # need to order step geometry
-
-    order_t <- order(timez[subz])
-    if( !isTRUE(all.equal(order_t, seq_len(sum(subz)))) ){ message(paste0('time was not ordered for: ',i)) }
+    order_t <- order(time_data[subz])
 
     sub_geom <- geometry[subz]
     sub_geom <- sub_geom[order_t]
