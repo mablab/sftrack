@@ -36,7 +36,7 @@ data(raccoon_data)
   # Input is a data.frame
 my_step <- as_sftraj(raccoon_data, time_col ='acquisition_time',
   error = NA, coords = c('longitude','latitude','height'),
-  burst =burstz)
+  burst_list =burstz)
   # Input is a ltraj
 
   # Input is a sf object

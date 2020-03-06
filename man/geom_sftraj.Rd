@@ -22,7 +22,7 @@ data(raccoon_data)
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 my_step <- as_sftraj(raccoon_data, time = 'acquisition_time',
    coords = c('longitude','latitude','height'),
-  burst =burstz)
+  burst_list =burstz)
 library(ggplot2)
 
 ggplot() + geom_sftraj(data = my_step)
