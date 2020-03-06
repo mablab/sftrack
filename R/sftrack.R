@@ -21,9 +21,9 @@
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
+#' my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude','height'),
-#'   burst =burstz)
+#'   burst = burstz)
 #'   # Input is a ltraj
 #'
 #'   # Input is a sf object
@@ -54,11 +54,16 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 #' @export
 as_sftrack.data.frame <- function(
   data,
-  burst,
-  active_burst = 'id',
-  error = NA,
-  time,
+  xyz,
   coords = c('x','y','z'),
+  burst,
+  id,
+  burst_col = NULL,
+  active_burst = NA,
+  error,
+  error_col,
+  time,
+  time_col,
   crs = NA
 ){
   # data(raccoon_data)
@@ -67,21 +72,44 @@ as_sftrack.data.frame <- function(
   # error = rep(NA, nrow(data))
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
-  # calculate point geom
+  # check if columns exist
 
-  geom <- sf::st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
+  if(!missing(id)){
+    check_names_exist(data, c(id,burst_col))
+    burst <- lapply(data[,c(id,burst_col), F], function(x)x)
+    names(burst)[1] <- 'id'}
+
+  if(!missing(coords)){
+    check_names_exist(data, coords)
+    xyz <- data[,coords]
+  }
+
+  if(!missing(error_col)){ check_names_exist(data, error_col)}
+  if(!missing(time_col)){ check_names_exist(data, time_col)}
+  # vector mode
+  # time
+  if(!missing(time)){
+    data$reloc_time <- time
+    time_col = 'reloc_time'
+  }
+
+  if(!missing(error)){
+    data$sftrack_error <- error
+    error_col = 'sftrack_error'
+  } else { if(missing(error_col)) error_col = NA}
+
+  geom <- sf::st_as_sf(xyz, coords = names(xyz), crs = crs, na.fail = FALSE)
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
-  burst = make_multi_burst(burst, active_burst = active_burst)
-
-  time_exists(data, time)
+  if(any(is.na(active_burst))){active_burst <- names(burst)}
+  burst <- make_multi_burst(burst, active_burst = active_burst)
 
   ret <- new_sftrack(
     data = data ,
     burst = burst,
-    error = error,
-    time = time,
+    error = error_col,
+    time = time_col,
     geometry = geom$geometry
   )
   #Sanity check
@@ -89,16 +117,6 @@ as_sftrack.data.frame <- function(
   #
   return(ret)
 }
-#data.frame
-# data(raccoon_data)
-#
-# df <- as_sftrack(
-#   data = raccoon_data ,
-#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
-#   error = rep(NA, nrow(data)),
-#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
-#   coords = c('latitude','longitude','height')
-# )
 
 #' @export
 as_sftrack.sftraj <- function(data){

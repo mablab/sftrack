@@ -22,26 +22,13 @@ ordered <- function(burst, time_data, return = TRUE){
     }
 }
 
-check_names_exist <- function(data, burst_col, coords, error_col, time_col){
+#' @export
+check_names_exist <- function(data, names){
   # check burst
   col_names <- colnames(data)
-  if(!missing('burst_col') && !burst_col %in% col_names){
-     stop('Burst column names not found in data.frame')
-  }
+  test <- !(names %in% colnames(data))
+  if(any(test)){  stop(paste0(paste0(names[test],collapse= ' & '), ' not found in data frame', collapse = ' '))}
 
-#' Checks if inputted column names are in data.frame
-#' @export
-  if(!missing('coords') && !coords %in% col_names){
-    stop('Coordinate column names not found in data.frame')
-  }
-
-  if(!missing('error_col') && !error_col %in% col_names){
-    stop('Error column not found in data.frame')
-  }
-
-  if(!missing('time_col') && !time_col %in% col_names){
-    stop('Time column not found in data.frame')
-  }
 }
 
 #check_names_exist(data=data, coords = 'what')

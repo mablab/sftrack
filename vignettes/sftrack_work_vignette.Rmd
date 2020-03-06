@@ -23,14 +23,12 @@ Load data and create appropriate variables for import. We'll set 0's to NA manua
 
 ```{r}
 data("raccoon_data")
-raccoon_data$latitude[raccoon_data$latitude==0] <- NA
-raccoon_data$longitude[raccoon_data$longitude==0] <- NA
-raccoon_data$height[raccoon_data$height==0] <- NA
+
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
 burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
 active_burst = c('id','month')
 error = NA
-time = 'acquisition_time'
+time_col = 'acquisition_time'
 coords = c('longitude','latitude','height')
 crs = '+init=epsg:4326'
 ```
@@ -40,12 +38,12 @@ crs = '+init=epsg:4326'
 Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
 ```{r}
 # sftrack
-my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords ,crs = crs)
+my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time_col = time_col , coords = coords ,crs = crs)
 my_sftrack
 
 
 # sftraj
-my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time = time , coords = coords, crs = crs )
+my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time_col = time_col , coords = coords, crs = crs )
 my_sftraj
 
 
