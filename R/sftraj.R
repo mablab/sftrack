@@ -21,7 +21,7 @@
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_step <- as_sftraj(raccoon_data, time ='acquisition_time',
+#' my_step <- as_sftraj(raccoon_data, time_col ='acquisition_time',
 #'   error = NA, coords = c('longitude','latitude','height'),
 #'   burst =burstz)
 #'   # Input is a ltraj
@@ -53,34 +53,66 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
 #' @export
 as_sftraj.data.frame <- function(
   data,
-  burst,
-  active_burst = 'id',
-  error = NA,
-  time,
+  xyz,
   coords = c('x','y','z'),
+  burst,
+  id,
+  burst_col = NULL,
+  active_burst = NA,
+  error,
+  error_col,
+  time,
+  time_col,
   crs = NA
 ){
   # data(raccoon_data)
   # data <- raccoon_data
-  # burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+  # burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
   # error = rep(NA, nrow(data))
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
-  # calculate point geom if not already a geom
-  geom <- sf::st_as_sf(data[,coords], coords = coords, crs = crs, na.fail = FALSE)
+
+  # data.frame mode
+
+  if(!missing(id)){
+    check_names_exist(data, c(id,burst_col))
+    burst <- lapply(data[,c(id,burst_col), F], function(x)x)
+    names(burst)[1] <- 'id'}
+
+  if(!missing(coords)){
+    check_names_exist(data, coords)
+    xyz <- data[,coords]
+    }
+
+  if(!missing(error_col)){ check_names_exist(data, error_col)}
+  if(!missing(time_col)){ check_names_exist(data, time_col)}
+  # vector mode
+  # time
+  if(!missing(time)){
+    data$reloc_time <- time
+    time_col = 'reloc_time'
+  }
+
+  if(!missing(error)){
+    data$sftrack_error <- error
+    error_col = 'sftrack_error'
+  } else { if(missing(error_col)) error_col = NA}
+
+  geom <- sf::st_as_sf(xyz, coords = names(xyz), crs = crs, na.fail = FALSE)
+  # Force calculation of empty geometries.
+  attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
   # pull out other relevant info
-  burst = make_multi_burst(burst, active_burst = active_burst)
-  error = error
-  time_exists(data, time)
+  if(any(is.na(active_burst))){active_burst <- names(burst)}
+  burst <- make_multi_burst(burst, active_burst = active_burst)
 
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
-    time_data = data[, time, drop = T])
+    time_data = data[, time_col, drop = T])
 
   ret <- new_sftraj(
     data = data ,
     burst = burst,
-    error = error,
-    time = time,
+    error = error_col,
+    time = time_col,
     geometry = step_geometry
   )
   #Sanity check

@@ -33,9 +33,9 @@ column is a list of points. It also creates and error, time, and burst column as
 data(raccoon_data)
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
-my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
+my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
   error = NA, coords = c('longitude','latitude','height'),
-  burst =burstz)
+  burst = burstz)
   # Input is a ltraj
 
   # Input is a sf object

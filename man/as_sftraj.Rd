@@ -34,7 +34,7 @@ column is a list of line segments representing each step. It also creates and er
 data(raccoon_data)
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
-my_step <- as_sftraj(raccoon_data, time ='acquisition_time',
+my_step <- as_sftraj(raccoon_data, time_col ='acquisition_time',
   error = NA, coords = c('longitude','latitude','height'),
   burst =burstz)
   # Input is a ltraj
