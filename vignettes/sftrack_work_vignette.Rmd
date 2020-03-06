@@ -25,7 +25,7 @@ Load data and create appropriate variables for import. We'll set 0's to NA manua
 data("raccoon_data")
 
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
-burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+burst_list = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 active_burst = c('id','month')
 error = NA
 time_col = 'acquisition_time'
@@ -38,12 +38,12 @@ crs = '+init=epsg:4326'
 Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
 ```{r}
 # sftrack
-my_sftrack <- as_sftrack(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time_col = time_col , coords = coords ,crs = crs)
+my_sftrack <- as_sftrack(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords ,crs = crs)
 my_sftrack
 
 
 # sftraj
-my_sftraj <- as_sftraj(data = raccoon_data, burst = burst, active_burst = active_burst, error = error, time_col = time_col , coords = coords, crs = crs )
+my_sftraj <- as_sftraj(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords, crs = crs )
 my_sftraj
 
 
@@ -102,7 +102,7 @@ stored at the row level. A `multi-burst` is a collection of `ind_bursts` and exi
 
 
 ```{r}
-mb1 <- make_multi_burst(burst=burst, active_burst=c('id','month'))
+mb1 <- make_multi_burst(burst_list=burst_list, active_burst=c('id','month'))
 str(mb1)
 ```
 
@@ -123,7 +123,7 @@ burst_labels(mb1)[1:10]
 Can combine multiple ind_bursts to create a multi_burst
 ```{r}
 a = ind_burst(list(id = 1, year = 2018))
-b = ind_burst(list(id = 2, year = 2018))
+b = ind_burst(list(id = 1, year = 2018))
 mb2 <- c(a, b) 
 str(mb2)
 ```

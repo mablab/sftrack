@@ -21,7 +21,7 @@
 #'
 #' # Make a multi burst
 #'  data(raccoon_data)
-#'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+#'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'  mb1 <- make_multi_burst(burst=burstz, active_burst=c('id','month'))
 #'  str(mb1)
 
@@ -32,6 +32,9 @@ make_ind_burst <- function(burst,
   # new_levels <- list(month = 0:11)
   # burst=list(id=1, month=2)
   # burst=list(id=factor('CJ11'), month=2)
+
+  # check duplicated
+  if(any(duplicated(names(burst)))){stop('burst names are duplicated')}
   if (!is.null(new_levels) &
       !is.list(new_levels)) {
     stop('new_levels must be a list')
@@ -64,7 +67,8 @@ make_ind_burst <- function(burst,
     }
   }
 
-  ind_burst(new_burst, active_burst = active_burst)
+ind_burst(new_burst, active_burst = active_burst)
+
 }
 
 ind_burst <- function(burst, active_burst = NULL){
@@ -91,18 +95,23 @@ multi_burst <- function(x = list(), active_burst) {
 
 ## Constructor
 make_multi_burst <-
-  function(burst = NULL,
+  function(burst_list = NULL,
     new_levels = NULL,
     active_burst = 'id') {
     # new_levels <- list(month = 1:12, height = 1:10)
     # burst=burstz
-    burst = burst
+    burst_list = burst_list
     active_burst = active_burst
-    burst_list <-
+    # check duplicated
+    if(any(duplicated(names(burst_list)))){stop('burst names can not be duplicated')}
+    burst_levels <- lapply(burst_list, unique)
+    #
+    burst <-
       do.call(function(...)
-        mapply(list, ..., SIMPLIFY = F), burst)
-    burst_levels <- lapply(burst, unique)
+        mapply(list, ..., SIMPLIFY = F), burst_list)
 
+
+    NAburst(burst)
     #override levels if provided
     if (!is.null(new_levels)) {
       old_names <- names(burst_levels)
@@ -111,7 +120,7 @@ make_multi_burst <-
         burst_levels[old_names == i] <- new_levels[i]
       }
     }
-   ret <- lapply(burst_list,
+    ret <- lapply(burst,
       function(x, ...)
         make_ind_burst(
           burst = x,
@@ -119,8 +128,11 @@ make_multi_burst <-
           active_burst = active_burst
         ))
 
-    multi_burst(ret, active_burst = active_burst)
+    mb <- multi_burst(ret, active_burst = active_burst)
 
+    #check more than one burst
+    check_two_bursts(mb)
+    return(mb)
   }
 
 #make_multi_burst(burst=burstz, active_burst=c('id','month'))
@@ -141,7 +153,10 @@ c.ind_burst <- function(...){
   df <- lapply(ret, function(x) {
     make_ind_burst(unclass(x), new_levels = new_levels, active_burst=active_burst)
   })
-  multi_burst(df, active_burst)
+  mb <- multi_burst(df, active_burst)
+  check_two_bursts(mb)
+  NAburst(mb)
+  return(mb)
 }
 
 #' @export

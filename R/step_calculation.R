@@ -10,9 +10,9 @@
 #' burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #' data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude','height'),
-#'   burst =burstz)
+#'   burst_list =burstz)
 #'
-#' make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
+#' make_step_geom(burst_id = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
 
 make_step_geom <- function(burst_id, time_data, geometry){
   # Need to check if time is ordered, if not throw an error
@@ -23,6 +23,7 @@ make_step_geom <- function(burst_id, time_data, geometry){
 
   #if theres more than one burst, then we combine bursts
   if(length(burst_id[[1]]) > 1) { message('more than one burst selected, bursts will be combined for step geometry') }
+  as.character(burst_id[[3]]$id)
   idz <- factor(paste0(burst_id))
   #
   unique_idz <- levels(idz)[table(idz)>0]

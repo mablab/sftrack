@@ -30,7 +30,7 @@ make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 
 # Make a multi burst
  data(raccoon_data)
- burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+ burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
  mb1 <- make_multi_burst(burst=burstz, active_burst=c('id','month'))
  str(mb1)
 }

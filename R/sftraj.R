@@ -23,7 +23,7 @@
 #'   # Input is a data.frame
 #' my_step <- as_sftraj(raccoon_data, time_col ='acquisition_time',
 #'   error = NA, coords = c('longitude','latitude','height'),
-#'   burst =burstz)
+#'   burst_list =burstz)
 #'   # Input is a ltraj
 #'
 #'   # Input is a sf object
@@ -55,7 +55,7 @@ as_sftraj.data.frame <- function(
   data,
   xyz,
   coords = c('x','y','z'),
-  burst,
+  burst_list,
   id,
   burst_col = NULL,
   active_burst = NA,
@@ -63,7 +63,8 @@ as_sftraj.data.frame <- function(
   error_col,
   time,
   time_col,
-  crs = NA
+  crs = NA,
+  zeroNA = FALSE
 ){
   # data(raccoon_data)
   # data <- raccoon_data
@@ -76,13 +77,14 @@ as_sftraj.data.frame <- function(
 
   if(!missing(id)){
     check_names_exist(data, c(id,burst_col))
-    burst <- lapply(data[,c(id,burst_col), F], function(x)x)
-    names(burst)[1] <- 'id'}
+    burst_list <- lapply(data[,c(id,burst_col), F], function(x)x)
+    names(burst_list)[1] <- 'id'}
 
   if(!missing(coords)){
     check_names_exist(data, coords)
     xyz <- data[,coords]
     }
+  if(zeroNA){xyz <- fixzero(xyz)}
 
   if(!missing(error_col)){ check_names_exist(data, error_col)}
   if(!missing(time_col)){ check_names_exist(data, time_col)}
@@ -101,9 +103,9 @@ as_sftraj.data.frame <- function(
   geom <- sf::st_as_sf(xyz, coords = names(xyz), crs = crs, na.fail = FALSE)
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
-  # pull out other relevant info
-  if(any(is.na(active_burst))){active_burst <- names(burst)}
-  burst <- make_multi_burst(burst, active_burst = active_burst)
+  #
+  if(any(is.na(active_burst))){active_burst <- names(burst_list)}
+  burst <- make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
     time_data = data[, time_col, drop = T])
@@ -116,7 +118,8 @@ as_sftraj.data.frame <- function(
     geometry = step_geometry
   )
   #Sanity check
-
+  #dup_timestamp(ret)
+  #ret <- ret[ordered(ret$burst, ret[,attr(ret,'time'),drop=T]),,drop=T]
   #
   return(ret)
 }
