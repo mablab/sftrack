@@ -45,7 +45,7 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
     active_burst = attr(burst, 'active_burst'),
     time = time,
     error = error,
-    class = c("sftrack", 'sf','data.frame')
+    class = c("sftrack", 'data.frame','sf')
   )
 }
 
@@ -184,16 +184,17 @@ as_sftrack.ltraj <- function(data, crs = NA){
   new_data <- lapply(seq_along(data), function(x) {
     sub <- data[x,]
     attributes(sub[[1]])
-    id <-  attr(sub[[1]], 'burst')
+    id <-  attr(sub[[1]], 'id')
+    burst <- attr(sub[[1]],'burst')
     infolocs <- infolocs(sub)
     time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],id,time,infolocs)
+    data.frame(sub[[1]][,coords],id,burst,time,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
-  time = 'time'
-  burst = list(id=df1$id)
+  time = 'reloc_time'
+  burst = list(id=df1$id, group=df1$burst)
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
