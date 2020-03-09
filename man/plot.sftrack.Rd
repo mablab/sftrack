@@ -4,7 +4,7 @@
 \alias{plot.sftrack}
 \title{Methods for plot an sftraj}
 \usage{
-\method{plot}{sftrack}(x, ...)
+plot.sftrack(x, ...)
 }
 \description{
 Methods for plot an sftraj

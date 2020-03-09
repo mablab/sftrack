@@ -44,7 +44,7 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
     active_burst = attr(burst, 'active_burst'),
     time = time,
     error = error,
-    class = c("sftraj", 'sf','data.frame')
+    class = c("sftraj", 'data.frame','sf')
   )
 }
 
@@ -161,20 +161,20 @@ as_sftraj.ltraj <- function(data, crs = NA){
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
-    sub <- data[x]
+    sub <- data[x,]
     attributes(sub[[1]])
-    id <-  attr(sub[[1]], 'burst')
+    id <-  attr(sub[[1]], 'id')
+    burst <- attr(sub[[1]],'burst')
     infolocs <- infolocs(sub)
     time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],id,time,infolocs)
-
+    data.frame(sub[[1]][,coords],id,burst,time,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
-  burst = list(id=df1$id)
+  time = 'reloc_time'
+  burst = list(id=df1$id, group=df1$burst)
   error = NA
-  time = 'time'
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords, crs = crs, na.fail = FALSE )
   #
