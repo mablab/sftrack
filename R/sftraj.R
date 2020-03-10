@@ -166,15 +166,15 @@ as_sftraj.ltraj <- function(data, crs = NA){
     id <-  attr(sub[[1]], 'id')
     burst <- attr(sub[[1]],'burst')
     infolocs <- infolocs(sub)
-    time <- sub[[1]]$date
+    reloc_time <- sub[[1]]$date
     coords <- c('x','y')
-    data.frame(sub[[1]][,coords],id,burst,time,infolocs)
+    data.frame(sub[[1]][,coords],id,burst,reloc_time,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
-  burst = list(id=df1$id, group=df1$burst)
-  error = NA
+  burst = list(id = df1$id)
+  if(!all(burst(data)==id(data))){burst$group <- df1$burst}
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords, crs = crs, na.fail = FALSE )
   #
@@ -182,12 +182,12 @@ as_sftraj.ltraj <- function(data, crs = NA){
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
     time_data = df1[, time])
 
-  ret <- new_sftraj(
-    data = df1 ,
+  ret <- new_sftrack(
+    data = df1[,!colnames(df1)%in%c('id','burst')] ,
     burst = burst,
     error = error,
     time = time,
-    geometry = step_geometry
+    geometry = geom$geometry
   )
 
   #Sanity check? Necessary?

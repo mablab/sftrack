@@ -110,7 +110,7 @@ str(mb1)
 Burst select allows you access to the active_burst
 
 ```{r}
-burst_select(mb1)[1]
+burst_select(mb1)[[1]]
 ```
 
 burst labels allows access to the burst labels which are a combination of the active bursts with '_' seperator
