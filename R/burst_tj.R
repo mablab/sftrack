@@ -87,6 +87,7 @@ multi_burst <- function(x = list(), active_burst) {
   structure(
     x,
     active_burst = active_burst,
+    burst_names = names(x[[1]]),
     sort_index = factor(sapply(x, function(x)
       attr(x, 'label'))),
     class = c('multi_burst')
@@ -127,11 +128,12 @@ make_multi_burst <-
           new_levels = burst_levels,
           active_burst = active_burst
         ))
-
+    check_burst_names(ret)
     mb <- multi_burst(ret, active_burst = active_burst)
 
     #check more than one burst
     check_two_bursts(mb)
+
     return(mb)
   }
 
@@ -145,6 +147,7 @@ c.ind_burst <- function(...){
     stop('There are more than one possible active bursts')
   }
   active_burst <- attr(ret[[1]], 'active_burst')
+  check_burst_names(ret)
   bursts = names(ret[[1]])
   new_levels <- lapply(bursts, function(x){
     unique(sapply(ret, function(y) y[[x]]))
@@ -175,8 +178,12 @@ as.data.frame.multi_burst <- function(x, ...) {
 
 #' @export
 print.ind_burst <- function(x, ...) {
- # cat(paste0('Active burst : ', attr(x, 'label')))
-  print.default(x)
+  print(lapply(x, as.character))
+}
+
+#' @export
+print.multi_burst <- function(x,...) {
+  print(lapply(x, function(x)x))
 }
 
 #' @export
@@ -189,6 +196,17 @@ str.multi_burst <- function(object, ...) {
   }
 }
 # str.multi_burst(my_track$burst)
+
+#' @export
+format.ind_burst <- function(x){
+  message(paste0('(',paste0(names(x),': ',as.character(unlist(x)),collapse=', '),')'))
+
+}
+
+#' @export
+format.multi_burst <- function(mb,...){
+  paste0('(',sapply(mb,function(x)paste(paste0(names(x),': ',as.character(unlist(x))) ,collapse=', ')),')')
+}
 
 #' @export
 "[.multi_burst" <- function (x, i, j, ...) {
@@ -229,4 +247,26 @@ burst_select <- function(burst){
 #' @export
 unique_active_bursts <- function(burst) unique(vapply(burst, function(x) paste0(attr(x,'active_burst'), collapse=', '),character(1)))
 
+# change label
+
+#' active burst
+#' @export
+active_burst <- function(burst){
+  check_burst_names(burst)
+  attr(burst, 'active_burst')
+}
+#active_burst(mb)
+
+#' change active burst
+#' @export
+#' @examples
+#'mb <- ind_burst(list(id=1, group=2),active_burst='id')
+#'active_burst(mb)
+#'active_burst(mb) <- c('id','group')
+#'active_burst(mb)
+'active_burst<-' <- function(burst, value){
+  if(!all(value==attr(burst, 'burst_names'))){stop('not all values not found in burst')}
+  attr(burst, 'active_burst') <- value
+  burst
+}
 

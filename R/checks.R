@@ -53,3 +53,11 @@ fix_zero <- function(xyz){
   xyz[zero_row,] <- NA
   return(xyz)
 }
+
+#' Are burst names not equivalent for each ind_burst?
+#' @export
+check_burst_names <- function(burst){
+  if(length(unique(sapply(burst, FUN=function(x)paste(names(x),collapse=''))))!=1){
+    stop('Burst names do not match')
+  }
+}

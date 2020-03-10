@@ -194,7 +194,8 @@ as_sftrack.ltraj <- function(data, crs = NA){
   )
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
-  burst = list(id=df1$id, group=df1$burst)
+  burst = list(id = df1$id)
+  if(!all(burst(data)==id(data))){burst$group <- df1$burst}
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
@@ -202,7 +203,7 @@ as_sftrack.ltraj <- function(data, crs = NA){
   error = NA
 
   ret <- new_sftrack(
-    data = df1 ,
+    data = df1[,!colnames(df1)%in%c('id','burst')] ,
     burst = burst,
     error = error,
     time = time,
@@ -236,4 +237,5 @@ print.sftrack <- function(x,...){
 
 # Sumary
 #summary.sftrack
+
 
