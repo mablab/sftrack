@@ -97,6 +97,7 @@ multi_burst <- function(x = list(), active_burst) {
 ## Constructor
 make_multi_burst <-
   function(burst_list = NULL,
+    burst,
     new_levels = NULL,
     active_burst = 'id') {
     # new_levels <- list(month = 1:12, height = 1:10)
@@ -107,9 +108,9 @@ make_multi_burst <-
     if(any(duplicated(names(burst_list)))){stop('burst names can not be duplicated')}
     burst_levels <- lapply(burst_list, unique)
     #
-    burst <-
+    if(missing(burst)){burst <-
       do.call(function(...)
-        mapply(list, ..., SIMPLIFY = F), burst_list)
+        mapply(list, ..., SIMPLIFY = F), burst_list)}
 
 
     NAburst(burst)
