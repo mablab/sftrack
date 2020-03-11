@@ -207,6 +207,15 @@ format.multi_burst <- function(mb,...){
   ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
 
 }
+
+#' @export
+summary.multi_burst <- function(object,...){
+  object = my_track$burst
+  attributes(my_track$burst)
+  levelz <- attr(object, 'sort_index')
+  summary(levelz)
+}
+
 #' make burst labels
 #'
 #' @description These functions access bursts in various ways

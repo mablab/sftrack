@@ -269,3 +269,9 @@ print.sftraj <- function(x,n_row,n_col,...){
   print.data.frame(y)
 }
 
+#'@export
+summary.sftraj <- function(object,...,stats = FALSE){
+  if(stats){summary_sftrack(object)}else(print(NextMethod()))
+}
+#summary(my_sftrack,stats=T)
+
