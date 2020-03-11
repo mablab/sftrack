@@ -114,8 +114,8 @@ as_sftrack.data.frame <- function(
     geometry = geom$geometry
   )
   #Sanity check
-  #dup_timestamp(ret)
-  #ret <- ret[ordered(ret$burst, ret[,attr(ret,'time'),drop=T]),,drop=T]
+  dup_timestamp(ret)
+  ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
 }
@@ -155,19 +155,6 @@ as_sftrack.sftraj <- function(data){
 
   return(ret)
 }
-
-
-#data.frame
-# data(raccoon_data)
-#
-# as_sftrack(
-#   data = raccoon_data ,
-#   burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5)),
-#   error = rep(NA, nrow(data)),
-#   time = as.POSIXct(data$acquisition_time, tz = 'UTC'),
-#   coords = c('latitude','longitude','height')
-# )
-
 
 ### Ltraj
 #' @export as_sftrack.ltraj
@@ -214,6 +201,65 @@ as_sftrack.ltraj <- function(data, crs = NA){
   #
   return(ret)
 }
+#sf
+# sf
+as_sftrack.sf <- function(
+  data,
+  burst_list,
+  id,
+  burst_col = NULL,
+  active_burst = NA,
+  error,
+  error_col,
+  time,
+  time_col
+){
+  # data(raccoon_data)
+  # data <- raccoon_data
+  # burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
+  # error = rep(NA, nrow(data))
+  # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
+  # coords = c('latitude','longitude','height')
+  geom <- data[,attr(data,'sf_column')]
+  data <- as.data.frame(data)
+  # data.frame mode
+  if(!missing(id)){
+    check_names_exist(data, c(id,burst_col))
+    burst_list <- lapply(data[,c(id,burst_col), F], function(x)x)
+    names(burst_list)[1] <- 'id'
+  }
+  if(!missing(error_col)){ check_names_exist(data, error_col)}
+  if(!missing(time_col)){ check_names_exist(data, time_col)}
+  # vector mode
+  # time
+  if(!missing(time)){
+    data$reloc_time <- time
+    time_col = 'reloc_time'
+  }
+
+  if(!missing(error)){
+    data$sftrack_error <- error
+    error_col = 'sftrack_error'
+  } else { if(missing(error_col)) error_col = NA}
+
+  #
+  if(any(is.na(active_burst))){active_burst <- names(burst_list)}
+  burst <- make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+
+  ret <- new_sftrack(
+    data = data ,
+    burst = burst,
+    error = error_col,
+    time = time_col,
+    geometry = geom$geometry
+  )
+  #Sanity check
+  dup_timestamp(ret)
+  ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
+  #
+  return(ret)
+}
+
 
 # Methods for 'sftrack' class
 #' @export
@@ -229,7 +275,7 @@ print.sftrack <- function(x,n_row,n_col,...){
   col_l <- length(!colnames(x)%in%c('burst','geometry'))
   p <- ifelse(col_l>n_col&n_col<ncol(x),n_col,col_l) -2
   cat(paste0("Rows: ",nrow(x), " | Cols: ",ncol(x),"\n"))
-  if(ncol(x)>10){
+  if(n_col<ncol(x)|n_row<nrow(x)){
     y <- cbind(x[1:row_l,colnames(x)[1:p]],
       data.frame('...' = rep('...',row_l)),
       x[1:row_l,c('burst','geometry')])
