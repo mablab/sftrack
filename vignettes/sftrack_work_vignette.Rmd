@@ -49,6 +49,7 @@ print(my_sftraj,5,10)
 
 ```
 
+### ltraj
 This generic function also converts ltraj objects  
 ```{r, message = FALSE}
 library(adehabitatLT)
@@ -63,7 +64,24 @@ head(as_sftraj(ltraj_df))
 
 ```
 
+### sf objects
+sf objects are easily handled as well.
 
+```{r}
+library(sf)
+df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
+sf_df <- st_as_sf(df1, coords=c('latitude','longitude'))
+id = 'sensor_code'
+time_col = 'acquisition_time'
+error_col = 'fix'
+
+new_sftraj <- as_sftraj(sf_df,id=id, time_col = time_col) 
+head(new_sftraj)
+
+new_sftrack <- as_sftrack(sf_df, id=id, time_col = time_col) 
+head(new_sftrack)
+
+```
 ### inter class conversion
 This function also converts between the `sftrack` and `sftraj` data type
 
