@@ -217,23 +217,26 @@ as_sftrack.ltraj <- function(data, crs = NA){
 
 # Methods for 'sftrack' class
 #' @export
-print.sftrack <- function(x,...){
+print.sftrack <- function(x,n_row,n_col,...){
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
   cat(paste0('proj : ',attr(x,'crs'),'\n'))
   cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
-  n <- ifelse(nrow(x)>10,10,nrow(x))
-  row_l <- length(!colnames(x)%in%c('burst','geometry'))
-  p <- ifelse(row_l>8,8,row_l)
-  cat(paste("First", n, "features w/",p+2, "truncated columns:\n"))
+  if(missing(n_col)){n_col <- ncol(x)}
+  if(missing(n_row)){n_row <- nrow(x)}
+  row_l <- ifelse(nrow(x)>n_row,n_row,nrow(x))
+  col_l <- length(!colnames(x)%in%c('burst','geometry'))
+  p <- ifelse(col_l>n_col&n_col<ncol(x),n_col,col_l) -2
+  cat(paste0("Rows: ",nrow(x), " | Cols: ",ncol(x),"\n"))
   if(ncol(x)>10){
-  y <- cbind(x[1:n,colnames(x)[1:p]],
-    data.frame('...' = rep('...',n)),
-    x[1:n,c('burst','geometry')])
+    y <- cbind(x[1:row_l,colnames(x)[1:p]],
+      data.frame('...' = rep('...',row_l)),
+      x[1:row_l,c('burst','geometry')])
   } else y <- x
-  print.data.frame(y, ...)
+  print.data.frame(y)
 }
+#print(my_track,10,10)
 
 # Sumary
 #summary.sftrack
