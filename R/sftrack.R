@@ -199,7 +199,7 @@ as_sftrack.ltraj <- function(data, crs = NA){
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords ,crs = crs, na.fail = FALSE)
   # pull out other relevant info
-  burst = make_multi_burst(burst)
+  burst = make_multi_burst(burst_list=burst)
   error = NA
 
   ret <- new_sftrack(
@@ -220,8 +220,8 @@ as_sftrack.ltraj <- function(data, crs = NA){
 print.sftrack <- function(x,n_row,n_col,...){
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
-  cat(paste0('proj : ',attr(x,'crs'),'\n'))
-  cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
+  cat(print(attr(x$geometry,'crs')))
+  cat(paste0('unique ids : ', paste(attributes(x$burst)$burst_levels$id,collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   if(missing(n_col)){n_col <- ncol(x)}
   if(missing(n_row)){n_row <- nrow(x)}
