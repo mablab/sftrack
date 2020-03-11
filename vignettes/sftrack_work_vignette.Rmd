@@ -39,12 +39,12 @@ Starting with the simple stuff. `as_sftrack` is the generic function to create a
 ```{r}
 # sftrack
 my_sftrack <- as_sftrack(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords ,crs = crs)
-my_sftrack
+print(my_sftrack,5,10)
 
 
 # sftraj
 my_sftraj <- as_sftraj(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords, crs = crs )
-my_sftraj
+print(my_sftraj,5,10)
 
 
 ```
@@ -57,8 +57,8 @@ ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSI
  id = raccoon_data$sensor_code, typeII = TRUE,
  infolocs = raccoon_data[,1:6] )
 
-as_sftrack(ltraj_df)
-as_sftraj(ltraj_df)
+head(as_sftrack(ltraj_df))
+head(as_sftraj(ltraj_df))
 
 
 ```
@@ -69,9 +69,9 @@ This function also converts between the `sftrack` and `sftraj` data type
 
 ```{r}
 new_sftrack <- as_sftrack(my_sftraj)
-new_sftrack
+head(new_sftrack)
 new_sftraj <- as_sftraj(my_sftrack)
-new_sftraj
+head(new_sftraj)
 
 all.equal(my_sftraj,new_sftraj)
 all.equal(my_sftrack,new_sftrack)

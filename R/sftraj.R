@@ -169,7 +169,7 @@ as_sftraj.ltraj <- function(data, crs = NA){
   coords = c('x','y')
   geom <- sf::st_as_sf(df1[,coords], coords = coords, crs = crs, na.fail = FALSE )
   #
-  burst = make_multi_burst(burst)
+  burst = make_multi_burst(burst_list=burst)
   step_geometry <- make_step_geom(burst_id = burst_select(burst), geometry = geom$geometry,
     time_data = df1[, time])
 
@@ -190,9 +190,9 @@ as_sftraj.ltraj <- function(data, crs = NA){
 #' @export
 print.sftraj <- function(x,n_row,n_col,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
-  cat('this is a sftraj object\n')
-  cat(paste0('proj : ',attr(x,'crs'),'\n'))
-  cat(paste0('unique ids : ', paste(unique(sapply(x$burst, function(x) x$id)),collapse=', '), '\n'))
+  cat('This is an sftraj object\n')
+  cat(print(attr(x$geometry,'crs')))
+  cat(paste0('unique ids : ', paste(attributes(x$burst)$burst_levels$id,collapse=', '), '\n'))
   cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
   if(missing(n_col)){n_col <- ncol(x)}
   if(missing(n_row)){n_row <- nrow(x)}
@@ -206,6 +206,5 @@ print.sftraj <- function(x,n_row,n_col,...){
       x[1:row_l,c('burst','geometry')])
   } else y <- x
   print.data.frame(y)
-
 }
 

@@ -188,6 +188,7 @@ format.multi_burst <- function(mb,...){
 "[.multi_burst" <- function (x, i, j, ...) {
   multi_burst(NextMethod(), active_burst = attr(x, 'active_burst'))
 }
+# mb[1:10]
 
 #' @export
 "[<-.multi_burst" <- function(x,i,value) {
@@ -197,7 +198,15 @@ format.multi_burst <- function(mb,...){
   ret = make_multi_burst(NextMethod(),active_burst = active_burst(x))
 
 }
-# mb[1:10]
+
+#' @export
+"[<-.ind_burst" <- function(x,i,value) {
+  if (is.null(value) || inherits(value, "ind_burst"))
+    value = list(value)
+  x = unclass(x) # becomes a list, but keeps attributes
+  ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
+
+}
 #' make burst labels
 #'
 #' @description These functions access bursts in various ways
