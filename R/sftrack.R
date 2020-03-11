@@ -286,5 +286,9 @@ print.sftrack <- function(x,n_row,n_col,...){
 
 # Sumary
 #summary.sftrack
-
+#'@export
+summary.sftrack <- function(object,...,stats = FALSE){
+  if(stats){summary_sftrack(object)}else(print(NextMethod()))
+}
+#summary(my_sftrack,stats=T)
 
