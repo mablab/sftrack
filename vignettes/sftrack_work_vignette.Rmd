@@ -7,50 +7,92 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, include =FALSE}
 devtools::load_all("/home/matt/r_programs/sftrack")
 
 ```
+*This vignette acts as a proto how-to manually mainly for highlighting features for anyone testing sftrack. It will eventually evolve into the full vignette.*
 
-Load data and create appropriate variables for import. We'll set 0's to NA manually for now.  
+We'll begin with a brief overview of an `sftrack` object:
 
-**data** is a data frame  
-**burst** is a list with multiple named vectors to group the data by  
-**active_burst** is a vector of the burst names you want to be activated for analysis  
-**error** is a vector of the error data  
-**time** is a vector of POSIXct or integer for the time  
-**coords** is a vector of the columns for the x,y,z coordinates  
+An `sftrack` object has 4 parts to it, 3 of which are required:  
+ - **Geometry** This is stored as an `sfc` object from sf. Accepts x,y, and z.  
+ - **Burst** This is the grouping variables, which contains at minimum an id field to identify the subject.  
+ - **Time** This can either be a POSIX object or an integer.  
+ - **Error** (optional). This is the field with error data in it.  
+
+## Loading in raw data
+
+To read in data we use the `as_sftrack` or `as_sftraj` function, depending on your desired output. Both have the same arguments and output except the way the geometry field is calculated.  
+
+`as_sftrack` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it accepts the column name where the data exists. For any `sftrack` component you can input either kind vector or column name, but not both. 
+
+Here is the possible inputs and their argument names:
+
+**data** is a data frame. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
+**xyz** data.frame of x,y,z coordinates where column 1 = x, 2 = y, and 3 = z (optional). NAs are allowed. Though NAs must exist through the entire row otherwise an error is thrown.  
+**coords** a vector listing the column names for each x,y,z coordinate, just like `sf`, where again position 1 = x, 2 = y, 3 =z. ex: c('longitude','latitude','altitude') 
+**crs** the coordinate references system/projection data, as implemented by rgdal. see CRS-class for more information.  
+**burst_list** a list with named vectors where length = nrow(data) of the grouping variables. One column must be named 'id', but otherwise can be any length >0.  
+**id** a character string naming the column with the id information.  
+**burst_col** a vector with character strings naming additional burst information. This is required additionally to having the `id` argument, and should not contain the `id` field.  
+**active_burst** This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever.  
+**time** a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time information column as 'reloc_time'.  
+**time_col** a character string naming the column with the time information.  
+**error** a vectoring containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs.  
+**error_col** a character string naming the column with the error information. If NA, error column is stored as NA and not accesible.  
+
+### Examples (Vector mode)
 
 ```{r}
 data("raccoon_data")
 
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, tz = 'UTC')
-burst_list = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-active_burst = c('id','month')
-error = NA
-time_col = 'acquisition_time'
-coords = c('longitude','latitude','height')
+#data
+data = raccoon_data
+#xyz
+xyz = data[,c('longitude','latitude')]
 crs = '+init=epsg:4326'
+#bursts
+burst_list = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon+1)
+active_burst = c('id','month')
+#time
+time = as.POSIXct(raccoon_data$acquisition_time, tz='EST')
+#error
+error = data$fix
+my_sftrack <- as_sftrack(data = data, xyz = xyz, burst_list = burst_list, 
+                         active_burst = active_burst, time = time, error = error)
+
+head(my_sftrack)
+
 ```
 
-###############################################
+As you can see in this case the data is not overwritten in anyway, but extra columns added with the correct data.
 
-Starting with the simple stuff. `as_sftrack` is the generic function to create an object. Can accept vectors, sf + vectors, and ltraj  
+
+### Examples (data.frame mode)
+
 ```{r}
-# sftrack
-my_sftrack <- as_sftrack(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords ,crs = crs)
-print(my_sftrack,5,10)
+data$time <- as.POSIXct(data$acquisition_time, tz='EST')
+data$month <- as.POSIXlt(data$acquisition_time)$mon+1
 
+coords = c('longitude','latitude')
+id = 'sensor_code'
+burst_col = c('month')
+time_col = 'time'
+error_col = 'fix'
 
-# sftraj
-my_sftraj <- as_sftraj(data = raccoon_data, burst_list = burst_list, active_burst = active_burst, error = error, time_col = time_col , coords = coords, crs = crs )
-print(my_sftraj,5,10)
+my_sftraj <- as_sftraj(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
 
-
+head(my_sftraj)
 ```
 
-### ltraj
-This generic function also converts ltraj objects  
+## Conversion mode
+
+`as_sftrack` and `as_sftraj` also accept other data types, and the arguments differ depending on the class. It currenly accpets, `sf`, `ltraj`, and eventually `tibbles`. 
+
+### Import from ltraj
+For an ltraj all you need is the ltraj object, all relevant information is taken from the object.
+
 ```{r, message = FALSE}
 library(adehabitatLT)
 
@@ -59,21 +101,19 @@ ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSI
  infolocs = raccoon_data[,1:6] )
 
 head(as_sftrack(ltraj_df))
-head(as_sftraj(ltraj_df))
 
 
 ```
 
 ### sf objects
-sf objects are easily handled as well.
+`sf` objects are handled similiarly to the standard raw data, except you do not need to input any information about the cooridnates.
 
 ```{r}
 library(sf)
-df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
-sf_df <- st_as_sf(df1, coords=c('latitude','longitude'))
+df1 <- data[!is.na(raccoon_data$latitude),]
+sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
 id = 'sensor_code'
-time_col = 'acquisition_time'
-error_col = 'fix'
+time_col = 'time'
 
 new_sftraj <- as_sftraj(sf_df,id=id, time_col = time_col) 
 head(new_sftraj)
@@ -82,50 +122,127 @@ new_sftrack <- as_sftrack(sf_df, id=id, time_col = time_col)
 head(new_sftrack)
 
 ```
-### inter class conversion
-This function also converts between the `sftrack` and `sftraj` data type
+### Inter-class conversion
+Additionally. `as_sftrack` and `as_sftraj` can convert between sftrack objects.
 
 ```{r}
+# Make tracks from raw data
+my_sftrack <- as_sftrack(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
+my_sftraj <- as_sftraj(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
+
+# Convert between types
 new_sftrack <- as_sftrack(my_sftraj)
-head(new_sftrack)
+#head(new_sftrack)
 new_sftraj <- as_sftraj(my_sftrack)
-head(new_sftraj)
+#head(new_sftraj)
 
 all.equal(my_sftraj,new_sftraj)
 all.equal(my_sftrack,new_sftrack)
 ```
 
+### Some basics of sf_track and sf_traj objects
+
+```{r}
+print(my_sftrack,5,10)
+
+summary(my_sftrack)
+
+summary_sftrack(my_sftrack)
+```
 
 ## Plotting
 
-Currently there are some plotting methods. Base plotting is basic, but assumes the active_burst is the grouping/coloring variable  
+**Base plotting**  
+Currently there are some basic plotting methods. Base plotting currently does not have any thrills built into it, and assumes that the `active_burst` is the grouping/coloring variable.  
+
 
 ```{r}
 plot(my_sftraj)
 ```
 
-
-You can also plot in ggplot, but right now its only using the geom_sftraj function. We can figure this out at a later date. But the method is very simple,
-you just have to tell geom_sf() what the grouping variable is.
+**ggplot**  
+This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change once I figure it out. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
 
 ```{r}
 library(ggplot2)
-ggplot() + geom_sftraj(data = my_sftraj)
+ggplot() + geom_sftrack(data = my_sftraj)
 ```
 
 ## Bursts  
 
-Bursts are a big point in the class. They are made in a similar vain to the `sfc` and `sfg` in `sf`. `ind_burst` is a singular birst. Its whats
-stored at the row level. A `multi-burst` is a collection of `ind_bursts` and exists at the column level. Bursts also have an `active_burst` argument, which turns on and off certain bursts for analysis and plotting purposes.
+Bursts are a big point in the class. They are made in a similar vain to the `sfc` and `sfg` in `sf`. `ind_burst` is a singular birst. Its whats stored at the row level. 
+A `multi-burst` is a collection of `ind_bursts` and exists at the column level. Bursts also have an `active_burst` argument, which turns on and off certain bursts for analysis and plotting purposes.
 
-
+We can look at th structure
 ```{r}
 mb1 <- make_multi_burst(burst_list=burst_list, active_burst=c('id','month'))
 str(mb1)
+mb1[[1]]
 ```
 
 
-Burst select allows you access to the active_burst
+#### Basics
+**ind_bursts**  
+Each burst internally makes a label which is just a `paste(., sep='_')`, and gets recalculated when a burst changes. You can make an `ind_burst` object using `make_ind_burst()`, and giving it a list with the bursts named, as well as indicating the active_burst. If you leave it blank it will assume its all bursts
+
+```{r}
+
+indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst='id')
+active_burst(indb)
+
+indb <- make_ind_burst(list(id='CJ13', month = 4))
+active_burst(indb)
+```
+
+**multi_burst**  
+Similarly you can make a multi_burst with `make_multi_burst()`. Unlike data.frame mode, `burst_list` takes a list where each element is a vector indicating the burst as well as a vector of the active bursts.
+
+```{r}
+burst_list <- list(id = rep(1:2,10), year = rep(2020, 10))
+mb <- make_multi_burst(burst_list=burst_list, active_burst=c('id','year'))
+str(mb)
+```
+
+You can also make a multi_burst by concatenating multiple ind_bursts
+
+```{r}
+mb <- c(ind_burst(list(id = 1, year = 2020)), ind_burst(list(id = 1, year = 2021)), ind_burst(list(id = 2, year = 2020)))
+
+summary(mb)
+```
+
+You can also edit bursts like a list, but you must replace it with an object of the appropriate class
+```{r}
+mb[1]
+mb[1] <- make_ind_burst(list(id=3,year=2019))
+mb[1]
+
+```
+
+And the burst names must match the ones in the multi_burst
+```{r}
+tryCatch(mb[1] <- make_ind_burst(list(id=3,month=2019)), error = function(e) e)
+```
+
+You can also edit individual elements in an ind_burst
+```{r}
+indb 
+indb[1] <- 'CJ15'
+str(indb)
+```
+
+You can also view and change the active_burst with `active_burst`.
+
+```{r}
+active_burst(indb)
+active_burst(indb) <- c('id')
+str(indb)
+```
+
+### Addtional burst functions
+There are a handful of other additional burst functions, most of which are just used internally, but could be useful to developers.
+
+`Burst_select` allows you access to the active_burst
 
 ```{r}
 burst_select(mb1)[[1]]
@@ -137,13 +254,6 @@ burst labels allows access to the burst labels which are a combination of the ac
 burst_labels(mb1)[1:10]
 ```
 
- 
-Can combine multiple ind_bursts to create a multi_burst
-```{r}
-a = ind_burst(list(id = 1, year = 2018))
-b = ind_burst(list(id = 1, year = 2018))
-mb2 <- c(a, b) 
-str(mb2)
-```
+burst_sort
 **The rest is not done quite complete** 
 And can redefine burst levels

@@ -28,26 +28,46 @@ plot.sftraj <- function(x,...){
   }
 }
 
+#' @exportMethod geom_sftrack
+geom_sftrack <- function(data,...) {
+  UseMethod('geom_sftrack')
+}
+
 # plot(my_step)
-#' geom_sftraj()
+#' geom_sftrack()
 #' This function can be added to ggplot() to plot an sftrack and sftraj
 #' Function does not yet work with ggplot grammer so you must but data= in this function
 #' @param data the sftraj or sftrack object.
-#' @export geom_sftraj
+
 #' @examples
 #'
 #' data(raccoon_data)
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #' my_step <- as_sftraj(raccoon_data, time = 'acquisition_time',
-#'    coords = c('longitude','latitude','height'),
+#'    coords = c('longitude','latitude'),
 #'   burst_list =burstz)
 #' library(ggplot2)
 #'
-#' ggplot() + geom_sftraj(data = my_step)
-geom_sftraj <- function(data,...){
-  sub <- data[!sapply(data$geometry, function(x) all(is.na(x[[1]]))),]
-  geom_sf(data = sub, aes(color=burst_sort(sub$burst)))
+#' ggplot() + geom_sftrack(data = my_step)
+#' @export geom_sftrack
+#'
+
+#' @export
+geom_sftrack.sftrack <- function(data,...){
+  sub <- data[!st_is_empty(data$geometry),]
+    list(
+      ggplot2::geom_sf(data = sub, aes(color=burst_sort(sub$burst), fill=burst_sort(sub$burst))),
+      guides(color = FALSE) ,
+      labs(fill="Bursts")
+    )
 }
-#library(ggplot2)
-#ggplot(data=my_track) +geom_sf(aes(color=burst_sort(my_track$burst)))
-#ggplot() + geom_sftraj(my_step)
+#'@export
+geom_sftrack.sftraj <- function(data,...){
+  sub <- data[!st_is_empty(data$geometry),]
+    list(
+      ggplot2::geom_sf(data=st_sfc(pts_traj(sub),crs=attr(data$geometry,'crs')),aes(color=burst_sort(sub$burst))),
+      ggplot2::geom_sf(data = sub, aes(color=burst_sort(sub$burst), fill=burst_sort(sub$burst))),
+      guides(color = FALSE) ,
+      labs(fill="Bursts")
+    )
+}
