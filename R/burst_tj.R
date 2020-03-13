@@ -210,12 +210,14 @@ format.multi_burst <- function(mb,...){
 
 #' @export
 summary.multi_burst <- function(object,...){
-  object = my_track$burst
-  attributes(my_track$burst)
+  #object = my_track$burst
+  #attributes(object)
   levelz <- attr(object, 'sort_index')
+  #cat(paste0(class(object)[1], " of length ", length(object),' | active burst : ',paste(active_burst(object),collapse=', '),'\n'))
+  #cat('counts: \n')
   summary(levelz)
 }
-
+#summary(mb)
 #' make burst labels
 #'
 #' @description These functions access bursts in various ways
@@ -252,7 +254,7 @@ unique_active_bursts <- function(burst) unique(vapply(burst, function(x) paste0(
 # change label
 
 #' active burst
-#' @export
+#' @export active_burst
 active_burst <- function(burst){
   check_burst_names(burst)
   attr(burst, 'active_burst')
@@ -269,6 +271,7 @@ active_burst <- function(burst){
 'active_burst<-' <- function(burst, value){
   if(!all(value==attr(burst, 'burst_names'))){stop('not all values not found in burst')}
   attr(burst, 'active_burst') <- value
+  attr(burst, 'label') <- paste0(sapply(burst[value], as.character), collapse = '_')
   burst
 }
 

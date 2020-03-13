@@ -3,10 +3,11 @@
 ###################
 #'@export
 pts_traj <- function(traj){
-  if(inherits(traj,'traj')){pts <- traj[,attr(traj,'sf_column')]}
+  if(inherits(traj,'sftraj')){pts <- traj[,attr(traj,'sf_column')]}
   if(inherits(traj, 'sfc')){pts <- traj}
+  if('XY'%in%class(pts[[1]])){dim=c('X','Y')}else{dim=c('X','Y','Z')}
   lapply(pts, function(x){
-    if(inherits(x,'GEOMETRYCOLLECTION')) { x[1][[1]]} else{ st_point(x[1:2])}
+    if(inherits(x,'GEOMETRYCOLLECTION')) { x[1][[1]]} else{ st_point(st_coordinates(x)[1,dim])}
   })
 }
 
@@ -14,8 +15,9 @@ pts_traj <- function(traj){
 coord_traj <- function(traj){
   if(inherits(traj,'traj')){pts <- traj[,attr(traj,'sf_column')]}
   if(inherits(traj, 'sfc')){pts <- traj}
+  if('XY'%in%class(pts[[1]])){dim=c('X','Y')}else{dim=c('X','Y','Z')}
   ret <- lapply(pts, function(x){
-    if(inherits(x,'GEOMETRYCOLLECTION')) { st_coordinates(x[1][[1]])} else{ matrix(c('X'=x[1],'Y'=x[2]),1)}
+    if(inherits(x,'GEOMETRYCOLLECTION')) { st_coordinates(x[1][[1]])} else{ st_coordinates(x)[1,dim]}
   })
   do.call(rbind,ret)
 }
@@ -24,7 +26,7 @@ coord_traj <- function(traj){
 #'@export
 summary_sftrack <- function(x){
   track_class <- class(x)[1]
-  x = my_track
+  #x = my_sftrack
   time_col <- attr(x,'time')
   error_col <- attr(x, 'error')
   sf_col <- attr(x,'sf_column')

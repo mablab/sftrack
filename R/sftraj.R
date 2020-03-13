@@ -22,7 +22,7 @@
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
 #' my_step <- as_sftraj(raccoon_data, time_col ='acquisition_time',
-#'   error = NA, coords = c('longitude','latitude','height'),
+#'   error = NA, coords = c('longitude','latitude'),
 #'   burst_list =burstz)
 #'   # Input is a ltraj
 #'
@@ -80,11 +80,14 @@ as_sftraj.data.frame <- function(
     burst_list <- lapply(data[,c(id,burst_col), F], function(x)x)
     names(burst_list)[1] <- 'id'}
 
+  # xyz coordinates
   if(!missing(coords)){
     check_names_exist(data, coords)
     xyz <- data[,coords]
-    }
+
+    } else{xyz <- as.data.frame(xyz)}
   if(zeroNA){xyz <- fixzero(xyz)}
+  check_NA_coords(xyz)
 
   if(!missing(error_col)){ check_names_exist(data, error_col)}
   if(!missing(time_col)){ check_names_exist(data, time_col)}
