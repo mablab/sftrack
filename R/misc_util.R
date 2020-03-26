@@ -22,6 +22,13 @@ coord_traj <- function(traj){
   do.call(rbind,ret)
 }
 
+#'@export
+is_linestring <- function(traj){
+  if(inherits(traj,'sftraj')){pts <- traj[,attr(traj,'sf_column')]}
+  if(inherits(traj, 'sfc')){pts <- traj}
+  if('XY'%in%class(pts[[1]])){dim=c('X','Y')}else{dim=c('X','Y','Z')}
+  sapply(traj, function(x) inherits(x, 'LINESTRING'))
+}
 
 #'@export
 summary_sftrack <- function(x){
