@@ -237,9 +237,22 @@ burst_labels <- function(burst) {
   )
 }
 
+
 #' @export
 burst_sort <- function(burst) {
   attr(burst, 'sort_index')
+}
+
+#' @export
+burst_levels <- function(burst, value){
+  levels(attr(burst, 'sort_index'))
+}
+#burst_levels(mb1)
+
+#' @export
+'burst_levels<-' <- function(burst, value){
+  levels(attr(burst, 'sort_index')) <- value
+  burst
 }
 
 #' @export
@@ -274,6 +287,8 @@ active_burst <- function(burst){
   attr(burst, 'label') <- paste0(sapply(burst[value], as.character), collapse = '_')
   burst
 }
+
+
 
 #' @export
 calc_burst_levels <- function(x){

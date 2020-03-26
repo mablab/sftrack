@@ -67,6 +67,6 @@ check_NA_coords <- function(xyz){
   check_row <- lapply(xyz, function(x) which(is.na(x)))
   NAs <- sapply(check_row, function(x) any(!unique(unlist(check_row))%in% x)  )
   if(any(NAs)){
-    stop(paste0(paste0(c('x','y','z')[!NAs],collapse=' '), ' column has NAs that are not found in other columns'))
+    stop(paste0(paste0(c('x','y','z')[!NAs],collapse=' '), ' column has NAs that are not found in other coordinate columns'))
   }
 }
