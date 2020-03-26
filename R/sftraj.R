@@ -274,7 +274,7 @@ print.sftraj <- function(x,n_row,n_col,...){
 
 #'@export
 summary.sftraj <- function(object,...,stats = FALSE){
-  if(stats){summary_sftrack(object)}else(print(NextMethod()))
+  if(stats){summary_sftrack(object)}else(NextMethod())
 }
 #summary(my_sftrack,stats=T)
 
