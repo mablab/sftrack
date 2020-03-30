@@ -53,7 +53,7 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
 as_sftraj.data.frame <- function(
   data,
   xyz,
-  coords = c('x','y','z'),
+  coords = c('x','y'),
   burst_list,
   id,
   burst_col = NULL,
@@ -103,8 +103,10 @@ as_sftraj.data.frame <- function(
   } else { if(missing(error_col)) error_col = NA}
 
   geom <- sf::st_as_sf(xyz, coords = names(xyz), crs = crs, na.fail = FALSE)
+
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <- sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
+
   #
   if(any(is.na(active_burst))){active_burst <- names(burst_list)}
   burst <- make_multi_burst(burst_list = burst_list, active_burst = active_burst)
@@ -120,8 +122,9 @@ as_sftraj.data.frame <- function(
     geometry = step_geometry
   )
   #Sanity check
-  #dup_timestamp(ret)
-  #ret <- ret[ordered(ret$burst, ret[,attr(ret,'time'),drop=T]),,drop=T]
+  dup_timestamp(ret)
+  check_z_coords(ret)
+  ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
 }
@@ -205,6 +208,7 @@ as_sftraj.sf <- function(
   )
   #Sanity check
   dup_timestamp(ret)
+  check_z_coords(ret)
   ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
@@ -244,8 +248,8 @@ as_sftraj.ltraj <- function(data, crs = NA){
     geometry = step_geometry
   )
 
-  #Sanity check? Necessary?
-
+  #Sanity checks
+  ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
 }
