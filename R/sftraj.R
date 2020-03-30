@@ -223,10 +223,11 @@ as_sftraj.ltraj <- function(data, crs = NA){
     attributes(sub[[1]])
     id <-  attr(sub[[1]], 'id')
     burst <- attr(sub[[1]],'burst')
-    infolocs <- infolocs(sub)
+    infolocs <- infolocs(data)[x]
     reloc_time <- sub[[1]]$date
     coords <- c('x','y')
     data.frame(sub[[1]][,coords],id,burst,reloc_time,infolocs)
+    #data.frame(sub[[1]][,coords],id,burst,infolocs)
   }
   )
   df1 <- do.call(rbind, new_data)
