@@ -1,35 +1,41 @@
 #' Methods for plot an sftraj
 #'
 #' @export plot.sftrack
-plot.sftrack <- function(x,...){
-plot(x$geometry)
-burst_srt <- burst_sort(x$burst)
-burst_lbl <- as.character(burst_srt)
-new_clrs <- rainbow(length(unique(burst_srt)))
-  for(i in seq_along(new_clrs)){
+plot.sftrack <- function(x, ...) {
+  plot(x$geometry)
+  burst_srt <- burst_sort(x$burst)
+  burst_lbl <- as.character(burst_srt)
+  new_clrs <- rainbow(length(unique(burst_srt)))
+  for (i in seq_along(new_clrs)) {
     #i=1
     lvl <- levels(burst_srt)[i]
-  plot(x$geometry[burst_lbl==lvl], type='l',add = T ,col=new_clrs[i])
+    plot(x$geometry[burst_lbl == lvl],
+      type = 'l',
+      add = T ,
+      col = new_clrs[i])
   }
 }
 
 # plot(my_track)
 
 #' @export plot.sftraj
-plot.sftraj <- function(x,...){
+plot.sftraj <- function(x, ...) {
   plot(x$geometry)
   burst_srt <- burst_sort(x$burst)
   burst_lbl <- as.character(burst_srt)
   new_clrs <- rainbow(length(unique(burst_srt)))
-  for(i in seq_along(new_clrs)){
+  for (i in seq_along(new_clrs)) {
     #i=1
     lvl <- levels(burst_srt)[i]
-    plot(x$geometry[burst_lbl==lvl], type='l',add = T ,col=new_clrs[i])
+    plot(x$geometry[burst_lbl == lvl],
+      type = 'l',
+      add = T ,
+      col = new_clrs[i])
   }
 }
 
 #' @exportMethod geom_sftrack
-geom_sftrack <- function(data,...) {
+geom_sftrack <- function(data, ...) {
   UseMethod('geom_sftrack')
 }
 
@@ -53,21 +59,25 @@ geom_sftrack <- function(data,...) {
 #'
 
 #' @export
-geom_sftrack.sftrack <- function(data,...){
-  sub <- data[!st_is_empty(data$geometry),]
-    list(
-      ggplot2::geom_sf(data = sub, aes(color=burst_sort(sub$burst), fill=burst_sort(sub$burst))),
-      guides(color = FALSE) ,
-      labs(fill="Bursts")
-    )
+geom_sftrack.sftrack <- function(data, ...) {
+  sub <- data[!st_is_empty(data$geometry), ]
+  list(ggplot2::geom_sf(data = sub, aes(
+    color = burst_sort(sub$burst), fill = burst_sort(sub$burst)
+  )),
+    guides(color = FALSE) ,
+    labs(fill = "Bursts"))
 }
 #'@export
-geom_sftrack.sftraj <- function(data,...){
-  sub <- data[!st_is_empty(data$geometry),]
-    list(
-      ggplot2::geom_sf(data=st_sfc(pts_traj(sub),crs=attr(data$geometry,'crs')),aes(color=burst_sort(sub$burst))),
-      ggplot2::geom_sf(data = sub, aes(color=burst_sort(sub$burst), fill=burst_sort(sub$burst))),
-      guides(color = FALSE) ,
-      labs(fill="Bursts")
-    )
+geom_sftrack.sftraj <- function(data, ...) {
+  sub <- data[!st_is_empty(data$geometry), ]
+  list(
+    ggplot2::geom_sf(data = st_sfc(
+      pts_traj(sub), crs = attr(data$geometry, 'crs')
+    ), aes(color = burst_sort(sub$burst))),
+    ggplot2::geom_sf(data = sub, aes(
+      color = burst_sort(sub$burst), fill = burst_sort(sub$burst)
+    )),
+    guides(color = FALSE) ,
+    labs(fill = "Bursts")
+  )
 }
