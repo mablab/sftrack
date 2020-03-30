@@ -185,8 +185,8 @@ format.ind_burst <- function(x){
 
 #' @export
 format.multi_burst <- function(mb,...){
-  paste0('(',sapply(mb,function(x)paste(paste0(names(x),': ',as.character(unlist(x))) ,collapse=', ')),')')
-}
+  paste0('(',vapply(mb, function(x)paste(paste0(names(x),': ',as.character(unlist(x))) ,collapse=', '), NA_character_),')')
+  }
 
 #' @export
 "[.multi_burst" <- function (x, i, j, ...) {
@@ -314,7 +314,8 @@ active_burst <- function(burst){
 
 #' @export
 calc_sort_index <- function(burst, active_burst){
-  burstz <- sapply(burst, function(x) paste0(x[active_burst],collapse='_'))
+  burstz <- vapply(burst, function(x) paste0(x[active_burst],collapse='_'), NA_character_)
+
   factor(burstz)
 }
 # calc_sort_index(burst)

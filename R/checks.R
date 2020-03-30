@@ -57,7 +57,7 @@ fix_zero <- function(xyz){
 #' Are burst names not equivalent for each ind_burst?
 #' @export
 check_burst_names <- function(burst){
-  if(length(unique(sapply(burst, FUN=function(x)paste(names(x),collapse=''))))!=1){
+  if(length(unique(vapply(burst, function(x)paste(names(x),collapse=''),NA_character_)))!=1){
     stop('Burst names do not match')
   }
 }
@@ -65,7 +65,7 @@ check_burst_names <- function(burst){
 #' export
 check_NA_coords <- function(xyz){
   check_row <- lapply(xyz, function(x) which(is.na(x)))
-  NAs <- sapply(check_row, function(x) any(!unique(unlist(check_row))%in% x)  )
+  NAs <- vapply(check_row, function(x) any(!unique(unlist(check_row))%in% x), NA)
   if(any(NAs)){
     stop(paste0(paste0(c('x','y','z')[!NAs],collapse=' '), ' column has NAs that are not found in other coordinate columns'))
   }
@@ -76,4 +76,4 @@ check_z_coords <- function(sftrack_obj){
     message('Z coordinates found. Note that the vast majority of rgdal calculations are done using planar geometry')
   }
 }
-check_z_coords(my_track)
+#check_z_coords(my_track)

@@ -27,7 +27,7 @@ is_linestring <- function(traj){
   if(inherits(traj,'sftraj')){pts <- traj[,attr(traj,'sf_column')]}
   if(inherits(traj, 'sfc')){pts <- traj}
   if('XY'%in%class(pts[[1]])){dim=c('X','Y')}else{dim=c('X','Y','Z')}
-  sapply(traj, function(x) inherits(x, 'LINESTRING'))
+  vapply(traj, function(x) inherits(x, 'LINESTRING'), NA)
 }
 
 #'@export
@@ -44,7 +44,7 @@ summary_sftrack <- function(x){
 
   if(track_class=='sftrack'){
     lenz <- tapply(sub[,sf_col], levelz, function(pts) {
-      new_pts <- pts[!sapply(pts, st_is_empty)]
+      new_pts <- pts[!vapply(pts, st_is_empty,NA)]
       st_length(st_linestring(st_coordinates(new_pts)))
     })
   }
