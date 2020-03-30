@@ -10,8 +10,10 @@ active_burst(burst) <- value
 change active burst
 }
 \examples{
-mb <- ind_burst(list(id=1, group=2),active_burst='id')
-active_burst(mb)
-active_burst(mb) <- c('id','group')
-active_burst(mb)
+ data(raccoon_data)
+ burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+ mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
+ active_burst(mb1)
+ active_burst(mb1) <- c('id')
+ active_burst(mb1)
 }
