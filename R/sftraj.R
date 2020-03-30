@@ -41,7 +41,6 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
   data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
   structure(
     data_sf,
-    active_burst = attr(burst, 'active_burst'),
     time = time,
     error = error,
     class = c("sftraj", 'data.frame','sf')
@@ -256,8 +255,8 @@ print.sftraj <- function(x,n_row,n_col,...){
   x <- as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
   cat('This is an sftraj object\n')
   cat(print(attr(x$geometry,'crs')))
-  cat(paste0('unique ids : ', paste(attributes(x$burst)$burst_levels$id,collapse=', '), '\n'))
-  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
+  #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
+  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x$burst, 'active_burst'),collapse=', '), '\n'))
   if(missing(n_col)){n_col <- ncol(x)}
   if(missing(n_row)){n_row <- nrow(x)}
   row_l <- ifelse(nrow(x)>n_row,n_row,nrow(x))

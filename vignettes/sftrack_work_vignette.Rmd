@@ -13,34 +13,34 @@ devtools::load_all("/home/matt/r_programs/sftrack")
 ```
 *This vignette acts as a proto how-to manually mainly for highlighting features for anyone testing sftrack. It will eventually evolve into the full vignette.*
 
-We'll begin with a brief overview of an `sftrack` object:
+We'll begin with a brief overview of an `sftrack` object. An `sftrack` object is a data object that describes the movement of a subject, it has x,y coordinates (sometimes z), some measurement of time (clock time or a sequence of integers), and some grouping variable that identifies the subjects. For the spatial aspects of `sftrack` we are using the package `sf`, this powerful tool lets us quickly calculate spatial attributes and plot with ease with its full integration with `rgdal`. 
 
 An `sftrack` object has 4 parts to it, 3 of which are required:  
- - **Geometry** This is stored as an `sfc` object from sf. Accepts x,y,z coordinates.  
+ - **Geometry** This is stored as an `sfc` object from `sf`. Accepts x,y,z coordinates, although z is rarely used.  
  - **Burst** This is the grouping variables, which contains at minimum an id field to identify the subject.  
  - **Time** This can either be a POSIX object or an integer.  
  - **Error** (optional). This is the field with error data in it.  
 
 ## Loading in raw data
 
-To read in data we use the `as_sftrack` or `as_sftraj` function, depending on your desired output. Both have the same arguments and output except the way the geometry field is calculated.  
+To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` function, depending on your desired output. Both have the same arguments and output but differ in the way the geometry field is calculated.  
 
-`as_sftrack` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it accepts the column name where the data exists. For any `sftrack` component you can input either kind vector data or the column name, but not both. 
+`as_sftrack()` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it accepts the column name where the data exists. For any `sftrack` component you can input either vector data or the column name, but not both. 
 
 #### Global options
-These are options that are required regardless of which input type.  
+These are options that are required regardless of which input type you use.  
 
-**data** is a data frame. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
-**crs** the coordinate references system/projection data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later.  
-**active_burst** This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever. If no value is supplied it defaults to all bursts.  
+**data** - is a data frame containing your data. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
+**crs** - the coordinate references system/projection of the data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later.  
+**active_burst** - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever. If no value is supplied it defaults to all bursts.  
 
 ### Vector inputs
-Vector inputs are generally feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule.  
+Vector inputs to `as_sftrack` in general involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule.  
 
-**burst_list** a list with named vectors to group the sftrack where each list item is length(vector) = nrow(data). One item must be named `id`, but otherwise can be feature infinite number of grouping variables.  
-**xyz** data.frame of x,y,z coordinates where column with order : `c(x, y, z)`, z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  
-**time** a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'.  
-**error** a vector containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs.  
+**burst_list** - a list with named vectors to group the sftrack where each list item is length(vector) = nrow(data). One item must be named `id`, but otherwise can be infinite number of grouping variables.  
+**xyz** - data.frame of x,y,z coordinates where column with order : `c(x, y, z)`, z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  
+**time** - a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'.  
+**error** - a vector containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs.  
 
 ### Examples (Vector)
 
@@ -72,13 +72,13 @@ As you can see in this case the data is not overwritten, but extra columns added
 -------------
 
 ### data.frame inputs  
-Data.frame inputs generally just describe the columns in the data that represent each field.  
+Data.frame inputs generally describe the columns in the data that represent each field.  
 
-**coords** a vector listing the column names for each x,y,z coordinate, just like `sf`, where again position 1 = x, 2 = y, 3 = z. ex: `c('longitude','latitude','altitude')`.  
-**id** a character string naming the column with the id information.  
-**burst_col** a vector with character strings naming additional burst information. This field is not required, and should not contain the `id` field.  
-**time_col** a character string naming the column with the time information. Must be POSIX or integer.  
-**error_col** a character string naming the column with the error information. If NA, error column is stored as NA and not accessible.  
+**coords** - a vector listing the column names for each x,y,z coordinate, just like `sf`, where again position 1 = x, 2 = y, 3 = z. ex: `c('longitude','latitude','altitude')`.  
+**id** - a character string naming the column with the id information.  
+**burst_col** - a vector with character strings naming additional burst information. This field is not required, and should not contain the `id` field.  
+**time_col** - a character string naming the column with the time information. Must be POSIX or integer.  
+**error_col** - a character string naming the column with the error information. If NA, error column is stored as NA and not accessible.  
 
 ### Examples (data.frame inputs)
 
@@ -99,10 +99,10 @@ head(my_sftraj)
 
 ## Conversion mode
 
-`as_sftrack` and `as_sftraj` also accept other data types, and the arguments differ depending on the class. It currenly accepts, `sf`, `ltraj`, and eventually `tibbles`. 
+`as_sftrack()` and `as_sftraj()` also accept other data types, and the arguments differ depending on the class. It currenly accepts, `sf`, `ltraj`, and eventually `tibbles`. 
 
 ### Import from ltraj
-For an ltraj all you need is the ltraj object, all relevant information is taken from the object. As crs information is not allowed in ltraj objects, you may also supply the crs.  
+For an ltraj all you need is the ltraj object, all relevant information is taken from the object. As ltraj objects do not store crs you may also supply the crs.  
 
 ```{r, message = FALSE}
 library(adehabitatLT)
@@ -118,7 +118,7 @@ head(my_sf)
 ```
 
 ### sf objects
-`sf` objects are handled similiarly to the standard raw data, except you do not need to input any information about the coordinates.
+`sf` objects are handled similiarly to the standard raw data, except you do not need to input any information about the coordinates or projection.
 
 ```{r}
 library(sf)
@@ -154,13 +154,14 @@ all.equal(my_sftrack,new_sftrack)
 
 ### Some basic functionality of sf_track and sf_traj objects
 **print**  
-`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `burst` and `geometery` fields as well as any other columns starting from column 1 until `#columns + 2 = n_col`.
+`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `burst` and `geometery` fields as well as any other columns starting from column 1 until `#columns + 2 = n_col`. If neither is provided than print just uses default values in the global options.
+
 ```{r}
 print(my_sftrack,5,10)
 ```
 
 **summary**  
-`summary()` works as youd normally expect for a data.frame, except displays the burst column as a count of each active_burst combination.  
+`summary()` works as youd normally expect for a data.frame, except it displays the burst column as a count of each active_burst combination.  
 ```{r}
 summary(my_sftrack)
 ```
@@ -187,8 +188,16 @@ Currently there are some basic plotting methods. Base plotting currently does no
 plot(my_sftraj)
 ```
 
+And changing the active burst will change the plot view
+
+```{r}
+active_burst(my_sftraj$burst) <- 'id'
+active_burst(my_sftraj$burst)
+plot(my_sftraj)
+```
+
 **ggplot**  
-This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change once I figure it out. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
+This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change as I look more into it. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
 
 ```{r}
 library(ggplot2)
@@ -197,7 +206,7 @@ ggplot() + geom_sftrack(data = my_sftraj)
 
 ## Bursts  
 
-Bursts are a big point in the class. They are made in a similar vein to the `sfc` and `sfg` in `sf`. `ind_burst` is a singular birst. Its whats stored at the row level. 
+Bursts are a big emphasis in the class. They are made in a similar vein to the `sfc` and `sfg` in `sf`. `ind_burst` is a singular burst. Its whats stored at the row level. 
 A `multi-burst` is a collection of `ind_bursts` and exists at the column level. Bursts also have an `active_burst` argument, which turns on and off certain bursts for analysis and plotting purposes.
 
 We can look at the structure
@@ -206,28 +215,31 @@ mb1 <- make_multi_burst(burst_list=burst_list, active_burst=c('id','month'))
 str(mb1)
 mb1[[1]]
 ```
-A burst contains grouping information, where the id of the subject is required, but additional bursts are not. Every burst also has the same active_burst columns, and these bursts are stored internally as a list. You can also see that labels are created based on the active_burst, this can be accessed and makes for easy labeling of plots of figures.  
+A burst contains grouping information, where the id of the subject is required, but additional bursts are not. Every burst has the same burst columns available, and these bursts are stored internally as a list. You can also see that labels are created based on the active_burst, this can be accessed and makes for easy labeling of plots of figures.  
 
 #### Basics
 **ind_bursts**  
 An ind_burst is the grouping variables for a single row of data.  
 
-Each burst internally makes a label which is just a `paste(., sep='_')`, and gets recalculated when a burst changes. You can make an `ind_burst` object using `make_ind_burst()`, and giving it a list with the bursts named, as well as indicating the active_burst. If you leave it blank it will assume its all bursts
+You can make an `ind_burst` object using `make_ind_burst()`, and giving it a list with the bursts named. 
 
 ```{r}
 
-indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst='id')
-indb
-active_burst(indb)
-
 indb <- make_ind_burst(list(id='CJ13', month = 4))
-active_burst(indb)
+indb
+```
+
+Because ind_bursts are simply lists, you can edit individual elements in an ind_burst
+```{r}
+indb 
+indb[1] <- 'CJ15'
+str(indb)
 ```
 
 **multi_burst**  
-Multi_bursts are a collection of ind_bursts, where all ind_bursts must have the same grouping variables and same active_burst. 
+Multi_bursts are a collection of ind_bursts, where all ind_bursts must have the same grouping variables. Multi_bursts have a specific 'active_burst', which is the bursts that should be activated to group the data when doing calculations, plotting, and graphing. 
 
-Similarly to ind_burst you can make a multi_burst with `make_multi_burst()`. The argument `burst_list` takes a list where each element is a vector indicating the burst as well as a vector of the active bursts.
+Similarly to ind_burst you can make a multi_burst with `make_multi_burst()`. The argument `burst_list` takes a list where each element is a vector indicating the named burst as well as a vector of the active bursts.
 
 ```{r}
 burst_list <- list(id = rep(1:2,10), year = rep(2020, 10))
@@ -235,7 +247,7 @@ mb <- make_multi_burst(burst_list=burst_list, active_burst=c('id','year'))
 str(mb)
 ```
 
-You can also make a multi_burst by concatenating multiple ind_bursts
+You can also make a multi_burst by concatenating multiple ind_bursts. Though in this case the active_burst will default to all bursts. Which you can change later.
 
 ```{r}
 a <- ind_burst(list(id = 1, year = 2020))
@@ -260,48 +272,16 @@ And the burst names must match the ones in the multi_burst
 tryCatch(mb[1] <- make_ind_burst(list(id=3,month=2019)), error = function(e) e)
 ```
 
-You can also edit individual elements in an ind_burst
-```{r}
-indb 
-indb[1] <- 'CJ15'
-str(indb)
-```
-
-You can also view and change the active_burst with `active_burst`.
-
-```{r}
-active_burst(indb)
-active_burst(indb) <- c('id')
-str(indb)
-```
-
-### Addtional burst functions
-There are a handful of other additional burst functions, most of which are just used internally, but could be useful to developers.
-
-**burst_select**
-`Burst_select` allows you select only the bursts that are active. 
-
-```{r}
-burst_select(mb1)[1:3]
-```
-
-**burst_labels**  
-burst labels allows access to the burst labels which are a combination of the active bursts with '_' seperator
-
-```{r}
-burst_labels(mb1)[1:10]
-```
-
 **burst_sort**  
-Bursts also have an internal sorting index, that can be used to quickly order data or to quickly search through it. It is calculated based on burst labels (alphabetically) and then by time. It gets recalculated everytime a new multi_burst is made or modified, so it is reliable. You can access it with `burst_sort`, but you can not modify it, as it is calculated internally.  
+Multi_burst calculates a sorting index based on the active_burst called the `sort_index`, this is simply a factor of the 'active' bursts where each individual burst = paste0(active_burst, sep='_'). As its a factor it can double as the labels and sorting index simultaneously. This gets recalculated everytime a multi_burst is modified or created. 
 
-This is stored as a factor so it can double as burst_labels as well as an integer when necessary.
-
+You can use `burst_sort()` to access this value, but you can not modify it.
 ```{r}
 burst_sort(mb1)[1:10]
 ```
 
-On occasion your data may have more possible burst levels than are available in the current data frame, and you would like this data to be preserved. Because of this we allow burst_levels to be amended to add more levels than are in the current data. Since this variable is a factor, we simply are redefining the factor levels with `burst_levels`. This may also be useful if you'd like to rearrange the order of plotting.
+**burst_levels**  
+On occasion your data may have more possible grouping levels than the sort_index shows. For example if there is a data gap, where the specific level may need to be retained even if no data is associated with it. Because of this we allow burst_levels to be amended to add more levels than are in the current data. Since this variable is a factor, we simply are redefining the factor levels with `burst_levels()`. This may also be useful if you'd like to rearrange the order of plotting.
 
 ```{r}
 burst_levels(mb1)
@@ -309,20 +289,39 @@ burst_levels(mb1) <- c("CJ11_1", "CJ11_2", "CJ13_1" ,"CJ13_2", "CJ14_3")
 burst_levels(mb1)
 ```
 
+**active_burst**  
+The active_burst is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can also view and change the active_burst of a multi_burst with `active_burst()`. This calculates a new sort_index internally as well.
+
+```{r}
+active_burst(my_sftrack$burst)
+summary(my_sftrack, stats = T)
+active_burst(my_sftrack$burst) <- c('id')
+active_burst(my_sftrack$burst)
+summary(my_sftrack, stats = T)
+
+```
+
+**burst_select**
+Sometimes you may want to access to the active_burst data, especially as a developer. To do this you can use `burst_select()` which returns only the active burst data in your burst.  
+
+```{r}
+burst_select(mb1)[1:3]
+```
+
 ## Geometry column  
 
-The geometry column of an sf_track object is a `sfc` column from the `sf` package. And therefore it can be manipulated exactly like you would in `sf` with the entirety of the `sf` packages functions. The main difference is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.
+As stated earlier, the geometry column is built using `sf`, so functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is a `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
 ```{r}
 my_sftrack$geometry
 ```
 
-An `sftrack` object is simply an `sfc` of `sf_POINTS`, this contrasts with an `sftraj` object which is a mixture of a geometrycollection and linestring. This is because a trajectory can have a start point and an NA end point, a line segment, or an NA and an end point. This allows no-loss conversion back and forth between `sftrack` and an `sftraj`, and because linestrings can not have a NULL point in them.
+An `sftrack` object is simply an `sfc` of `sf_POINTS`, this contrasts with an `sftraj` object which is a mixture of a `GEOMETERYCOLLECTION` and `LINESTRING`. This is because a trajectory can have a start point and an NA end point, a line segment, or an NA and an end point. This allows no-loss conversion back and forth between `sftrack` and an `sftraj`, and because linestrings can not have a NULL point in them.
 
 ```{r}
 my_sftraj$geometry
 ```
 
-This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. To help this, there are two functions that help extract points from `sftraj` objects.
+This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. To help with working with sftraj objects, there are two functions that help extract points from `sftraj` objects.
 
 **coord_traj**  
 This function returns a data.frame (x,y,z) of the beginning point of each sftraj geometry.
@@ -332,12 +331,17 @@ coord_traj(my_sftraj$geometry)[1:10,]
 ```
 
 **pts_traj**  
-And `pts_traj` returns a list of the beginning point of each sftraj geometry
+And `pts_traj` returns a list of the beginning point of each sftraj geometry.
+
+```{r}
+pts_traj(my_sftraj$geometry)[1:10]
+```
 
 **is_linestring**  
-Returns TRUE or FALSE if the geometry is a linestring. This allows you to filter an `sftraj` object to be 'pure'.
+May help if you'd like to quickly filter an `sftraj` object to just contain pure linestrings. `is_linestring()` returns TRUE or FALSE if the geometry is a linestring. This does not recalculate anything, it just filters out steps that contained NAs in either phase.
 
 ```{r}
 is_linestring(my_sftraj$geometry)[1:10]
-
+new_sftraj <- my_sftraj[is_linestring(my_sftraj$geometry),]
+head(new_sftraj)
 ```

@@ -42,7 +42,6 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
   data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
   structure(
     data_sf,
-    active_burst = attr(burst, 'active_burst'),
     time = time,
     error = error,
     class = c("sftrack", 'data.frame','sf')
@@ -272,8 +271,8 @@ print.sftrack <- function(x,n_row,n_col,...){
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
   cat(print(attr(x$geometry,'crs')))
-  cat(paste0('unique ids : ', paste(attributes(x$burst)$burst_levels$id,collapse=', '), '\n'))
-  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x, 'active_burst'),collapse=', '), '\n'))
+  #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
+  cat(paste0('bursts : total = ', length(x$burst[[1]]),' | active burst = ',paste0(attr(x$burst, 'active_burst'),collapse=', '), '\n'))
   if(missing(n_col)){n_col <- ncol(x)}
   if(missing(n_row)){n_row <- nrow(x)}
   row_l <- ifelse(nrow(x)>n_row,n_row,nrow(x))
@@ -287,7 +286,7 @@ print.sftrack <- function(x,n_row,n_col,...){
   } else y <- x
   print.data.frame(y)
 }
-#print(my_track,10,10)
+# print(my_track,10,10)
 
 # Sumary
 #summary.sftrack

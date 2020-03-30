@@ -4,7 +4,7 @@
 plot.sftrack <- function(x,...){
 plot(x$geometry)
 burst_srt <- burst_sort(x$burst)
-burst_lbl <- burst_labels(x$burst)
+burst_lbl <- as.character(burst_srt)
 new_clrs <- rainbow(length(unique(burst_srt)))
   for(i in seq_along(new_clrs)){
     #i=1
@@ -19,7 +19,7 @@ new_clrs <- rainbow(length(unique(burst_srt)))
 plot.sftraj <- function(x,...){
   plot(x$geometry)
   burst_srt <- burst_sort(x$burst)
-  burst_lbl <- burst_labels(x$burst)
+  burst_lbl <- as.character(burst_srt)
   new_clrs <- rainbow(length(unique(burst_srt)))
   for(i in seq_along(new_clrs)){
     #i=1

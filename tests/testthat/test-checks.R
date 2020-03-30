@@ -34,5 +34,5 @@ test_that("checks check successfully", {
     timez = Sys.time() + 60*60*(c(1,2,3,4))
   )
   expect_error( as_sftrack(data = df1,burst_list=list(id=df1$id, month = df1$month),
-    time_col = 'timez', active_burst = c('id','month'), coords = c('x','y','z')), 'x column has NAs that are not found in other columns')
+    time_col = 'timez', active_burst = c('id','month'), coords = c('x','y','z')), 'x column has NAs that are not found in other coordinate columns')
 })
