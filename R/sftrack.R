@@ -117,8 +117,9 @@ as_sftrack.data.frame <- function(
     time = time_col,
     geometry = geom$geometry
   )
-  #Sanity check
+  #Sanity checks
   dup_timestamp(ret)
+  check_z_coords(ret)
   ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
@@ -201,7 +202,7 @@ as_sftrack.ltraj <- function(data, crs = NA){
     geometry = geom$geometry
   )
   #Sanity check? Necessary?
-
+  ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)
 }
@@ -259,6 +260,7 @@ as_sftrack.sf <- function(
   )
   #Sanity check
   dup_timestamp(ret)
+  check_z_coords(ret)
   ret <- ret[ordered(ret$burst, ret[,attr(ret,'time')]),]
   #
   return(ret)

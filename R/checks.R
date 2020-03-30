@@ -7,7 +7,7 @@ ordered <- function(burst, time_data, return = TRUE){
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <- all(tapply(time_data, idz, function(x) identical(order(x), seq_len(length(x)))))
   if(isOrdered & return){ return(seq_along(time_data)) }
-  if(!isOrdered){ message(paste0('time was not ordered for each burst'))
+  if(!isOrdered){ message(paste0('time was not ordered for each burst, reordering output...'))
     if(return) { return(order(idz,time_data))}
     }
 }
@@ -26,7 +26,7 @@ check_names_exist <- function(data, names){
 #' @param x An sftrack/sftraj object
 dup_timestamp <- function(x){
   test <- tapply(x[, attr(x, 'time'), drop=T]   ,attr(x$burst, 'sort_index'), function(y) any(duplicated(y)))
-  if(any(test)){stop(paste0( paste0(names(test)[test],collapse=', '), ' have duplicated time stamps'))}
+  if(any(test)){stop(paste0('bursts: ', paste0(names(test)[test],collapse=', '), ' have duplicated time stamps'))}
 }
 
 ##### Burst related checks
@@ -70,3 +70,10 @@ check_NA_coords <- function(xyz){
     stop(paste0(paste0(c('x','y','z')[!NAs],collapse=' '), ' column has NAs that are not found in other coordinate columns'))
   }
 }
+
+check_z_coords <- function(sftrack_obj){
+  if('XYZ' %in% class(sftrack_obj$geometry[[1]])){
+    message('Z coordinates found. Note that the vast majority of rgdal calculations are done using planar geometry')
+  }
+}
+check_z_coords(my_track)
