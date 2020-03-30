@@ -234,6 +234,8 @@ Because ind_bursts are simply lists, you can edit individual elements in an ind_
 indb 
 indb[1] <- 'CJ15'
 str(indb)
+indb$month <- '5'
+str(indb)
 ```
 
 **multi_burst**  
@@ -258,6 +260,12 @@ mb <- c(a, b , c)
 summary(mb)
 ```
 
+You can also combine multi_bursts together with `c()`.  
+
+```{r}
+mb_combine <- c(mb1,mb1)
+summary(mb_combine)
+```
 You can also edit bursts like a list, but you must replace it with an object of the appropriate class
 ```{r}
 mb[1]

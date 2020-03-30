@@ -59,7 +59,7 @@ ind_burst <- function(burst){
 
 # ind_burst(burst=list(id='CJ11',month=3, height=10))
 multi_burst <- function(x = list(), active_burst = NULL) {
-  if(is.null(active_burst)){active_burst <- names(burst)}
+  if(is.null(active_burst)){active_burst <- names(x)}
 
   sort_index <- calc_sort_index(x, active_burst)
 
@@ -136,10 +136,18 @@ c.ind_burst <- function(...){
 
 #' @export
 c.multi_burst <- function(..., recursive = FALSE) {
-  multi_burst(c(unlist(lapply(
-    list(...), unclass
-  ))))
+  x = list(...)
+  active_burstz <- unique_active_bursts(x)
+  if (length(active_burstz) > 1) {
+    stop('There are more than one possible active bursts')
+  }
+
+  multi_burst(
+    unlist(lapply(x, unclass), recursive = FALSE),
+    active_burst = active_burst(x[[1]][1])
+  )
 }
+# c(my_track$burst, my_track$burst)
 
 #' @export
 as.data.frame.multi_burst <- function(x, ...) {
@@ -202,6 +210,17 @@ format.multi_burst <- function(mb,...){
   x = unclass(x) # becomes a list, but keeps attributes
  # ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
   ret = make_ind_burst(NextMethod())
+  structure(ret)
+}
+
+#' @export
+"$<-.ind_burst" <- function(x,i,value) {
+  if (is.null(value) || inherits(value, "ind_burst"))
+    value = list(value)
+  x = unclass(x) # becomes a list, but keeps attributes
+  # ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
+  ret = make_ind_burst(NextMethod())
+  structure(ret)
 }
 
 #' @export
