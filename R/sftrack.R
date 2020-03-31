@@ -120,7 +120,7 @@ as_sftrack.data.frame <- function(data,...,
       na.fail = FALSE)
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <-
-    sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
+    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
   # pull out other relevant info
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
