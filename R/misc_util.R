@@ -113,3 +113,12 @@ summary_sftrack <- function(x) {
     row.names = levels(levelz))
 
 }
+
+#'@export
+sfg_is_empty = function(x) {
+  switch(class(x)[2],
+    POINT = any(!is.finite(x)),
+    MULTIPOINT = , LINESTRING = , CIRCULARSTRING = , CURVE = nrow(x) == 0,
+    length(x) == 0
+  )
+}
