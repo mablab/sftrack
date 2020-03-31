@@ -12,7 +12,9 @@
 #'   error = NA, coords = c('longitude','latitude'),
 #'   burst_list =burstz)
 #'
-#' make_step_geom(burst_id = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
+#' make_step_geom(burst_id = data_sf$burst,
+#'                geometry = data_sf$geometry,
+#'                time_data = data_sf$acquisition_time)
 
 make_step_geom <- function(burst_id, time_data, geometry) {
   # Need to check if time is ordered, if not throw an error

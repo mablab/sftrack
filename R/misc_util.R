@@ -90,7 +90,7 @@ summary_sftrack <- function(x) {
   if (track_class == 'sftraj') {
     lenz <- tapply(sub[, sf_col], levelz, function(pts) {
       mat <- coord_traj(pts)
-      st_length(st_linestring(na.omit(mat)))
+      st_length(st_linestring(stats::na.omit(mat)))
     })
   }
   points = vapply(

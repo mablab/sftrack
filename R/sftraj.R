@@ -49,7 +49,7 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
 #########################
 # Methods
 #' @export
-as_sftraj.data.frame <- function(data,
+as_sftraj.data.frame <- function(data,...,
   xyz,
   coords = c('x', 'y'),
   burst_list,
@@ -87,7 +87,7 @@ as_sftraj.data.frame <- function(data,
     xyz <- as.data.frame(xyz)
   }
   if (zeroNA) {
-    xyz <- fixzero(xyz)
+    xyz <- fix_zero(xyz)
   }
   check_NA_coords(xyz)
 
@@ -153,7 +153,7 @@ as_sftraj.data.frame <- function(data,
 
 ## Track
 #' @export
-as_sftraj.sftrack <- function(data) {
+as_sftraj.sftrack <- function(data,...) {
   burst <- data$burst
   geometry <-  data$geometry
   time <-  attr(data, 'time')
@@ -180,7 +180,7 @@ as_sftraj.sftrack <- function(data) {
 
 # sf
 #' @export
-as_sftraj.sf <- function(data,
+as_sftraj.sf <- function(data,...,
   burst_list,
   id,
   burst_col = NULL,
@@ -255,7 +255,7 @@ as_sftraj.sf <- function(data,
 }
 
 #' @export
-as_sftraj.ltraj <- function(data, crs = NA) {
+as_sftraj.ltraj <- function(data,..., crs = NA) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -272,7 +272,11 @@ as_sftraj.ltraj <- function(data, crs = NA) {
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
   burst = list(id = df1$id)
-  if (!all(burst(data) == id(data))) {
+  # pull out id and burst from ltraj object
+  id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+  burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+
+  if (!all(burst_lt == id_lt)) {
     burst$group <- df1$burst
   }
   coords = c('x', 'y')
@@ -283,6 +287,7 @@ as_sftraj.ltraj <- function(data, crs = NA) {
       na.fail = FALSE)
   #
   burst = make_multi_burst(burst_list = burst)
+  error = NA
   step_geometry <-
     make_step_geom(
       burst_id = burst_select(burst),

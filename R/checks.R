@@ -38,6 +38,7 @@ check_names_exist <- function(data, names) {
 
 #' check that time is unique
 #' @param x An sftrack/sftraj object
+#' @export
 dup_timestamp <- function(x) {
   test <-
     tapply(x[, attr(x, 'time'), drop = T]   , attr(x$burst, 'sort_index'), function(y)
@@ -59,6 +60,7 @@ NAburst <- function(burst) {
     stop('NAs not allowed in burst')
   }
 }
+
 #' @export
 # more than one relocation for a burst
 check_two_bursts <- function(burst) {
@@ -89,7 +91,8 @@ check_burst_names <- function(burst) {
   }
 }
 
-#' export
+#' checkNAcoords
+#' @export
 check_NA_coords <- function(xyz) {
   check_row <- lapply(xyz, function(x)
     which(is.na(x)))
@@ -104,6 +107,7 @@ check_NA_coords <- function(xyz) {
   }
 }
 
+#' @export
 check_z_coords <- function(sftrack_obj) {
   if ('XYZ' %in% class(sftrack_obj$geometry[[1]])) {
     message(

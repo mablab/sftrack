@@ -38,11 +38,12 @@ Description: Movement classes for tracking data and trajectories,
     the path, composed by steps, i.e. the straightline segments
     connecting successive locations. `sftraj` is designed to handle
     movement of both living organisms and inanimate objects.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
+VignetteBuilder: knitr
 URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
 BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr
