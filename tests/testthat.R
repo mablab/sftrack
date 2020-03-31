@@ -1,4 +1,4 @@
 library(testthat)
-library(sftraj)
+library(sftrack)
 #library(adehabitatLT)
-test_check("sftraj")
+test_check("sftrack")

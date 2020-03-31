@@ -120,7 +120,7 @@ as_sftraj.data.frame <- function(data,
 
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <-
-    sum(vapply(geom$geometry, sf:::sfg_is_empty, TRUE))
+    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
 
   #
   if (any(is.na(active_burst))) {
