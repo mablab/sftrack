@@ -50,7 +50,7 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 ########################
 # Methods
 #' @export
-as_sftrack.data.frame <- function(data,
+as_sftrack.data.frame <- function(data,...,
   xyz,
   coords = c('x', 'y', 'z'),
   burst_list,
@@ -144,7 +144,7 @@ as_sftrack.data.frame <- function(data,
 }
 
 #' @export
-as_sftrack.sftraj <- function(data) {
+as_sftrack.sftraj <- function(data,...) {
   geometry <- data$geometry
 
   point_d <- class(geometry[[1]])[1]
@@ -179,15 +179,8 @@ as_sftrack.sftraj <- function(data) {
 }
 
 ### Ltraj
-#' @export as_sftrack.ltraj
-# library(adehabitatLT)
-# data(raccoon_data)
-# ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
-#  id = raccoon_data$sensor_code, typeII = TRUE,
-#  infolocs = raccoon_data[,1:6] )
-# as_sftrack(data = ltraj_df)
-
-as_sftrack.ltraj <- function(data, crs = NA) {
+#' @export
+as_sftrack.ltraj <- function(data,..., crs = NA) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -231,7 +224,7 @@ as_sftrack.ltraj <- function(data, crs = NA) {
 }
 #sf
 # sf
-as_sftrack.sf <- function(data,
+as_sftrack.sf <- function(data,...,
   burst_list,
   id,
   burst_col = NULL,
