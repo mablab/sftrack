@@ -2,10 +2,10 @@
 % Please edit documentation in R/checks.R
 \name{check_NA_coords}
 \alias{check_NA_coords}
-\title{export}
+\title{checkNAcoords}
 \usage{
 check_NA_coords(xyz)
 }
 \description{
-export
+checkNAcoords
 }

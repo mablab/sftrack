@@ -22,5 +22,7 @@ data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),
   burst_list =burstz)
 
-make_step_geom(burst_id = data_sf$burst, geometry = data_sf$geometry, time_data = data_sf$acquisition_time)
+make_step_geom(burst_id = data_sf$burst,
+               geometry = data_sf$geometry,
+               time_data = data_sf$acquisition_time)
 }

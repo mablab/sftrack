@@ -87,7 +87,7 @@ as_sftrack.data.frame <- function(data,...,
     xyz <- as.data.frame(xyz)
   }
   if (zeroNA) {
-    xyz <- fixzero(xyz)
+    xyz <- fix_zero(xyz)
   }
   check_NA_coords(xyz)
 
@@ -197,7 +197,11 @@ as_sftrack.ltraj <- function(data,..., crs = NA) {
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
   burst = list(id = df1$id)
-  if (!all(burst(data) == id(data))) {
+  # pull out id and burst from ltraj object
+  id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+  burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+
+  if (!all(burst_lt == id_lt)) {
     burst$group <- df1$burst
   }
   coords = c('x', 'y')

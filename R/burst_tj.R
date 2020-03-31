@@ -174,13 +174,13 @@ str.multi_burst <- function(object, ...) {
   cat(paste0(class(object)[1], " of length ", n))
   if (n > 0) {
     cat("; first list element: ")
-    str(object[[1]], ...)
+    utils::str(object[[1]], ...)
   }
 }
 # str.multi_burst(my_track$burst)
 
 #' @export
-format.ind_burst <- function(x) {
+format.ind_burst <- function(x,...) {
   message(paste0('(', paste0(
     names(x), ': ', as.character(unlist(x)), collapse = ', '
   ), ')'))
@@ -188,10 +188,10 @@ format.ind_burst <- function(x) {
 }
 
 #' @export
-format.multi_burst <- function(mb, ...) {
-  paste0('(', vapply(mb, function(x)
+format.multi_burst <- function(x, ...) {
+  paste0('(', vapply(x, function(y)
     paste(
-      paste0(names(x), ': ', as.character(unlist(x))) , collapse = ', '
+      paste0(names(y), ': ', as.character(unlist(y))) , collapse = ', '
     ), NA_character_), ')')
 }
 
