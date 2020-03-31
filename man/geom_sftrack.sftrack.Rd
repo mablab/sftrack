@@ -17,7 +17,7 @@ This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function
 }
 \examples{
-
+library(ggplot2)
 data(raccoon_data)
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
