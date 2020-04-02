@@ -2,10 +2,13 @@
 % Please edit documentation in R/checks.R
 \name{check_burst_names}
 \alias{check_burst_names}
-\title{Are burst names not equivalent for each ind_burst?}
+\title{Are burst names not equivalent for each ind_burst? Or are they duplicated}
 \usage{
 check_burst_names(burst)
 }
+\arguments{
+\item{burst}{a multi_burst}
+}
 \description{
-Are burst names not equivalent for each ind_burst?
+Are burst names not equivalent for each ind_burst? Or are they duplicated
 }

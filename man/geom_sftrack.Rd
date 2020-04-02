@@ -4,26 +4,27 @@
 \alias{geom_sftrack}
 \alias{geom_sftrack.sftrack}
 \alias{geom_sftrack.sftraj}
-\title{geom_sftrack()
-This function can be added to ggplot() to plot an sftrack and sftraj
-Function does not yet work with ggplot grammer so you must but data= in this function}
+\title{Function to plot sftrack objects in ggplot}
 \usage{
+geom_sftrack(data, ...)
+
 \method{geom_sftrack}{sftrack}(data, ...)
 
 \method{geom_sftrack}{sftraj}(data, ...)
 }
 \arguments{
 \item{data}{the sftraj or sftrack object.}
+
+\item{...}{arguments to passed to ggplot}
 }
 \description{
-geom_sftrack()
 This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function
 }
 \examples{
 library(ggplot2)
 library(sftrack)
-data(raccoon_data)
+raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
    coords = c('longitude','latitude'),

@@ -1,7 +1,24 @@
 ###################
 # Misc utilitie functions
 ###################
-#'@export
+#' @title Return a list of sf_POINTS or a data.frame of the beginning points rom a trajectory
+#' @name traj_geom
+#' @param traj a trajectory geometery from sf_traj
+#' @examples
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#'   # Input is a data.frame
+#' my_traj <- as_sftraj(raccoon_data, time_col ='acquisition_time',
+#'   error = NA, coords = c('longitude','latitude'),
+#'   burst_list =burstz)
+#' print(my_traj, 5, 10)
+#'
+#' # extract a list of points
+#' pts_traj(my_traj)
+#'
+#' # or a data.frame of points
+#' coord_traj(my_traj)
+#' @export
 pts_traj <- function(traj) {
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
@@ -23,9 +40,10 @@ pts_traj <- function(traj) {
   })
 }
 
-#'@export
+#' @rdname traj_geom
+#' @export
 coord_traj <- function(traj) {
-  if (inherits(traj, 'traj')) {
+  if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
   }
   if (inherits(traj, 'sfc')) {
@@ -46,7 +64,14 @@ coord_traj <- function(traj) {
   do.call(rbind, ret)
 }
 
-#'@export
+#' @title Is a trajectory geometry a linestring or a geometerycollection
+#' @description A step is a movement from one point to the next, with an sftraj object
+#' this manifests as a linestring. If, however, one of these two points is missing, the sftraj
+#' is created as a geometery collection of two points, the beginning and the end point, where one
+#' of the steps is NA. This function checks a trajectory geometry if its a linestring and returns
+#' a vector of T/F. Largely an internal function, but can be used to subset sftraj objects.
+#' @export
+#' @param traj an sftraj object
 is_linestring <- function(traj) {
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
@@ -63,7 +88,9 @@ is_linestring <- function(traj) {
     inherits(x, 'LINESTRING'), NA)
 }
 
-#'@export
+#' @title Summarize sftrack objects
+#' @param x an sftrack object
+#' @export
 summary_sftrack <- function(x) {
   track_class <- class(x)[1]
   #x = my_sftrack
@@ -114,7 +141,7 @@ summary_sftrack <- function(x) {
 
 }
 
-#'@export
+#recalculates empty geometries (take from sf as it is an internal as well)
 sfg_is_empty = function(x) {
   switch(class(x)[2],
     POINT = any(!is.finite(x)),

@@ -2,10 +2,13 @@
 % Please edit documentation in R/checks.R
 \name{check_NA_coords}
 \alias{check_NA_coords}
-\title{checkNAcoords}
+\title{Check if coordinates contain NAs in some columns but not others}
 \usage{
 check_NA_coords(xyz)
 }
+\arguments{
+\item{xyz}{a data.frame of xy or xyz coordinates}
+}
 \description{
-checkNAcoords
+Check if coordinates contain NAs in some columns but not others
 }

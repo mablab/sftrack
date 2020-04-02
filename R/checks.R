@@ -1,6 +1,9 @@
-#' Checks if burst is ordered by time and then outputs the correct order
+#' @title Checks if burst is ordered by time and then outputs the correct order
 #' @export
-ordered <- function(burst, time_data, return = TRUE) {
+#' @param burst a multi_burst
+#' @param time_data a vector of time
+#' @param return the new order or not?
+check_ordered <- function(burst, time_data, return = TRUE) {
   idz <- factor(paste0(burst))
 
   # may not be as fast as something involving order(time_data, idz)
@@ -20,8 +23,10 @@ ordered <- function(burst, time_data, return = TRUE) {
   }
 }
 
-#' Check if a set of column names are found in a data frame and return an error if not
+#' @title Check if a set of column names are found in a data frame and return an error if not
 #' @export
+#' @param data a data.frame to check names against
+#' @param names the inputted column names
 check_names_exist <- function(data, names) {
   # check burst
   col_names <- colnames(data)
@@ -36,7 +41,7 @@ check_names_exist <- function(data, names) {
 
 }
 
-#' check that time is unique
+#' @title check that time is unique
 #' @param x An sftrack/sftraj object
 #' @export
 dup_timestamp <- function(x) {
@@ -53,15 +58,15 @@ dup_timestamp <- function(x) {
 }
 
 ##### Burst related checks
-# no NAs in burst
+#' @title Check there are no NAs in burst
 #' @export
-NAburst <- function(burst) {
+#' @param burst a multi_burst
+check_NAburst <- function(burst) {
   if (any(is.na(unlist(burst)))) {
     stop('NAs not allowed in burst')
   }
 }
 
-#' @export
 # more than one relocation for a burst
 check_two_bursts <- function(burst) {
   count <- table(attr(burst, 'sort_index'))
@@ -69,12 +74,26 @@ check_two_bursts <- function(burst) {
     warning(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
   }
 }
+#' @title Are burst names not equivalent for each ind_burst? Or are they duplicated
+#' @export
+#' @param burst a multi_burst
+check_burst_names <- function(burst) {
+  if (length(unique(vapply(burst, function(x)
+    paste(names(x), collapse = ''), NA_character_))) != 1) {
+    stop('Burst names do not match')
+  }
 
-# fix 0's to NAs in latitude and longitude
-# xyz <- data[,coords]
-# xyz[1:10,1:2] <- 0
-# xyz
-# returns data.frame with 0s replaced with NAs
+  if (any(unlist(lapply(burst, function(x)duplicated(names(x)))))) {
+    stop('burst names can not be duplicated')
+  }
+}
+
+###################
+# coordinate related checks
+
+#' @title fix 0's to NAs in latitude and longitude
+#' @param xyz a data.frame of xy or xyz coordinates
+#' @return returns a data.frame with 0s replaced with NAs
 #' @export
 fix_zero <- function(xyz) {
   zero_row <- apply(!is.na(xyz[, 1:2]) & xyz[, 1:2] == 0, 1, any)
@@ -82,16 +101,9 @@ fix_zero <- function(xyz) {
   return(xyz)
 }
 
-#' Are burst names not equivalent for each ind_burst?
-#' @export
-check_burst_names <- function(burst) {
-  if (length(unique(vapply(burst, function(x)
-    paste(names(x), collapse = ''), NA_character_))) != 1) {
-    stop('Burst names do not match')
-  }
-}
 
-#' checkNAcoords
+#' @title Check if coordinates contain NAs in some columns but not others
+#' @param xyz a data.frame of xy or xyz coordinates
 #' @export
 check_NA_coords <- function(xyz) {
   check_row <- lapply(xyz, function(x)
@@ -107,7 +119,7 @@ check_NA_coords <- function(xyz) {
   }
 }
 
-#' @export
+# Checks if z coordinates and returns a message
 check_z_coords <- function(sftrack_obj) {
   if ('XYZ' %in% class(sftrack_obj$geometry[[1]])) {
     message(
