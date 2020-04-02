@@ -2,7 +2,7 @@
 % Please edit documentation in R/burst_tj.R
 \name{calc_sort_index}
 \alias{calc_sort_index}
-\title{recalculate the new sort index. Internal function}
+\title{Calculate the sort index. Internal function}
 \usage{
 calc_sort_index(burst, active_burst)
 }
@@ -12,5 +12,5 @@ calc_sort_index(burst, active_burst)
 \item{active_burst}{a character vector of the active_burst}
 }
 \description{
-recalculate the new sort index. Internal function
+Calculate the sort index. Internal function
 }

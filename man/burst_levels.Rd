@@ -20,6 +20,7 @@ Access the burst levels
 \examples{
 
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+
  mb1 <- make_multi_burst(burst_list = list(id = raccoon_data$sensor_code))
  # Access the burst levels
  burst_levels(mb1)

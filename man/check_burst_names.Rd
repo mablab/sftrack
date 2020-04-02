@@ -2,7 +2,7 @@
 % Please edit documentation in R/checks.R
 \name{check_burst_names}
 \alias{check_burst_names}
-\title{Are burst names not equivalent for each ind_burst? Or are they duplicated}
+\title{Are burst names equivalent for each ind_burst?}
 \usage{
 check_burst_names(burst)
 }
@@ -10,5 +10,5 @@ check_burst_names(burst)
 \item{burst}{a multi_burst}
 }
 \description{
-Are burst names not equivalent for each ind_burst? Or are they duplicated
+Are burst names equivalent for each ind_burst?
 }
