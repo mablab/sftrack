@@ -1,7 +1,6 @@
 ---
-title: "sftrack working vignette"
+title: "1. Overview of sftrack"
 output: html_document
-html_document:
 vignette: >
  %\VignetteIndexEntry{1. Overview of sftrack}
   %\VignetteEngine{knitr::rmarkdown}
@@ -108,7 +107,7 @@ head(my_sftraj)
 `as_sftrack()` and `as_sftraj()` also accept other data types, and the arguments differ depending on the class. It currenly accepts, `sf`, `ltraj`, and eventually `tibbles`. 
 
 ### Import from ltraj
-For an ltraj all you need is the ltraj object, all relevant information is taken from the object. As ltraj objects do not store crs you may also supply the crs.  
+For an ltraj all you need is the ltraj object, all relevant information is taken from the object.  
 
 ```{r, message = FALSE}
 library(adehabitatLT)
@@ -117,7 +116,7 @@ ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSI
  id = raccoon_data$sensor_code, typeII = TRUE,
  infolocs = raccoon_data[,1:6] )
 
-my_sf <- as_sftrack(ltraj_df, crs = crs)
+my_sf <- as_sftrack(ltraj_df)
 head(my_sf)
 
 

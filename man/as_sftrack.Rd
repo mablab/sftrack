@@ -2,8 +2,8 @@
 % Please edit documentation in R/sftrack.R
 \name{as_sftrack}
 \alias{as_sftrack}
-\alias{new_sftrack}
 \alias{as_sftrack.data.frame}
+\alias{new_sftrack}
 \alias{as_sftrack.sftraj}
 \alias{as_sftrack.ltraj}
 \alias{as_sftrack.sf}
@@ -11,15 +11,15 @@
 \usage{
 as_sftrack(data, ...)
 
-new_sftrack(data, burst, time, geometry, error = NA)
-
 \method{as_sftrack}{data.frame}(data, ..., xyz, coords = c("x", "y",
   "z"), burst_list, id, burst_col = NULL, active_burst = NA, error,
   error_col, time, time_col, crs = NA, zeroNA = F)
 
+new_sftrack(data, burst, time, geometry, error = NA)
+
 \method{as_sftrack}{sftraj}(data, ...)
 
-\method{as_sftrack}{ltraj}(data, ..., crs = NA)
+\method{as_sftrack}{ltraj}(data, ...)
 
 \method{as_sftrack}{sf}(data, ..., burst_list, id, burst_col = NULL,
   active_burst = NA, error, error_col, time, time_col)
@@ -28,14 +28,6 @@ new_sftrack(data, burst, time, geometry, error = NA)
 \item{data}{(global) a data.frame of the movement data}
 
 \item{...}{extra information to be past to as_sftrack}
-
-\item{burst}{a multi_burst}
-
-\item{time}{(vector) a vector of time information, can be either POSIX or an integer}
-
-\item{geometry}{a vector of sf geometries}
-
-\item{error}{(vector - optional) a vector of error information for the movement data}
 
 \item{xyz}{(vector) a data.frame of xy or xyz coordinates}
 
@@ -49,19 +41,27 @@ new_sftrack(data, burst, time, geometry, error = NA)
 
 \item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
 
+\item{error}{(vector - optional) a vector of error information for the movement data}
+
 \item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
+
+\item{time}{(vector) a vector of time information, can be either POSIX or an integer}
 
 \item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
 
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
+
+\item{burst}{a multi_burst}
+
+\item{geometry}{a vector of sf geometries}
 }
 \description{
 This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
-Creates a `burst` column to group movement data, and dedicated time and error columns.
+Creates a `burst` column to group movement data and sets dedicated time and error columns.
 
-Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
+Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
 Either input is allowed, but vector mode over.writes data.frame mode if both are given.
 
@@ -73,6 +73,7 @@ Convert objects into sftrack objects.
 \examples{
 
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
 my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',

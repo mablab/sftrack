@@ -31,6 +31,7 @@
 #'
 #' # Make a multi burst
 #'  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#'  raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
 #'  str(mb1)
@@ -257,6 +258,7 @@ burst_sort <- function(burst) {
 #' @examples
 #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#'
 #'  mb1 <- make_multi_burst(burst_list = list(id = raccoon_data$sensor_code))
 #'  # Access the burst levels
 #'  burst_levels(mb1)
@@ -279,11 +281,20 @@ burst_levels <- function(burst, value) {
 #' @title Select the active multi_bursts.
 #' @return a list where each position is a list of the active bursts from each ind_burst
 #' @param burst a multi_burst
+#' @param labels whether to return labels instead of a list of the active burst. Defaults to FALSE
 #' @export
-burst_select <- function(burst) {
+burst_select <- function(burst, labels = F) {
   # should also pull out select bursts, or perhaps `multi.burst[` already does this
-  lapply(burst, function(x)
+  if(!labels){
+    ret <- lapply(burst, function(x)
     x[names(x) %in% attr(burst, 'active_burst')])
+  }
+  if(labels){
+    ret <- vapply(burst, function(x)
+      paste(x[names(x) %in% attr(burst, 'active_burst')],collapse='_'),
+    NA_character_)
+  }
+  return(ret)
 }
 
 unique_active_bursts <-
@@ -299,6 +310,7 @@ unique_active_bursts <-
 #' The active_bursts are essentially a paste(names_of_bursts, sep = '_') grouping variable.
 #' @examples
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
 #'
@@ -339,7 +351,7 @@ active_burst <- function(burst) {
   burst
 }
 
-#' @title recalculate the new sort index. Internal function
+#' @title Calculate the sort index. Internal function
 #' @param burst a multi_burst
 #' @param active_burst a character vector of the active_burst
 #' @export

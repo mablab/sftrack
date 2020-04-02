@@ -56,6 +56,7 @@ make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 
 # Make a multi burst
  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+ raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
  str(mb1)

@@ -1,3 +1,4 @@
+# Burst related checks
 #' @title Checks if burst is ordered by time and then outputs the correct order
 #' @export
 #' @param burst a multi_burst
@@ -41,22 +42,6 @@ check_names_exist <- function(data, names) {
 
 }
 
-#' @title check that time is unique
-#' @param x An sftrack/sftraj object
-#' @export
-dup_timestamp <- function(x) {
-  test <-
-    tapply(x[, attr(x, 'time'), drop = T]   , attr(x$burst, 'sort_index'), function(y)
-      any(duplicated(y)))
-  if (any(test)) {
-    stop(paste0(
-      'bursts: ',
-      paste0(names(test)[test], collapse = ', '),
-      ' have duplicated time stamps'
-    ))
-  }
-}
-
 ##### Burst related checks
 #' @title Check there are no NAs in burst
 #' @export
@@ -74,7 +59,7 @@ check_two_bursts <- function(burst) {
     warning(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
   }
 }
-#' @title Are burst names not equivalent for each ind_burst? Or are they duplicated
+#' @title Are burst names equivalent for each ind_burst?
 #' @export
 #' @param burst a multi_burst
 check_burst_names <- function(burst) {
@@ -88,6 +73,16 @@ check_burst_names <- function(burst) {
   }
 }
 
+#' @title Checks if sort_index needs to be recalculated then recalculates them
+#' @param burst a multi_burst
+#' @export
+check_sort <- function(burst){
+  eq <- all.equal(as.character(burst_sort(burst)),burst_select(burst, T))
+  if(!eq){
+    attr(burst, 'sort_index') <- calc_sort_index(burst, active_burst(burst))
+    burst
+  }
+}
 ###################
 # coordinate related checks
 
@@ -128,3 +123,48 @@ check_z_coords <- function(sftrack_obj) {
   }
 }
 #check_z_coords(my_track)
+
+################
+# Time
+#' @title Check if time is integer or posix
+#' @param time a vector of time
+#' @export
+check_time <- function(time) {
+  # This function was originally envisioned to contain all time checks
+  # Currently its not but can expand if we feel its necessary to have
+  # is integer or posixct
+  if(!(inherits(time,'integer')|inherits(time, 'POSIXct'))) {
+    stop('Time needs to be an integer or POSIXct')
+  }
+}
+
+#' @title Check if time is regular for each burst and returns logical for each burst
+#' @param sftrack an sftrack/sftraj object
+#' @export
+check_t_regular <- function(sftrack){
+  # is complete
+  time_col=attr(sftrack,'time')
+  sftrack <- sftrack[check_ordered(burst_select(sftrack$burst),sftrack[,time_col]),]
+  ans <- tapply(sftrack[,time_col,drop=T],paste(burst_select(sftrack$burst)), function(date){
+    x1 <- unclass(date[-1])
+    x2 <- unclass(date[-length(date)])
+    abs(mean(c(x1 - x2))-(x1[1]-x2[1]))<=1e-07
+  })
+  return(ans)
+}
+
+#' @title check that time is unique
+#' @param x An sftrack/sftraj object
+#' @export
+dup_timestamp <- function(x) {
+  test <-
+    tapply(x[, attr(x, 'time'), drop = T]   , burst_select(x$burst,T), function(y)
+      any(duplicated(y)))
+  if (any(test)) {
+    stop(paste0(
+      'bursts: ',
+      paste0(names(test)[test], collapse = ', '),
+      ' have duplicated time stamps'
+    ))
+  }
+}

@@ -22,7 +22,7 @@ new_sftraj(data, burst, time, geometry, error = NA)
 \method{as_sftraj}{sf}(data, ..., burst_list, id, burst_col = NULL,
   active_burst = NA, error, error_col, time, time_col)
 
-\method{as_sftraj}{ltraj}(data, ..., crs = NA)
+\method{as_sftraj}{ltraj}(data, ...)
 }
 \arguments{
 \item{data}{(global) a data.frame of the movement data}
@@ -58,8 +58,8 @@ new_sftraj(data, burst, time, geometry, error = NA)
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
 }
 \description{
-This function converts x,y,z data into an sftraj object with a sf_geometry column of linestrings describing a step from the current point to the next.
-Creates a `burst` column to group movement data, and dedicated time and error columns.
+This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
+Creates a `burst` column to group movement data and sets dedicated time and error columns.
 
 Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
 length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
@@ -73,6 +73,7 @@ Convert objects into sftraj objects.
 \examples{
 
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
 my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
