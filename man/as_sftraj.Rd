@@ -2,44 +2,107 @@
 % Please edit documentation in R/sftraj.R
 \name{as_sftraj}
 \alias{as_sftraj}
-\title{as_sftraj}
+\alias{new_sftraj}
+\alias{as_sftraj.data.frame}
+\alias{as_sftraj.sftrack}
+\alias{as_sftraj.sf}
+\alias{as_sftraj.ltraj}
+\title{Convert objects into sftraj objects.}
 \usage{
 as_sftraj(data, ...)
+
+new_sftraj(data, burst, time, geometry, error = NA)
+
+\method{as_sftraj}{data.frame}(data, ..., xyz, coords = c("x", "y"),
+  burst_list, id, burst_col = NULL, active_burst = NA, error,
+  error_col, time, time_col, crs = NA, zeroNA = FALSE)
+
+\method{as_sftraj}{sftrack}(data, ...)
+
+\method{as_sftraj}{sf}(data, ..., burst_list, id, burst_col = NULL,
+  active_burst = NA, error, error_col, time, time_col)
+
+\method{as_sftraj}{ltraj}(data, ..., crs = NA)
 }
 \arguments{
-\item{data}{Data.frame input, these columns will remain unchanged, and any columns refered to
-in later parameters are not deleted from this column. The function simply copies the data.frame
-and adds the appropriate columns.}
+\item{data}{(global) a data.frame of the movement data}
 
-\item{proj4}{projection (for sf)}
+\item{...}{extra information to be past to as_sftraj}
 
-\item{time}{vector of time}
+\item{burst}{a multi_burst}
 
-\item{burst}{list of named vectors one of which must be named id}
+\item{time}{(vector) a vector of time information, can be either POSIX or an integer}
 
-\item{error}{error vector}
+\item{geometry}{a vector of sf geometries}
 
-\item{coords}{vector of three column names for the x,y,z coordinates, in that order.}
+\item{error}{(vector - optional) a vector of error information for the movement data}
 
-\item{tz}{timezone component, same as as.POSIX}
+\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
+
+\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
+
+\item{burst_list}{(vector) a list of named vectors describing multiple grouping variables}
+
+\item{id}{(data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs}
+
+\item{burst_col}{(data.frame - optional) a character vector naming the other grouping columns in `data`.}
+
+\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
+
+\item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
+
+\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
+
+\item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
+
+\item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
 }
 \description{
-This generic has multiple inputs and gathers relevant information
-to sftraj class.
-It converts x,y,z data into an sftraj object and gives it an sf$geometry column. This
-column is a list of line segments representing each step. It also creates and error, time, and burst column as well of each respective class.
+This function converts x,y,z data into an sftraj object with a sf_geometry column of linestrings describing a step from the current point to the next.
+Creates a `burst` column to group movement data, and dedicated time and error columns.
+
+Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
+length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
+Either input is allowed, but vector mode over.writes data.frame mode if both are given.
+
+Some options are global and required regardless
+}
+\details{
+Convert objects into sftraj objects.
 }
 \examples{
 
-data(raccoon_data)
+raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
-my_step <- as_sftraj(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),
-  error = NA, coords = c('longitude','latitude','height'),
-  burst =burstz)
+my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
+  error = NA, coords = c('longitude','latitude'),
+  burst_list = burstz)
+
   # Input is a ltraj
+  library(adehabitatLT)
+  ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')],
+  date = as.POSIXct(raccoon_data$acquisition_time),
+  id = raccoon_data$sensor_code, typeII = TRUE,
+  infolocs = raccoon_data[,1:6] )
+  my_sftraj <- as_sftraj(ltraj_df)
+  head(my_sftraj)
 
   # Input is a sf object
+  library(sf)
+  df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
+  sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
+  id = 'sensor_code'
+  time_col = 'acquisition_time'
+
+  new_sftraj <- as_sftraj(sf_df, id=id, time_col = time_col)
+  head(new_sftraj)
 
   # Input is an sftrack object
+  my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
+  error = NA, coords = c('longitude','latitude'),
+  burst_list = burstz)
+
+  new_traj <- as_sftraj(my_track)
+  head(new_traj)
 }
