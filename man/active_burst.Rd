@@ -20,6 +20,7 @@ The active_bursts are essentially a paste(names_of_bursts, sep = '_') grouping v
 }
 \examples{
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
 
