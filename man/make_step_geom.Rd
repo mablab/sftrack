@@ -18,6 +18,7 @@ This calculates step geometries as individual line segments based on the active_
 }
 \examples{
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),

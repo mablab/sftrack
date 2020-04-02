@@ -2,8 +2,8 @@
 #' @name as_sftraj
 #' @title Convert objects into sftraj objects.
 #' @description
-#' This function converts x,y,z data into an sftraj object with a sf_geometry column of linestrings describing a step from the current point to the next.
-#' Creates a `burst` column to group movement data, and dedicated time and error columns.
+#' This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
+#' Creates a `burst` column to group movement data and sets dedicated time and error columns.
 #'
 #' Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
 #' length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
@@ -31,6 +31,7 @@
 #' @examples
 #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
 #' my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
@@ -99,7 +100,7 @@ as_sftraj.data.frame <- function(data,...,
   time_col,
   crs = NA,
   zeroNA = FALSE) {
-  # data.frame mode
+  # check if columns exist
 
   if (!missing(id)) {
     check_names_exist(data, c(id, burst_col))
@@ -121,17 +122,21 @@ as_sftraj.data.frame <- function(data,...,
   }
   check_NA_coords(xyz)
 
-  if (!missing(error_col)) {
-    check_names_exist(data, error_col)
-  }
+
+  # Time
   if (!missing(time_col)) {
     check_names_exist(data, time_col)
   }
-  # vector mode
-  # time
   if (!missing(time)) {
     data$reloc_time <- time
     time_col = 'reloc_time'
+  }
+  check_time(data[,time_col])
+
+  # Error
+  #
+  if (!missing(error_col)) {
+    check_names_exist(data, error_col)
   }
 
   if (!missing(error)) {
@@ -142,22 +147,21 @@ as_sftraj.data.frame <- function(data,...,
       error_col = NA
   }
 
-  geom <-
-    sf::st_as_sf(xyz,
-      coords = names(xyz),
-      crs = crs,
-      na.fail = FALSE)
-
-  # Force calculation of empty geometries.
-  attr(geom$geometry, 'n_empty') <-
-    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
-
-  #
+  # pull out other relevant info
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
   }
   burst <-
     make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+
+  geom <-
+    sf::st_as_sf(xyz,
+      coords = names(xyz),
+      crs = crs,
+      na.fail = FALSE)
+  # Force calculation of empty geometries.
+  attr(geom$geometry, 'n_empty') <-
+    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
 
   step_geometry <-
     make_step_geom(
@@ -173,10 +177,10 @@ as_sftraj.data.frame <- function(data,...,
     time = time_col,
     geometry = step_geometry
   )
-  #Sanity check
+  #Sanity checks
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
   dup_timestamp(ret)
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
   #
   return(ret)
 }
@@ -240,15 +244,15 @@ as_sftraj.sf <- function(data,...,
   if (!missing(error_col)) {
     check_names_exist(data, error_col)
   }
+  # Time
   if (!missing(time_col)) {
     check_names_exist(data, time_col)
   }
-  # vector mode
-  # time
   if (!missing(time)) {
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
+  check_time(data[,time_col])
 
   if (!missing(error)) {
     data$sftrack_error <- error
@@ -290,7 +294,7 @@ as_sftraj.sf <- function(data,...,
 #' @rdname as_sftraj
 #' @method as_sftraj ltraj
 #' @export
-as_sftraj.ltraj <- function(data,..., crs = NA) {
+as_sftraj.ltraj <- function(data,...) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -306,6 +310,7 @@ as_sftraj.ltraj <- function(data,..., crs = NA) {
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
   burst = list(id = df1$id)
+  crs = attr(data, 'proj4string')
   # pull out id and burst from ltraj object
   id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
   burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
@@ -348,7 +353,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   x <-
     as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
   cat('This is an sftraj object\n')
-  cat(print(attr(x$geometry, 'crs')))
+  cat(paste0('crs: ',format(attr(x$geometry, 'crs')),'\n'))
   #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',

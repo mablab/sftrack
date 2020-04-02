@@ -25,6 +25,7 @@ Function does not yet work with ggplot grammer so you must but data= in this fun
 library(ggplot2)
 library(sftrack)
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
    coords = c('longitude','latitude'),

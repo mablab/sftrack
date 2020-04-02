@@ -3,9 +3,9 @@
 #' @title Convert objects into sftrack objects.
 #' @description
 #' This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
-#' Creates a `burst` column to group movement data, and dedicated time and error columns.
+#' Creates a `burst` column to group movement data and sets dedicated time and error columns.
 #'
-#' Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
+#' Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 #' length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
 #' Either input is allowed, but vector mode over.writes data.frame mode if both are given.
 #'
@@ -31,6 +31,7 @@
 #' @examples
 #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
 #' my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
@@ -70,17 +71,6 @@ as_sftrack <- function(data, ...) {
   UseMethod('as_sftrack')
 }
 
-#' @rdname as_sftrack
-#' @export
-new_sftrack <- function(data, burst, time, geometry, error = NA) {
-  data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
-  structure(
-    data_sf,
-    time = time,
-    error = error,
-    class = c("sftrack", 'data.frame', 'sf')
-  )
-}
 
 #' @rdname as_sftrack
 #' @export
@@ -120,18 +110,21 @@ as_sftrack.data.frame <- function(data,...,
   }
   check_NA_coords(xyz)
 
-  #
-  if (!missing(error_col)) {
-    check_names_exist(data, error_col)
-  }
+
+  # Time
   if (!missing(time_col)) {
     check_names_exist(data, time_col)
   }
-  # vector mode
-  # time
   if (!missing(time)) {
     data$reloc_time <- time
     time_col = 'reloc_time'
+  }
+  check_time(data[,time_col])
+
+  # Error
+  #
+  if (!missing(error_col)) {
+    check_names_exist(data, error_col)
   }
 
   if (!missing(error)) {
@@ -142,6 +135,13 @@ as_sftrack.data.frame <- function(data,...,
       error_col = NA
   }
 
+  # pull out other relevant info
+  if (any(is.na(active_burst))) {
+    active_burst <- names(burst_list)
+  }
+  burst <-
+    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+
   geom <-
     sf::st_as_sf(xyz,
       coords = names(xyz),
@@ -150,12 +150,6 @@ as_sftrack.data.frame <- function(data,...,
   # Force calculation of empty geometries.
   attr(geom$geometry, 'n_empty') <-
     sum(vapply(geom$geometry, sfg_is_empty, TRUE))
-  # pull out other relevant info
-  if (any(is.na(active_burst))) {
-    active_burst <- names(burst_list)
-  }
-  burst <-
-    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
   ret <- new_sftrack(
     data = data ,
@@ -165,11 +159,24 @@ as_sftrack.data.frame <- function(data,...,
     geometry = geom$geometry
   )
   #Sanity checks
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
   dup_timestamp(ret)
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+
   #
   return(ret)
+}
+
+#' @rdname as_sftrack
+#' @export
+new_sftrack <- function(data, burst, time, geometry, error = NA) {
+  data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
+  structure(
+    data_sf,
+    time = time,
+    error = error,
+    class = c("sftrack", 'data.frame', 'sf')
+  )
 }
 
 #' @rdname as_sftrack
@@ -213,7 +220,7 @@ as_sftrack.sftraj <- function(data,...) {
 #' @rdname as_sftrack
 #' @method as_sftrack ltraj
 #' @export
-as_sftrack.ltraj <- function(data,..., crs = NA) {
+as_sftrack.ltraj <- function(data,...) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
@@ -229,6 +236,7 @@ as_sftrack.ltraj <- function(data,..., crs = NA) {
   df1 <- do.call(rbind, new_data)
   time = 'reloc_time'
   burst = list(id = df1$id)
+  crs = attr(data, 'proj4string')
   # pull out id and burst from ltraj object
   id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
   burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
@@ -253,7 +261,7 @@ as_sftrack.ltraj <- function(data,..., crs = NA) {
     time = time,
     geometry = geom$geometry
   )
-  #Sanity check? Necessary?
+  #Sanity check. Which are necessary?
   ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
   #
   return(ret)
@@ -281,19 +289,20 @@ as_sftrack.sf <- function(data,...,
       x)
     names(burst_list)[1] <- 'id'
   }
-  if (!missing(error_col)) {
-    check_names_exist(data, error_col)
-  }
+
+  # Time
   if (!missing(time_col)) {
     check_names_exist(data, time_col)
   }
-  # vector mode
-  # time
   if (!missing(time)) {
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
+  check_time(data[,time_col])
 
+  if (!missing(error_col)) {
+    check_names_exist(data, error_col)
+  }
   if (!missing(error)) {
     data$sftrack_error <- error
     error_col = 'sftrack_error'
@@ -331,7 +340,7 @@ as_sftrack.sf <- function(data,...,
 print.sftrack <- function(x, n_row, n_col, ...) {
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
-  cat(print(attr(x$geometry, 'crs')))
+  cat(paste0('crs: ',format(attr(x$geometry, 'crs')),'\n'))
   #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',
