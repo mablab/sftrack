@@ -6,6 +6,11 @@
 \usage{
 check_names_exist(data, names)
 }
+\arguments{
+\item{data}{a data.frame to check names against}
+
+\item{names}{the inputted column names}
+}
 \description{
 Check if a set of column names are found in a data frame and return an error if not
 }

@@ -1,6 +1,8 @@
-#' Methods for plot an sftraj
-#'
+#' @title methods for plot sftrack/sftraj
 #' @export
+#' @param x sftrack object
+#' @param ... arguments to passed to plot
+#' @method plot sftrack
 plot.sftrack <- function(x, ...) {
   graphics::plot(x$geometry)
   burst_srt <- burst_sort(x$burst)
@@ -16,8 +18,11 @@ plot.sftrack <- function(x, ...) {
   }
 }
 
-# plot(my_track)
+#' @title methods for plot sftrack/sftraj
 #' @export
+#' @param x sftrack object
+#' @param ... arguments to passed to plot
+#' @method plot sftraj
 plot.sftraj <- function(x, ...) {
   graphics::plot(x$geometry)
   burst_srt <- burst_sort(x$burst)
@@ -33,21 +38,20 @@ plot.sftraj <- function(x, ...) {
   }
 }
 
-#' @export
-geom_sftrack <- function(data, ...) {
-  UseMethod('geom_sftrack')
-}
 
 # plot(my_step)
-#' geom_sftrack()
+#' @title Function to plot sftrack objects in ggplot
+#' @name geom_sftrack
+#' @description
 #' This function can be added to ggplot() to plot an sftrack and sftraj
 #' Function does not yet work with ggplot grammer so you must but data= in this function
 #' @name geom_sftrack
 #' @param data the sftraj or sftrack object.
+#' @param ... arguments to passed to ggplot
 #' @examples
 #' library(ggplot2)
 #' library(sftrack)
-#' data(raccoon_data)
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #' my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
 #'    coords = c('longitude','latitude'),
@@ -55,7 +59,12 @@ geom_sftrack <- function(data, ...) {
 #'
 #' ggplot() + geom_sftrack(data = my_step)
 #' @export
+geom_sftrack <- function(data, ...) {
+  UseMethod('geom_sftrack')
+}
 
+#' @rdname geom_sftrack
+#' @export
 geom_sftrack.sftrack <- function(data, ...) {
   sub <- data[!st_is_empty(data$geometry), ]
   list(ggplot2::geom_sf(data = sub, ggplot2::aes(

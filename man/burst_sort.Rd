@@ -2,13 +2,13 @@
 % Please edit documentation in R/burst_tj.R
 \name{burst_sort}
 \alias{burst_sort}
-\title{make burst labels}
+\title{Print the sort_index from a burst}
 \usage{
 burst_sort(burst)
 }
 \arguments{
-\item{burst}{A burst object}
+\item{burst}{a multi_burst}
 }
 \description{
-These functions access bursts in various ways
+Print the sort_index from a burst
 }

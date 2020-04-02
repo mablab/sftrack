@@ -2,20 +2,15 @@
 % Please edit documentation in R/burst_tj.R
 \name{calc_sort_index}
 \alias{calc_sort_index}
-\title{#' @export
-calc_burst_levels <- function(x){
-  burst_levels <- lapply(names(x[[1]]), function(y) unique(sapply(x, function(z) z[[y]])))
-  names(burst_levels) <- names(x[[1]])
-  return(burst_levels)
-}}
+\title{recalculate the new sort index. Internal function}
 \usage{
 calc_sort_index(burst, active_burst)
 }
-\description{
-#' @export
-calc_burst_levels <- function(x){
-  burst_levels <- lapply(names(x[[1]]), function(y) unique(sapply(x, function(z) z[[y]])))
-  names(burst_levels) <- names(x[[1]])
-  return(burst_levels)
+\arguments{
+\item{burst}{a multi_burst}
+
+\item{active_burst}{a character vector of the active_burst}
 }
+\description{
+recalculate the new sort index. Internal function
 }

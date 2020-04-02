@@ -1,37 +1,38 @@
-#' step geom calculator
+#' @title Calculate step geometries given a set of bursts, time, and geometries
 #'
-#' @description This calculates step geom as individual line segments. It implies your bursts
-#'
-#' @param burst_id burst object thats subsetted by only the bursts we want to use to calculate one step_geom
+#' @description This calculates step geometries as individual line segments based on the active_burst
+#' @param burst a multi_burst
+#' @param time_data time vector
 #' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
-#' @param timez time object
 #' @export make_step_geom
 #' @examples
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #' data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude'),
 #'   burst_list =burstz)
 #'
-#' make_step_geom(burst_id = data_sf$burst,
+#' make_step_geom(burst = data_sf$burst,
 #'                geometry = data_sf$geometry,
 #'                time_data = data_sf$acquisition_time)
 
-make_step_geom <- function(burst_id, time_data, geometry) {
+make_step_geom <- function(burst, time_data, geometry) {
   # Need to check if time is ordered, if not throw an error
   # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
-  # burst_id = burst_select(make_multi_burst(burstz, active_burst = c('id')))
+  # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
   # time_data = raccoon_data$acquisition_time
 
   #if theres more than one burst, then we combine bursts
-  if (length(burst_id[[1]]) > 1) {
-    message('more than one burst selected, bursts will be combined for step geometry')
-  }
-  as.character(burst_id[[3]]$id)
-  idz <- factor(paste0(burst_id))
+  # if (length(burst[[1]]) > 1) {
+  #   message('more than one burst selected, bursts will be combined for step geometry')
+  # }
+  burst <- burst_select(burst)
+  as.character(burst[[3]]$id)
+  idz <- factor(paste0(burst))
   #
   unique_idz <- levels(idz)[table(idz) > 0]
-  ordered(burst_id, time_data, return = FALSE)
+  check_ordered(burst, time_data, return = FALSE)
   step_geometry <- rep(NA, length(geometry))
 
   # check dimensions

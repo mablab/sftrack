@@ -13,8 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r, include =FALSE}
-devtools::load_all("/home/matt/r_programs/sftrack")
-#library(sftrack)
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
 
 ```
 *This vignette acts as a proto how-to manually mainly for highlighting features for anyone testing sftrack. It will eventually evolve into the full vignette.*
@@ -51,7 +51,7 @@ Vector inputs to `as_sftrack` in general involve feeding as_sftrack the data its
 ### Examples (Vector)
 
 ```{r}
-data("raccoon_data",package='sftrack')
+raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 
 #data
 data = raccoon_data
@@ -258,9 +258,9 @@ str(mb)
 You can also make a multi_burst by concatenating multiple ind_bursts. Though in this case the active_burst will default to all bursts. Which you can change later.
 
 ```{r}
-a <- ind_burst(list(id = 1, year = 2020))
-b <- ind_burst(list(id = 1, year = 2021))
-c <- ind_burst(list(id = 2, year = 2020))
+a <- make_ind_burst(list(id = 1, year = 2020))
+b <- make_ind_burst(list(id = 1, year = 2021))
+c <- make_ind_burst(list(id = 2, year = 2020))
 mb <- c(a, b , c)
 
 summary(mb)
