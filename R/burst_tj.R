@@ -72,7 +72,7 @@ multi_burst <- function(x = list(), active_burst = NULL) {
     active_burst <- names(x)
   }
 
-  sort_index <- calc_sort_index(x, active_burst)
+  sort_index <- burst_labels(x, TRUE, active_burst)
 
   structure(
     x,
@@ -182,7 +182,7 @@ str.multi_burst <- function(object, ...) {
 # str.multi_burst(my_track$burst)
 
 #' @export
-format.ind_burst <- function(x,...) {
+format.ind_burst <- function(x, ...) {
   message(paste0('(', paste0(
     names(x), ': ', as.character(unlist(x)), collapse = ', '
   ), ')'))
@@ -237,7 +237,6 @@ format.multi_burst <- function(x, ...) {
 
 #' @export
 summary.multi_burst <- function(object, ...) {
-
   levelz <- attr(object, 'sort_index')
   summary(levelz)
 }
@@ -281,19 +280,40 @@ burst_levels <- function(burst, value) {
 #' @title Select the active multi_bursts.
 #' @return a list where each position is a list of the active bursts from each ind_burst
 #' @param burst a multi_burst
-#' @param labels whether to return labels instead of a list of the active burst. Defaults to FALSE
+#' @param select (optional), the burst names to subset by, defaults to the current active_burst.
 #' @export
-burst_select <- function(burst, labels = F) {
-  # should also pull out select bursts, or perhaps `multi.burst[` already does this
-  if(!labels){
-    ret <- lapply(burst, function(x)
-    x[names(x) %in% attr(burst, 'active_burst')])
+burst_select <- function(burst, select = NULL) {
+  if (is.null(select)) {
+    select <- attr(burst, 'active_burst')
   }
-  if(labels){
-    ret <- vapply(burst, function(x)
-      paste(x[names(x) %in% attr(burst, 'active_burst')],collapse='_'),
-    NA_character_)
+
+  names_id <- names(burst[[1]]) %in% select
+  ret <- lapply(burst, function(x)
+    x[names_id])
+  return(ret)
+}
+
+#' @title Calculates burst labels created from the ind_burst and the active_burst
+#' @param burst a multi_burst
+#' @param factor logical, whether to return a factor, defaults return is a character
+#' @param active_burst (optional), the active_burst to subset by, defaults to the current active_burst.
+#' @export
+burst_labels <- function(burst,
+  factor = F,
+  active_burst = NULL) {
+  if (is.null(active_burst)) {
+    active_burst <- attr(burst, 'active_burst')
   }
+  names_id <- names(burst[[1]]) %in% active_burst
+
+  ret <-
+    vapply(burst, function(x)
+      paste(x[names_id], collapse = '_'), NA_character_)
+
+  if (factor) {
+    ret <- factor(ret)
+  }
+
   return(ret)
 }
 
@@ -347,19 +367,7 @@ active_burst <- function(burst) {
   }
   attr(burst, 'active_burst') <- value
   attr(burst, 'sort_index') <-
-    calc_sort_index(burst, active_burst = value)
+    burst_labels(burst, T, active_burst = value)
   burst
 }
 
-#' @title Calculate the sort index. Internal function
-#' @param burst a multi_burst
-#' @param active_burst a character vector of the active_burst
-#' @export
-calc_sort_index <- function(burst, active_burst) {
-  burstz <-
-    vapply(burst, function(x)
-      paste0(x[active_burst], collapse = '_'), NA_character_)
-
-  factor(burstz)
-}
-# calc_sort_index(burst)
