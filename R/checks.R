@@ -68,7 +68,10 @@ check_burst_names <- function(burst) {
     stop('Burst names do not match')
   }
 
-  if (any(unlist(lapply(burst, function(x)duplicated(names(x)))))) {
+  if (any(unlist(lapply(burst, function(x)
+    duplicated(names(
+      x
+    )))))) {
     stop('burst names can not be duplicated')
   }
 }
@@ -76,10 +79,11 @@ check_burst_names <- function(burst) {
 #' @title Checks if sort_index needs to be recalculated then recalculates them
 #' @param burst a multi_burst
 #' @export
-check_sort <- function(burst){
-  eq <- all.equal(as.character(burst_sort(burst)),burst_select(burst, T))
-  if(!eq){
-    attr(burst, 'sort_index') <- calc_sort_index(burst, active_burst(burst))
+check_sort <- function(burst) {
+  bl <- burst_labels(burst)
+  eq <- all.equal(as.character(burst_sort(burst)), bl)
+  if (!eq) {
+    attr(burst, 'sort_index') <- factor(bl)
     burst
   }
 }
@@ -133,7 +137,7 @@ check_time <- function(time) {
   # This function was originally envisioned to contain all time checks
   # Currently its not but can expand if we feel its necessary to have
   # is integer or posixct
-  if(!(inherits(time,'integer')|inherits(time, 'POSIXct'))) {
+  if (!(inherits(time, 'integer') | inherits(time, 'POSIXct'))) {
     stop('Time needs to be an integer or POSIXct')
   }
 }
@@ -141,15 +145,17 @@ check_time <- function(time) {
 #' @title Check if time is regular for each burst and returns logical for each burst
 #' @param sftrack an sftrack/sftraj object
 #' @export
-check_t_regular <- function(sftrack){
+check_t_regular <- function(sftrack) {
   # is complete
-  time_col=attr(sftrack,'time')
-  sftrack <- sftrack[check_ordered(burst_select(sftrack$burst),sftrack[,time_col]),]
-  ans <- tapply(sftrack[,time_col,drop=T],paste(burst_select(sftrack$burst)), function(date){
-    x1 <- unclass(date[-1])
-    x2 <- unclass(date[-length(date)])
-    abs(mean(c(x1 - x2))-(x1[1]-x2[1]))<=1e-07
-  })
+  time_col = attr(sftrack, 'time')
+  sftrack <-
+    sftrack[check_ordered(burst_select(sftrack$burst), sftrack[, time_col]),]
+  ans <-
+    tapply(sftrack[, time_col, drop = T], paste(burst_select(sftrack$burst)), function(date) {
+      x1 <- unclass(date[-1])
+      x2 <- unclass(date[-length(date)])
+      abs(mean(c(x1 - x2)) - (x1[1] - x2[1])) <= 1e-07
+    })
   return(ans)
 }
 
@@ -158,7 +164,7 @@ check_t_regular <- function(sftrack){
 #' @export
 dup_timestamp <- function(x) {
   test <-
-    tapply(x[, attr(x, 'time'), drop = T]   , burst_select(x$burst,T), function(y)
+    tapply(x[, attr(x, 'time'), drop = T], burst_labels(x$burst, F), function(y)
       any(duplicated(y)))
   if (any(test)) {
     stop(paste0(

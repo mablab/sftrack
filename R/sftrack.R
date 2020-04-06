@@ -75,7 +75,8 @@ as_sftrack <- function(data, ...) {
 #' @rdname as_sftrack
 #' @export
 #' @method as_sftrack data.frame
-as_sftrack.data.frame <- function(data,...,
+as_sftrack.data.frame <- function(data,
+  ...,
   xyz,
   coords = c('x', 'y', 'z'),
   burst_list,
@@ -119,7 +120,7 @@ as_sftrack.data.frame <- function(data,...,
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
-  check_time(data[,time_col])
+  check_time(data[, time_col])
 
   # Error
   #
@@ -159,7 +160,7 @@ as_sftrack.data.frame <- function(data,...,
     geometry = geom$geometry
   )
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   dup_timestamp(ret)
   check_z_coords(ret)
 
@@ -182,7 +183,7 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 #' @rdname as_sftrack
 #' @method as_sftrack sftraj
 #' @export
-as_sftrack.sftraj <- function(data,...) {
+as_sftrack.sftraj <- function(data, ...) {
   geometry <- data$geometry
 
   # point_d <- class(geometry[[1]])[1]
@@ -206,7 +207,7 @@ as_sftrack.sftraj <- function(data,...) {
   time <- attr(data, 'time')
   new_data <- as.data.frame(data)
   new_data <-
-    new_data[, !colnames(new_data) %in% c('geometry', 'burst')]
+    new_data[,!colnames(new_data) %in% c('geometry', 'burst')]
   ret <- new_sftrack(
     data = new_data,
     burst = burst,
@@ -215,7 +216,7 @@ as_sftrack.sftraj <- function(data,...) {
     geometry = geometry
   )
   # reorder just incase
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   return(ret)
 }
 
@@ -223,11 +224,11 @@ as_sftrack.sftraj <- function(data,...) {
 #' @rdname as_sftrack
 #' @method as_sftrack ltraj
 #' @export
-as_sftrack.ltraj <- function(data,...) {
+as_sftrack.ltraj <- function(data, ...) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
-    sub <- data[x, ]
+    sub <- data[x,]
     attributes(sub[[1]])
     id <-  attr(sub[[1]], 'id')
     burst <- attr(sub[[1]], 'burst')
@@ -241,8 +242,11 @@ as_sftrack.ltraj <- function(data,...) {
   burst = list(id = df1$id)
   crs = attr(data, 'proj4string')
   # pull out id and burst from ltraj object
-  id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
-  burst_lt <- vapply(data, function(x) attr(x,'burst'),NA_character_)
+  id_lt <- vapply(data, function(x)
+    attr(x, 'id'), NA_character_)
+  burst_lt <-
+    vapply(data, function(x)
+      attr(x, 'burst'), NA_character_)
 
   if (!all(burst_lt == id_lt)) {
     burst$group <- df1$burst
@@ -258,14 +262,14 @@ as_sftrack.ltraj <- function(data,...) {
   error = NA
 
   ret <- new_sftrack(
-    data = df1[, !colnames(df1) %in% c('id', 'burst')] ,
+    data = df1[,!colnames(df1) %in% c('id', 'burst')] ,
     burst = burst,
     error = error,
     time = time,
     geometry = geom$geometry
   )
   #Sanity check. Which are necessary?
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   #
   return(ret)
 }
@@ -273,7 +277,8 @@ as_sftrack.ltraj <- function(data,...) {
 #' @rdname as_sftrack
 #' @method as_sftrack sf
 #' @export
-as_sftrack.sf <- function(data,...,
+as_sftrack.sf <- function(data,
+  ...,
   burst_list,
   id,
   burst_col = NULL,
@@ -282,7 +287,6 @@ as_sftrack.sf <- function(data,...,
   error_col,
   time,
   time_col) {
-
   geom <- data[, attr(data, 'sf_column')]
   data <- as.data.frame(data)
   # data.frame mode
@@ -301,7 +305,7 @@ as_sftrack.sf <- function(data,...,
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
-  check_time(data[,time_col])
+  check_time(data[, time_col])
 
   if (!missing(error_col)) {
     check_names_exist(data, error_col)
@@ -331,7 +335,7 @@ as_sftrack.sf <- function(data,...,
   #Sanity check
   dup_timestamp(ret)
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   #
   return(ret)
 }
@@ -343,7 +347,7 @@ as_sftrack.sf <- function(data,...,
 print.sftrack <- function(x, n_row, n_col, ...) {
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
-  cat(paste0('crs: ',format(attr(x$geometry, 'crs')),'\n'))
+  cat(paste0('crs: ', format(attr(x$geometry, 'crs')), '\n'))
   #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',
