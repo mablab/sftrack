@@ -4,16 +4,16 @@
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
 plot.sftrack <- function(x, ...) {
-  graphics::plot(x$geometry)
+  graphics::plot(x[,attr(x, 'sf_column')])
   burst_srt <- burst_sort(x$burst)
   burst_lbl <- as.character(burst_srt)
   new_clrs <- grDevices::rainbow(length(unique(burst_srt)))
   for (i in seq_along(new_clrs)) {
     #i=1
     lvl <- levels(burst_srt)[i]
-    graphics::plot(x$geometry[burst_lbl == lvl],
+    graphics::plot(x[burst_lbl == lvl, attr(x, 'sf_column')],
       type = 'l',
-      add = T ,
+      add = TRUE ,
       col = new_clrs[i])
   }
 }
@@ -24,16 +24,16 @@ plot.sftrack <- function(x, ...) {
 #' @param ... arguments to passed to plot
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
-  graphics::plot(x$geometry)
+  graphics::plot(x[,attr(x, 'sf_column')])
   burst_srt <- burst_sort(x$burst)
   burst_lbl <- as.character(burst_srt)
   new_clrs <- grDevices::rainbow(length(unique(burst_srt)))
   for (i in seq_along(new_clrs)) {
     #i=1
     lvl <- levels(burst_srt)[i]
-    graphics::plot(x$geometry[burst_lbl == lvl],
+    graphics::plot(x[burst_lbl == lvl, attr(x, 'sf_column')],
       type = 'l',
-      add = T ,
+      add = TRUE ,
       col = new_clrs[i])
   }
 }
@@ -67,7 +67,7 @@ geom_sftrack <- function(data, ...) {
 #' @rdname geom_sftrack
 #' @export
 geom_sftrack.sftrack <- function(data, ...) {
-  sub <- data[!st_is_empty(data$geometry), ]
+  sub <- data[!st_is_empty(data[, attr(data, 'sf_column')]), ]
   list(ggplot2::geom_sf(data = sub, ggplot2::aes(
     color = burst_sort(sub$burst), fill = burst_sort(sub$burst)
   )),
@@ -78,10 +78,10 @@ geom_sftrack.sftrack <- function(data, ...) {
 #'@name geom_sftrack
 #'@export
 geom_sftrack.sftraj <- function(data, ...) {
-  sub <- data[!st_is_empty(data$geometry), ]
+  sub <- data[!st_is_empty(data[,attr(data, 'sf_column')]), ]
   list(
     ggplot2::geom_sf(data = st_sfc(
-      pts_traj(sub), crs = attr(data$geometry, 'crs')
+      pts_traj(sub), crs = attr(data[,attr(data, 'sf_column')], 'crs')
     ), ggplot2::aes(color = burst_sort(sub$burst))),
     ggplot2::geom_sf(data = sub, ggplot2::aes(
       color = burst_sort(sub$burst), fill = burst_sort(sub$burst)

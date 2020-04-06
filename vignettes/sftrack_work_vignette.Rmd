@@ -35,7 +35,7 @@ To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` func
 #### Global options
 These are options that are required regardless of which input type you use.  
 
-**data** - is a data frame containing your data. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
+**data** - is a data.frame containing your data. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
 **crs** - the coordinate references system/projection of the data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later.  
 **active_burst** - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever. If no value is supplied it defaults to all bursts.  
 
@@ -158,20 +158,20 @@ all.equal(my_sftrack,new_sftrack)
 ```
 
 ### Some basic functionality of sf_track and sf_traj objects
-**print**  
-`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `burst` and `geometery` fields as well as any other columns starting from column 1 until `#columns + 2 = n_col`. If neither is provided than print just uses default values in the global options.
+##### print  
+`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `burst` and `geometery` fields as well as any other columns starting from column 1 until `#columns + 2 = n_col`. If neither is provided than print just uses default values in the global options. `ncol` and `nrow` are optional arguments, defaults to data.frame defaults.
 
 ```{r}
 print(my_sftrack,5,10)
 ```
 
-**summary**  
+##### summary  
 `summary()` works as youd normally expect for a data.frame, except it displays the burst column as a count of each active_burst combination.  
 ```{r}
 summary(my_sftrack)
 ```
 
-**summary_sftrack**  
+##### summary_sftrack  
 `summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each burst as well as the total distance of the burst. This function uses `st_length` from the `sf` package and therefore outputs in units of the crs. In this example the distance is in degrees distance.
 ```{r}
 summary_sftrack(my_sftrack)
@@ -185,7 +185,7 @@ summary(my_sftrack, stats = TRUE)
 ```
 ## Plotting
 
-**Base plotting**  
+##### Base plotting 
 Currently there are some basic plotting methods. Base plotting currently does not have any thrills built into it, and assumes that the `active_burst` is the grouping/coloring variable.  
 
 
@@ -201,7 +201,7 @@ active_burst(my_sftraj$burst)
 plot(my_sftraj)
 ```
 
-**ggplot**  
+##### ggplot
 This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change as I look more into it. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
 
 ```{r}
@@ -223,7 +223,7 @@ mb1[[1]]
 A burst contains grouping information, where the id of the subject is required, but additional bursts are not. Every burst has the same burst columns available, and these bursts are stored internally as a list. You can also see that labels are created based on the active_burst, this can be accessed and makes for easy labeling of plots of figures.  
 
 #### Basics
-**ind_bursts**  
+##### ind_bursts 
 An ind_burst is the grouping variables for a single row of data.  
 
 You can make an `ind_burst` object using `make_ind_burst()`, and giving it a list with the bursts named. 
@@ -243,7 +243,7 @@ indb$month <- '5'
 str(indb)
 ```
 
-**multi_burst**  
+##### multi_burst  
 Multi_bursts are a collection of ind_bursts, where all ind_bursts must have the same grouping variables. Multi_bursts have a specific 'active_burst', which is the bursts that should be activated to group the data when doing calculations, plotting, and graphing. 
 
 Similarly to ind_burst you can make a multi_burst with `make_multi_burst()`. The argument `burst_list` takes a list where each element is a vector indicating the named burst as well as a vector of the active bursts.
@@ -285,15 +285,15 @@ And the burst names must match the ones in the multi_burst
 tryCatch(mb[1] <- make_ind_burst(list(id=3,month=2019)), error = function(e) e)
 ```
 
-**burst_sort**  
-Multi_burst calculates a sorting index based on the active_burst called the `sort_index`, this is simply a factor of the 'active' bursts where each individual burst = paste0(active_burst, sep='_'). As its a factor it can double as the labels and sorting index simultaneously. This gets recalculated everytime a multi_burst is modified or created. 
+##### burst_sort 
+Multi_burst calculates an index based on the active_burst called the `sort_index`, this is simply a factor of the 'active' bursts where each individual burst = paste(active_burst, sep='_'). As its a factor it can double as the labels and sorting index simultaneously. This gets recalculated everytime a multi_burst is modified or created. 
 
 You can use `burst_sort()` to access this value, but you can not modify it.
 ```{r}
 burst_sort(mb1)[1:10]
 ```
 
-**burst_levels**  
+##### burst_levels 
 On occasion your data may have more possible grouping levels than the sort_index shows. For example if there is a data gap, where the specific level may need to be retained even if no data is associated with it. Because of this we allow burst_levels to be amended to add more levels than are in the current data. Since this variable is a factor, we simply are redefining the factor levels with `burst_levels()`. This may also be useful if you'd like to rearrange the order of plotting.
 
 ```{r}
@@ -302,7 +302,7 @@ burst_levels(mb1) <- c("CJ11_1", "CJ11_2", "CJ13_1" ,"CJ13_2", "CJ14_3")
 burst_levels(mb1)
 ```
 
-**active_burst**  
+##### active_burst 
 The active_burst is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can also view and change the active_burst of a multi_burst with `active_burst()`. This calculates a new sort_index internally as well.
 
 ```{r}
@@ -314,13 +314,28 @@ summary(my_sftrack, stats = T)
 
 ```
 
-**burst_select**
+##### burst_select
 Sometimes you may want to access to the active_burst data, especially as a developer. To do this you can use `burst_select()` which returns only the active burst data in your burst.  
 
 ```{r}
 burst_select(mb1)[1:3]
 ```
 
+This is also the easiest way to subset the bursts, you can `select` a new set of bursts which will subset the burst by those new columns, but it will not change the original active_burst.
+
+```{r}
+burst_select(mb1, select = 'id')[1:3]
+```
+
+There are two ways to access the labels of the bursts. First you can access them as previously mentioned from the sort_index attribute via `burst_sort` and `burst_levels`. These attributes should actively update as the multi_burst is updated, and is a fast an effecient method of subsetting. A second way of accessing them is via the burst itself. `burst_labels` creates the burst labels from the burst when called from each ind_burst. This may be more reliable as it recreates the burst labels from the original burst, but can also be much slower with large datasets than using `burst_sort` as `burst_sort` is already calculated when the burst was created.
+
+`burst_labels` is generally an internal function, as this function is how the original `sort_index` is created. However it may be of interest to developers, if you'd like to manually recalculate the index for example. It can also create novel labels, by supplying a new `active_burst` argument.
+
+```{r}
+burst_labels(mb1)[1:3]
+burst_labels(mb1, active_burst = 'id')[1:3]
+
+```
 ## Geometry column  
 
 As stated earlier, the geometry column is built using `sf`, so functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is a `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
@@ -336,21 +351,21 @@ my_sftraj$geometry
 
 This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. To help with working with sftraj objects, there are two functions that help extract points from `sftraj` objects.
 
-**coord_traj**  
+##### coord_traj 
 This function returns a data.frame (x,y,z) of the beginning point of each sftraj geometry.
 
 ```{r}
 coord_traj(my_sftraj$geometry)[1:10,]
 ```
 
-**pts_traj**  
+##### pts_traj 
 And `pts_traj` returns a list of the beginning point of each sftraj geometry.
 
 ```{r}
 pts_traj(my_sftraj$geometry)[1:10]
 ```
 
-**is_linestring**  
+##### is_linestring 
 May help if you'd like to quickly filter an `sftraj` object to just contain pure linestrings. `is_linestring()` returns TRUE or FALSE if the geometry is a linestring. This does not recalculate anything, it just filters out steps that contained NAs in either phase.
 
 ```{r}

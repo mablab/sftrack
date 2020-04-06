@@ -1,0 +1,1936 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="624.23749mm"
+   height="750.93811mm"
+   viewBox="0 0 624.23749 750.93811"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (fd57863, 2020-04-02)"
+   sodipodi:docname="flow_burst.svg"
+   inkscape:export-filename="/home/matt/r_programs/sftrack/DevFlowDiagram/flow_burst.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1-4"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2-3" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1-0-3-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2-8-9-6" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1-0-3-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2-8-9-8" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1-0-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2-8-9" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker5507-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path5505-8" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1-0"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2-8" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker3903-8-9-1"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path3901-8-4-2" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-04-9-7"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3479-8-3-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1363-9-7-3-8"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1361-1-17-8-9" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-04-9-7-7"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3479-8-3-6-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1363-9-7-3-8-3"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1361-1-17-8-9-5" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-04-9-7-7-6"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3479-8-3-6-5-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1363-9-7-3-8-3-2"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1361-1-17-8-9-5-9" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-0-7-4-2-3"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3479-9-9-2-8-6"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1363-9-3-2-2-8-7"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1361-1-6-0-64-8-5" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-4"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart-04-9-7-7-7"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3479-8-3-6-5-8"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1363-9-7-3-8-3-6"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         inkscape:connector-curvature="0"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1361-1-17-8-9-5-8" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-9"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-2"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-9-1"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-2-5"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-9-1-8"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-2-5-1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-9-1-8-4"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-2-5-1-3"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3357-1-2-6-3-8-9-1-8-4-1"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path3355-2-8-8-5-2-5-1-3-0"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1.00000003pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="1"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.69999999"
+     inkscape:cx="1349.0289"
+     inkscape:cy="1678.9339"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1533"
+     inkscape:window-height="845"
+     inkscape:window-x="67"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-10.208281,690.70254)">
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.45049992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1222"
+       width="98.323189"
+       height="16.866255"
+       x="32.814758"
+       y="-677.14294"
+       ry="0" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.30782273;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1224"
+       width="98.340759"
+       height="74.367737"
+       x="32.797184"
+       y="-660.46136" />
+    <rect
+       style="opacity:1;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.41390622;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1226"
+       width="98.28772"
+       height="24.785362"
+       x="32.797184"
+       y="-660.46136" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="53.105652"
+       y="-667.36865"
+       id="text1230"><tspan
+         sodipodi:role="line"
+         id="tspan1228"
+         x="53.105652"
+         y="-667.36865"
+         style="stroke-width:0.26458332">make_ind_burst()</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1232"
+       style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,-1.7008929,-715.62446)"><flowRegion
+         id="flowRegion1234"><rect
+           id="rect1236"
+           width="343.91382"
+           height="86.115204"
+           x="146.42857"
+           y="213.09898" /></flowRegion><flowPara
+         id="flowPara1238">inputs:</flowPara><flowPara
+         id="flowPara1240"><flowSpan
+   style="font-weight:bold"
+   id="flowSpan1244">burst</flowSpan> a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may').</flowPara><flowPara
+         id="flowPara1242" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1246"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,1.5875,-712.52505)"><flowRegion
+         id="flowRegion1248"><rect
+           id="rect1250"
+           width="349.61359"
+           height="309.50259"
+           x="133.24358"
+           y="297.88208" /></flowRegion><flowPara
+         id="flowPara1252"
+         style="font-weight:bold">Check inputs</flowPara><flowPara
+         id="flowPara1254">- names are not duplicated</flowPara><flowPara
+         id="flowPara1258">- 'id' column exists</flowPara><flowPara
+         id="flowPara1266" /><flowPara
+         id="flowPara1268">Make an `ind_burst` object</flowPara><flowPara
+         id="flowPara1262" /><flowPara
+         id="flowPara1264" /></flowRoot>    <g
+       id="g1383"
+       transform="translate(-22.225008,-9.5250002)">
+      <rect
+         y="-593.65344"
+         x="191.98131"
+         height="9.3544588"
+         width="79.646301"
+         id="rect1241-59-7-4"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1245-75-0-1"
+         y="-587.12793"
+         x="215.82433"
+         style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-587.12793"
+           x="215.82433"
+           id="tspan1243-38-4-0"
+           sodipodi:role="line">ind_burst()</tspan></text>
+    </g>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Arrow1Lstart-04-9-7);marker-end:url(#marker1363-9-7-3-8)"
+       d="m 125.54994,-598.45043 43.9354,0.22834"
+       id="path1257-2-6-8-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.66499996;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect11469-2-1-9"
+       width="98.355186"
+       height="15.234363"
+       x="33.145611"
+       y="-570.33661" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="34.595364"
+       y="-560.96759"
+       id="text11473-5-4-9"><tspan
+         sodipodi:role="line"
+         id="tspan11471-8-6-4"
+         x="34.595364"
+         y="-560.96759"
+         style="stroke-width:0.26458332">Output is an 'ind_burst' object</tspan></text>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6)"
+       d="m 83.119676,-587.34553 0.26727,16.83798"
+       id="path11480-6-9-5"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.45049992;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1222-6"
+       width="98.323189"
+       height="16.866255"
+       x="277.20651"
+       y="-678.06073"
+       ry="0" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.31422514;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1224-2"
+       width="98.868896"
+       height="112.31361"
+       x="277.19214"
+       y="-661.37592" />
+    <rect
+       style="opacity:1;fill:#cccccc;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.43961206;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1226-9"
+       width="98.262016"
+       height="27.966892"
+       x="277.20178"
+       y="-661.36621" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="297.49741"
+       y="-668.28644"
+       id="text1230-1"><tspan
+         sodipodi:role="line"
+         id="tspan1228-2"
+         x="297.49741"
+         y="-668.28644"
+         style="stroke-width:0.26458332">make_multi_burst()</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1232-7"
+       style="font-style:normal;font-weight:normal;font-size:16px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,242.69119,-716.54219)"><flowRegion
+         id="flowRegion1234-0"><rect
+           id="rect1236-9"
+           width="348.9646"
+           height="159.85632"
+           x="146.42857"
+           y="213.09898" /></flowRegion><flowPara
+         id="flowPara1238-3">inputs:</flowPara><flowPara
+         id="flowPara1240-6"><flowSpan
+   style="font-weight:bold"
+   id="flowSpan2390">burst_list</flowSpan> a list of equal length vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)</flowPara><flowPara
+         id="flowPara1242-6" /><flowPara
+         id="flowPara2388" /></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1246-2"
+       style="font-style:normal;font-weight:normal;font-size:24px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,245.97958,-709.73859)"><flowRegion
+         id="flowRegion1248-6"><rect
+           id="rect1250-1"
+           width="349.61359"
+           height="309.50259"
+           x="133.24358"
+           y="297.88208" /></flowRegion><flowPara
+         id="flowPara1252-8"
+         style="font-weight:bold">Check inputs</flowPara><flowPara
+         id="flowPara1258-9">- check no NAs</flowPara><flowPara
+         id="flowPara2155">- check burst names arent</flowPara><flowPara
+         id="flowPara2157">duplicated</flowPara><flowPara
+         id="flowPara2159">- check names match</flowPara><flowPara
+         id="flowPara2161" /><flowPara
+         id="flowPara2163"
+         style="font-weight:bold">Create a list of ind_bursts</flowPara><flowPara
+         id="flowPara1266-2" /><flowPara
+         id="flowPara1268-0"
+         style="font-weight:bold">Make an `multi_burst` object</flowPara><flowPara
+         id="flowPara1262-2" /><flowPara
+         id="flowPara1264-3" /></flowRoot>    <g
+       id="g2386"
+       transform="translate(-115.35841)">
+      <rect
+         y="-565.99622"
+         x="529.50708"
+         height="9.3544588"
+         width="79.646301"
+         id="rect1241-59-7-4-5"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1245-75-0-1-9"
+         y="-559.4707"
+         x="546.61847"
+         style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-559.4707"
+           x="546.61847"
+           id="tspan1243-38-4-0-2"
+           sodipodi:role="line">multi_burst()</tspan></text>
+    </g>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Arrow1Lstart-04-9-7-7);marker-end:url(#marker1363-9-7-3-8-3)"
+       d="m 369.94203,-561.26793 43.93539,0.22834"
+       id="path1257-2-6-8-4-2"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.66499996;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect11469-2-1-9-8"
+       width="98.355186"
+       height="15.234363"
+       x="277.53735"
+       y="-532.62457" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="277.3996"
+       y="-523.78473"
+       id="text11473-5-4-9-9"><tspan
+         sodipodi:role="line"
+         id="tspan11471-8-6-4-7"
+         x="277.3996"
+         y="-523.78473"
+         style="stroke-width:0.26458332">Output is a 'multi_burst' object</tspan></text>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3)"
+       d="m 327.51176,-549.63384 0.26727,16.83798"
+       id="path11480-6-9-5-3"
+       inkscape:connector-curvature="0" />
+    <g
+       id="g2381"
+       transform="translate(-115.35841,-2.1166667)">
+      <rect
+         y="-582.18311"
+         x="536.05719"
+         height="9.3544588"
+         width="79.646301"
+         id="rect1241-59-7-4-5-1"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1245-75-0-1-9-9"
+         y="-575.65759"
+         x="545.2724"
+         style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-575.65759"
+           x="545.2724"
+           id="tspan1243-38-4-0-2-4"
+           sodipodi:role="line">make_ind_burst()</tspan></text>
+    </g>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Arrow1Lstart-04-9-7-7-6);marker-end:url(#marker1363-9-7-3-8-3-2)"
+       d="m 376.49213,-579.57153 43.9354,0.22834"
+       id="path1257-2-6-8-4-2-7"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1037-6-9-0-0-2"
+       width="97.735306"
+       height="14.967162"
+       x="33.498894"
+       y="-510.94339" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="60.141533"
+       y="-501.98117"
+       id="text1041-7-0-5-6-6"><tspan
+         sodipodi:role="line"
+         id="tspan1039-5-8-6-8-1"
+         x="60.141533"
+         y="-501.98117"
+         style="stroke-width:0.26458332">ind_burst()</tspan></text>
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.21065386;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1088-8-6-7-8"
+       width="97.989639"
+       height="46.173843"
+       x="33.371792"
+       y="-491.34079" />
+    <rect
+       style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.22807229;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1090-5-4-9-7"
+       width="97.996437"
+       height="31.036633"
+       x="33.368366"
+       y="-495.66473" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1092-0-0-0-9"
+       style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,-98.88527,-600.98047)"><flowRegion
+         id="flowRegion1094-9-0-3-2"><rect
+           id="rect1096-6-4-3-0"
+           width="365.91971"
+           height="457.36826"
+           x="504.06613"
+           y="399.86853" /></flowRegion><flowPara
+         id="flowPara1098-3-6-3-2"
+         style="font-weight:bold">Inputs:</flowPara><flowPara
+         id="flowPara3647"
+         style="font-weight:bold">x <flowSpan
+   style="font-weight:normal"
+   id="flowSpan3091">= a named list of grouping variables, where one must be named 'id'.</flowSpan></flowPara><flowPara
+         id="flowPara1100-9-5-2-5" /><flowPara
+         id="flowPara1124-6-9-6-9" /><flowPara
+         id="flowPara1126-2-9-5-2" /><flowPara
+         id="flowPara1128-1-1-2-2" /><flowPara
+         id="flowPara1130-7-4-6-8" /><flowPara
+         id="flowPara1132-8-9-5-9" /><flowPara
+         id="flowPara1134-5-1-8-7" /><flowPara
+         id="flowPara1136-7-0-7-3" /><flowPara
+         id="flowPara1138-4-7-9-6" /><flowPara
+         id="flowPara1140-1-5-6-1" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="35.284416"
+       y="-455.12054"
+       id="text2577-4-0-8-9"><tspan
+         sodipodi:role="line"
+         x="35.284416"
+         y="-455.12054"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan3727">Create 'ind_burst' </tspan><tspan
+         sodipodi:role="line"
+         x="35.284416"
+         y="-447.18304"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan3815">structure</tspan><tspan
+         sodipodi:role="line"
+         x="35.284416"
+         y="-439.24554"
+         style="stroke-width:0.26458332"
+         id="tspan11142-0-2-3-0" /><tspan
+         sodipodi:role="line"
+         x="35.284416"
+         y="-431.30804"
+         style="stroke-width:0.26458332"
+         id="tspan2599-9-9-0-6" /><tspan
+         sodipodi:role="line"
+         x="35.284416"
+         y="-423.37054"
+         style="stroke-width:0.26458332"
+         id="tspan2601-2-0-1-1" /></text>
+    <rect
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.3392292;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect11469-2-1-9-5"
+       width="98.611458"
+       height="12.314915"
+       x="32.716328"
+       y="-427.82672" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="34.328964"
+       y="-419.88235"
+       id="text11473-5-4-9-2"><tspan
+         sodipodi:role="line"
+         x="34.328964"
+         y="-419.88235"
+         style="stroke-width:0.26458332"
+         id="tspan3811">Output is an 'ind_burst' object</tspan></text>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8)"
+       d="m 82.32363,-445.20181 0.2673,16.83798"
+       id="path11480-6-9-5-4"
+       inkscape:connector-curvature="0" />
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1037-6-9-0-0-2-0"
+       width="97.735306"
+       height="14.967162"
+       x="278.72791"
+       y="-478.13739" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="305.37054"
+       y="-469.17517"
+       id="text1041-7-0-5-6-6-3"><tspan
+         sodipodi:role="line"
+         id="tspan1039-5-8-6-8-1-6"
+         x="305.37054"
+         y="-469.17517"
+         style="stroke-width:0.26458332">multi_burst()</tspan></text>
+    <rect
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.25716111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1088-8-6-7-8-1"
+       width="97.94313"
+       height="68.845245"
+       x="278.62405"
+       y="-458.51154" />
+    <rect
+       style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.24684535;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect1090-5-4-9-7-0"
+       width="97.977661"
+       height="36.363251"
+       x="278.60678"
+       y="-462.8493" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot1092-0-0-0-9-6"
+       style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,146.34412,-568.17445)"><flowRegion
+         id="flowRegion1094-9-0-3-2-3"><rect
+           id="rect1096-6-4-3-0-2"
+           width="365.91971"
+           height="457.36826"
+           x="504.06613"
+           y="399.86853" /></flowRegion><flowPara
+         id="flowPara1098-3-6-3-2-0"
+         style="font-weight:bold">Inputs:</flowPara><flowPara
+         id="flowPara3647-6"
+         style="font-weight:bold">x <flowSpan
+   style="font-weight:normal"
+   id="flowSpan3091-1">= a list of ind_bursts</flowSpan></flowPara><flowPara
+         style="font-weight:bold"
+         id="flowPara4112">active_burst <flowSpan
+   style="font-weight:normal"
+   id="flowSpan4114">= a character vector of the burst names you want activated for analysis</flowSpan></flowPara><flowPara
+         id="flowPara1100-9-5-2-5-5" /><flowPara
+         id="flowPara1124-6-9-6-9-5" /><flowPara
+         id="flowPara1126-2-9-5-2-4" /><flowPara
+         id="flowPara1128-1-1-2-2-7" /><flowPara
+         id="flowPara1130-7-4-6-8-6" /><flowPara
+         id="flowPara1132-8-9-5-9-5" /><flowPara
+         id="flowPara1134-5-1-8-7-6" /><flowPara
+         id="flowPara1136-7-0-7-3-9" /><flowPara
+         id="flowPara1138-4-7-9-6-3" /><flowPara
+         id="flowPara1140-1-5-6-1-7" /></flowRoot>    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="280.51343"
+       y="-419.13947"
+       id="text2577-4-0-8-9-4"><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-419.13947"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan3727-5">Calculate sort_index</tspan><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-411.20197"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan4104" /><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-403.26447"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan4102">Create 'multi_burst' </tspan><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-395.32697"
+         style="font-weight:bold;stroke-width:0.26458332"
+         id="tspan3815-2">structure</tspan><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-387.38947"
+         style="stroke-width:0.26458332"
+         id="tspan11142-0-2-3-0-5" /><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-379.45197"
+         style="stroke-width:0.26458332"
+         id="tspan2599-9-9-0-6-4" /><tspan
+         sodipodi:role="line"
+         x="280.51343"
+         y="-371.51447"
+         style="stroke-width:0.26458332"
+         id="tspan2601-2-0-1-1-7" /></text>
+    <rect
+       style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.80717027;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect11469-2-1-9-5-4"
+       width="98.143524"
+       height="70.055305"
+       x="278.17929"
+       y="-372.5614" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="282.39279"
+       y="-365.229"
+       id="text11473-5-4-9-2-4"><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-365.229"
+         style="stroke-width:0.26458332"
+         id="tspan3811-3">Output is an 'multi_burst' </tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-358.17346"
+         style="stroke-width:0.26458332"
+         id="tspan4355">object</tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-351.11789"
+         style="stroke-width:0.26458332"
+         id="tspan4357">Attributes:</tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-344.06235"
+         style="stroke-width:0.26458332"
+         id="tspan4359"><tspan
+   style="font-weight:bold"
+   id="tspan4371">burst_names</tspan> = a character of </tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-337.00677"
+         style="stroke-width:0.26458332"
+         id="tspan4367">the burst names to query when </tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-329.95123"
+         style="stroke-width:0.26458332"
+         id="tspan4369">subsetting a burst </tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-322.89566"
+         style="stroke-width:0.26458332"
+         id="tspan4361"><tspan
+   style="font-weight:bold"
+   id="tspan4373">sort_index</tspan> = a factor of the</tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-315.84012"
+         style="stroke-width:0.26458332"
+         id="tspan4363">active_burst names, </tspan><tspan
+         sodipodi:role="line"
+         x="282.39279"
+         y="-308.78455"
+         style="stroke-width:0.26458332"
+         id="tspan4365">for use in sorting and labelling.</tspan></text>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-4)"
+       d="m 327.55302,-390.17065 0.2673,16.83798"
+       id="path11480-6-9-5-4-0"
+       inkscape:connector-curvature="0" />
+    <g
+       id="g4341"
+       transform="translate(-112.71257,-6.3500002)">
+      <rect
+         y="-419.02841"
+         x="516.51166"
+         height="9.3544588"
+         width="79.646301"
+         id="rect1241-59-7-4-5-4"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1245-75-0-1-9-3"
+         y="-412.5029"
+         x="526.64496"
+         style="font-style:normal;font-weight:normal;font-size:7.05555534px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96"><tspan
+           style="stroke-width:0.26458332"
+           y="-412.5029"
+           x="526.64496"
+           id="tspan1243-38-4-0-2-1"
+           sodipodi:role="line">burst_labels()</tspan></text>
+    </g>
+    <path
+       style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-start:url(#Arrow1Lstart-04-9-7-7-7);marker-end:url(#marker1363-9-7-3-8-3-6)"
+       d="m 359.59245,-420.65015 43.93539,0.22834"
+       id="path1257-2-6-8-4-2-4"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cc" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4375"
+       style="font-style:normal;font-weight:normal;font-size:26.66666603px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="matrix(0.26458333,0,0,0.26458333,0,-703)"><flowRegion
+         id="flowRegion4377"><rect
+           id="rect4379"
+           width="185"
+           height="88.571426"
+           x="1480.7142"
+           y="1304.5276" /></flowRegion><flowPara
+         id="flowPara4381" /></flowRoot>    <g
+       id="g7693"
+       transform="translate(-60.854162,9.5250013)">
+      <rect
+         y="-249.94385"
+         x="89.387917"
+         height="14.967162"
+         width="97.735306"
+         id="rect1037-6-9-0-0-2-06"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1041-7-0-5-6-6-8"
+         y="-240.98163"
+         x="121.83349"
+         style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-240.98163"
+           x="121.83349"
+           id="tspan1039-5-8-6-8-1-9"
+           sodipodi:role="line">burst_sort()</tspan></text>
+      <rect
+         y="-230.36255"
+         x="89.239517"
+         height="29.37845"
+         width="98.032227"
+         id="rect1088-8-6-7-8-2"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.16806613;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <rect
+         y="-234.6956"
+         x="89.226936"
+         height="16.664974"
+         width="98.057335"
+         id="rect1090-5-4-9-7-6"
+         style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.16717543;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <flowRoot
+         transform="matrix(0.26458333,0,0,0.26458333,-42.996247,-339.98085)"
+         style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1092-0-0-0-9-64"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1094-9-0-3-2-9"><rect
+             y="399.86853"
+             x="504.06613"
+             height="457.36826"
+             width="365.91971"
+             id="rect1096-6-4-3-0-5" /></flowRegion><flowPara
+           style="font-weight:bold"
+           id="flowPara1098-3-6-3-2-04">Inputs:</flowPara><flowPara
+           style="font-weight:bold"
+           id="flowPara3647-8">burst <flowSpan
+   id="flowSpan5989"
+   style="font-weight:normal">=  a multi_burst object</flowSpan></flowPara><flowPara
+           id="flowPara1100-9-5-2-5-1" /><flowPara
+           id="flowPara1124-6-9-6-9-7" /><flowPara
+           id="flowPara1126-2-9-5-2-2" /><flowPara
+           id="flowPara1128-1-1-2-2-72" /><flowPara
+           id="flowPara1130-7-4-6-8-2" /><flowPara
+           id="flowPara1132-8-9-5-9-6" /><flowPara
+           id="flowPara1134-5-1-8-7-1" /><flowPara
+           id="flowPara1136-7-0-7-3-0" /><flowPara
+           id="flowPara1138-4-7-9-6-6" /><flowPara
+           id="flowPara1140-1-5-6-1-1" /></flowRoot>      <text
+         id="text2577-4-0-8-9-5"
+         y="-211.76076"
+         x="93.044327"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan3815-4"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-211.76076"
+           x="93.044327"
+           sodipodi:role="line">Access the 'sort_index'</tspan><tspan
+           id="tspan5082"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-203.82326"
+           x="93.044327"
+           sodipodi:role="line">attribute</tspan><tspan
+           id="tspan11142-0-2-3-0-9"
+           style="stroke-width:0.26458332"
+           y="-195.88576"
+           x="93.044327"
+           sodipodi:role="line" /><tspan
+           id="tspan2599-9-9-0-6-0"
+           style="stroke-width:0.26458332"
+           y="-187.94826"
+           x="93.044327"
+           sodipodi:role="line" /><tspan
+           id="tspan2601-2-0-1-1-9"
+           style="stroke-width:0.26458332"
+           y="-180.01076"
+           x="93.044327"
+           sodipodi:role="line" /></text>
+      <rect
+         y="-184.08702"
+         x="88.807739"
+         height="59.4841"
+         width="98.206665"
+         id="rect11469-2-1-9-5-1"
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.74402022;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text11473-5-4-9-2-7"
+         y="-176.34508"
+         x="90.217987"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan3811-7"
+           style="stroke-width:0.26458332"
+           y="-176.34508"
+           x="90.217987"
+           sodipodi:role="line">Output is a factor of the </tspan><tspan
+           id="tspan5282"
+           style="stroke-width:0.26458332"
+           y="-168.40758"
+           x="90.217987"
+           sodipodi:role="line">burst labels created from the </tspan><tspan
+           id="tspan5284"
+           style="stroke-width:0.26458332"
+           y="-160.47008"
+           x="90.217987"
+           sodipodi:role="line">active_bursts.</tspan><tspan
+           id="tspan5979"
+           style="stroke-width:0.26458332"
+           y="-152.53258"
+           x="90.217987"
+           sodipodi:role="line" /><tspan
+           id="tspan5296"
+           style="stroke-width:0.26458332"
+           y="-144.59508"
+           x="90.217987"
+           sodipodi:role="line">Can be used to quickly sort </tspan><tspan
+           id="tspan5286"
+           style="stroke-width:0.26458332"
+           y="-136.65758"
+           x="90.217987"
+           sodipodi:role="line">the data.frame or use as </tspan><tspan
+           id="tspan5302"
+           style="stroke-width:0.26458332"
+           y="-128.72008"
+           x="90.217987"
+           sodipodi:role="line">labels for graphs/maps</tspan></text>
+      <path
+         inkscape:connector-curvature="0"
+         id="path11480-6-9-5-4-1"
+         d="m 138.21265,-201.66479 0.2673,16.83798"
+         style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-9)" />
+    </g>
+    <g
+       id="g7739"
+       transform="translate(-66.473553,9.9348373)">
+      <rect
+         y="-250.35368"
+         x="213.66824"
+         height="14.967162"
+         width="97.735306"
+         id="rect1037-6-9-0-0-2-06-9"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1041-7-0-5-6-6-8-7"
+         y="-241.39145"
+         x="246.11382"
+         style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-241.39145"
+           x="246.11382"
+           id="tspan1039-5-8-6-8-1-9-7"
+           sodipodi:role="line">burst_levels()</tspan></text>
+      <rect
+         y="-230.76129"
+         x="213.53093"
+         height="37.641655"
+         width="98.010078"
+         id="rect1088-8-6-7-8-2-6"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.19021775;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <rect
+         y="-235.10538"
+         x="213.50726"
+         height="16.664974"
+         width="98.057335"
+         id="rect1090-5-4-9-7-6-7"
+         style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.16717544;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <flowRoot
+         transform="matrix(0.26458333,0,0,0.26458333,81.28408,-340.39055)"
+         style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1092-0-0-0-9-64-3"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1094-9-0-3-2-9-6"><rect
+             y="399.86853"
+             x="504.06613"
+             height="457.36826"
+             width="365.91971"
+             id="rect1096-6-4-3-0-5-5" /></flowRegion><flowPara
+           style="font-weight:bold"
+           id="flowPara1098-3-6-3-2-04-6">Inputs:</flowPara><flowPara
+           style="font-weight:bold"
+           id="flowPara3647-8-3">burst <flowSpan
+   id="flowSpan5987"
+   style="font-weight:normal">=  a multi_burst object</flowSpan></flowPara><flowPara
+           id="flowPara1100-9-5-2-5-1-9" /><flowPara
+           id="flowPara1124-6-9-6-9-7-4" /><flowPara
+           id="flowPara1126-2-9-5-2-2-8" /><flowPara
+           id="flowPara1128-1-1-2-2-72-1" /><flowPara
+           id="flowPara1130-7-4-6-8-2-2" /><flowPara
+           id="flowPara1132-8-9-5-9-6-9" /><flowPara
+           id="flowPara1134-5-1-8-7-1-3" /><flowPara
+           id="flowPara1136-7-0-7-3-0-9" /><flowPara
+           id="flowPara1138-4-7-9-6-6-0" /><flowPara
+           id="flowPara1140-1-5-6-1-1-8" /></flowRoot>      <text
+         id="text2577-4-0-8-9-5-8"
+         y="-212.17056"
+         x="217.32466"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan3815-4-5"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-212.17056"
+           x="217.32466"
+           sodipodi:role="line">Access the factor levels </tspan><tspan
+           id="tspan5611"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-204.23306"
+           x="217.32466"
+           sodipodi:role="line">of the 'sort_index' </tspan><tspan
+           id="tspan5619"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-196.29556"
+           x="217.32466"
+           sodipodi:role="line">attribute.</tspan><tspan
+           id="tspan11142-0-2-3-0-9-9"
+           style="stroke-width:0.26458332"
+           y="-188.35806"
+           x="217.32466"
+           sodipodi:role="line" /><tspan
+           id="tspan2599-9-9-0-6-0-6"
+           style="stroke-width:0.26458332"
+           y="-180.42056"
+           x="217.32466"
+           sodipodi:role="line" /><tspan
+           id="tspan2601-2-0-1-1-9-3"
+           style="stroke-width:0.26458332"
+           y="-172.48306"
+           x="217.32466"
+           sodipodi:role="line" /></text>
+      <rect
+         y="-174.96696"
+         x="213.09306"
+         height="60.275932"
+         width="99.533051"
+         id="rect11469-2-1-9-5-1-8"
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.75399661;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text11473-5-4-9-2-7-5"
+         y="-167.75914"
+         x="213.96916"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan5284-1"
+           style="stroke-width:0.26458332"
+           y="-167.75914"
+           x="213.96916"
+           sodipodi:role="line">Output is a character of the</tspan><tspan
+           id="tspan5632"
+           style="stroke-width:0.26458332"
+           y="-159.82164"
+           x="213.96916"
+           sodipodi:role="line">factor levels of the sort_index.</tspan><tspan
+           id="tspan5981"
+           style="stroke-width:0.26458332"
+           y="-151.88414"
+           x="213.96916"
+           sodipodi:role="line" /><tspan
+           id="tspan5302-8"
+           style="stroke-width:0.26458332"
+           y="-143.94664"
+           x="213.96916"
+           sodipodi:role="line">Can be used to refer to the</tspan><tspan
+           id="tspan5640"
+           style="stroke-width:0.26458332"
+           y="-136.00914"
+           x="213.96916"
+           sodipodi:role="line">levels for labelling, subsetting,</tspan><tspan
+           id="tspan5644"
+           style="stroke-width:0.26458332"
+           y="-128.07164"
+           x="213.96916"
+           sodipodi:role="line">but also to add new levels</tspan><tspan
+           id="tspan5648"
+           style="stroke-width:0.26458332"
+           y="-120.13414"
+           x="213.96916"
+           sodipodi:role="line">using `burst_levels&lt;-`.</tspan></text>
+      <path
+         inkscape:connector-curvature="0"
+         id="path11480-6-9-5-4-1-4"
+         d="m 262.49298,-192.54943 0.2673,16.83798"
+         style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-9-1)" />
+    </g>
+    <g
+       id="g2070"
+       transform="translate(-119.32907,-10.583334)">
+      <rect
+         y="-229.83551"
+         x="385.71924"
+         height="14.967162"
+         width="97.735306"
+         id="rect1037-6-9-0-0-2-06-9-0"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1041-7-0-5-6-6-8-7-3"
+         y="-220.87349"
+         x="418.16479"
+         style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-220.87349"
+           x="418.16479"
+           id="tspan1039-5-8-6-8-1-9-7-0"
+           sodipodi:role="line">burst_select()</tspan></text>
+      <rect
+         y="-188.01866"
+         x="385.58191"
+         height="37.641655"
+         width="98.010078"
+         id="rect1088-8-6-7-8-2-6-4"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.19021775;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <rect
+         y="-214.53595"
+         x="385.60974"
+         height="43.556244"
+         width="97.954384"
+         id="rect1090-5-4-9-7-6-7-4"
+         style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.27012658;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <flowRoot
+         transform="matrix(0.26458333,0,0,0.26458333,253.33508,-319.34316)"
+         style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1092-0-0-0-9-64-3-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1094-9-0-3-2-9-6-4"><rect
+             y="399.86853"
+             x="504.06613"
+             height="457.36826"
+             width="365.91971"
+             id="rect1096-6-4-3-0-5-5-7" /></flowRegion><flowPara
+           style="font-weight:bold"
+           id="flowPara1098-3-6-3-2-04-6-6">Inputs:</flowPara><flowPara
+           style="font-weight:bold"
+           id="flowPara3647-8-3-3">burst <flowSpan
+   id="flowSpan5985"
+   style="font-weight:normal">=  a multi_burst object</flowSpan></flowPara><flowPara
+           id="flowPara5971"
+           style="font-weight:bold">active_burst = <flowSpan
+   style="font-weight:normal"
+   id="flowSpan1566">(optional), the active_burst to subset by, defaults to the current active_burst.</flowSpan></flowPara><flowPara
+           style="font-weight:bold"
+           id="flowPara1564" /><flowPara
+           id="flowPara1100-9-5-2-5-1-9-1" /><flowPara
+           id="flowPara1124-6-9-6-9-7-4-7" /><flowPara
+           id="flowPara1126-2-9-5-2-2-8-5" /><flowPara
+           id="flowPara1128-1-1-2-2-72-1-9" /><flowPara
+           id="flowPara1130-7-4-6-8-2-2-6" /><flowPara
+           id="flowPara1132-8-9-5-9-6-9-2" /><flowPara
+           id="flowPara1134-5-1-8-7-1-3-1" /><flowPara
+           id="flowPara1136-7-0-7-3-0-9-7" /><flowPara
+           id="flowPara1138-4-7-9-6-6-0-8" /><flowPara
+           id="flowPara1140-1-5-6-1-1-8-5" /></flowRoot>      <text
+         id="text2577-4-0-8-9-5-8-7"
+         y="-162.54883"
+         x="389.37564"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan5619-8"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-162.54883"
+           x="389.37564"
+           sodipodi:role="line">Subset bursts by the </tspan><tspan
+           id="tspan5969"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-154.61133"
+           x="389.37564"
+           sodipodi:role="line">active_burst attribute</tspan><tspan
+           id="tspan11142-0-2-3-0-9-9-5"
+           style="stroke-width:0.26458332"
+           y="-146.67383"
+           x="389.37564"
+           sodipodi:role="line" /><tspan
+           id="tspan2599-9-9-0-6-0-6-9"
+           style="stroke-width:0.26458332"
+           y="-138.73633"
+           x="389.37564"
+           sodipodi:role="line" /><tspan
+           id="tspan2601-2-0-1-1-9-3-7"
+           style="stroke-width:0.26458332"
+           y="-130.79883"
+           x="389.37564"
+           sodipodi:role="line" /></text>
+      <rect
+         y="-132.72273"
+         x="385.17484"
+         height="70.370628"
+         width="99.738785"
+         id="rect11469-2-1-9-5-1-8-5"
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.81553304;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text11473-5-4-9-2-7-5-3"
+         y="-125.01646"
+         x="386.54932"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan6001"
+           style="stroke-width:0.26458332"
+           y="-125.01646"
+           x="386.54932"
+           sodipodi:role="line">Output is a list where each</tspan><tspan
+           id="tspan6005"
+           style="stroke-width:0.26458332"
+           y="-117.07896"
+           x="386.54932"
+           sodipodi:role="line">position is a ind_burst</tspan><tspan
+           id="tspan6028"
+           style="stroke-width:0.26458332"
+           y="-109.14146"
+           x="386.54932"
+           sodipodi:role="line">subsetted by the active_burst.</tspan><tspan
+           id="tspan6030"
+           style="stroke-width:0.26458332"
+           y="-101.20396"
+           x="386.54932"
+           sodipodi:role="line" /><tspan
+           id="tspan5648-9"
+           style="stroke-width:0.26458332"
+           y="-93.266457"
+           x="386.54932"
+           sodipodi:role="line">Can be used when you need</tspan><tspan
+           id="tspan6032"
+           style="stroke-width:0.26458332"
+           y="-85.328957"
+           x="386.54932"
+           sodipodi:role="line">to refer to the active bursts </tspan><tspan
+           id="tspan6034"
+           style="stroke-width:0.26458332"
+           y="-77.391457"
+           x="386.54932"
+           sodipodi:role="line">only, particularly when </tspan><tspan
+           id="tspan6076"
+           style="stroke-width:0.26458332"
+           y="-69.453957"
+           x="386.54932"
+           sodipodi:role="line">subsetting of a data.frame. </tspan></text>
+      <path
+         inkscape:connector-curvature="0"
+         id="path11480-6-9-5-4-1-4-6"
+         d="m 434.54399,-150.33524 0.26729,16.83798"
+         style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-9-1-8)" />
+    </g>
+    <g
+       id="g2021"
+       transform="translate(0,-10.583333)">
+      <rect
+         y="-229.83551"
+         x="505.0484"
+         height="14.967162"
+         width="97.735306"
+         id="rect1037-6-9-0-0-2-06-9-0-3"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1041-7-0-5-6-6-8-7-3-3"
+         y="-220.87347"
+         x="537.49396"
+         style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-220.87347"
+           x="537.49396"
+           id="tspan1039-5-8-6-8-1-9-7-0-8"
+           sodipodi:role="line">burst_labels()</tspan></text>
+      <rect
+         y="-169.99986"
+         x="504.93842"
+         height="62.419456"
+         width="97.955414"
+         id="rect1088-8-6-7-8-2-6-4-6"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.24488124;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <rect
+         y="-214.50618"
+         x="504.96863"
+         height="64.878357"
+         width="97.894928"
+         id="rect1090-5-4-9-7-6-7-4-0"
+         style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.3295795;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <flowRoot
+         transform="matrix(0.26458333,0,0,0.26458333,372.66426,-319.34311)"
+         style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1092-0-0-0-9-64-3-4-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1094-9-0-3-2-9-6-4-8"><rect
+             y="399.86853"
+             x="504.06613"
+             height="457.36826"
+             width="365.91971"
+             id="rect1096-6-4-3-0-5-5-7-8" /></flowRegion><flowPara
+           style="font-weight:bold"
+           id="flowPara1098-3-6-3-2-04-6-6-8">Inputs:</flowPara><flowPara
+           id="flowPara5971-7"
+           style="font-weight:bold">burst <flowSpan
+   id="flowSpan5985-7"
+   style="font-weight:normal">=  a multi_burst object</flowSpan></flowPara><flowPara
+           style="font-weight:bold"
+           id="flowPara1868">factor <flowSpan
+   style="font-weight:normal"
+   id="flowSpan1870">= logical, whether to return a factor, defaults return is a character</flowSpan></flowPara><flowPara
+           id="flowPara6439"
+           style="font-weight:bold">active_burst <flowSpan
+   id="flowSpan1950"
+   style="font-weight:normal">= (optional), the active_burst to subset by, defaults to the current active_burst.</flowSpan></flowPara><flowPara
+           style="font-weight:normal"
+           id="flowPara1100-9-5-2-5-1-9-1-4" /><flowPara
+           id="flowPara1124-6-9-6-9-7-4-7-3" /><flowPara
+           id="flowPara1126-2-9-5-2-2-8-5-0" /><flowPara
+           id="flowPara1128-1-1-2-2-72-1-9-3" /><flowPara
+           id="flowPara1130-7-4-6-8-2-2-6-0" /><flowPara
+           id="flowPara1132-8-9-5-9-6-9-2-9" /><flowPara
+           id="flowPara1134-5-1-8-7-1-3-1-2" /><flowPara
+           id="flowPara1136-7-0-7-3-0-9-7-5" /><flowPara
+           id="flowPara1138-4-7-9-6-6-0-8-4" /><flowPara
+           id="flowPara1140-1-5-6-1-1-8-5-0" /></flowRoot>      <text
+         id="text2577-4-0-8-9-5-8-7-5"
+         y="-141.91161"
+         x="508.7048"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan5619-8-9"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-141.91161"
+           x="508.7048"
+           sodipodi:role="line">Subset bursts by the </tspan><tspan
+           id="tspan6443"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-133.97411"
+           x="508.7048"
+           sodipodi:role="line">active_burst attribute </tspan><tspan
+           id="tspan6447"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-126.03661"
+           x="508.7048"
+           sodipodi:role="line" /><tspan
+           id="tspan6559"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-118.09911"
+           x="508.7048"
+           sodipodi:role="line">Convert to factor if </tspan><tspan
+           id="tspan1952"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-110.16161"
+           x="508.7048"
+           sodipodi:role="line">required</tspan><tspan
+           id="tspan11142-0-2-3-0-9-9-5-6"
+           style="stroke-width:0.26458332"
+           y="-102.22411"
+           x="508.7048"
+           sodipodi:role="line" /><tspan
+           id="tspan2599-9-9-0-6-0-6-9-9"
+           style="stroke-width:0.26458332"
+           y="-94.286606"
+           x="508.7048"
+           sodipodi:role="line" /><tspan
+           id="tspan2601-2-0-1-1-9-3-7-2"
+           style="stroke-width:0.26458332"
+           y="-86.349106"
+           x="508.7048"
+           sodipodi:role="line" /></text>
+      <rect
+         y="-89.675194"
+         x="504.68912"
+         height="149.31787"
+         width="99.368561"
+         id="rect11469-2-1-9-5-1-8-5-2"
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.18575299;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text11473-5-4-9-2-7-5-3-4"
+         y="-82.154045"
+         x="505.87848"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan5997-4"
+           style="stroke-width:0.26458332"
+           y="-82.154045"
+           x="505.87848"
+           sodipodi:role="line">Output is a </tspan><tspan
+           id="tspan6030-2"
+           style="stroke-width:0.26458332"
+           y="-74.216545"
+           x="505.87848"
+           sodipodi:role="line">factor of the active bursts</tspan><tspan
+           id="tspan6475"
+           style="stroke-width:0.26458332"
+           y="-66.279045"
+           x="505.87848"
+           sodipodi:role="line">where paste(., sep='_')</tspan><tspan
+           id="tspan6477"
+           style="stroke-width:0.26458332"
+           y="-58.341545"
+           x="505.87848"
+           sodipodi:role="line" /><tspan
+           id="tspan6076-5"
+           style="stroke-width:0.26458332"
+           y="-50.404045"
+           x="505.87848"
+           sodipodi:role="line">Can be used to recalculate the</tspan><tspan
+           id="tspan6533"
+           style="stroke-width:0.26458332"
+           y="-42.466545"
+           x="505.87848"
+           sodipodi:role="line">sort_index, which happens</tspan><tspan
+           id="tspan6535"
+           style="stroke-width:0.26458332"
+           y="-34.529045"
+           x="505.87848"
+           sodipodi:role="line">everytime the multi_burst is</tspan><tspan
+           id="tspan6537"
+           style="stroke-width:0.26458332"
+           y="-26.591545"
+           x="505.87848"
+           sodipodi:role="line">changed.</tspan><tspan
+           id="tspan6539"
+           style="stroke-width:0.26458332"
+           y="-18.654045"
+           x="505.87848"
+           sodipodi:role="line" /><tspan
+           id="tspan6541"
+           style="stroke-width:0.26458332"
+           y="-10.716546"
+           x="505.87848"
+           sodipodi:role="line">Is similar to burst_select,</tspan><tspan
+           id="tspan6543"
+           style="stroke-width:0.26458332"
+           y="-2.7790463"
+           x="505.87848"
+           sodipodi:role="line">except active_bursts can</tspan><tspan
+           id="tspan6545"
+           style="stroke-width:0.26458332"
+           y="5.1584535"
+           x="505.87848"
+           sodipodi:role="line">be inputted and therefore</tspan><tspan
+           id="tspan6547"
+           style="stroke-width:0.26458332"
+           y="13.095953"
+           x="505.87848"
+           sodipodi:role="line">done before a multi_burst is</tspan><tspan
+           id="tspan6549"
+           style="stroke-width:0.26458332"
+           y="21.033453"
+           x="505.87848"
+           sodipodi:role="line">officially made. Also</tspan><tspan
+           id="tspan6551"
+           style="stroke-width:0.26458332"
+           y="28.970953"
+           x="505.87848"
+           sodipodi:role="line">returns a factor.</tspan><tspan
+           id="tspan6553"
+           style="stroke-width:0.26458332"
+           y="36.908455"
+           x="505.87848"
+           sodipodi:role="line" /><tspan
+           id="tspan6555"
+           style="stroke-width:0.26458332"
+           y="44.845955"
+           x="505.87848"
+           sodipodi:role="line">Is mainly just an internal </tspan><tspan
+           id="tspan6557"
+           style="stroke-width:0.26458332"
+           y="52.783451"
+           x="505.87848"
+           sodipodi:role="line">function and not for users.</tspan></text>
+      <path
+         inkscape:connector-curvature="0"
+         id="path11480-6-9-5-4-1-4-6-1"
+         d="m 553.87317,-107.47242 0.2673,16.837926"
+         style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-9-1-8-4)" />
+    </g>
+    <g
+       id="g7531"
+       transform="translate(-196.42896,10.322776)">
+      <rect
+         y="-250.74162"
+         x="582.14819"
+         height="14.967162"
+         width="97.735306"
+         id="rect1037-6-9-0-0-2-06-9-0-3-8"
+         style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.46499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text1041-7-0-5-6-6-8-7-3-3-5"
+         y="-241.77956"
+         x="614.59381"
+         style="font-style:normal;font-weight:normal;font-size:5.64444447px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           style="stroke-width:0.26458332"
+           y="-241.77956"
+           x="614.59381"
+           id="tspan1039-5-8-6-8-1-9-7-0-8-0"
+           sodipodi:role="line">active_burst()</tspan></text>
+      <rect
+         y="-215.29753"
+         x="581.98785"
+         height="21.627878"
+         width="98.056084"
+         id="rect1088-8-6-7-8-2-6-4-6-6"
+         style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.14422001;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <rect
+         y="-235.48579"
+         x="581.99487"
+         height="19.856913"
+         width="98.042038"
+         id="rect1090-5-4-9-7-6-7-4-0-4"
+         style="opacity:1;fill:#e6e6e6;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.18247031;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <flowRoot
+         transform="matrix(0.26458333,0,0,0.26458333,449.76414,-340.24904)"
+         style="font-style:normal;font-weight:normal;font-size:21.33333397px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+         id="flowRoot1092-0-0-0-9-64-3-4-4-6"
+         xml:space="preserve"><flowRegion
+           id="flowRegion1094-9-0-3-2-9-6-4-8-2"><rect
+             y="399.86853"
+             x="504.06613"
+             height="457.36826"
+             width="365.91971"
+             id="rect1096-6-4-3-0-5-5-7-8-5" /></flowRegion><flowPara
+           style="font-weight:bold"
+           id="flowPara1098-3-6-3-2-04-6-6-8-8">Inputs:</flowPara><flowPara
+           id="flowPara6439-8"
+           style="font-weight:bold">burst <flowSpan
+   id="flowSpan5985-7-2"
+   style="font-weight:normal">=  a multi_burst object</flowSpan></flowPara><flowPara
+           id="flowPara1100-9-5-2-5-1-9-1-4-7" /><flowPara
+           id="flowPara1124-6-9-6-9-7-4-7-3-2" /><flowPara
+           id="flowPara1126-2-9-5-2-2-8-5-0-4" /><flowPara
+           id="flowPara1128-1-1-2-2-72-1-9-3-0" /><flowPara
+           id="flowPara1130-7-4-6-8-2-2-6-0-6" /><flowPara
+           id="flowPara1132-8-9-5-9-6-9-2-9-2" /><flowPara
+           id="flowPara1134-5-1-8-7-1-3-1-2-9" /><flowPara
+           id="flowPara1136-7-0-7-3-0-9-7-5-9" /><flowPara
+           id="flowPara1138-4-7-9-6-6-0-8-4-0" /><flowPara
+           id="flowPara1140-1-5-6-1-1-8-5-0-8" /></flowRoot>      <text
+         id="text2577-4-0-8-9-5-8-7-5-1"
+         y="-206.73781"
+         x="585.80463"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan6443-1"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-206.73781"
+           x="585.80463"
+           sodipodi:role="line">Access the `active_burst`</tspan><tspan
+           id="tspan6559-0"
+           style="font-weight:bold;stroke-width:0.26458332"
+           y="-198.80031"
+           x="585.80463"
+           sodipodi:role="line">attribute </tspan><tspan
+           id="tspan11142-0-2-3-0-9-9-5-6-3"
+           style="stroke-width:0.26458332"
+           y="-190.86281"
+           x="585.80463"
+           sodipodi:role="line" /><tspan
+           id="tspan2599-9-9-0-6-0-6-9-9-4"
+           style="stroke-width:0.26458332"
+           y="-182.92531"
+           x="585.80463"
+           sodipodi:role="line" /><tspan
+           id="tspan2601-2-0-1-1-9-3-7-2-0"
+           style="stroke-width:0.26458332"
+           y="-174.98781"
+           x="585.80463"
+           sodipodi:role="line" /></text>
+      <rect
+         y="-176.2148"
+         x="581.77161"
+         height="140.65912"
+         width="99.403252"
+         id="rect11469-2-1-9-5-1-8-5-2-3"
+         style="opacity:1;fill:#b3b3b3;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.15106022;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill" />
+      <text
+         id="text11473-5-4-9-2-7-5-3-4-9"
+         y="-168.67633"
+         x="582.97827"
+         style="font-style:normal;font-weight:normal;font-size:6.3499999px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+         xml:space="preserve"><tspan
+           id="tspan6557-6"
+           style="stroke-width:0.26458332"
+           y="-168.67633"
+           x="582.97827"
+           sodipodi:role="line">Output is a character vector</tspan><tspan
+           id="tspan7242"
+           style="stroke-width:0.26458332"
+           y="-160.73883"
+           x="582.97827"
+           sodipodi:role="line">of the active burst names.</tspan><tspan
+           id="tspan7244"
+           style="stroke-width:0.26458332"
+           y="-152.80133"
+           x="582.97827"
+           sodipodi:role="line" /><tspan
+           id="tspan7246"
+           style="stroke-width:0.26458332"
+           y="-144.86383"
+           x="582.97827"
+           sodipodi:role="line">Can be used to refer to </tspan><tspan
+           id="tspan7248"
+           style="stroke-width:0.26458332"
+           y="-136.92633"
+           x="582.97827"
+           sodipodi:role="line">active_burst names or subset</tspan><tspan
+           id="tspan7250"
+           style="stroke-width:0.26458332"
+           y="-128.98883"
+           x="582.97827"
+           sodipodi:role="line">by the active_burst.</tspan><tspan
+           id="tspan7252"
+           style="stroke-width:0.26458332"
+           y="-121.05133"
+           x="582.97827"
+           sodipodi:role="line" /><tspan
+           id="tspan7254"
+           style="stroke-width:0.26458332"
+           y="-113.11383"
+           x="582.97827"
+           sodipodi:role="line">Most importantly can change</tspan><tspan
+           id="tspan7256"
+           style="stroke-width:0.26458332"
+           y="-105.17633"
+           x="582.97827"
+           sodipodi:role="line">the active_burst of a </tspan><tspan
+           id="tspan7258"
+           style="stroke-width:0.26458332"
+           y="-97.238831"
+           x="582.97827"
+           sodipodi:role="line">multi_burst via </tspan><tspan
+           id="tspan7260"
+           style="stroke-width:0.26458332"
+           y="-89.301331"
+           x="582.97827"
+           sodipodi:role="line">`active_burst&lt;-`.</tspan><tspan
+           id="tspan7262"
+           style="stroke-width:0.26458332"
+           y="-81.363831"
+           x="582.97827"
+           sodipodi:role="line" /><tspan
+           id="tspan7264"
+           style="stroke-width:0.26458332"
+           y="-73.426331"
+           x="582.97827"
+           sodipodi:role="line">This will trigger a cascade</tspan><tspan
+           id="tspan7266"
+           style="stroke-width:0.26458332"
+           y="-65.488831"
+           x="582.97827"
+           sodipodi:role="line">effect recalculating labels</tspan><tspan
+           id="tspan7268"
+           style="stroke-width:0.26458332"
+           y="-57.551331"
+           x="582.97827"
+           sodipodi:role="line">and show different outputs</tspan><tspan
+           id="tspan7270"
+           style="stroke-width:0.26458332"
+           y="-49.613831"
+           x="582.97827"
+           sodipodi:role="line">from functions such as </tspan><tspan
+           id="tspan7272"
+           style="stroke-width:0.26458332"
+           y="-41.676331"
+           x="582.97827"
+           sodipodi:role="line">summary and plot.</tspan></text>
+      <path
+         inkscape:connector-curvature="0"
+         id="path11480-6-9-5-4-1-4-6-1-7"
+         d="m 630.97304,-193.99539 0.2673,16.83798"
+         style="opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#000000;stroke-width:0.66500002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;marker-end:url(#marker3357-1-2-6-3-8-9-1-8-4-1)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:19.75555611px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="33.756546"
+       y="-254.45979"
+       id="text7743"><tspan
+         sodipodi:role="line"
+         id="tspan7741"
+         x="33.756546"
+         y="-254.45979"
+         style="stroke-width:0.26458332">Accessory functions for bursts</tspan></text>
+    <rect
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.96499997;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
+       id="rect7745"
+       width="623.27252"
+       height="330.34515"
+       x="10.690781"
+       y="-278.69312" />
+  </g>
+</svg>
