@@ -65,7 +65,7 @@ make_step_geom <- function(burst, time_data, geometry) {
         new_geom <- sf::st_linestring(rbind(x, y))
       }
       new_geom
-    }, x1, x2, SIMPLIFY = F)
+    }, x1, x2, SIMPLIFY = FALSE)
     sf_x <- x3
     step_geometry[subz] <- sf_x[order(order_t)]
 

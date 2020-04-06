@@ -23,7 +23,7 @@ test_that("checks check successfully", {
     )
     expect_message(as_sftrack(data = df1,burst_list=list(id=df1$id, month = df1$month),
       time_col = 'timez', active_burst = c('id','month'), coords = c('x','y','z')),
-      "Z coordinates found. Note that the vast majority of rgdal calculations are done using planar geometry")
+      "Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry")
 
     # duplicate time_stamps
     df2 <- data.frame(

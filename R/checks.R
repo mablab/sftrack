@@ -120,9 +120,9 @@ check_NA_coords <- function(xyz) {
 
 # Checks if z coordinates and returns a message
 check_z_coords <- function(sftrack_obj) {
-  if ('XYZ' %in% class(sftrack_obj$geometry[[1]])) {
+  if ('XYZ' %in% class(sftrack_obj[,attr(sftrack_obj, 'sf_column')][[1]])) {
     message(
-      'Z coordinates found. Note that the vast majority of rgdal calculations are done using planar geometry'
+      'Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry'
     )
   }
 }
@@ -151,7 +151,7 @@ check_t_regular <- function(sftrack) {
   sftrack <-
     sftrack[check_ordered(burst_select(sftrack$burst), sftrack[, time_col]),]
   ans <-
-    tapply(sftrack[, time_col, drop = T], paste(burst_select(sftrack$burst)), function(date) {
+    tapply(sftrack[, time_col, drop = TRUE], paste(burst_select(sftrack$burst)), function(date) {
       x1 <- unclass(date[-1])
       x2 <- unclass(date[-length(date)])
       abs(mean(c(x1 - x2)) - (x1[1] - x2[1])) <= 1e-07
@@ -164,7 +164,7 @@ check_t_regular <- function(sftrack) {
 #' @export
 dup_timestamp <- function(x) {
   test <-
-    tapply(x[, attr(x, 'time'), drop = T], burst_labels(x$burst, F), function(y)
+    tapply(x[, attr(x, 'time'), drop = TRUE], burst_labels(x$burst, FALSE), function(y)
       any(duplicated(y)))
   if (any(test)) {
     stop(paste0(

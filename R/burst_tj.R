@@ -95,7 +95,7 @@ make_multi_burst <-
     if (!is.null(burst_list)) {
       burst <-
         do.call(function(...)
-          mapply(list, ..., SIMPLIFY = F), burst_list)
+          mapply(list, ..., SIMPLIFY = FALSE), burst_list)
     }
 
     check_NAburst(burst)
@@ -299,7 +299,7 @@ burst_select <- function(burst, select = NULL) {
 #' @param active_burst (optional), the active_burst to subset by, defaults to the current active_burst.
 #' @export
 burst_labels <- function(burst,
-  factor = F,
+  factor = FALSE,
   active_burst = NULL) {
   if (is.null(active_burst)) {
     active_burst <- attr(burst, 'active_burst')
@@ -367,7 +367,7 @@ active_burst <- function(burst) {
   }
   attr(burst, 'active_burst') <- value
   attr(burst, 'sort_index') <-
-    burst_labels(burst, T, active_burst = value)
+    burst_labels(burst, TRUE, active_burst = value)
   burst
 }
 
