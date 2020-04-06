@@ -13,7 +13,7 @@ as_sftrack(data, ...)
 
 \method{as_sftrack}{data.frame}(data, ..., xyz, coords = c("x", "y",
   "z"), burst_list, id, burst_col = NULL, active_burst = NA, error,
-  error_col, time, time_col, crs = NA, zeroNA = F)
+  error_col, time, time_col, crs = NA, zeroNA = FALSE)
 
 new_sftrack(data, burst, time, geometry, error = NA)
 

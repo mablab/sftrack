@@ -88,12 +88,12 @@ as_sftrack.data.frame <- function(data,
   time,
   time_col,
   crs = NA,
-  zeroNA = F) {
+  zeroNA = FALSE) {
   # check if columns exist
 
   if (!missing(id)) {
     check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), F], function(x)
+    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
       x)
     names(burst_list)[1] <- 'id'
   }
@@ -149,15 +149,15 @@ as_sftrack.data.frame <- function(data,
       crs = crs,
       na.fail = FALSE)
   # Force calculation of empty geometries.
-  attr(geom$geometry, 'n_empty') <-
-    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
+  attr(geom[, attr(geom, 'sf_column')], 'n_empty') <-
+    sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
   ret <- new_sftrack(
     data = data ,
     burst = burst,
     error = error_col,
     time = time_col,
-    geometry = geom$geometry
+    geometry = st_geometry(geom)
   )
   #Sanity checks
   ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
@@ -184,7 +184,7 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 #' @method as_sftrack sftraj
 #' @export
 as_sftrack.sftraj <- function(data, ...) {
-  geometry <- data$geometry
+  geometry <- st_geometry(data)
 
   # point_d <- class(geometry[[1]])[1]
   # nd <- which(point_d == c(NA, 'XY', 'XYZ'))
@@ -266,7 +266,7 @@ as_sftrack.ltraj <- function(data, ...) {
     burst = burst,
     error = error,
     time = time,
-    geometry = geom$geometry
+    geometry = st_geometry(geom)
   )
   #Sanity check. Which are necessary?
   ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
@@ -287,12 +287,12 @@ as_sftrack.sf <- function(data,
   error_col,
   time,
   time_col) {
-  geom <- data[, attr(data, 'sf_column')]
+  geom <- st_geometry(data)
   data <- as.data.frame(data)
   # data.frame mode
   if (!missing(id)) {
     check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), F], function(x)
+    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
       x)
     names(burst_list)[1] <- 'id'
   }
@@ -330,7 +330,7 @@ as_sftrack.sf <- function(data,
     burst = burst,
     error = error_col,
     time = time_col,
-    geometry = geom$geometry
+    geometry = st_geometry(geom)
   )
   #Sanity check
   dup_timestamp(ret)
@@ -347,7 +347,7 @@ as_sftrack.sf <- function(data,
 print.sftrack <- function(x, n_row, n_col, ...) {
   x <- as.data.frame(x)
   cat('This is an sftrack object\n')
-  cat(paste0('crs: ', format(attr(x$geometry, 'crs')), '\n'))
+  cat(paste0('crs: ', format(attr(st_geometry(x), 'crs')), '\n'))
   #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',
@@ -363,13 +363,13 @@ print.sftrack <- function(x, n_row, n_col, ...) {
     n_row <- nrow(x)
   }
   row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
-  col_l <- length(!colnames(x) %in% c('burst', 'geometry'))
+  col_l <- length(!colnames(x) %in% c('burst', attr(x, 'sf_column')))
   p <- ifelse(col_l > n_col & n_col < ncol(x), n_col, col_l) - 2
   cat(paste0("Rows: ", nrow(x), " | Cols: ", ncol(x), "\n"))
   if (n_col < ncol(x) | n_row < nrow(x)) {
     y <- cbind(x[1:row_l, colnames(x)[1:p]],
       data.frame('...' = rep('...', row_l)),
-      x[1:row_l, c('burst', 'geometry')])
+      x[1:row_l, c('burst', attr(x, 'sf_column'))])
   } else
     y <- x
   print.data.frame(y)
@@ -385,4 +385,4 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   } else
     (NextMethod())
 }
-#summary(my_sftrack,stats=T)
+#summary(my_sftrack,stats=TRUE)

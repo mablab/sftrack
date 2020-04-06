@@ -4,7 +4,7 @@
 \alias{burst_labels}
 \title{Calculates burst labels created from the ind_burst and the active_burst}
 \usage{
-burst_labels(burst, factor = F, active_burst = NULL)
+burst_labels(burst, factor = FALSE, active_burst = NULL)
 }
 \arguments{
 \item{burst}{a multi_burst}
