@@ -87,7 +87,8 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
 #' @rdname as_sftraj
 #' @export
 #' @method as_sftraj data.frame
-as_sftraj.data.frame <- function(data,...,
+as_sftraj.data.frame <- function(data,
+  ...,
   xyz,
   coords = c('x', 'y'),
   burst_list,
@@ -104,7 +105,7 @@ as_sftraj.data.frame <- function(data,...,
 
   if (!missing(id)) {
     check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), F], function(x)
+    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
       x)
     names(burst_list)[1] <- 'id'
   }
@@ -131,7 +132,7 @@ as_sftraj.data.frame <- function(data,...,
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
-  check_time(data[,time_col])
+  check_time(data[, time_col])
 
   # Error
   #
@@ -160,14 +161,14 @@ as_sftraj.data.frame <- function(data,...,
       crs = crs,
       na.fail = FALSE)
   # Force calculation of empty geometries.
-  attr(geom$geometry, 'n_empty') <-
-    sum(vapply(geom$geometry, sfg_is_empty, TRUE))
+  attr(geom[,attr(geom, 'sf_column')], 'n_empty') <-
+    sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
   step_geometry <-
     make_step_geom(
       burst = burst,
-      geometry = geom$geometry,
-      time_data = data[, time_col, drop = T]
+      geometry = st_geometry(geom),
+      time_data = data[, time_col, drop = TRUE]
     )
 
   ret <- new_sftraj(
@@ -178,7 +179,7 @@ as_sftraj.data.frame <- function(data,...,
     geometry = step_geometry
   )
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   dup_timestamp(ret)
   check_z_coords(ret)
   #
@@ -188,20 +189,18 @@ as_sftraj.data.frame <- function(data,...,
 #' @rdname as_sftraj
 #' @method as_sftraj sftrack
 #' @export
-as_sftraj.sftrack <- function(data,...) {
+as_sftraj.sftrack <- function(data, ...) {
   burst <- data$burst
-  geometry <-  data$geometry
+  geometry <-  st_geometry(data)
   time <-  attr(data, 'time')
   error <- attr(data, 'error')
   step_geometry <-
-    make_step_geom(
-      burst = burst,
+    make_step_geom(burst = burst,
       geometry = geometry,
-      time_data = data[, time, drop = T]
-    )
+      time_data = data[, time, drop = TRUE])
   new_data <- as.data.frame(data)
   new_data <-
-    new_data[, !colnames(new_data) %in% c('geometry', 'burst')]
+    new_data[,!colnames(new_data) %in% c(attr(data, 'sf_column'), 'burst')]
   ret <- new_sftraj(
     data = new_data,
     burst = burst,
@@ -217,7 +216,8 @@ as_sftraj.sftrack <- function(data,...) {
 #' @rdname as_sftraj
 #' @method as_sftraj sf
 #' @export
-as_sftraj.sf <- function(data,...,
+as_sftraj.sf <- function(data,
+  ...,
   burst_list,
   id,
   burst_col = NULL,
@@ -232,12 +232,12 @@ as_sftraj.sf <- function(data,...,
   # error = rep(NA, nrow(data))
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
-  geom <- data[, attr(data, 'sf_column')]
+  geom <- st_geometry(data)
   data <- as.data.frame(data)
   # data.frame mode
   if (!missing(id)) {
     check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), F], function(x)
+    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
       x)
     names(burst_list)[1] <- 'id'
   }
@@ -252,7 +252,7 @@ as_sftraj.sf <- function(data,...,
     data$reloc_time <- time
     time_col = 'reloc_time'
   }
-  check_time(data[,time_col])
+  check_time(data[, time_col])
 
   if (!missing(error)) {
     data$sftrack_error <- error
@@ -272,8 +272,8 @@ as_sftraj.sf <- function(data,...,
   step_geometry <-
     make_step_geom(
       burst = burst,
-      geometry = geom$geometry,
-      time_data = data[, time_col, drop = T]
+      geometry = st_geometry(geom),
+      time_data = data[, time_col, drop = TRUE]
     )
 
   ret <- new_sftraj(
@@ -286,7 +286,7 @@ as_sftraj.sf <- function(data,...,
   #Sanity check
   dup_timestamp(ret)
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   #
   return(ret)
 }
@@ -294,11 +294,11 @@ as_sftraj.sf <- function(data,...,
 #' @rdname as_sftraj
 #' @method as_sftraj ltraj
 #' @export
-as_sftraj.ltraj <- function(data,...) {
+as_sftraj.ltraj <- function(data, ...) {
   # This is done so we dont have to import adehabitat. (instead of ld())
   # But it could go either way depending
   new_data <- lapply(seq_along(data), function(x) {
-    sub <- data[x, ]
+    sub <- data[x,]
     attributes(sub[[1]])
     id <-  attr(sub[[1]], 'id')
     burst <- attr(sub[[1]], 'burst')
@@ -312,8 +312,10 @@ as_sftraj.ltraj <- function(data,...) {
   burst = list(id = df1$id)
   crs = attr(data, 'proj4string')
   # pull out id and burst from ltraj object
-  id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
-  burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+  id_lt <- vapply(data, function(x)
+    attr(x, 'id'), NA_character_)
+  burst_lt <- vapply(data, function(x)
+    attr(x, 'id'), NA_character_)
 
   if (!all(burst_lt == id_lt)) {
     burst$group <- df1$burst
@@ -330,12 +332,12 @@ as_sftraj.ltraj <- function(data,...) {
   step_geometry <-
     make_step_geom(
       burst = burst,
-      geometry = geom$geometry,
+      geometry = st_geometry(geom),
       time_data = df1[, time]
     )
 
   ret <- new_sftraj(
-    data = df1[, !colnames(df1) %in% c('id', 'burst')] ,
+    data = df1[,!colnames(df1) %in% c('id', 'burst')] ,
     burst = burst,
     error = error,
     time = time,
@@ -343,7 +345,7 @@ as_sftraj.ltraj <- function(data,...) {
   )
 
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
   #
   return(ret)
 }
@@ -353,7 +355,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   x <-
     as.data.frame(x) # have to do this because otherwise it uses sf rules...hmmm..need to change
   cat('This is an sftraj object\n')
-  cat(paste0('crs: ',format(attr(x$geometry, 'crs')),'\n'))
+  cat(paste0('crs: ', format(attr(st_geometry(x), 'crs')), '\n'))
   #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',
@@ -369,13 +371,13 @@ print.sftraj <- function(x, n_row, n_col, ...) {
     n_row <- nrow(x)
   }
   row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
-  col_l <- length(!colnames(x) %in% c('burst', 'geometry'))
+  col_l <- length(!colnames(x) %in% c('burst', attr(x, 'sf_column')))
   p <- ifelse(col_l > n_col & n_col < ncol(x), n_col, col_l) - 2
   cat(paste0("Rows: ", nrow(x), " | Cols: ", ncol(x), "\n"))
   if (n_col < ncol(x) | n_row < nrow(x)) {
     y <- cbind(x[1:row_l, colnames(x)[1:p]],
       data.frame('...' = rep('...', row_l)),
-      x[1:row_l, c('burst', 'geometry')])
+      x[1:row_l, c('burst', attr(x, 'sf_column'))])
   } else
     y <- x
   print.data.frame(y)
@@ -388,4 +390,4 @@ summary.sftraj <- function(object, ..., stats = FALSE) {
   } else
     (NextMethod())
 }
-#summary(my_sftraj,stats=T)
+#summary(my_sftraj,stats=TRUE)

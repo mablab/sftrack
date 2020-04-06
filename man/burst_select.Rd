@@ -4,12 +4,12 @@
 \alias{burst_select}
 \title{Select the active multi_bursts.}
 \usage{
-burst_select(burst, labels = F)
+burst_select(burst, select = NULL)
 }
 \arguments{
 \item{burst}{a multi_burst}
 
-\item{labels}{whether to return labels instead of a list of the active burst. Defaults to FALSE}
+\item{select}{(optional), the burst names to subset by, defaults to the current active_burst.}
 }
 \value{
 a list where each position is a list of the active bursts from each ind_burst
