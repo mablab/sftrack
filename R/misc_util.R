@@ -32,11 +32,11 @@ pts_traj <- function(traj) {
   } else{
     dim = c('X', 'Y', 'Z')
   }
-  lapply(pts, function(x) {
+  ret=lapply(pts, function(x) {
     if (inherits(x, 'GEOMETRYCOLLECTION')) {
       x[1][[1]]
     } else{
-      st_point(st_coordinates(x)[1, dim])
+      st_point(unname(st_coordinates(x)[1, dim]))
     }
   })
 }

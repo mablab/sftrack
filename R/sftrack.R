@@ -185,19 +185,21 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 as_sftrack.sftraj <- function(data,...) {
   geometry <- data$geometry
 
-  point_d <- class(geometry[[1]])[1]
-  nd <- which(point_d == c(NA, 'XY', 'XYZ'))
-  d_seq <- seq(1, (2 * nd), by = 2)
-  new_geom <- lapply(geometry, function(x) {
-    if (c('GEOMETRYCOLLECTION') %in% class(x)) {
-      return(unclass(x)[[1]])
-    }
-    if (c('LINESTRING') %in% class(x)) {
-      return(sf::st_point(x[d_seq], dim = point_d))
-    }
-  })
-
+  # point_d <- class(geometry[[1]])[1]
+  # nd <- which(point_d == c(NA, 'XY', 'XYZ'))
+  # d_seq <- seq(1, (2 * nd), by = 2)
+  # new_geom <- lapply(geometry, function(x) {
+  #   if (c('GEOMETRYCOLLECTION') %in% class(x)) {
+  #     return(unclass(x)[[1]])
+  #   }
+  #   if (c('LINESTRING') %in% class(x)) {
+  #     return(sf::st_point(x[d_seq], dim = point_d))
+  #   }
+  # })
+  # pull out first points from straj
+  new_geom <- pts_traj(data)
   crs <- attr(geometry, 'crs')
+
   geometry <- sf::st_sfc(new_geom, crs = crs)
   burst <- data$burst
   error <- attr(data, 'error')
@@ -212,7 +214,8 @@ as_sftrack.sftraj <- function(data,...) {
     time = time,
     geometry = geometry
   )
-
+  # reorder just incase
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]), ]
   return(ret)
 }
 
@@ -239,7 +242,7 @@ as_sftrack.ltraj <- function(data,...) {
   crs = attr(data, 'proj4string')
   # pull out id and burst from ltraj object
   id_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
-  burst_lt <- vapply(data, function(x) attr(x,'id'),NA_character_)
+  burst_lt <- vapply(data, function(x) attr(x,'burst'),NA_character_)
 
   if (!all(burst_lt == id_lt)) {
     burst$group <- df1$burst
