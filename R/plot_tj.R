@@ -4,17 +4,28 @@
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
 plot.sftrack <- function(x, ...) {
-  graphics::plot(x[,attr(x, 'sf_column')])
-  burst_srt <- burst_sort(x$burst)
-  burst_lbl <- as.character(burst_srt)
-  new_clrs <- grDevices::rainbow(length(unique(burst_srt)))
-  for (i in seq_along(new_clrs)) {
+ # x <- my_sftrack
+  b_lvl <- burst_levels(x$burst)
+  bl <-   burst_labels(x$burst)
+  what <- as.numeric(as.factor(bl))
+  col1 <- scales::alpha(what, 0.2)
+  my_pts <- x[,attr(x, 'sf_column')]
+  graphics::plot(my_pts,
+    col = col1, cex = 1)
+
+  my_coords <- st_coordinates(my_pts)
+
+  here <- lapply(b_lvl, function(y){
+    st_linestring(my_coords[bl ==y,])
+  })
+
+  for (i in seq_along(b_lvl)) {
     #i=1
-    lvl <- levels(burst_srt)[i]
-    graphics::plot(x[burst_lbl == lvl, attr(x, 'sf_column')],
+    lvl <- b_lvl[i]
+    graphics::plot(here[[i]],
       type = 'l',
       add = TRUE ,
-      col = new_clrs[i])
+      col = i)
   }
 }
 
@@ -24,17 +35,27 @@ plot.sftrack <- function(x, ...) {
 #' @param ... arguments to passed to plot
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
-  graphics::plot(x[,attr(x, 'sf_column')])
-  burst_srt <- burst_sort(x$burst)
-  burst_lbl <- as.character(burst_srt)
-  new_clrs <- grDevices::rainbow(length(unique(burst_srt)))
-  for (i in seq_along(new_clrs)) {
+  #x <- my_sftraj
+  b_lvl <- burst_levels(x$burst)
+  bl <-   burst_labels(x$burst)
+  what <- as.numeric(as.factor(bl))
+  col1 <- scales::alpha(what, 0.2)
+  my_pts <- pts_traj(x[,attr(x, 'sf_column')], TRUE)
+
+  graphics::plot(my_pts,
+    col = col1, cex = 1)
+  my_coords <- st_coordinates(my_pts)
+  here <- lapply(b_lvl, function(y){
+    st_linestring(my_coords[bl ==y,])
+  })
+
+  for (i in seq_along(b_lvl)) {
     #i=1
-    lvl <- levels(burst_srt)[i]
-    graphics::plot(x[burst_lbl == lvl, attr(x, 'sf_column')],
+    lvl <- b_lvl[i]
+    graphics::plot(here[[i]],
       type = 'l',
       add = TRUE ,
-      col = new_clrs[i])
+      col = i)
   }
 }
 
