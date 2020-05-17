@@ -20,7 +20,7 @@
 #' # or a data.frame of points
 #' coord_traj(my_traj)
 #' @export
-pts_traj <- function(traj) {
+pts_traj <- function(traj, sfc = FALSE) {
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
   }
@@ -28,23 +28,26 @@ pts_traj <- function(traj) {
     pts <- traj
   }
   if ('XY' %in% class(pts[[1]])) {
-    dim = c('X', 'Y')
+    dim = 2
   } else{
-    dim = c('X', 'Y', 'Z')
+    dim = 3
   }
-  ret=lapply(pts, function(x) {
+  this_seq <- seq(1,dim*2,by = dim)
+  ret = lapply(pts, function(x) {
     if (inherits(x, 'GEOMETRYCOLLECTION')) {
       x[1][[1]]
     } else{
-      st_point(unname(st_coordinates(x)[1, dim]))
+      st_point(x[this_seq] )
     }
   })
+  if(sfc){st_sfc(ret, crs = attr(pts,'crs'))} else {ret}
 }
 
 #' @rdname traj_geom
 #' @param first T/F whether you'd like to return the first or second point. Defaults to first.
 #' @export
 coord_traj <- function(traj, first = TRUE) {
+  traj = my_sftraj
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
   }
@@ -54,15 +57,18 @@ coord_traj <- function(traj, first = TRUE) {
   pos <- 2
   if(first) pos <- 1
   if ('XY' %in% class(pts[[1]])) {
-    dim = c('X', 'Y')
+    dim = 2
   } else{
-    dim = c('X', 'Y', 'Z')
+    dim = 3
   }
+  this_seq <- seq(pos,dim*2,by = dim)
   ret <- lapply(pts, function(x) {
+    #  x = pts[[1]]
     if (inherits(x, 'GEOMETRYCOLLECTION')) {
       st_coordinates(x[pos][[1]])
     } else{
-      st_coordinates(x)[pos, dim]
+      x[this_seq]
+      # st_coordinates(x)[pos, dim]
     }
   })
   do.call(rbind, ret)
