@@ -42,14 +42,17 @@ pts_traj <- function(traj) {
 }
 
 #' @rdname traj_geom
+#' @param first T/F whether you'd like to return the first or second point. Defaults to first.
 #' @export
-coord_traj <- function(traj) {
+coord_traj <- function(traj, first = TRUE) {
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
   }
   if (inherits(traj, 'sfc')) {
     pts <- traj
   }
+  pos <- 2
+  if(first) pos <- 1
   if ('XY' %in% class(pts[[1]])) {
     dim = c('X', 'Y')
   } else{
@@ -57,9 +60,9 @@ coord_traj <- function(traj) {
   }
   ret <- lapply(pts, function(x) {
     if (inherits(x, 'GEOMETRYCOLLECTION')) {
-      st_coordinates(x[1][[1]])
+      st_coordinates(x[pos][[1]])
     } else{
-      st_coordinates(x)[1, dim]
+      st_coordinates(x)[pos, dim]
     }
   })
   do.call(rbind, ret)
@@ -98,16 +101,16 @@ summary_sftrack <- function(x) {
   time_col <- attr(x, 'time')
   error_col <- attr(x, 'error')
   sf_col <- attr(x, 'sf_column')
-  sub <- x[, colnames(x) %in% c(time_col, error_col, 'burst', sf_col)]
+  sub <- x[, ]
   levelz <- attr(x$burst, 'sort_index')
   statz <-
     tapply(sub[, time_col], levelz, function(x)
       list(
         'begin' = min(x),
         'end' = max(x),
-        'points' = length(x)
+        'points' = length(x),
+        'NAs' = sum(is.na(x))
       ))
-  statz
 
   if (track_class == 'sftrack') {
     lenz <- tapply(sub[, sf_col], levelz, function(pts) {
@@ -118,13 +121,19 @@ summary_sftrack <- function(x) {
   if (track_class == 'sftraj') {
     lenz <- tapply(sub[, sf_col], levelz, function(pts) {
       mat <- coord_traj(pts)
-      st_length(st_linestring(stats::na.omit(mat)))
+      sum(st_length(pts))
     })
   }
   points = vapply(
     statz,
     FUN = function(x)
       x$points,
+    numeric(1)
+  )
+  NAs = vapply(
+    statz,
+    FUN = function(x)
+      x$NAs,
     numeric(1)
   )
   begin_time = lapply(statz, function(x)
@@ -135,9 +144,10 @@ summary_sftrack <- function(x) {
   attr(begin_time, "tzone") <-
     attr(end_time, "tzone") <- attr(x[, attr(x, 'time')], "tzone")
   data.frame(points,
+    NAs,
     begin_time,
     end_time,
-    length = lenz,
+    length_m = lenz,
     row.names = levels(levelz))
 
 }

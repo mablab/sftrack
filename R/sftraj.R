@@ -87,37 +87,47 @@ new_sftraj <- function(data, burst, time, geometry, error = NA) {
 #' @rdname as_sftraj
 #' @export
 #' @method as_sftraj data.frame
-as_sftraj.data.frame <- function(data,
+as_sftraj.data.frame <- function(
+  data,
   ...,
-  xyz,
-  coords = c('x', 'y'),
-  burst_list,
-  id,
-  burst_col = NULL,
+  coords,
+  burst,
   active_burst = NA,
-  error,
-  error_col,
   time,
-  time_col,
+  error = NA,
   crs = NA,
-  zeroNA = FALSE) {
-  # check if columns exist
-
-  if (!missing(id)) {
-    check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
-      x)
-    names(burst_list)[1] <- 'id'
+  zeroNA = FALSE
+) {
+  # data =sub_gps
+  # coords = c('longitude','latitude')
+  # burst = 'id'
+  # time = 'timez'
+  # crs='+init=epsg:4326'
+  # error = NA
+  # zeroNA = FALSE
+  #######################
+  # Check inputs
+  # Id
+  if(length(burst)==nrow(data)){
+    if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
+    burst_list <- burst
+  } else{
+    # check names exist
+    check_names_exist(data, burst)
+    # check id in burst
+    if(!'id'%in%burst){stop('There is no `id` column in burst names')}
+    # create burst list from names
+    burst_list <- lapply(data[, burst, FALSE], function(x) x)
   }
 
-  # xyz coordinates
-  if (!missing(coords)) {
+  # Coords
+  if(is.null(nrow(coords))){
     check_names_exist(data, coords)
     xyz <- data[, coords]
-
-  } else{
-    xyz <- as.data.frame(xyz)
+  }else{
+    xyz <- as.data.frame(coords)
   }
+  # fix zeros to NA
   if (zeroNA) {
     xyz <- fix_zero(xyz)
   }
@@ -125,28 +135,26 @@ as_sftraj.data.frame <- function(data,
 
 
   # Time
-  if (!missing(time_col)) {
-    check_names_exist(data, time_col)
-  }
-  if (!missing(time)) {
+  if (length(time)==nrow(data) ) {
     data$reloc_time <- time
     time_col = 'reloc_time'
+  } else {
+    check_names_exist(data, time)
+    time_col = time
   }
   check_time(data[, time_col])
 
   # Error
   #
-  if (!missing(error_col)) {
-    check_names_exist(data, error_col)
-  }
-
-  if (!missing(error)) {
-    data$sftrack_error <- error
-    error_col = 'sftrack_error'
-  } else {
-    if (missing(error_col))
-      error_col = NA
-  }
+  if (!is.na(error)) {
+    if(length(error) == nrow(data)){
+      data$sftrack_error <- error
+      error_col = 'sftrack_error'
+    } else{
+      check_names_exist(data, error)
+      error_col = error
+    }
+  } else { error_col = NA}
 
   # pull out other relevant info
   if (any(is.na(active_burst))) {
@@ -234,35 +242,43 @@ as_sftraj.sf <- function(data,
   # coords = c('latitude','longitude','height')
   geom <- st_geometry(data)
   data <- as.data.frame(data)
-  # data.frame mode
-  if (!missing(id)) {
-    check_names_exist(data, c(id, burst_col))
-    burst_list <- lapply(data[, c(id, burst_col), FALSE], function(x)
-      x)
-    names(burst_list)[1] <- 'id'
+  #######################
+  # Check inputs
+  # Id
+  if(length(burst)==nrow(data)){
+    if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
+    burst_list <- burst
+  } else{
+    # check names exist
+    check_names_exist(data, burst)
+    # check id in burst
+    if(!'id'%in%burst){stop('There is no `id` column in burst names')}
+    # create burst list from names
+    burst_list <- lapply(data[, burst, FALSE], function(x) x)
   }
-  if (!missing(error_col)) {
-    check_names_exist(data, error_col)
-  }
+
   # Time
-  if (!missing(time_col)) {
-    check_names_exist(data, time_col)
-  }
-  if (!missing(time)) {
+  if (length(time)==nrow(data) ) {
     data$reloc_time <- time
     time_col = 'reloc_time'
+  } else {
+    check_names_exist(data, time)
+    time_col = time
   }
   check_time(data[, time_col])
 
-  if (!missing(error)) {
-    data$sftrack_error <- error
-    error_col = 'sftrack_error'
-  } else {
-    if (missing(error_col))
-      error_col = NA
-  }
+  # Error
 
-  #
+  if (!is.na(error)) {
+    if(length(error) == nrow(data)){
+      data$sftrack_error <- error
+      error_col = 'sftrack_error'
+    } else{
+      check_names_exist(data, error)
+      error_col = error
+    }
+  } else { error_col = NA}
+
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
   }
