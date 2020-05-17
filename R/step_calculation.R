@@ -81,36 +81,39 @@ make_step_geom <- function(burst, time_data, geometry) {
 #
 # here <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
-#step functions taken from ltraj
-#These will need to be transformed into sf calculations
-#Although some like dx/dy are not possible as an st_function
+#step function
 #' @title Calculates step metrics including distance, dt, dx, and dy.
 #' @param sftrack an sftrack/sftraj object
 #' @export
-step_calc <- function(sftrack) {
-  ret <- lapply(levels(burst_sort(sftrack$burst)), function(index) {
-    #index = 'CJ11_1'
-    sub <- sftrack[burst_sort(sftrack$burst) == index, ]
-    xy <- st_coordinates(sub[, attr(sub, 'sf_column')])
+step_calc <- function(sftraj) {
+  if(inherits(sftraj,'sftrack')){sftraj <- as_sftraj(sftraj)}
+  sftraj$sftrack_id = factor(paste(burst_sort(sftraj$burst),sftraj[, attr(sftraj, 'time')],sep = '_'),ordered = T)
+  ret <- lapply(levels(burst_sort(sftraj$burst)), function(index) {
+    sub <- sftraj[burst_sort(sftraj$burst) == index, ]
+    sub <- sub[order(sub[, attr(sub, 'time')]),]
+    x1 <- coord_traj(sub[, attr(sub, 'sf_column')], TRUE)
+    x2 <- coord_traj(sub[, attr(sub, 'sf_column')], FALSE)
     time <- sub[, attr(sub, 'time')]
-    x1 <- xy[-1, ]
-    x2 <- xy[-nrow(xy), ]
-    dist <- c(sqrt((x1[, 1] - x2[, 1]) ^ 2 + (x1[, 2] - x2[, 2]) ^ 2), NA)
-    dt <- c(unclass(time[-1]) - unclass(time[-length(time)]), NA)
-    R2n <- (xy[, 1] - xy[1, 1]) ^ 2 + (xy[, 2] - xy[1, 2]) ^ 2
-    dx <- c(x1[, 1] - x2[, 1], NA)
-    dy <- c(x1[, 2] - x2[, 2], NA)
-    abs.angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
+    dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
+    dt <- unclass(time[-1]) - unclass(time[-length(time)])
+    abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])
+    dx <- sin(abs_angle) * dist
+    dy <- cos(abs_angle) * dist
+    speed <- dist/dt
     so <- cbind.data.frame(
       dx = dx,
       dy = dy,
       dist = dist,
       dt = dt,
-      R2n = R2n,
-      abs.angle = abs.angle
+      abs_angle = abs_angle,
+      speed = speed
+
     )
-    so$burst_id <- burst_sort(sub$burst)
+    so <- rbind(so,rep(NA,ncol(so)))
+    so$sftrack_id = sub$sftrack_id
     return(so)
   })
-  do.call(rbind, ret)
+  ret <- do.call(rbind, ret)
+  ret[as.numeric(sftraj$sftrack_id),]
 }
+

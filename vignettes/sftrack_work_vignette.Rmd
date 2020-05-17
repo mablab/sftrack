@@ -1,10 +1,12 @@
 ---
 title: "1. Overview of sftrack"
-output: html_document
-vignette: >
- %\VignetteIndexEntry{1. Overview of sftrack}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output:
+  pdf_document: default
+  html_document: default
+vignette: |
+  %\VignetteIndexEntry{1. Overview of sftrack}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
