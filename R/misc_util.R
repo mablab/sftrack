@@ -22,7 +22,7 @@
 #' @export
 pts_traj <- function(traj, sfc = FALSE) {
   if (inherits(traj, 'sftraj')) {
-    pts <- traj[, attr(traj, 'sf_column')]
+    pts <- st_geometry(traj)
   }
   if (inherits(traj, 'sfc')) {
     pts <- traj
@@ -47,7 +47,7 @@ pts_traj <- function(traj, sfc = FALSE) {
 #' @param first T/F whether you'd like to return the first or second point. Defaults to first.
 #' @export
 coord_traj <- function(traj, first = TRUE) {
-  traj = my_sftraj
+ # traj = my_sftraj
   if (inherits(traj, 'sftraj')) {
     pts <- traj[, attr(traj, 'sf_column')]
   }
@@ -107,10 +107,11 @@ summary_sftrack <- function(x) {
   time_col <- attr(x, 'time')
   error_col <- attr(x, 'error')
   sf_col <- attr(x, 'sf_column')
+
   sub <- x[, ]
   levelz <- attr(x$burst, 'sort_index')
   statz <-
-    tapply(sub[, time_col], levelz, function(x)
+    tapply(sub[[time_col]], levelz, function(x)
       list(
         'begin' = min(x),
         'end' = max(x),
@@ -119,14 +120,15 @@ summary_sftrack <- function(x) {
       ))
 
   if (track_class == 'sftrack') {
-    lenz <- tapply(sub[, sf_col], levelz, function(pts) {
+    my_crs <- attr(sub[[sf_col]], 'crs')
+    lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
       new_pts <- pts[!vapply(pts, st_is_empty, NA)]
-      st_length(st_linestring(st_coordinates(new_pts)))
+      my_sfc <- st_sfc(st_linestring(st_coordinates(new_pts)), crs = my_crs )
+      st_length(my_sfc)
     })
   }
   if (track_class == 'sftraj') {
-    lenz <- tapply(sub[, sf_col], levelz, function(pts) {
-      mat <- coord_traj(pts)
+    lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
       sum(st_length(pts))
     })
   }
@@ -147,15 +149,16 @@ summary_sftrack <- function(x) {
   end_time = lapply(statz, function(x)
     x$end)
   class(begin_time) <- class(end_time) <- c("POSIXct", "POSIXt")
-  attr(begin_time, "tzone") <-
-    attr(end_time, "tzone") <- attr(x[, attr(x, 'time')], "tzone")
-  data.frame(points,
+  attr(begin_time, "tzone") <-attr(x[[attr(x, 'time')]], "tzone")
+    attr(end_time, "tzone") <- attr(x[[attr(x, 'time')]], "tzone")
+  data.frame(
+    burst = levels(levelz),
+    points,
     NAs,
     begin_time,
     end_time,
     length_m = lenz,
-    row.names = levels(levelz))
-
+    row.names = NULL)
 }
 
 #recalculates empty geometries (take from sf as it is an internal as well)
@@ -164,5 +167,22 @@ sfg_is_empty = function(x) {
     POINT = any(!is.finite(x)),
     MULTIPOINT = , LINESTRING = , CIRCULARSTRING = , CURVE = nrow(x) == 0,
     length(x) == 0
+  )
+}
+
+which_duplicated <- function(data, burst_list, time_col){
+  # data = sub_gps1
+  # time_col = 'timez'
+  # burst_list = list(id = sub_gps1$id)
+  burst <-
+    make_multi_burst(burst_list = burst_list)
+
+  results <- unlist(tapply(data[[time_col]], burst_labels(burst, FALSE), duplicated))
+
+  data.frame(
+    burst = burst_labels(burst, FALSE)[results],
+    time = x[[time_col]][results],
+    row = which(results),
+    row.names = NULL
   )
 }

@@ -69,6 +69,9 @@ ind_burst <- function(x = list()) {
 
 multi_burst <- function(x = list(), active_burst = NULL) {
   if (is.null(active_burst)) {
+    if( inherits(x,'multi_burst')) {
+      active_burst = active_burst(x)
+    } else
     active_burst <- names(x)
   }
 
