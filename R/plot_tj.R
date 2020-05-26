@@ -9,24 +9,9 @@ plot.sftrack <- function(x, ...) {
   bl <-   burst_labels(x$burst)
   what <- as.numeric(as.factor(bl))
   col1 <- scales::alpha(what, 0.2)
-  my_pts <- x[,attr(x, 'sf_column')]
+  my_pts <- st_geometry(x)
   graphics::plot(my_pts,
     col = col1, cex = 1)
-
-  my_coords <- st_coordinates(my_pts)
-
-  here <- lapply(b_lvl, function(y){
-    st_linestring(my_coords[bl ==y,])
-  })
-
-  for (i in seq_along(b_lvl)) {
-    #i=1
-    lvl <- b_lvl[i]
-    graphics::plot(here[[i]],
-      type = 'l',
-      add = TRUE ,
-      col = i)
-  }
 }
 
 #' @title methods for plot sftrack/sftraj
@@ -40,13 +25,22 @@ plot.sftraj <- function(x, ...) {
   bl <-   burst_labels(x$burst)
   what <- as.numeric(as.factor(bl))
   col1 <- scales::alpha(what, 0.2)
-  my_pts <- pts_traj(x[,attr(x, 'sf_column')], TRUE)
+  my_pts <- pts_traj(x[[attr(x, 'sf_column')]], TRUE)
 
   graphics::plot(my_pts,
     col = col1, cex = 1)
   my_coords <- st_coordinates(my_pts)
   here <- lapply(b_lvl, function(y){
-    st_linestring(my_coords[bl ==y,])
+    #y = b_lvl[1]
+    sub_coords <- my_coords[bl ==y,]
+    sub_time <- x[[attr(x,'time')]][bl==y]
+    sub_time <- order(sub_time)
+    which_na <- c(0,which(is.na(sub_coords[,1])),  (nrow(sub_coords)+1))
+    what <- lapply(seq_len(length(which_na)-1), function(z){
+      #z=3
+      st_linestring(sub_coords[(which_na[z]+1):(which_na[z+1]-1),])
+    })
+    st_multilinestring(what)
   })
 
   for (i in seq_along(b_lvl)) {

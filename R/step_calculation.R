@@ -85,15 +85,17 @@ make_step_geom <- function(burst, time_data, geometry) {
 #' @title Calculates step metrics including distance, dt, dx, and dy.
 #' @param sftrack an sftrack/sftraj object
 #' @export
-step_calc <- function(sftraj) {
+step_metrics <- function(sftraj) {
   if(inherits(sftraj,'sftrack')){sftraj <- as_sftraj(sftraj)}
-  sftraj$sftrack_id = factor(paste(burst_sort(sftraj$burst),sftraj[, attr(sftraj, 'time')],sep = '_'),ordered = T)
-  ret <- lapply(levels(burst_sort(sftraj$burst)), function(index) {
+  sftraj$sftrack_id <- paste0(burst_labels(sftraj[['burst']]),'_',sftraj[[attr(sftraj,'time')]])
+  order_t <- order(sftraj$sftrack_id)
+  sftraj <- sftraj[order_t,]
+  ret <- lapply(burst_levels(sftraj$burst), function(index) {
     sub <- sftraj[burst_sort(sftraj$burst) == index, ]
-    sub <- sub[order(sub[, attr(sub, 'time')]),]
-    x1 <- coord_traj(sub[, attr(sub, 'sf_column')], TRUE)
-    x2 <- coord_traj(sub[, attr(sub, 'sf_column')], FALSE)
-    time <- sub[, attr(sub, 'time')]
+  #  sub <- sub[order(sub[, attr(sub, 'time')]),]
+    x1 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = TRUE)
+    x2 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = FALSE)
+    time <- sub[[attr(sub, 'time')]]
     dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
     dt <- unclass(time[-1]) - unclass(time[-length(time)])
     abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])
@@ -114,6 +116,24 @@ step_calc <- function(sftraj) {
     return(so)
   })
   ret <- do.call(rbind, ret)
-  ret[as.numeric(sftraj$sftrack_id),]
+  ret[order(order_t),]
 }
 
+step_recalc <- function(sftraj, return = FALSE){
+  if(!inherits(sftraj,'sftraj')){stop('object is not an sftraj object')}
+  att <- attributes(sftraj)
+  time_col <- att$time
+  sf_col <- att$sf_column
+  geom <- pts_traj(sftraj[[sf_col]], sfc =T)
+  step_geometry <-
+    make_step_geom(
+      burst = sftraj$burst,
+      geometry = geom,
+      time_data = sftraj[[time_col]]
+    )
+  if(return){ return(step_geometry)}
+
+  sftraj[[sf_col]] <- step_geometry
+  sftraj
+
+}

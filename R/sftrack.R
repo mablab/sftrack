@@ -93,7 +93,8 @@ as_sftrack.data.frame <- function(
   # crs='+init=epsg:4326'
   # error = NA
   # zeroNA = FALSE
-  #######################
+  # active_burst = NA
+  # ######################
   # Check inputs
   # Id
   if(length(burst)==nrow(data)){
@@ -168,23 +169,22 @@ as_sftrack.data.frame <- function(
     geometry = st_geometry(geom)
   )
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
   dup_timestamp(ret)
   check_z_coords(ret)
 
-  #
   return(ret)
 }
 
 #' @rdname as_sftrack
 #' @export
 new_sftrack <- function(data, burst, time, geometry, error = NA) {
-  data_sf <- sf::st_as_sf(cbind(data, burst, geometry = geometry))
+  data_sf <- sf::st_as_sf(cbind(data[,!colnames(data)%in%c('burst','geometry'),F], burst, geometry = geometry))
   structure(
     data_sf,
     time = time,
     error = error,
-    class = c("sftrack", 'data.frame', 'sf')
+    class = c("sftrack", 'sf','data.frame')
   )
 }
 
@@ -194,17 +194,6 @@ new_sftrack <- function(data, burst, time, geometry, error = NA) {
 as_sftrack.sftraj <- function(data, ...) {
   geometry <- st_geometry(data)
 
-  # point_d <- class(geometry[[1]])[1]
-  # nd <- which(point_d == c(NA, 'XY', 'XYZ'))
-  # d_seq <- seq(1, (2 * nd), by = 2)
-  # new_geom <- lapply(geometry, function(x) {
-  #   if (c('GEOMETRYCOLLECTION') %in% class(x)) {
-  #     return(unclass(x)[[1]])
-  #   }
-  #   if (c('LINESTRING') %in% class(x)) {
-  #     return(sf::st_point(x[d_seq], dim = point_d))
-  #   }
-  # })
   # pull out first points from straj
   new_geom <- pts_traj(data)
   crs <- attr(geometry, 'crs')
@@ -215,7 +204,7 @@ as_sftrack.sftraj <- function(data, ...) {
   time <- attr(data, 'time')
   new_data <- as.data.frame(data)
   new_data <-
-    new_data[,!colnames(new_data) %in% c('geometry', 'burst')]
+    new_data[,!colnames(new_data) %in% c(attr(data, 'sf_column'), 'burst'), drop = TRUE]
   ret <- new_sftrack(
     data = new_data,
     burst = burst,
@@ -223,8 +212,7 @@ as_sftrack.sftraj <- function(data, ...) {
     time = time,
     geometry = geometry
   )
-  # reorder just incase
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
+
   return(ret)
 }
 
@@ -277,7 +265,7 @@ as_sftrack.ltraj <- function(data, ...) {
     geometry = st_geometry(geom)
   )
   #Sanity check. Which are necessary?
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
   #
   return(ret)
 }
@@ -348,10 +336,12 @@ as_sftrack.sf <- function(data,
     geometry = st_geometry(geom)
   )
   #Sanity check
+  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
   dup_timestamp(ret)
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time')]),]
+
   #
+
   return(ret)
 }
 
@@ -360,13 +350,12 @@ as_sftrack.sf <- function(data,
 
 #' @export
 print.sftrack <- function(x, n_row, n_col, ...) {
-  x <- as.data.frame(x)
+
   cat('This is an sftrack object\n')
   cat(paste0('crs: ', format(attr(st_geometry(x), 'crs')), '\n'))
-  #cat(paste0('unique bursts : ', paste(levels(attr(x$burst, 'sort_index')),collapse=', '), '\n'))
   cat(paste0(
     'bursts : total = ',
-    length(x$burst[[1]]),
+    length(burst_levels(x$burst)),
     ' | active burst = ',
     paste0(attr(x$burst, 'active_burst'), collapse = ', '),
     '\n'
@@ -401,3 +390,96 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
     (NextMethod())
 }
 #summary(my_sftrack,stats=TRUE)
+
+`[.sftrack` <- function(x,i,j,...,drop=F){
+  #x = my_sftrack
+  #i = 1:10
+  #rm(j)
+  sf_col =  attr(x,'sf_column')
+  time_col = attr(x, 'time')
+  error_col = attr(x,'error')
+  #if(is.na(error_col)){ error_col <- NULL}
+  nargs = nargs()
+  if(!missing(j) && missing(i)){
+    i <- seq_len(nrow(x))
+  }
+  if (!missing(i) && nargs > 2) {
+    if (is.character(i))
+      i = match(i, row.names(x))
+  }
+
+  #x = as.data.frame(x)
+  class(x) = setdiff(class(x), c("sftrack",'sf'))
+  x = if (missing(j)) {
+    if (nargs == 2)
+      x[i]
+    else
+      x[i, , drop = drop]
+  } else
+    x[i, j, drop = drop]
+
+  if(drop){
+    return(x)
+  }
+
+  exist_name <- c('burst',sf_col,time_col,error_col) %in% colnames(x)
+
+  if(any(!exist_name[1:3]) || !is.na(error_col) & !exist_name[4]){
+
+    warning(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1]))
+    return(x)
+  }
+  if(!missing(i)){
+    x$burst = multi_burst(x$burst)
+  }
+  new_sftrack(x, burst = x$burst, geometry = x[,sf_col,F],time = time_col, error = error_col)
+}
+
+rbind.sftrack <- function(...){
+  all = list(...)
+  #all = list(my_sftrack, my_sftrack1,my_sftrack2)
+
+  same_att <- all(duplicated(lapply(all, function(x) attributes(x)[c('sf_column','time','error')]))[-1])
+  if(!same_att){stop('sf, time, and error columns must be the same')}
+  att <- attributes(all[[1]])
+  time_col <- att$time
+  error_col <- att$error
+  sf_col <- att$sf_column
+  df1 <- do.call(rbind.data.frame, all)
+  ret <- new_sftrack(data = df1[,!colnames(df1)%in%c('burst',sf_col), drop = T], burst = df1$burst,
+    time = time_col, error = error_col, geometry = st_geometry(df1))
+
+  #Sanity checks
+  dup_timestamp(ret)
+    return(ret)
+
+}
+
+cbind.sftrack <- function(...,deparse.level = 1){
+  all <- list(...)
+  #all <- list(my_sftrack,my_sftrack[,1:5,drop=T])
+  sftrack_obj <- sapply(all, function(x){
+    inherits(x,'sftrack')
+  })
+  if(sum(sftrack_obj)>1){
+    # return error
+    stop('Cannot attempt to merge two sftrack objects together, use new_sftrack() instead')
+  }
+  # The rest below this is not useful as I'm pretty sure you cbind.sftrack only works when both objects are an sftrack object
+  # I'll keep it till we can decide what we want cbind to do
+  # check if theres two burst columns
+  if(sum(unlist(lapply(all, function(x) colnames(x)=='burst')))>1){
+    stop('More than one column named "burst" found')
+  }
+
+  my_sftrack <- all[sftrack_obj][[1]]
+  att <- attributes(my_sftrack)
+  time_col <- att$time
+  error_col <- att$error
+  sf_col <- att$sf_column
+  new_sftrack <- do.call(data.frame,all)
+
+  ret <- new_sftrack(data = new_sftrack[,!colnames(new_sftrack)%in%c('burst',sf_col), drop = T], burst = new_sftrack$burst,
+    time = time_col, error = error_col, geometry = new_sftrack[[sf_col]])
+  ret
+}
