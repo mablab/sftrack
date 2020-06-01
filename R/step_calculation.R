@@ -17,7 +17,6 @@
 #'                geometry = data_sf$geometry,
 #'                time_data = data_sf$acquisition_time)
 make_step_geom <- function(burst, time_data, geometry) {
-  # Need to check if time is ordered, if not throw an error
   # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
   # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
@@ -27,9 +26,8 @@ make_step_geom <- function(burst, time_data, geometry) {
   # if (length(burst[[1]]) > 1) {
   #   message('more than one burst selected, bursts will be combined for step geometry')
   # }
-  burst <- burst_select(burst)
-  as.character(burst[[3]]$id)
-  idz <- factor(paste0(burst))
+
+  idz <- burst_labels(burst, factor = T)
   #
   unique_idz <- levels(idz)[table(idz) > 0]
   check_ordered(burst, time_data, return = FALSE)
@@ -90,9 +88,26 @@ step_metrics <- function(sftraj) {
   sftraj$sftrack_id <- paste0(burst_labels(sftraj[['burst']]),'_',sftraj[[attr(sftraj,'time')]])
   order_t <- order(sftraj$sftrack_id)
   sftraj <- sftraj[order_t,]
-  ret <- lapply(burst_levels(sftraj$burst), function(index) {
-    sub <- sftraj[burst_sort(sftraj$burst) == index, ]
-  #  sub <- sub[order(sub[, attr(sub, 'time')]),]
+  ret <- lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
+    # index = levels(burst_labels(sftraj$burst, factor = TRUE))[23]
+    sub <- sftraj[burst_labels(sftraj$burst) == index, ]
+
+    # if only 1 row
+    if(nrow(sub)==1){
+      return(
+        data.frame(
+          dx = NA,
+          dy = NA,
+          dist = NA,
+          dt = NA,
+          abs_angle = NA,
+          speed = NA,
+          sftrack_id = sub$sftrack_id
+        )
+      )
+    }
+
+
     x1 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = TRUE)
     x2 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = FALSE)
     time <- sub[[attr(sub, 'time')]]
@@ -119,6 +134,7 @@ step_metrics <- function(sftraj) {
   ret[order(order_t),]
 }
 
+#' @export
 step_recalc <- function(sftraj, return = FALSE){
   if(!inherits(sftraj,'sftraj')){stop('object is not an sftraj object')}
   att <- attributes(sftraj)

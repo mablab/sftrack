@@ -5,9 +5,9 @@
 #' @method plot sftrack
 plot.sftrack <- function(x, ...) {
  # x <- my_sftrack
-  b_lvl <- burst_levels(x$burst)
-  bl <-   burst_labels(x$burst)
-  what <- as.numeric(as.factor(bl))
+  bl <-   burst_labels(x$burst,factor=TRUE)
+  b_lvl <- levels(bl)
+  what <- as.numeric(bl)
   col1 <- scales::alpha(what, 0.2)
   my_pts <- st_geometry(x)
   graphics::plot(my_pts,
@@ -21,9 +21,9 @@ plot.sftrack <- function(x, ...) {
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
   #x <- my_sftraj
-  b_lvl <- burst_levels(x$burst)
-  bl <-   burst_labels(x$burst)
-  what <- as.numeric(as.factor(bl))
+  bl <-   burst_labels(x$burst,factor=TRUE)
+  b_lvl <- levels(bl)
+  what <- as.numeric(bl)
   col1 <- scales::alpha(what, 0.2)
   my_pts <- pts_traj(x[[attr(x, 'sf_column')]], TRUE)
 
@@ -31,8 +31,10 @@ plot.sftraj <- function(x, ...) {
     col = col1, cex = 1)
   my_coords <- st_coordinates(my_pts)
   here <- lapply(b_lvl, function(y){
-    #y = b_lvl[1]
+    #for(y in b_lvl){
+    #y = b_lvl[22]
     sub_coords <- my_coords[bl ==y,]
+    if(!inherits(sub_coords,'matrix')){return()}
     sub_time <- x[[attr(x,'time')]][bl==y]
     sub_time <- order(sub_time)
     which_na <- c(0,which(is.na(sub_coords[,1])),  (nrow(sub_coords)+1))
@@ -40,12 +42,14 @@ plot.sftraj <- function(x, ...) {
       #z=3
       st_linestring(sub_coords[(which_na[z]+1):(which_na[z+1]-1),])
     })
-    st_multilinestring(what)
+    ret = st_multilinestring(what)
+    names(ret) <- y
+    return(ret)
   })
 
-  for (i in seq_along(b_lvl)) {
-    #i=1
-    lvl <- b_lvl[i]
+  for (i in seq_along(here)) {
+    if(is.null(here[[i]])){next}
+    #lvl <- names(here[[i]])
     graphics::plot(here[[i]],
       type = 'l',
       add = TRUE ,

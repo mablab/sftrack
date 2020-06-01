@@ -109,7 +109,8 @@ as_sftraj.data.frame <- function(
   #######################
   # Check inputs
   # Id
-  if(length(burst)==nrow(data)){
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+  if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
   } else{
@@ -143,7 +144,7 @@ as_sftraj.data.frame <- function(
     check_names_exist(data, time)
     time_col = time
   }
-  check_time(data[, time_col])
+  check_time(data[[time_col]])
 
   # Error
   #
@@ -164,6 +165,9 @@ as_sftraj.data.frame <- function(
   burst <-
     make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
+  # earliest reasonable time to check time stamps
+  dup_timestamp(time = data[[time_col]], burst = burst)
+
   geom <-
     sf::st_as_sf(xyz,
       coords = names(xyz),
@@ -173,23 +177,22 @@ as_sftraj.data.frame <- function(
   attr(geom[,attr(geom, 'sf_column')], 'n_empty') <-
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
-  step_geometry <-
+  geom <-
     make_step_geom(
       burst = burst,
       geometry = st_geometry(geom),
-      time_data = data[, time_col, drop = TRUE]
+      time_data = data[[time_col]]
     )
-
   ret <- new_sftraj(
-    data = data ,
-    burst = burst,
-    error = error_col,
-    time = time_col,
-    geometry = step_geometry
+    data = data.frame(data,burst,geometry = geom),
+    burst_col = 'burst',
+    sf_col = 'geometry',
+    error_col = error_col,
+    time_col = time_col
   )
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
-  dup_timestamp(ret)
+  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, 'time')]]),]
+
   check_z_coords(ret)
 
   return(ret)
@@ -242,11 +245,12 @@ as_sftraj.sf <- function(data,
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
   geom <- st_geometry(data)
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
   data <- as.data.frame(data)
-  #######################
   # Check inputs
   # Id
-  if(length(burst)==nrow(data)){
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+  if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
   } else{
@@ -266,10 +270,10 @@ as_sftraj.sf <- function(data,
     check_names_exist(data, time)
     time_col = time
   }
-  check_time(data[, time_col])
+  check_time(data[[time_col]])
 
   # Error
-
+  #
   if (!is.na(error)) {
     if(length(error) == nrow(data)){
       data$sftrack_error <- error
@@ -280,31 +284,35 @@ as_sftraj.sf <- function(data,
     }
   } else { error_col = NA}
 
+  #
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
   }
   burst <-
     make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
-  step_geometry <-
+  # earliest reasonable time to check time stamps
+  dup_timestamp(time = data[[time_col]], burst = burst)
+
+  geom <-
     make_step_geom(
       burst = burst,
       geometry = st_geometry(geom),
-      time_data = data[, time_col, drop = TRUE]
+      time_data = data[[time_col]]
     )
 
   ret <- new_sftraj(
-    data = data ,
-    burst = burst,
-    error = error_col,
-    time = time_col,
-    geometry = step_geometry
+    data = data.frame(data,burst,geometry = geom),
+    burst_col = 'burst',
+    sf_col = 'geometry',
+    error_col = error_col,
+    time_col = time_col
   )
-  #Sanity check
-  dup_timestamp(ret)
+  #Sanity checks
+  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, 'time')]]),]
+
   check_z_coords(ret)
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
-  #
+
   return(ret)
 }
 
@@ -350,7 +358,7 @@ as_sftraj.ltraj <- function(data, ...) {
     make_step_geom(
       burst = burst,
       geometry = st_geometry(geom),
-      time_data = df1[, time]
+      time_data = df1[[time]]
     )
 
   ret <- new_sftraj(
@@ -362,42 +370,64 @@ as_sftraj.ltraj <- function(data, ...) {
   )
 
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
+  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, 'time')]]),]
 
   return(ret)
 }
 
 #' @export
 print.sftraj <- function(x, n_row, n_col, ...) {
-
-  cat('This is an sftraj object\n')
-  cat(paste0('crs: ', format(attr(st_geometry(x), 'crs')), '\n'))
-  cat(paste0(
-    'bursts : total = ',
-    length(burst_levels(x$burst)),
-    ' | active burst = ',
-    paste0(attr(x$burst, 'active_burst'), collapse = ', '),
-    '\n'
-  ))
   if (missing(n_col)) {
     n_col <- ncol(x)
   }
   if (missing(n_row)) {
     n_row <- nrow(x)
   }
-  row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
-  col_l <- length(!colnames(x) %in% c('burst', attr(x, 'sf_column')))
-  p <- ifelse(col_l > n_col & n_col < ncol(x), n_col, col_l) - 2
-  cat(paste0("Rows: ", nrow(x), " | Cols: ", ncol(x), "\n"))
-  if (n_col < ncol(x) | n_row < nrow(x)) {
-    y <- cbind(x[1:row_l, colnames(x)[1:p]],
-      data.frame('...' = rep('...', row_l)),
-      x[1:row_l, c('burst', attr(x, 'sf_column'))])
-  } else
-    y <- x
-  print.data.frame(y)
-}
+  burst_col <- attr(x, 'burst')
+  sf_col <- attr(x, 'sf_column')
+  time_col <- attr(x, 'time')
+  sf_attr <- attributes(st_geometry(x))
+  # time stuff
 
+  tcl <- attributes(x[[time_col]])$class[1]
+  if(tcl=='POSIXct'){
+    tz <-  attributes(x[[time_col]])$tzone
+    if(is.na(tz)){paste(tcl,'no timezone')}
+    time_mes <- paste(tcl,'in',tz)
+  } else{
+    time_mes <- 'integer'
+  }
+
+  # active burst
+  ab <- attr(x[[burst_col]], 'active_burst')
+  bn <- names(x[[burst_col]][[1]])
+  active_burst_names <- paste0('*',ab,'*')
+  burst_mes <- paste0(active_burst_names,bn[!ab %in%  bn], collapse = ', ')
+  #print
+  cat(paste0('Sftraj with ',nrow(x),' features and ',ncol(x),
+    ' fields (',sf_attr$n_empty,' empty geometries) \n'))
+  cat(paste0('Geometry : \"',sf_col,'\" (',class(x[[sf_col]][[1]])[1],', crs: ', format(sf_attr$crs), ') \n'))
+  cat(paste0('Timestamp : \"',time_col,'\" (',time_mes,') \n'))
+  cat(paste0('Burst : \"', burst_col,'\" (', burst_mes,') \n'))
+  cat('-------------------------------\n')
+  # Figure out the row and columns
+  row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
+  sub_col_names <- colnames(x)[!colnames(x) %in% c(burst_col,sf_col,time_col )]
+  col_l <- length(sub_col_names)
+
+  x <- as.data.frame(x)
+
+  if(n_col<col_l) {
+    p <- ifelse(col_l > n_col, n_col, col_l)
+    ret <- cbind(x[1:row_l,  sub_col_names[1:p], drop = FALSE],
+      data.frame('...' = rep('...', row_l)),
+      x[1:row_l, c(burst_col,sf_col,time_col )])
+  } else ret <- x
+
+  ret <- ret[1:row_l,]
+  print(ret)
+
+}
 #'@export
 summary.sftraj <- function(object, ..., stats = FALSE) {
   if (stats) {
@@ -406,6 +436,7 @@ summary.sftraj <- function(object, ..., stats = FALSE) {
     (NextMethod())
 }
 #summary(my_sftraj,stats=TRUE)
+#' @export
 rbind.sftraj <- function(...){
   all = list(...)
   #all = list(my_sftraj, my_sftraj1)
@@ -425,18 +456,14 @@ rbind.sftraj <- function(...){
       geometry = geom,
       time_data = df1[[time_col]]
     )
-  ret <- new_sftraj(
-    data = df1 ,
-    burst = df1$burst,
-    error = error_col,
-    time = time_col,
-    geometry = step_geometry
-  )
+  ret <- new_sftraj(data = df1, burst = 'burst',
+    time = time_col, error = error_col, sf_column = sf_col)
   #Sanity checks
   dup_timestamp(ret)
   return(ret)
 }
 
+#' @export
 `[.sftraj` <- function(x,i,j,...,drop=F){
   # x = my_sftraj
   # i = 1:10
@@ -462,7 +489,7 @@ rbind.sftraj <- function(...){
     if (nargs == 2)
       x[i]
     else
-      x = x[i, , drop = drop]
+     x[i, , drop = drop]
   } else
     x[i, j, drop = drop]
 
@@ -477,11 +504,11 @@ rbind.sftraj <- function(...){
     message(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftraj object, reverting to ',class(x)[1]))
     return(x)
   }
-  if(!missing(i)){
-    x$burst = multi_burst(x$burst)
-  }
+  # if(!missing(i)){
+  #   x$burst = multi_burst(x$burst)
+  # }
   # remake sftraj
 
-  new_sftraj(x, burst = x$burst, geometry = x[[sf_col]],time = time_col, error = error_col)
+  new_sftraj(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
 }
 

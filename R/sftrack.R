@@ -71,12 +71,25 @@ as_sftrack <- function(data, ...) {
   UseMethod('as_sftrack')
 }
 
+#' @rdname as_sftrack
+#' @export
+new_sftrack <- function(data, burst_col, sf_col, time_col, error_col = NA) {
+
+  data_sf <- sf::st_sf(data, sf_column_name = sf_col)
+  structure(
+    data_sf,
+    burst = burst_col,
+    time = time_col,
+    error = error_col,
+    class = c("sftrack", 'sf','data.frame')
+  )
+}
 
 #' @rdname as_sftrack
 #' @export
 #' @method as_sftrack data.frame
 as_sftrack.data.frame <- function(
-  data,
+  data = NULL,
   ...,
   coords,
   burst,
@@ -86,18 +99,19 @@ as_sftrack.data.frame <- function(
   crs = NA,
   zeroNA = FALSE
 ) {
-  # data =sub_gps
-  # coords = c('longitude','latitude')
-  # burst = 'id'
-  # time = 'timez'
+  # data = NULL
+  # coords = sub_gps[,c('longitude','latitude')]
+  # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
+  # time = sub_gps[,'timez']
   # crs='+init=epsg:4326'
   # error = NA
   # zeroNA = FALSE
   # active_burst = NA
-  # ######################
+  ######################
   # Check inputs
   # Id
-  if(length(burst)==nrow(data)){
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+  if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
   } else{
@@ -131,7 +145,7 @@ as_sftrack.data.frame <- function(
     check_names_exist(data, time)
     time_col = time
   }
-  check_time(data[, time_col])
+  check_time(data[[time_col]])
 
   # Error
   #
@@ -152,6 +166,9 @@ as_sftrack.data.frame <- function(
   burst <-
     make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
+  # earliest reasonable time to check time stamps
+  dup_timestamp(time = data[[time_col]], burst = burst)
+
   geom <-
     sf::st_as_sf(xyz,
       coords = names(xyz),
@@ -162,30 +179,18 @@ as_sftrack.data.frame <- function(
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
   ret <- new_sftrack(
-    data = data ,
-    burst = burst,
-    error = error_col,
-    time = time_col,
-    geometry = st_geometry(geom)
+    data = data.frame(data,burst,geometry = geom),
+    burst_col = 'burst',
+    sf_col = 'geometry',
+    error_col = error_col,
+    time_col = time_col
   )
   #Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
-  dup_timestamp(ret)
+  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, 'time')]]),]
+
   check_z_coords(ret)
 
   return(ret)
-}
-
-#' @rdname as_sftrack
-#' @export
-new_sftrack <- function(data, burst, time, geometry, error = NA) {
-  data_sf <- sf::st_as_sf(cbind(data[,!colnames(data)%in%c('burst','geometry'),F], burst, geometry = geometry))
-  structure(
-    data_sf,
-    time = time,
-    error = error,
-    class = c("sftrack", 'sf','data.frame')
-  )
 }
 
 #' @rdname as_sftrack
@@ -199,18 +204,19 @@ as_sftrack.sftraj <- function(data, ...) {
   crs <- attr(geometry, 'crs')
 
   geometry <- sf::st_sfc(new_geom, crs = crs)
-  burst <- data$burst
+  burst <- attr(data,'burst')
   error <- attr(data, 'error')
   time <- attr(data, 'time')
-  new_data <- as.data.frame(data)
-  new_data <-
-    new_data[,!colnames(new_data) %in% c(attr(data, 'sf_column'), 'burst'), drop = TRUE]
+  sf_col <- attr(data, 'sf_column')
+  data[[sf_col]] <- geometry
+
+  new_data = as.data.frame(data)
   ret <- new_sftrack(
     data = new_data,
-    burst = burst,
-    error = error,
-    time = time,
-    geometry = geometry
+    burst_col = burst,
+    sf_col = sf_col,
+    error_col = error,
+    time = time
   )
 
   return(ret)
@@ -256,13 +262,13 @@ as_sftrack.ltraj <- function(data, ...) {
   # pull out other relevant info
   burst = make_multi_burst(burst_list = burst)
   error = NA
-
+  new_data <- cbind(df1[,!colnames(df1) %in% c('id')], burst= burst, geometry = st_geometry(geom))
   ret <- new_sftrack(
-    data = df1[,!colnames(df1) %in% c('id', 'burst')] ,
-    burst = burst,
-    error = error,
-    time = time,
-    geometry = st_geometry(geom)
+    data =  new_data,
+    burst_col = burst,
+    error_col = error,
+    time_col = time,
+    sf_col = 'geometry'
   )
   #Sanity check. Which are necessary?
   ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
@@ -284,10 +290,12 @@ as_sftrack.sf <- function(data,
   time,
   time_col) {
   geom <- st_geometry(data)
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
   data <- as.data.frame(data)
   # Check inputs
   # Id
-  if(length(burst)==nrow(data)){
+  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+  if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
   } else{
@@ -307,10 +315,10 @@ as_sftrack.sf <- function(data,
     check_names_exist(data, time)
     time_col = time
   }
-  check_time(data[, time_col])
+  check_time(data[[time_col]])
 
   # Error
-
+  #
   if (!is.na(error)) {
     if(length(error) == nrow(data)){
       data$sftrack_error <- error
@@ -328,19 +336,20 @@ as_sftrack.sf <- function(data,
   burst <-
     make_multi_burst(burst_list = burst_list, active_burst = active_burst)
 
-  ret <- new_sftrack(
-    data = data ,
-    burst = burst,
-    error = error_col,
-    time = time_col,
-    geometry = st_geometry(geom)
-  )
-  #Sanity check
-  ret <- ret[check_ordered(ret$burst, ret[, attr(ret, 'time'), drop = T]),]
-  dup_timestamp(ret)
-  check_z_coords(ret)
+  # earliest reasonable time to check time stamps
+  dup_timestamp(time = data[[time_col]], burst = burst)
 
-  #
+  ret <- new_sftrack(
+    data = data.frame(data,burst,geometry = geom),
+    burst_col = 'burst',
+    sf_col = 'geometry',
+    error_col = error_col,
+    time_col = time_col
+  )
+  #Sanity checks
+  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, 'time')]]),]
+
+  check_z_coords(ret)
 
   return(ret)
 }
@@ -350,33 +359,56 @@ as_sftrack.sf <- function(data,
 
 #' @export
 print.sftrack <- function(x, n_row, n_col, ...) {
-
-  cat('This is an sftrack object\n')
-  cat(paste0('crs: ', format(attr(st_geometry(x), 'crs')), '\n'))
-  cat(paste0(
-    'bursts : total = ',
-    length(burst_levels(x$burst)),
-    ' | active burst = ',
-    paste0(attr(x$burst, 'active_burst'), collapse = ', '),
-    '\n'
-  ))
   if (missing(n_col)) {
     n_col <- ncol(x)
   }
   if (missing(n_row)) {
     n_row <- nrow(x)
   }
+  burst_col <- attr(x, 'burst')
+  sf_col <- attr(x, 'sf_column')
+  time_col <- attr(x, 'time')
+  sf_attr <- attributes(st_geometry(x))
+  # time stuff
+
+  tcl <- attributes(x[[time_col]])$class[1]
+  if(tcl=='POSIXct'){
+    tz <-  attributes(x[[time_col]])$tzone
+    if(is.na(tz)){paste(tcl,'no timezone')}
+    time_mes <- paste(tcl,'in',tz)
+  } else{
+    time_mes <- 'integer'
+  }
+
+  # active burst
+  ab <- attr(x[[burst_col]], 'active_burst')
+  bn <- names(x[[burst_col]][[1]])
+  active_burst_names <- paste0('*',ab,'*')
+  burst_mes <- paste0(active_burst_names,bn[!ab %in%  bn], collapse = ', ')
+  #print
+  cat(paste0('Sftrack with ',nrow(x),' features and ',ncol(x),
+    ' fields (',sf_attr$n_empty,' empty geometries) \n'))
+  cat(paste0('Geometry : \"',sf_col,'\" (',class(x[[sf_col]][[1]])[1],', crs: ', format(sf_attr$crs), ') \n'))
+  cat(paste0('Timestamp : \"',time_col,'\" (',time_mes,') \n'))
+  cat(paste0('Burst : \"', burst_col,'\" (', burst_mes,') \n'))
+  cat('-------------------------------\n')
+  # Figure out the row and columns
   row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
-  col_l <- length(!colnames(x) %in% c('burst', attr(x, 'sf_column')))
-  p <- ifelse(col_l > n_col & n_col < ncol(x), n_col, col_l) - 2
-  cat(paste0("Rows: ", nrow(x), " | Cols: ", ncol(x), "\n"))
-  if (n_col < ncol(x) | n_row < nrow(x)) {
-    y <- cbind(x[1:row_l, colnames(x)[1:p]],
+  sub_col_names <- colnames(x)[!colnames(x) %in% c(burst_col,sf_col,time_col )]
+  col_l <- length(sub_col_names)
+
+  x <- as.data.frame(x)
+
+  if(n_col<col_l) {
+    p <- ifelse(col_l > n_col, n_col, col_l)
+    ret <- cbind(x[1:row_l,  sub_col_names[1:p], drop = FALSE],
       data.frame('...' = rep('...', row_l)),
-      x[1:row_l, c('burst', attr(x, 'sf_column'))])
-  } else
-    y <- x
-  print.data.frame(y)
+      x[1:row_l, c(burst_col,sf_col,time_col )])
+  } else ret <- x
+
+  ret <- ret[1:row_l,]
+  print(ret)
+
 }
 # print(my_track,10,10)
 
@@ -390,7 +422,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
     (NextMethod())
 }
 #summary(my_sftrack,stats=TRUE)
-
+#' @export
 `[.sftrack` <- function(x,i,j,...,drop=F){
   #x = my_sftrack
   #i = 1:10
@@ -429,10 +461,14 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
     warning(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1]))
     return(x)
   }
-  if(!missing(i)){
-    x$burst = multi_burst(x$burst)
-  }
-  new_sftrack(x, burst = x$burst, geometry = x[,sf_col,F],time = time_col, error = error_col)
+
+  # these last two lines are probably not necessary now that we've changed burst
+  # to not calculate anything
+  # if(!missing(i)){
+  #   x$burst = multi_burst(x$burst)
+  # }
+
+  new_sftrack(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
 }
 
 rbind.sftrack <- function(...){
@@ -446,15 +482,15 @@ rbind.sftrack <- function(...){
   error_col <- att$error
   sf_col <- att$sf_column
   df1 <- do.call(rbind.data.frame, all)
-  ret <- new_sftrack(data = df1[,!colnames(df1)%in%c('burst',sf_col), drop = T], burst = df1$burst,
-    time = time_col, error = error_col, geometry = st_geometry(df1))
+  ret <- new_sftrack(data = df1, burst = 'burst',
+    time = time_col, error = error_col, sf_column = sf_col)
 
   #Sanity checks
   dup_timestamp(ret)
     return(ret)
 
 }
-
+#' @export
 cbind.sftrack <- function(...,deparse.level = 1){
   all <- list(...)
   #all <- list(my_sftrack,my_sftrack[,1:5,drop=T])
@@ -472,14 +508,5 @@ cbind.sftrack <- function(...,deparse.level = 1){
     stop('More than one column named "burst" found')
   }
 
-  my_sftrack <- all[sftrack_obj][[1]]
-  att <- attributes(my_sftrack)
-  time_col <- att$time
-  error_col <- att$error
-  sf_col <- att$sf_column
-  new_sftrack <- do.call(data.frame,all)
 
-  ret <- new_sftrack(data = new_sftrack[,!colnames(new_sftrack)%in%c('burst',sf_col), drop = T], burst = new_sftrack$burst,
-    time = time_col, error = error_col, geometry = new_sftrack[[sf_col]])
-  ret
 }
