@@ -5,7 +5,7 @@
 #' @param time_data a vector of time
 #' @param return the new order or not?
 check_ordered <- function(burst, time_data, return = TRUE) {
-  idz <- factor(paste0(burst))
+  idz <- burst_labels(burst, factor = TRUE)
 
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
@@ -46,15 +46,20 @@ check_names_exist <- function(data, names) {
 #' @title Check there are no NAs in burst
 #' @export
 #' @param burst a multi_burst
-check_NAburst <- function(burst) {
+check_NA_burst <- function(burst) {
+  if(inherits(burst,c('sftrack','sftraj'))){burst <- burst$burst}
   if (any(is.na(unlist(burst)))) {
     stop('NAs not allowed in burst')
   }
 }
 
 # more than one relocation for a burst
-check_two_bursts <- function(burst) {
-  count <- table(attr(burst, 'sort_index'))
+check_two_bursts <- function(burst, active_burst) {
+  if(inherits(burst,'multi_burst')){
+    lvlz <- burst_labels(burst,factor=T)
+  } else {
+  lvlz <- vapply(burst, function(y) {paste0(y[active_burst],collapse='_')}, NA_character_)}
+  count <- table(lvlz)
   if (any(count == 1)) {
     warning(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
   }
@@ -63,8 +68,9 @@ check_two_bursts <- function(burst) {
 #' @export
 #' @param burst a multi_burst
 check_burst_names <- function(burst) {
-  if (length(unique(vapply(burst, function(x)
-    paste(names(x), collapse = ''), NA_character_))) != 1) {
+  if(inherits(burst,c('sftrack','sftraj'))){burst <- burst$burst}
+  if (length(unique(vapply(burst, function(y)
+    paste(names(y), collapse = ''), NA_character_))) != 1) {
     stop('Burst names do not match')
   }
 
@@ -76,17 +82,6 @@ check_burst_names <- function(burst) {
   }
 }
 
-#' @title Checks if sort_index needs to be recalculated then recalculates them
-#' @param burst a multi_burst
-#' @export
-check_sort <- function(burst) {
-  bl <- burst_labels(burst)
-  eq <- all.equal(as.character(burst_sort(burst)), bl)
-  if (!eq) {
-    attr(burst, 'sort_index') <- factor(bl)
-    burst
-  }
-}
 ###################
 # coordinate related checks
 
@@ -119,8 +114,8 @@ check_NA_coords <- function(xyz) {
 }
 
 # Checks if z coordinates and returns a message
-check_z_coords <- function(sftrack_obj) {
-  if ('XYZ' %in% class(st_geometry(sftrack_obj)[[1]])) {
+check_z_coords <- function(x) {
+  if ('XYZ' %in% class(st_geometry(x)[[1]])) {
     message(
       'Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry'
     )
@@ -148,10 +143,11 @@ check_time <- function(time) {
 check_t_regular <- function(sftrack) {
   # is complete
   time_col = attr(sftrack, 'time')
+  idz <- burst_labels(sftrack$burst,factor=T)
   sftrack <-
-    sftrack[check_ordered(burst_select(sftrack$burst), sftrack[, time_col]),]
+    sftrack[check_ordered(idz, sftrack[[time_col]]),]
   ans <-
-    tapply(sftrack[, time_col, drop = TRUE], paste(burst_select(sftrack$burst)), function(date) {
+    tapply(sftrack[[time_col]], idz, function(date) {
       x1 <- unclass(date[-1])
       x2 <- unclass(date[-length(date)])
       abs(mean(c(x1 - x2)) - (x1[1] - x2[1])) <= 1e-07
@@ -162,9 +158,10 @@ check_t_regular <- function(sftrack) {
 #' @title check that time is unique
 #' @param x An sftrack/sftraj object
 #' @export
-dup_timestamp <- function(x) {
+dup_timestamp <- function(burst, time) {
+  if(inherits(burst,c('sftrack','sftraj'))){burst <- burst$burst}
   test <-
-    tapply(x[[attr(x, 'time')]], burst_labels(x$burst, FALSE), function(y)
+    tapply(time, burst_labels(burst, TRUE), function(y)
       any(duplicated(y)))
   if (any(test)) {
     stop(paste0(

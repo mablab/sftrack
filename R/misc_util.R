@@ -84,7 +84,7 @@ coord_traj <- function(traj, first = TRUE) {
 #' @param traj an sftraj object
 is_linestring <- function(traj) {
   if (inherits(traj, 'sftraj')) {
-    pts <- traj[, attr(traj, 'sf_column')]
+    pts <- traj[[attr(traj, 'sf_column')]]
   }
   if (inherits(traj, 'sfc')) {
     pts <- traj
@@ -109,7 +109,7 @@ summary_sftrack <- function(x) {
   sf_col <- attr(x, 'sf_column')
 
   sub <- x[, ]
-  levelz <- attr(x$burst, 'sort_index')
+  levelz <- burst_labels(x$burst,factor = TRUE)
   statz <-
     tapply(sub[[time_col]], levelz, function(x)
       list(
@@ -150,7 +150,7 @@ summary_sftrack <- function(x) {
     x$end)
   class(begin_time) <- class(end_time) <- c("POSIXct", "POSIXt")
   attr(begin_time, "tzone") <-attr(x[[attr(x, 'time')]], "tzone")
-    attr(end_time, "tzone") <- attr(x[[attr(x, 'time')]], "tzone")
+  attr(end_time, "tzone") <- attr(x[[attr(x, 'time')]], "tzone")
   data.frame(
     burst = levels(levelz),
     points,
@@ -170,18 +170,20 @@ sfg_is_empty = function(x) {
   )
 }
 
+#' @export
 which_duplicated <- function(data, burst_list, time_col){
-  # data = sub_gps1
+  # data = sub_gps
   # time_col = 'timez'
-  # burst_list = list(id = sub_gps1$id)
+  # burst_list = list(id = sub_gps$id)
+  # data$timez[1] <- data$timez[2]
   burst <-
     make_multi_burst(burst_list = burst_list)
 
-  results <- unlist(tapply(data[[time_col]], burst_labels(burst, FALSE), duplicated))
+  results <- unlist(tapply(data[[time_col]], burst_labels(burst, TRUE), duplicated))
 
   data.frame(
-    burst = burst_labels(burst, FALSE)[results],
-    time = x[[time_col]][results],
+    burst = burst_labels(burst, TRUE)[results],
+    time = data[[time_col]][results],
     row = which(results),
     row.names = NULL
   )

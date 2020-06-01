@@ -62,26 +62,23 @@ make_ind_burst <- function(burst) {
 
 ind_burst <- function(x = list()) {
   structure(x ,
+    label = paste(x,collapse='_'),
     class = c("ind_burst"))
 }
 
-# ind_burst(burst=list(id='CJ11',month=3, height=10))
+# ind_burst(x=list(id='CJ11',month=3, height=10))
 
 multi_burst <- function(x = list(), active_burst = NULL) {
   if (is.null(active_burst)) {
     if( inherits(x,'multi_burst')) {
       active_burst = active_burst(x)
     } else
-    active_burst <- names(x)
+      active_burst <- names(x)
   }
-
-  sort_index <- burst_labels(x, TRUE, active_burst)
 
   structure(
     x,
     active_burst = active_burst,
-    burst_names = names(x[[1]]),
-    sort_index = sort_index,
     class = c('multi_burst')
   )
 }
@@ -90,18 +87,16 @@ multi_burst <- function(x = list(), active_burst = NULL) {
 make_multi_burst <-
   function(burst_list = NULL,
     active_burst = NULL) {
-    # check duplicated
-    # if (any(duplicated(names(burst_list)))) {
-    #   stop('burst names can not be duplicated')
-    # }
 
     if (!is.null(burst_list)) {
       burst <-
         do.call(function(...)
           mapply(list, ..., SIMPLIFY = FALSE), burst_list)
     }
+    # to stop a problem where vector mode names are created via the first item in the list
+    names(burst) <- NULL
 
-    check_NAburst(burst)
+    check_NA_burst(burst)
     check_burst_names(burst)
     if (is.null(active_burst)) {
       active_burst <- names(burst[[1]])
@@ -123,19 +118,16 @@ make_multi_burst <-
 #' @param ... objects to be pasted together into a multi_burst
 c.ind_burst <- function(...) {
   ret = list(...)
-  #ret = list(a,b)
-  if (length(unique_active_bursts(ret)) > 1) {
-    stop('There are more than one possible active bursts')
-  }
-
+  #ret = list(a,b,c)
   check_burst_names(ret)
   active_burst <- names(ret[[1]])
   df <- lapply(ret, function(x) {
     make_ind_burst(unclass(x))
   })
+  check_NA_burst(mb)
   mb <- multi_burst(df, active_burst = active_burst)
   check_two_bursts(mb)
-  check_NAburst(mb)
+
   return(mb)
 }
 
@@ -202,10 +194,16 @@ format.multi_burst <- function(x, ...) {
 
 #' @export
 "[.multi_burst" <- function (x, i, j, ...) {
+  nargs = nargs()
+  if (!missing(i) && is.character(i)) {
+    i = which(lapply(x, attr,'label') %in% i)
+  }
   multi_burst(NextMethod(), active_burst = attr(x, 'active_burst'))
 }
 # mb[1:10]
-
+#mb1[1:10]
+#mb1['CJ13_1']
+#my_sftrack['ID101_1_IS_FU4_3',]
 #' @export
 "[<-.multi_burst" <- function(x, i, value) {
   if (is.null(value) || inherits(value, "ind_burst"))
@@ -214,7 +212,7 @@ format.multi_burst <- function(x, ...) {
   ret = multi_burst(NextMethod(), active_burst = active_burst(x))
   check_burst_names(ret)
   check_two_bursts(ret)
-  check_NAburst(ret)
+  check_NA_burst(ret)
   ret
 }
 
@@ -233,68 +231,16 @@ format.multi_burst <- function(x, ...) {
   if (is.null(value) || inherits(value, "ind_burst"))
     value = list(value)
   x = unclass(x) # becomes a list, but keeps attributes
-  # ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
   ret = make_ind_burst(NextMethod())
   structure(ret)
 }
 
 #' @export
 summary.multi_burst <- function(object, ...) {
-  levelz <- attr(object, 'sort_index')
-  summary(levelz)
+  object <- burst_labels(object,factor = TRUE)
+ NextMethod()
 }
-#summary(mb)
-
-#' @title Print the sort_index from a burst
-#' @export
-#' @param burst a multi_burst
-burst_sort <- function(burst) {
-  attr(burst, 'sort_index')
-}
-
-#' @title Access the burst levels
-#' @name burst_levels
-#' @param burst a multi_burst
-#' @param value a character vector of the new levels, must contain all the current levels
-#' @export
-#' @examples
-#'
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#'
-#'  mb1 <- make_multi_burst(burst_list = list(id = raccoon_data$sensor_code))
-#'  # Access the burst levels
-#'  burst_levels(mb1)
-#'
-#'  # edit the burst levels by adding more values
-#'  burst_levels(mb1) <- c('CJ11', 'CJ12', 'CJ13')
-
-burst_levels <- function(burst, value) {
-  levels(attr(burst, 'sort_index'))
-}
-#burst_levels(mb1)
-
-#' @rdname burst_levels
-#' @export
-'burst_levels<-' <- function(burst, value) {
-  levels(attr(burst, 'sort_index')) <- value
-  burst
-}
-
-#' @title Select the active multi_bursts.
-#' @return a list where each position is a list of the active bursts from each ind_burst
-#' @param burst a multi_burst
-#' @param select (optional), the burst names to subset by, defaults to the current active_burst.
-#' @export
-burst_select <- function(burst, select = NULL) {
-  if (is.null(select)) {
-    select <- attr(burst, 'active_burst')
-  }
-
-  names_id <- names(burst[[1]]) %in% select
-  ret <- lapply(burst, function(x)
-    x[names_id])
-  return(ret)
-}
+#summary(mb1)
 
 #' @title Calculates burst labels created from the ind_burst and the active_burst
 #' @param burst a multi_burst
@@ -304,15 +250,11 @@ burst_select <- function(burst, select = NULL) {
 burst_labels <- function(burst,
   factor = FALSE,
   active_burst = NULL) {
+  if(inherits(burst, c('sftrack','sftraj'))){burst <- burst$burst}
   if (is.null(active_burst)) {
     active_burst <- attr(burst, 'active_burst')
   }
-  names_id <- names(burst[[1]]) %in% active_burst
-
-  ret <-
-    vapply(burst, function(x)
-      paste(x[names_id], collapse = '_'), NA_character_)
-
+  ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
   if (factor) {
     ret <- factor(ret)
   }
@@ -321,9 +263,9 @@ burst_labels <- function(burst,
 }
 
 unique_active_bursts <-
-  function(burst)
-    unique(vapply(burst, function(x)
-      paste0(attr(x, 'active_burst'), collapse = ', '), character(1)))
+  function(burst){
+    all(duplicated(lapply(burst, function(x) active_burst(x)))[-1])
+  }
 
 #' @title Access the active_burst value
 #' @rdname active_burst
@@ -356,21 +298,29 @@ unique_active_bursts <-
 #'  summary(my_track)
 #'
 active_burst <- function(burst) {
-  check_burst_names(burst)
+  if(inherits(burst,c('sftrack','sftraj'))){return(attr(burst$burst, 'active_burst'))}
+  #check_burst_names(x)
   attr(burst, 'active_burst')
 }
-#active_burst(mb)
+#active_burst(my_sftrack)
 
 #' @export
 #' @rdname active_burst
 #' @param value character vector of the burst names to make active
 'active_burst<-' <- function(burst, value) {
-  if (!all(value %in% attr(burst, 'burst_names'))) {
-    stop('not all values not found in burst')
+  #x= my_sftraj
+  #value = 'id'
+  if(inherits(burst,c('sftrack','sftraj'))){burst <- burst$burst}
+
+  if (!all(value %in% names(burst[[1]]))) {
+    stop('not all names found in burst')
   }
   attr(burst, 'active_burst') <- value
-  attr(burst, 'sort_index') <-
-    burst_labels(burst, TRUE, active_burst = value)
   burst
 }
-
+# active_burst(my_sftrack) <- c('id','numSat')
+#' @export
+levels.multi_burst <- function(x){
+  x = burst_labels(x, factor = T)
+  NextMethod()
+}
