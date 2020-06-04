@@ -34,8 +34,8 @@ pts_traj <- function(traj, sfc = FALSE) {
   }
   this_seq <- seq(1,dim*2,by = dim)
   ret = lapply(pts, function(x) {
-    if (inherits(x, 'GEOMETRYCOLLECTION')) {
-      x[1][[1]]
+    if (inherits(x, 'POINT')) {
+      x
     } else{
       st_point(x[this_seq] )
     }
@@ -44,34 +44,35 @@ pts_traj <- function(traj, sfc = FALSE) {
 }
 
 #' @rdname traj_geom
-#' @param first T/F whether you'd like to return the first or second point. Defaults to first.
 #' @export
-coord_traj <- function(traj, first = TRUE) {
+coord_traj <- function(traj) {
  # traj = my_sftraj
   if (inherits(traj, 'sftraj')) {
-    pts <- traj[, attr(traj, 'sf_column')]
+    pts <- traj[[attr(traj, 'sf_column')]]
   }
   if (inherits(traj, 'sfc')) {
     pts <- traj
   }
-  pos <- 2
-  if(first) pos <- 1
+
   if ('XY' %in% class(pts[[1]])) {
     dim = 2
   } else{
     dim = 3
   }
-  this_seq <- seq(pos,dim*2,by = dim)
+  this_seq <- seq(1,dim*2,by = dim)
   ret <- lapply(pts, function(x) {
-    #  x = pts[[1]]
-    if (inherits(x, 'GEOMETRYCOLLECTION')) {
-      st_coordinates(x[pos][[1]])
-    } else{
+    #  x = pts[[499]]
+    if (inherits(x, 'POINT')) {
+
+      st_coordinates(x)
+      x[1:dim]
+      } else{
       x[this_seq]
       # st_coordinates(x)[pos, dim]
     }
   })
   do.call(rbind, ret)
+
 }
 
 #' @title Is a trajectory geometry a linestring or a geometerycollection
@@ -188,3 +189,11 @@ which_duplicated <- function(data, burst_list, time_col){
     row.names = NULL
   )
 }
+
+#' Get the position of x2, given the time
+#' @export
+get_x2 <- function(time){
+  or <- order(time)
+  seq_along(time)[or][or+1][order(or)]
+}
+

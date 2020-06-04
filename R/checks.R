@@ -54,11 +54,14 @@ check_NA_burst <- function(burst) {
 }
 
 # more than one relocation for a burst
-check_two_bursts <- function(burst, active_burst) {
+check_two_bursts <- function(burst,..., active_burst) {
+
   if(inherits(burst,'multi_burst')){
     lvlz <- burst_labels(burst,factor=T)
+    active_burst <- attr(burst, 'active_burst')
   } else {
-  lvlz <- vapply(burst, function(y) {paste0(y[active_burst],collapse='_')}, NA_character_)}
+  lvlz <- vapply(burst, function(y) {paste0(y[active_burst],collapse='_')}, NA_character_)
+  }
   count <- table(lvlz)
   if (any(count == 1)) {
     warning(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
