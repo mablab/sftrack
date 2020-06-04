@@ -1,15 +1,97 @@
 test_that("sftrack is built correct", {
-  # multiple bursts become combined
+  # data.frame mode works successfully
   df1 <- data.frame(
     id = c(1, 1, 1, 1),
     month = c(1,1,2,2),
     x = c(27, 27, 27, 27),
     y = c(-80,-81,-82,-83),
-    timez = Sys.time() + 60*60*(1:4)
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
   )
-  my_sftrack <- as_sftrack(data = df1,burst_list=list(id=df1$id, month = df1$month),
-    time_col = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  my_sftrack <- as_sftrack(data = df1,burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  expect_equal(colnames(my_sftrack),c('id','month','x','y','z','timez','reloc_time','burst','geometry'))
   expect_equal(class(my_sftrack$geometry)[1], 'sfc_POINT')
+
+  # vector mode with data
+
+  my_sftrack <- as_sftrack(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  expect_equal(colnames(my_sftrack),c('id','month','x','y','z','timez','burst','geometry'))
+
+  # data.frame mode without data; accepts null
+  my_sftrack <- as_sftrack(burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  expect_equal(colnames(my_sftrack),c('sftrack_id','reloc_time','burst','geometry'))
+
+  # check 2 dimensions
+  expect_equal(class(my_sftrack$geometry[[1]])[1], 'XY')
+
+  # test that sftrack can change active_bursts
+  expect_equal(attr(my_sftrack$burst,'active_burst'), c('id','month'))
+  my_sftrack <- suppressMessages( as_sftrack(burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id'), coords = df1[,c('x','y','z')]))
+  expect_equal(attr(my_sftrack$burst,'active_burst'), c('id'))
+
+  # test that dimensions are created equally
+  expect_equal(class(my_sftrack$geometry[[1]])[1], 'XYZ')
+
+
+})
+
+test_that("as_sftrack and sftraj convert back and forth successfully", {
+
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+  my_sftrack <- as_sftrack(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  my_sftraj <- as_sftraj(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  new_sftraj <- as_sftraj(my_sftrack)
+  expect_equal(new_sftraj, my_sftraj)
+  new_sftrack <- as_sftrack(my_sftraj)
+  expect_equal(new_sftrack, my_sftrack)
+
+
+})
+
+test_that("input as sf successfully", {
+    # Input is a sf object
+
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+
+    sf_df <- st_as_sf(df1, coords=c('x','y'))
+    new_sftrack <- as_sftrack(data = sf_df, burst = 'id', time = 'timez')
+
+    # Not include sfc_point
+    sf_df <- st_as_sf(df1, coords=c('x','y'))
+    sf_df$geometry <- st_sfc(list(st_multipoint(), st_multipoint(),st_multipoint(),st_multipoint()))
+
+    expect_error(as_sftrack(data = sf_df, burst = 'id', time = 'timez'))
 })
 
 
+test_that('subset works correctly',{
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+
+})

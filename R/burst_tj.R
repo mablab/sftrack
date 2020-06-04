@@ -98,16 +98,17 @@ make_multi_burst <-
 
     check_NA_burst(burst)
     check_burst_names(burst)
+
     if (is.null(active_burst)) {
       active_burst <- names(burst[[1]])
     }
+    check_two_bursts(burst, active_burst = active_burst)
     ret <- lapply(burst,
       function(x, ...)
         make_ind_burst(x))
 
     mb <- multi_burst(ret, active_burst = active_burst)
-    #check more than one burst
-    check_two_bursts(mb)
+
     return(mb)
   }
 
@@ -124,7 +125,7 @@ c.ind_burst <- function(...) {
   df <- lapply(ret, function(x) {
     make_ind_burst(unclass(x))
   })
-  check_NA_burst(mb)
+  check_NA_burst(df)
   mb <- multi_burst(df, active_burst = active_burst)
   check_two_bursts(mb)
 
@@ -138,7 +139,7 @@ c.ind_burst <- function(...) {
 c.multi_burst <- function(..., recursive = FALSE) {
   x = list(...)
   active_burstz <- unique_active_bursts(x)
-  if (length(active_burstz) > 1) {
+  if (length(levels(active_burstz)) > 1) {
     stop('There are more than one possible active bursts')
   }
 
@@ -264,7 +265,8 @@ burst_labels <- function(burst,
 
 unique_active_bursts <-
   function(burst){
-    all(duplicated(lapply(burst, function(x) active_burst(x)))[-1])
+    #burst = list(burst1,burst2)
+    factor(vapply(burst, function(x) {paste(active_burst(x),collapse='')}, NA_character_))
   }
 
 #' @title Access the active_burst value
@@ -316,11 +318,19 @@ active_burst <- function(burst) {
     stop('not all names found in burst')
   }
   attr(burst, 'active_burst') <- value
-  burst
+  burst_relabel(burst)
 }
 # active_burst(my_sftrack) <- c('id','numSat')
 #' @export
 levels.multi_burst <- function(x){
   x = burst_labels(x, factor = T)
   NextMethod()
+}
+
+burst_relabel <- function(burst){
+  what <- lapply(burst, function(x) {
+    attr(x,'label') <- paste(x[active_burst(burst)],collapse='_')
+    x
+  })
+  multi_burst(what, active_burst = attr(burst, 'active_burst'))
 }

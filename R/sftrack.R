@@ -67,8 +67,8 @@
 #'   head(new_track)
 ######################
 # Builder
-as_sftrack <- function(data, ...) {
-  UseMethod('as_sftrack')
+as_sftrack <- function(data = data.frame(), ...) {
+  UseMethod('as_sftrack', object = data)
 }
 
 #' @rdname as_sftrack
@@ -89,7 +89,7 @@ new_sftrack <- function(data, burst_col, sf_col, time_col, error_col = NA) {
 #' @export
 #' @method as_sftrack data.frame
 as_sftrack.data.frame <- function(
-  data = NULL,
+  data =  data.frame(),
   ...,
   coords,
   burst,
@@ -99,7 +99,7 @@ as_sftrack.data.frame <- function(
   crs = NA,
   zeroNA = FALSE
 ) {
-  # data = NULL
+  # data = data.frame()
   # coords = sub_gps[,c('longitude','latitude')]
   # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
   # time = sub_gps[,'timez']
@@ -110,7 +110,7 @@ as_sftrack.data.frame <- function(
   ######################
   # Check inputs
   # Id
-  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+  if(nrow(data)==0){data <- data.frame(sftrack_id = seq_along(time))}
   if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
@@ -279,22 +279,23 @@ as_sftrack.ltraj <- function(data, ...) {
 #' @rdname as_sftrack
 #' @method as_sftrack sf
 #' @export
-as_sftrack.sf <- function(data,
+as_sftrack.sf <- function(
+  data,
   ...,
-  burst_list,
-  id,
-  burst_col = NULL,
+  coords,
+  burst,
   active_burst = NA,
-  error,
-  error_col,
   time,
-  time_col) {
+  error = NA
+  ) {
   geom <- st_geometry(data)
-  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+
   data <- as.data.frame(data)
   # Check inputs
+  # geom
+  if(attributes(geom)$class[1]!='sfc_POINT'){stop('sf column must be an sfc_POINT')}
   # Id
-  if(is.null(data)){data <- data.frame(sftrack_id = seq_along(time))}
+
   if(all(sapply(burst,length)==nrow(data))){
     if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
     burst_list <- burst
@@ -340,7 +341,7 @@ as_sftrack.sf <- function(data,
   dup_timestamp(time = data[[time_col]], burst = burst)
 
   ret <- new_sftrack(
-    data = data.frame(data,burst,geometry = geom),
+    data = data.frame(data,burst),
     burst_col = 'burst',
     sf_col = 'geometry',
     error_col = error_col,
@@ -374,7 +375,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   tcl <- attributes(x[[time_col]])$class[1]
   if(tcl=='POSIXct'){
     tz <-  attributes(x[[time_col]])$tzone
-    if(is.na(tz)){paste(tcl,'no timezone')}
+    if(is.null(tz)|tz==''){paste(tcl,'no timezone')}
     time_mes <- paste(tcl,'in',tz)
   } else{
     time_mes <- 'integer'

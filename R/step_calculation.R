@@ -55,11 +55,14 @@ make_step_geom <- function(burst, time_data, geometry) {
     first_point <- min(which(subz))
 
     x3 <- mapply(function(x, y) {
-      # x <- x1[[12]]
-      # y <- x2[[12]]
-      if (any(c(is.na(x), is.na(y)))) {
-        new_geom <- sf::st_geometrycollection(list(x, y))
-      } else{
+      # x <- x1[[1]]
+      # y <- x2[[1]]
+      if (any(c(is.na(x),is.na(y)))) {
+        if(all(!is.na(x))){ new_geom <- sf::st_point(x)
+        } else {
+        new_geom <- sf::st_point()
+        }
+      } else {
         new_geom <- sf::st_linestring(rbind(x, y))
       }
       new_geom
@@ -89,7 +92,7 @@ step_metrics <- function(sftraj) {
   order_t <- order(sftraj$sftrack_id)
   sftraj <- sftraj[order_t,]
   ret <- lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
-    # index = levels(burst_labels(sftraj$burst, factor = TRUE))[23]
+    # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
     sub <- sftraj[burst_labels(sftraj$burst) == index, ]
 
     # if only 1 row
@@ -108,8 +111,8 @@ step_metrics <- function(sftraj) {
     }
 
 
-    x1 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = TRUE)
-    x2 <- coord_traj(sub[[attr(sub, 'sf_column')]], first = FALSE)
+    x1 <- coord_traj(sub[[attr(sub, 'sf_column')]])
+    x2 <- rbind(x1[-nrow(x1),],c(NA,NA))
     time <- sub[[attr(sub, 'time')]]
     dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
     dt <- unclass(time[-1]) - unclass(time[-length(time)])
