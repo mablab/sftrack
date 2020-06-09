@@ -93,5 +93,28 @@ test_that('subset works correctly',{
     z = c(0,1,2,3),
     timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
   )
+  # retains sftrack class
+  my_sftrack <- as_sftrack(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  expect_equal(class(my_sftrack[1:3,]),c('sftrack','sf','data.frame'))
+
+  expect_message(my_sftrack[,3,])
+
+  expect_silent(my_sftrack[,3,drop = T])
+
+  # rbind
+  df2 <- df1
+  df2$timez <- df2$timez + 10
+  my_sftrack2 <- as_sftrack(data = df2,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  my_sftrack3 <- rbind(my_sftrack, my_sftrack2)
+  expect_equal(class(my_sftrack3)[1], 'sftrack')
+
+  expect_equal(nrow(my_sftrack3),8)
+
+  # change active burst
+  active_burst(my_sftrack2) <- 'id'
+  expect_equal(attr(my_sftrack2$burst,'active_burst'), 'id')
+
 
 })

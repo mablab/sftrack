@@ -164,10 +164,10 @@ as_sftrack.data.frame <- function(
     active_burst <- names(burst_list)
   }
   burst <-
-    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+    make_multi_burst(burst_list, active_burst = active_burst)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], burst = burst)
+  dup_timestamp(time = data[[time_col]], x = burst)
 
   geom <-
     sf::st_as_sf(xyz,
@@ -260,7 +260,7 @@ as_sftrack.ltraj <- function(data, ...) {
       crs = crs,
       na.fail = FALSE)
   # pull out other relevant info
-  burst = make_multi_burst(burst_list = burst)
+  burst = make_multi_burst(burst)
   error = NA
   new_data <- cbind(df1[,!colnames(df1) %in% c('id')], burst= burst, geometry = st_geometry(geom))
   ret <- new_sftrack(
@@ -335,10 +335,10 @@ as_sftrack.sf <- function(
     active_burst <- names(burst_list)
   }
   burst <-
-    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+    make_multi_burst(burst_list, active_burst = active_burst)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], burst = burst)
+  dup_timestamp(time = data[[time_col]], x = burst)
 
   ret <- new_sftrack(
     data = data.frame(data,burst),
@@ -375,7 +375,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   tcl <- attributes(x[[time_col]])$class[1]
   if(tcl=='POSIXct'){
     tz <-  attributes(x[[time_col]])$tzone
-    if(is.null(tz)|tz==''){paste(tcl,'no timezone')}
+    if(is.null(tz)||tz==''){tz <- paste(,'no timezone')}
     time_mes <- paste(tcl,'in',tz)
   } else{
     time_mes <- 'integer'
@@ -459,7 +459,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
 
   if(any(!exist_name[1:3]) || !is.na(error_col) & !exist_name[4]){
 
-    warning(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1]))
+    message(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1]))
     return(x)
   }
 
@@ -474,7 +474,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
 
 rbind.sftrack <- function(...){
   all = list(...)
-  #all = list(my_sftrack, my_sftrack1,my_sftrack2)
+  #all = list(my_sftrack, my_sftrack2)
 
   same_att <- all(duplicated(lapply(all, function(x) attributes(x)[c('sf_column','time','error')]))[-1])
   if(!same_att){stop('sf, time, and error columns must be the same')}
@@ -482,9 +482,13 @@ rbind.sftrack <- function(...){
   time_col <- att$time
   error_col <- att$error
   sf_col <- att$sf_column
-  df1 <- do.call(rbind.data.frame, all)
+  for(i in seq_along(all)){
+  class(all[[i]]) <- setdiff(class(all[[i]]),c('sftrack','sf'))
+  }
+  df1 <- do.call(rbind,all)
+  class(df1) <- setdiff(class(df1),c('sftrack','sf'))
   ret <- new_sftrack(data = df1, burst = 'burst',
-    time = time_col, error = error_col, sf_column = sf_col)
+    time = time_col, error = error_col, sf_col = sf_col)
 
   #Sanity checks
   dup_timestamp(ret)

@@ -85,6 +85,15 @@ check_burst_names <- function(burst) {
   }
 }
 
+check_active_burst <- function(burst, active_burst = NULL, check_all = T){
+  if(is.null(active_burst)){active_burst <- active_burst(burst)}
+  if(!check_all){
+    check <- all(active_burst %in% names(burst[[1]]))
+  } else {
+  check <- all(vapply(burst, function(x) all(active_burst %in% names(x)), NA))
+  }
+  if(!check){stop('not all active bursts found in burst names')}
+}
 ###################
 # coordinate related checks
 
@@ -161,8 +170,12 @@ check_t_regular <- function(sftrack) {
 #' @title check that time is unique
 #' @param x An sftrack/sftraj object
 #' @export
-dup_timestamp <- function(burst, time) {
-  if(inherits(burst,c('sftrack','sftraj'))){burst <- burst$burst}
+dup_timestamp <- function(x, time) {
+  if(inherits(x,c('sftrack','sftraj'))){
+    burst <- x$burst
+    time <- x[[attr(x, 'time')]]
+  } else{burst = x}
+
   test <-
     tapply(time, burst_labels(burst, TRUE), function(y)
       any(duplicated(y)))
