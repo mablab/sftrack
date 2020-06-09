@@ -30,7 +30,7 @@ make_step_geom <- function(burst, time_data, geometry) {
   idz <- burst_labels(burst, factor = T)
   #
   unique_idz <- levels(idz)[table(idz) > 0]
-  check_ordered(burst, time_data, return = FALSE)
+
   step_geometry <- rep(NA, length(geometry))
 
   # check dimensions
@@ -112,13 +112,20 @@ step_metrics <- function(sftraj) {
 
 
     x1 <- coord_traj(sub[[attr(sub, 'sf_column')]])
-    x2 <- rbind(x1[-nrow(x1),],c(NA,NA))
+    x2 <- rbind(x1[-1,],c(NA,NA))
     time <- sub[[attr(sub, 'time')]]
     dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
     dt <- unclass(time[-1]) - unclass(time[-length(time)])
-    abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])
-    dx <- sin(abs_angle) * dist
-    dy <- cos(abs_angle) * dist
+    if(is.na(attr(st_geometry(sftraj),'crs'))){
+      dx <- c(x2[,1] - x1[,1])[-nrow(x1)]
+      dy <- c(x2[,2] - x1[,2])[-nrow(x1)]
+      abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
+    } else {
+      abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])+pi/2
+      dx <- sin(abs_angle) * dist
+      dy <- cos(abs_angle) * dist
+    }
+
     speed <- dist/dt
     so <- cbind.data.frame(
       dx = dx,

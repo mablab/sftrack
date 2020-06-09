@@ -32,7 +32,7 @@ pts_traj <- function(traj, sfc = FALSE) {
   } else{
     dim = 3
   }
-  this_seq <- seq(1,dim*2,by = dim)
+  this_seq <- seq(1,dim*2,by = 2)
   ret = lapply(pts, function(x) {
     if (inherits(x, 'POINT')) {
       x
@@ -59,7 +59,7 @@ coord_traj <- function(traj) {
   } else{
     dim = 3
   }
-  this_seq <- seq(1,dim*2,by = dim)
+  this_seq <- seq(1,dim*2,by = 2)
   ret <- lapply(pts, function(x) {
     #  x = pts[[499]]
     if (inherits(x, 'POINT')) {
@@ -197,3 +197,12 @@ get_x2 <- function(time){
   seq_along(time)[or][or+1][order(or)]
 }
 
+
+unique_active_bursts <-
+  function(burst){
+    #burst = list(burst1,burst2)
+    #burst = list(x[[1]],value[[1]])
+    if(length(unique(vapply(burst, function(x) paste(attr(x,'active_burst'),collapse=''),NA_character_)))!=1){
+      stop('There are more than one possible active bursts')
+    }
+  }

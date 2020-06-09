@@ -164,10 +164,10 @@ as_sftraj.data.frame <- function(
     active_burst <- names(burst_list)
   }
   burst <-
-    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+    make_multi_burst(burst_list, active_burst = active_burst)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], burst = burst)
+  dup_timestamp(time = data[[time_col]], x = burst)
 
   geom <-
     sf::st_as_sf(xyz,
@@ -245,7 +245,9 @@ as_sftraj.sf <-  function(
   # time = as.POSIXct(data$acquisition_time, tz = 'UTC')
   # coords = c('latitude','longitude','height')
   geom <- st_geometry(data)
+  sf_col <- attr(data, 'sf_column')
   data <- as.data.frame(data)
+
   # Check inputs
   # Geom
   if(attributes(geom)$class[1]!='sfc_POINT'){stop('sf column must be an sfc_POINT')}
@@ -291,10 +293,10 @@ as_sftraj.sf <-  function(
     active_burst <- names(burst_list)
   }
   burst <-
-    make_multi_burst(burst_list = burst_list, active_burst = active_burst)
+    make_multi_burst(burst_list, active_burst = active_burst)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], burst = burst)
+  dup_timestamp(time = data[[time_col]], x = burst)
 
   geom <-
     make_step_geom(
@@ -354,7 +356,7 @@ as_sftraj.ltraj <- function(data, ...) {
       crs = crs,
       na.fail = FALSE)
   #
-  burst = make_multi_burst(burst_list = burst)
+  burst = make_multi_burst(burst)
   # earliest reasonable time to check time stamps
   dup_timestamp(time = data[[time_col]], burst = burst)
 
@@ -399,7 +401,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   tcl <- attributes(x[[time_col]])$class[1]
   if(tcl=='POSIXct'){
     tz <-  attributes(x[[time_col]])$tzone
-    if(is.null(tz)|tz==''){paste(tcl,'no timezone')}
+    if(is.null(tz)||tz==''){tz = paste('no timezone')}
     time_mes <- paste(tcl,'in',tz)
   } else{
     time_mes <- 'integer'
@@ -446,7 +448,7 @@ summary.sftraj <- function(object, ..., stats = FALSE) {
 #' @export
 rbind.sftraj <- function(...){
   all = list(...)
-  #all = list(my_sftraj, my_sftraj1)
+  #all = list(my_sftraj, my_sftraj2)
   same_att <- all(duplicated(lapply(all, function(x) attributes(x)[c('sf_column','time','error')]))[-1])
   if(!same_att){stop('sf, time, and error columns must be the same')}
 
@@ -463,8 +465,9 @@ rbind.sftraj <- function(...){
       geometry = geom,
       time_data = df1[[time_col]]
     )
-  ret <- new_sftraj(data = df1, burst = 'burst',
-    time = time_col, error = error_col, sf_column = sf_col)
+  class(df1) <- setdiff(class(df1),c('sftraj','sf'))
+  ret <- new_sftraj(data = df1, burst_col = 'burst',
+    time = time_col, error = error_col, sf_col = sf_col)
   #Sanity checks
   dup_timestamp(ret)
   return(ret)

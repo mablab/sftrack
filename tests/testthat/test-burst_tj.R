@@ -18,16 +18,16 @@ test_that('ind_burst works',{
 test_that('multi_burst works', {
   burstz <- list(id = rep(1,4),col1 = c(1,1,2,2), col2 = c('A','B','B','A'))
 
-  obj1 <- suppressWarnings(make_multi_burst(burst = burstz, active_burst = 'id'))
+  obj1 <- suppressWarnings(make_multi_burst(x = burstz, active_burst = 'id'))
   expect_equal(sapply(obj1,function(x) x$col1), as.character(c('1','1','2','2')))
 
-  mb <- make_multi_burst(burst_list = burstz,active_burst = 'id')
-  expect_equal(attr(mb,'active_burst'), 'id')
+  mb <- make_multi_burst(x = burstz,active_burst = 'id')
+  expect_equal(attr(mb[[1]],'active_burst'), 'id')
 
-  expect_warning(make_multi_burst(burst = burstz))
+  expect_warning(make_multi_burst(x = burstz))
 
   # check levels
-  levels(mb)
+
 })
 
 test_that('concatenate bursts',{
@@ -68,4 +68,32 @@ test_that('active bursts can change correctly',{
   expect_equal(active_burst(my_sftrack),c('id'))
 
 
+})
+
+test_that('subset multi_bursts',{
+  burst1 <- make_multi_burst(list(id = rep(1,4), col2 = c('A','B','B','A')))
+  expect_equal(class(burst1[1]),'multi_burst')
+
+  # subsetting via label name
+ expect_equal(length(burst1['1_B']),2)
+
+ # replace item in a multi_burst
+ burst1 <- make_multi_burst(list(id = rep(1,5), col2 = c('A','A','C','C','A')))
+ burst1[2] <- ind_burst(list(id = 1, col2 = 'C'))
+ expect_equal(class(burst1[[2]]),'ind_burst')
+ expect_equal(attr(burst1[[2]],'label'),'1_C')
+
+ #replacing an individual element in an ind burst
+ ib <- make_ind_burst(list(id = 1,month='Jan'))
+ ib$id <- 2
+ expect_equal(attr(ib, 'label'),'2_Jan')
+
+ #replacing an individual element in a multi_burst
+ burst1[[1]]$id <- 3
+ expect_equal(burst1 [[1]][[1]],'3')
+
+ ib <- make_ind_burst(list(id='test', month = 'Jan'))
+ active_burst(ib) <- 'id'
+ expect_equal(attr(ib, 'active_burst'), 'id')
+ expect_equal(attr(ib,'label'), 'test')
 })
