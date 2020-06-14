@@ -1,0 +1,97 @@
+---
+title: "5. Getting Spatial with sftrack"
+output:
+  pdf_document: default
+html_document: default
+vignette: |
+  %\VignetteIndexEntry{5. Working with an sftrack}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all("/home/matt/r_programs/sftrack")
+#library(sftrack)
+
+```
+
+```{r}
+# Make tracks from raw data
+data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+data$month <- as.POSIXlt(data$acquisition_time)$mon+1
+
+data$time <- as.POSIXct(data$acquisition_time, tz='EST')
+coords = c('longitude','latitude')
+burst = list(id = data$sensor_code, month = as.POSIXlt(data$acquisition_time)$mon+1)
+time = 'time'
+error = 'fix'
+crs = '+init=epsg:4326'
+my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error, crs = crs)
+```
+## Geometry column  
+
+As stated earlier, the geometry column is built using `sf`, so functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is a `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
+```{r}
+my_sftrack$geometry
+```
+
+An `sftrack` object is simply an `sfc` of `sf_POINTS`, this contrasts with an `sftraj` object which is a mixture of a `GEOMETERYCOLLECTION` and `LINESTRING`. This is because a trajectory can have a start point and an NA end point, a line segment, or an NA and an end point. This allows no-loss conversion back and forth between `sftrack` and an `sftraj`, and because linestrings can not have a NULL point in them.
+
+```{r}
+my_sftraj$geometry
+```
+
+This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. To help with working with sftraj objects, there are two functions that help extract points from `sftraj` objects.
+
+##### coord_traj 
+This function returns a data.frame (x,y,z) of the beginning point of each sftraj geometry.
+
+```{r}
+coord_traj(my_sftraj$geometry)[1:10,]
+```
+
+##### pts_traj 
+And `pts_traj` returns a list of the beginning point of each sftraj geometry.
+
+```{r}
+pts_traj(my_sftraj$geometry)[1:10]
+```
+
+##### is_linestring 
+May help if you'd like to quickly filter an `sftraj` object to just contain pure linestrings. `is_linestring()` returns TRUE or FALSE if the geometry is a linestring. This does not recalculate anything, it just filters out steps that contained NAs in either phase.
+
+```{r}
+is_linestring(my_sftraj$geometry)[1:10]
+new_sftraj <- my_sftraj[is_linestring(my_sftraj$geometry),]
+head(new_sftraj)
+```
+
+## Plotting
+
+##### Base plotting 
+Currently there are some basic plotting methods. Base plotting currently does not have any thrills built into it, and assumes that the `active_burst` is the grouping/coloring variable.  
+
+
+```{r}
+plot(my_sftraj)
+```
+
+And changing the active burst will change the plot view
+
+```{r}
+active_burst(my_sftraj$burst) <- 'id'
+active_burst(my_sftraj$burst)
+plot(my_sftraj)
+```
+
+##### ggplot
+This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change as I look more into it. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
+
+```{r}
+library(ggplot2)
+ggplot() + geom_sftrack(data = my_sftraj)
+```
+
+
+

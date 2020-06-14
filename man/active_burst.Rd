@@ -7,7 +7,7 @@
 \usage{
 active_burst(burst)
 
-active_burst(burst) <- value
+active_burst(x, ...) <- value
 }
 \arguments{
 \item{burst}{a multi_burst}

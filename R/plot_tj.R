@@ -11,7 +11,7 @@ plot.sftrack <- function(x, ...) {
   col1 <- scales::alpha(what, 0.2)
   my_pts <- st_geometry(x)
   graphics::plot(my_pts,
-    col = col1, cex = 1)
+    col = col1, cex = 1,...)
 }
 
 #' @title methods for plot sftrack/sftraj
@@ -23,28 +23,15 @@ plot.sftraj <- function(x, ...) {
   #x <- my_sftraj
   bl <-   burst_labels(x$burst,factor=TRUE)
   b_lvl <- levels(bl)
-  what <- as.numeric(bl)
-  col1 <- scales::alpha(what, 0.2)
-  my_pts <- pts_traj(x[[attr(x, 'sf_column')]], TRUE)
+  geom = st_geometry(x)
+  il <- is_linestring(geom)
+  col1 <-  vapply(burst_labels(x[['burst']][!il]), function(x) which(x==b_lvl), NA_integer_)
+  my_pts <- geom[!il]
+  attr(my_pts,'bbox') <- st_bbox(geom)
+  graphics::plot(my_pts, col = col1,...)
 
-  graphics::plot(my_pts,
-    col = col1, cex = 1)
-  my_coords <- st_coordinates(my_pts)
-  here <- lapply(b_lvl, function(y){
-    #for(y in b_lvl){
-    #y = b_lvl[22]
-    sub_coords <- my_coords[bl ==y,]
-    if(!inherits(sub_coords,'matrix')){return()}
-    sub_time <- x[[attr(x,'time')]][bl==y]
-    sub_time <- order(sub_time)
-    which_na <- c(0,which(is.na(sub_coords[,1])),  (nrow(sub_coords)+1))
-    what <- lapply(seq_len(length(which_na)-1), function(z){
-      #z=3
-      st_linestring(sub_coords[(which_na[z]+1):(which_na[z+1]-1),])
-    })
-    ret = st_multilinestring(what)
-    names(ret) <- y
-    return(ret)
+  here = lapply(b_lvl, function(y){
+    st_multilinestring(geom[bl==y&il])
   })
 
   for (i in seq_along(here)) {
@@ -86,9 +73,10 @@ geom_sftrack <- function(data, ...) {
 #' @rdname geom_sftrack
 #' @export
 geom_sftrack.sftrack <- function(data, ...) {
-  sub <- data[!st_is_empty(data[, attr(data, 'sf_column')]), ]
+  sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
+  bl <- burst_labels(sub$burst, factor = T)
   list(ggplot2::geom_sf(data = sub, ggplot2::aes(
-    color = burst_sort(sub$burst), fill = burst_sort(sub$burst)
+    color = bl, fill = bl
   )),
     ggplot2::guides(color = FALSE) ,
     ggplot2::labs(fill = "Bursts"))
@@ -97,15 +85,17 @@ geom_sftrack.sftrack <- function(data, ...) {
 #'@name geom_sftrack
 #'@export
 geom_sftrack.sftraj <- function(data, ...) {
-  sub <- data[!st_is_empty(data[,attr(data, 'sf_column')]), ]
+  sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
+  bl <- burst_labels(sub$burst, factor = T)
   list(
     ggplot2::geom_sf(data = st_sfc(
-      pts_traj(sub), crs = attr(data[,attr(data, 'sf_column')], 'crs')
-    ), ggplot2::aes(color = burst_sort(sub$burst))),
+      pts_traj(sub), crs = attr(sub[[attr(sub, 'sf_column')]], 'crs')
+    ), ggplot2::aes(color = bl)),
     ggplot2::geom_sf(data = sub, ggplot2::aes(
-      color = burst_sort(sub$burst), fill = burst_sort(sub$burst)
+      color = bl, fill = bl
     )),
     ggplot2::guides(color = FALSE) ,
     ggplot2::labs(fill = "Bursts")
   )
 }
+#ggplot() + geom_sftrack(data = my_sftraj)

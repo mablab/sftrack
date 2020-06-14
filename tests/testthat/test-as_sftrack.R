@@ -98,9 +98,14 @@ test_that('subset works correctly',{
     time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
   expect_equal(class(my_sftrack[1:3,]),c('sftrack','sf','data.frame'))
 
-  expect_message(my_sftrack[,3,])
+  expect_equal(ncol(my_sftrack[,3,]),4)
 
   expect_silent(my_sftrack[,3,drop = T])
+
+  expect_equal(nrow(my_sftrack[,3,drop = T]),NULL)
+
+  # subset by colname without dropped columns
+  expect_equal(colnames(my_sftrack[,c('id','month')]), c('id','month','burst','timez','geometry'))
 
   # rbind
   df2 <- df1

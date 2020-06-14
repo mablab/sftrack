@@ -8,12 +8,17 @@ vignette: |
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
 ---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+devtools::load_all("/home/matt/r_programs/sftrack")
+#library(sftrack)
 
+```
 ## Loading in raw data
 
 To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` function, depending on your desired output. Both have the same arguments and output but differ in the way the geometry field is calculated.  
 
-`as_sftrack()` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it accepts the column name where the data exists. For any `sftrack` component you can input either vector data or the column name, but not both. 
+`as_sftrack()` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it accepts the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable.
 
 #### Global options
 These are options that are required regardless of which input type you use.  
@@ -22,13 +27,14 @@ These are options that are required regardless of which input type you use.
 **crs** - the coordinate references system/projection of the data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later.  
 **active_burst** - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever. If no value is supplied it defaults to all bursts.  
 
-### Vector inputs
-Vector inputs to `as_sftrack` in general involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule.  
+### Variable inputs
+Vector inputs to `as_sftrack` in general involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule. And a column name 
+must be found in the data.frame supplied by `data`. If using entirely vector inputs, `data` is not required. 
 
-**burst_list** - a list with named vectors to group the sftrack where each list item is length(vector) = nrow(data). One item must be named `id`, but otherwise can be infinite number of grouping variables.  
-**xyz** - data.frame of x,y,z coordinates where column with order : `c(x, y, z)`, z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  
-**time** - a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'.  
-**error** - a vector containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs.  
+**burst** - a list with named vectors to group the sftrack where each list item is length(vector) = nrow(data). One item must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for burst categories.   
+**cords** - data.frame of x,y,z coordinates where column with order : `c(x, y, z)`, z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  Or a vector naming the column names for coordinates in x,y,z order.
+**time** - a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'. Or the column name for the time column
+**error** - a vector containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs. Or the column name for the error column
 
 ### Examples (Vector)
 
@@ -38,16 +44,16 @@ raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrac
 #data
 data = raccoon_data
 #xyz
-xyz = data[,c('longitude','latitude')]
+coords = data[,c('longitude','latitude')]
 crs = '+init=epsg:4326'
 #bursts
-burst_list = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon+1)
+burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon+1)
 active_burst = c('id','month')
 #time
 time = as.POSIXct(raccoon_data$acquisition_time, tz='EST')
 #error
 error = data$fix
-my_sftrack <- as_sftrack(data = data, xyz = xyz, burst_list = burst_list, 
+my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, 
                          active_burst = active_burst, time = time, 
                          crs = crs, error = error)
 
@@ -60,13 +66,9 @@ As you can see in this case the data is not overwritten, but extra columns added
 -------------
 
 ### data.frame inputs  
-Data.frame inputs generally describe the columns in the data that represent each field.  
 
-**coords** - a vector listing the column names for each x,y,z coordinate, just like `sf`, where again position 1 = x, 2 = y, 3 = z. ex: `c('longitude','latitude','altitude')`.  
-**id** - a character string naming the column with the id information.  
-**burst_col** - a vector with character strings naming additional burst information. This field is not required, and should not contain the `id` field.  
-**time_col** - a character string naming the column with the time information. Must be POSIX or integer.  
-**error_col** - a character string naming the column with the error information. If NA, error column is stored as NA and not accessible.  
+Data.frame inputs generally describe the columns in the data that represent each field. In the case
+of using data.frame inputs the columns are cbinded to `data`. Therefore you may experience duplicate columns if you did not subset appropriately.
 
 ### Examples (data.frame inputs)
 
@@ -75,12 +77,11 @@ data$time <- as.POSIXct(data$acquisition_time, tz='EST')
 data$month <- as.POSIXlt(data$acquisition_time)$mon+1
 
 coords = c('longitude','latitude')
-id = 'sensor_code'
-burst_col = c('month')
-time_col = 'time'
-error_col = 'fix'
+burst = c(id = 'sensor_code', month = 'month')
+time = 'time'
+error = 'fix'
 
-my_sftraj <- as_sftraj(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
+my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error)
 
 head(my_sftraj)
 ```
@@ -112,13 +113,13 @@ head(my_sf)
 library(sf)
 df1 <- data[!is.na(raccoon_data$latitude),]
 sf_df <- st_as_sf(df1, coords=c('longitude','latitude'), crs = crs)
-id = 'sensor_code'
+burst = c(id = 'sensor_code')
 time_col = 'time'
 
-new_sftraj <- as_sftraj(sf_df,id=id, time_col = time_col) 
+new_sftraj <- as_sftraj(sf_df,burst = burst, time = time_col) 
 head(new_sftraj)
 
-new_sftrack <- as_sftrack(sf_df, id=id, time_col = time_col) 
+new_sftrack <- as_sftrack(sf_df,burst = burst, time= time_col) 
 head(new_sftrack)
 
 ```
@@ -127,8 +128,13 @@ Additionally `as_sftrack` and `as_sftraj` can convert back and forth between eac
 
 ```{r}
 # Make tracks from raw data
-my_sftrack <- as_sftrack(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
-my_sftraj <- as_sftraj(data = data, coords = coords, id = id, burst_col = burst_col, time_col = time_col, error_col = error_col)
+coords = c('longitude','latitude')
+burst = c(id = 'sensor_code', month = 'month')
+time = 'time'
+error = 'fix'
+
+my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error)
+my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error)
 
 # Convert between types
 new_sftrack <- as_sftrack(my_sftraj)
@@ -136,7 +142,7 @@ new_sftrack <- as_sftrack(my_sftraj)
 new_sftraj <- as_sftraj(my_sftrack)
 #head(new_sftraj)
 
-all.equal(my_sftraj,new_sftraj)
-all.equal(my_sftrack,new_sftrack)
+identical(my_sftraj,new_sftraj)
+identical(my_sftrack,new_sftrack)
 ```
 

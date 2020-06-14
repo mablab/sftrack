@@ -111,16 +111,20 @@ as_sftrack.data.frame <- function(
   # Check inputs
   # Id
   if(nrow(data)==0){data <- data.frame(sftrack_id = seq_along(time))}
+  # bursts
   if(all(sapply(burst,length)==nrow(data))){
-    if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
+    # check id in burst
+    check_burst_id(burst)
     burst_list <- burst
   } else{
     # check names exist
     check_names_exist(data, burst)
     # check id in burst
-    if(!'id'%in%burst){stop('There is no `id` column in burst names')}
+    # check id in burst
+    check_burst_id(burst)
     # create burst list from names
     burst_list <- lapply(data[, burst, FALSE], function(x) x)
+    if(!is.null(names(burst))){ names(burst_list) <- names(burst) } else {names(burst_list) <- burst}
   }
 
   # Coords
@@ -148,16 +152,15 @@ as_sftrack.data.frame <- function(
   check_time(data[[time_col]])
 
   # Error
-  #
-  if (!is.na(error)) {
     if(length(error) == nrow(data)){
       data$sftrack_error <- error
       error_col = 'sftrack_error'
     } else{
+      if (!is.na(error)) {
       check_names_exist(data, error)
       error_col = error
-    }
-  } else { error_col = NA}
+    } else { error_col = NA}
+  }
 
   # pull out other relevant info
   if (any(is.na(active_burst))) {
@@ -260,9 +263,9 @@ as_sftrack.ltraj <- function(data, ...) {
       crs = crs,
       na.fail = FALSE)
   # pull out other relevant info
-  burst = make_multi_burst(burst)
+  df1$burst = make_multi_burst(burst)
   error = NA
-  new_data <- cbind(df1[,!colnames(df1) %in% c('id')], burst= burst, geometry = st_geometry(geom))
+  new_data <- cbind(df1[,!colnames(df1) %in% c('id')], geometry = st_geometry(geom))
   ret <- new_sftrack(
     data =  new_data,
     burst_col = burst,
@@ -287,7 +290,7 @@ as_sftrack.sf <- function(
   active_burst = NA,
   time,
   error = NA
-  ) {
+) {
   geom <- st_geometry(data)
 
   data <- as.data.frame(data)
@@ -296,16 +299,20 @@ as_sftrack.sf <- function(
   if(attributes(geom)$class[1]!='sfc_POINT'){stop('sf column must be an sfc_POINT')}
   # Id
 
+  # bursts
   if(all(sapply(burst,length)==nrow(data))){
-    if(!'id' %in% names(burst)){stop('There is no `id` column in burst names')}
+    # check id in burst
+    check_burst_id(burst)
     burst_list <- burst
   } else{
     # check names exist
     check_names_exist(data, burst)
     # check id in burst
-    if(!'id'%in%burst){stop('There is no `id` column in burst names')}
+    # check id in burst
+    check_burst_id(burst)
     # create burst list from names
     burst_list <- lapply(data[, burst, FALSE], function(x) x)
+    if(!is.null(names(burst))){ names(burst_list) <- names(burst) } else {names(burst_list) <- burst}
   }
 
   # Time
@@ -319,16 +326,15 @@ as_sftrack.sf <- function(
   check_time(data[[time_col]])
 
   # Error
-  #
-  if (!is.na(error)) {
-    if(length(error) == nrow(data)){
-      data$sftrack_error <- error
-      error_col = 'sftrack_error'
-    } else{
+  if(length(error) == nrow(data)){
+    data$sftrack_error <- error
+    error_col = 'sftrack_error'
+  } else{
+    if (!is.na(error)) {
       check_names_exist(data, error)
       error_col = error
-    }
-  } else { error_col = NA}
+    } else { error_col = NA}
+  }
 
   #
   if (any(is.na(active_burst))) {
@@ -375,7 +381,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   tcl <- attributes(x[[time_col]])$class[1]
   if(tcl=='POSIXct'){
     tz <-  attributes(x[[time_col]])$tzone
-    if(is.null(tz)||tz==''){tz <- paste(,'no timezone')}
+    if(is.null(tz)||tz==''){tz <- paste('no timezone')}
     time_mes <- paste(tcl,'in',tz)
   } else{
     time_mes <- 'integer'
@@ -424,9 +430,10 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
 }
 #summary(my_sftrack,stats=TRUE)
 #' @export
-`[.sftrack` <- function(x,i,j,...,drop=F){
+`[.sftrack` <- function(x,i,j,..., drop = FALSE){
   #x = my_sftrack
   #i = 1:10
+  #j=c(1,2,3)
   #rm(j)
   sf_col =  attr(x,'sf_column')
   time_col = attr(x, 'time')
@@ -438,38 +445,38 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   }
   if (!missing(i) && nargs > 2) {
     if (is.character(i))
-      i = match(i, row.names(x))
+      i = burst_labels(x) %in% i
   }
-
+  if(!missing(j) && all(is.character(j))){
+    j = which(colnames(x)%in%j)
+  }
   #x = as.data.frame(x)
   class(x) = setdiff(class(x), c("sftrack",'sf'))
   x = if (missing(j)) {
     if (nargs == 2)
       x[i]
     else
-      x[i, , drop = drop]
-  } else
-    x[i, j, drop = drop]
+      x[i, , ]
+  } else {
+    if(drop){
+      return(x[i,j, drop = drop])
+    } else{
 
-  if(drop){
-    return(x)
+      error_col <- if(is.na(error_col)) NULL else error_col
+      x[i,union(colnames(x)[j],c('burst',sf_col,time_col,error_col))]
+    }
   }
 
-  exist_name <- c('burst',sf_col,time_col,error_col) %in% colnames(x)
 
-  if(any(!exist_name[1:3]) || !is.na(error_col) & !exist_name[4]){
+  # # This piece is if we want drop = TRUE to be the default
+  # if((any(!exist_name[1:3]) || !is.na(error_col) & !exist_name[4])){
+  #
+  #   message(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1],
+  #     '\n Use drop = FALSE to retain class'))
+  #
+  #     }
+    new_sftrack(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
 
-    message(paste0(paste0(c('burst','geometry','time','error')[!exist_name],collapse=', '),' subsetted out of sftrack object, reverting to ',class(x)[1]))
-    return(x)
-  }
-
-  # these last two lines are probably not necessary now that we've changed burst
-  # to not calculate anything
-  # if(!missing(i)){
-  #   x$burst = multi_burst(x$burst)
-  # }
-
-  new_sftrack(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
 }
 
 rbind.sftrack <- function(...){

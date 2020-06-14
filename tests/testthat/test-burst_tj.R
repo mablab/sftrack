@@ -11,7 +11,7 @@ test_that('ind_burst works',{
   expect_error(make_ind_burst(list(id=1, id = 1)), 'burst names are duplicated')
 
   # There is an id column
-  expect_error(make_ind_burst(list(month = 'Jan', Year = 2020)), 'There is no id column')
+  expect_error(make_ind_burst(list(month = 'Jan', Year = 2020)), 'There is no `id` column in burst names')
 
 })
 

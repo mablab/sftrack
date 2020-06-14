@@ -20,7 +20,7 @@
 #' # or a data.frame of points
 #' coord_traj(my_traj)
 #' @export
-pts_traj <- function(traj, sfc = FALSE) {
+pts_traj <- function(traj, sfc = FALSE, first = T) {
   if (inherits(traj, 'sftraj')) {
     pts <- st_geometry(traj)
   }
