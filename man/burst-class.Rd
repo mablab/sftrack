@@ -8,9 +8,9 @@
 \alias{c.multi_burst}
 \title{A class to group movement data}
 \usage{
-make_ind_burst(burst)
+make_ind_burst(burst, active_burst = NULL)
 
-make_multi_burst(burst_list = NULL, active_burst = NULL)
+make_multi_burst(x = NULL, active_burst = NULL)
 
 \method{c}{ind_burst}(...)
 
@@ -19,13 +19,13 @@ make_multi_burst(burst_list = NULL, active_burst = NULL)
 \arguments{
 \item{burst}{a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may'). In the case of a multi_burst can be a list of ind_bursts.}
 
-\item{burst_list}{a list of equal length vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)}
-
 \item{active_burst}{a vector of the names of the bursts to be considered 'active' for the sake of analysis.}
 
 \item{...}{objects to be pasted together into a multi_burst}
 
 \item{recursive}{ignored}
+
+\item{burst_list}{a list of equal length vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)}
 }
 \description{
 This class describes a burst, which is a grouping variable

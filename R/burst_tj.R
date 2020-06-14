@@ -50,10 +50,8 @@ make_ind_burst <- function(burst, active_burst = NULL) {
     stop('burst names are duplicated')
   }
 
-  # Check if id is the only list
-  if (!'id' %in% names(burst)) {
-    stop('There is no id column')
-  }
+  # check id in burst
+  check_burst_id(burst)
 
   new_burst <- lapply(burst, as.character)
   ind_burst(new_burst, active_burst)
@@ -99,6 +97,7 @@ make_multi_burst <-
 
     if(inherits(x[[1]], c('multi_burst','ind_burst'))) {burst = x } else{
     if(!inherits(x, 'list')){stop('burst must be a list')}
+
       burst <-
         do.call(function(...)
           mapply(list, ..., SIMPLIFY = FALSE), x)
@@ -236,7 +235,7 @@ format.multi_burst <- function(x, ...) {
     value = list(value)
   x = unclass(x) # becomes a list, but keeps attributes
   # ret = make_ind_burst(NextMethod(),active_burst = active_burst(x))
-  ret = make_ind_burst(NextMethod())
+  ret = make_ind_burst(NextMethod(), active_burst = attr(x, 'active_burst'))
   structure(ret)
 }
 
@@ -245,13 +244,13 @@ format.multi_burst <- function(x, ...) {
   if (is.null(value) || inherits(value, "ind_burst"))
     value = list(value)
   x = unclass(x) # becomes a list, but keeps attributes
-  ret = make_ind_burst(NextMethod())
+  ret = make_ind_burst(NextMethod(), active_burst = attr(x, 'active_burst'))
   structure(ret)
 }
 
 #' @export
 summary.multi_burst <- function(object, ...) {
-  object <- burst_labels(object)
+  object <- burst_labels(object, factor = T)
  NextMethod()
 }
 #summary(mb1)
@@ -261,11 +260,15 @@ summary.multi_burst <- function(object, ...) {
 #' @param factor logical, whether to return a factor, defaults return is a character
 #' @param active_burst (optional), the active_burst to subset by, defaults to the current active_burst.
 #' @export
-burst_labels <- function(burst, factor = F) {
-  if(inherits(burst, c('sftrack','sftraj'))){burst <- burst$burst}
-  # if (is.null(active_burst)) {
-  #   active_burst <- attr(burst, 'active_burst')
-  # }
+burst_labels <- function(x, ...) {
+  UseMethod('burst_labels', object = x)
+}
+
+
+#' @export
+burst_labels.sftrack <-   function(x, factor = F) {
+  burst <- x$burst
+
   ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
   if (factor) {
     ret <- factor(ret)
@@ -274,7 +277,37 @@ burst_labels <- function(burst, factor = F) {
   return(ret)
 }
 
+#' @export
+burst_labels.sftraj <- function(x, factor = F) {
+  burst <- x$burst
 
+  ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
+  if (factor) {
+    ret <- factor(ret)
+  }
+
+  return(ret)
+}
+#' @export
+burst_labels.ind_burst <- function(x, ...) {
+  burst <- x
+
+  ret <- attr(x,'label')
+
+  return(ret)
+}
+
+#' @export
+burst_labels.multi_burst <- function(x, factor = F) {
+  burst <- x
+
+  ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
+  if (factor) {
+    ret <- factor(ret)
+  }
+
+  return(ret)
+}
 
 #' @title Access the active_burst value
 #' @rdname active_burst

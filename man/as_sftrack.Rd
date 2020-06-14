@@ -2,58 +2,57 @@
 % Please edit documentation in R/sftrack.R
 \name{as_sftrack}
 \alias{as_sftrack}
-\alias{as_sftrack.data.frame}
 \alias{new_sftrack}
+\alias{as_sftrack.data.frame}
 \alias{as_sftrack.sftraj}
 \alias{as_sftrack.ltraj}
 \alias{as_sftrack.sf}
 \title{Convert objects into sftrack objects.}
 \usage{
-as_sftrack(data, ...)
+as_sftrack(data = data.frame(), ...)
 
-\method{as_sftrack}{data.frame}(data, ..., xyz, coords = c("x", "y",
-  "z"), burst_list, id, burst_col = NULL, active_burst = NA, error,
-  error_col, time, time_col, crs = NA, zeroNA = FALSE)
+new_sftrack(data, burst_col, sf_col, time_col, error_col = NA)
 
-new_sftrack(data, burst, time, geometry, error = NA)
+\method{as_sftrack}{data.frame}(data = data.frame(), ..., coords, burst,
+  active_burst = NA, time, error = NA, crs = NA, zeroNA = FALSE)
 
 \method{as_sftrack}{sftraj}(data, ...)
 
 \method{as_sftrack}{ltraj}(data, ...)
 
-\method{as_sftrack}{sf}(data, ..., burst_list, id, burst_col = NULL,
-  active_burst = NA, error, error_col, time, time_col)
+\method{as_sftrack}{sf}(data, ..., coords, burst, active_burst = NA,
+  time, error = NA)
 }
 \arguments{
 \item{data}{(global) a data.frame of the movement data}
 
 \item{...}{extra information to be past to as_sftrack}
 
-\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
-
-\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
-
-\item{burst_list}{(vector) a list of named vectors describing multiple grouping variables}
-
-\item{id}{(data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs}
-
 \item{burst_col}{(data.frame - optional) a character vector naming the other grouping columns in `data`.}
 
-\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
-
-\item{error}{(vector - optional) a vector of error information for the movement data}
+\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
 
 \item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
 
+\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
+
+\item{burst}{a multi_burst}
+
+\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
+
 \item{time}{(vector) a vector of time information, can be either POSIX or an integer}
 
-\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
+\item{error}{(vector - optional) a vector of error information for the movement data}
 
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
 
-\item{burst}{a multi_burst}
+\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
+
+\item{burst_list}{(vector) a list of named vectors describing multiple grouping variables}
+
+\item{id}{(data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs}
 
 \item{geometry}{a vector of sf geometries}
 }

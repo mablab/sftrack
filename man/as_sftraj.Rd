@@ -9,18 +9,17 @@
 \alias{as_sftraj.ltraj}
 \title{Convert objects into sftraj objects.}
 \usage{
-as_sftraj(data, ...)
+as_sftraj(data = data.frame(), ...)
 
-new_sftraj(data, burst, time, geometry, error = NA)
+new_sftraj(data, burst_col, sf_col, time_col, error_col = NA)
 
-\method{as_sftraj}{data.frame}(data, ..., xyz, coords = c("x", "y"),
-  burst_list, id, burst_col = NULL, active_burst = NA, error,
-  error_col, time, time_col, crs = NA, zeroNA = FALSE)
+\method{as_sftraj}{data.frame}(data = data.frame(), ..., coords, burst,
+  active_burst = NA, time, error = NA, crs = NA, zeroNA = FALSE)
 
 \method{as_sftraj}{sftrack}(data, ...)
 
-\method{as_sftraj}{sf}(data, ..., burst_list, id, burst_col = NULL,
-  active_burst = NA, error, error_col, time, time_col)
+\method{as_sftraj}{sf}(data, ..., coords, burst, active_burst = NA, time,
+  error = NA)
 
 \method{as_sftraj}{ltraj}(data, ...)
 }
@@ -29,33 +28,33 @@ new_sftraj(data, burst, time, geometry, error = NA)
 
 \item{...}{extra information to be past to as_sftraj}
 
+\item{burst_col}{(data.frame - optional) a character vector naming the other grouping columns in `data`.}
+
+\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
+
+\item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
+
+\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
+
 \item{burst}{a multi_burst}
+
+\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
 
 \item{time}{(vector) a vector of time information, can be either POSIX or an integer}
 
-\item{geometry}{a vector of sf geometries}
-
 \item{error}{(vector - optional) a vector of error information for the movement data}
 
-\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
+\item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
-\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
+\item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
+
+\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
 
 \item{burst_list}{(vector) a list of named vectors describing multiple grouping variables}
 
 \item{id}{(data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs}
 
-\item{burst_col}{(data.frame - optional) a character vector naming the other grouping columns in `data`.}
-
-\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
-
-\item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
-
-\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
-
-\item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
-
-\item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
+\item{geometry}{a vector of sf geometries}
 }
 \description{
 This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.

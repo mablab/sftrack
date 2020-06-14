@@ -4,7 +4,7 @@
 \alias{dup_timestamp}
 \title{check that time is unique}
 \usage{
-dup_timestamp(x)
+dup_timestamp(x, time)
 }
 \arguments{
 \item{x}{An sftrack/sftraj object}

@@ -6,7 +6,7 @@
 \alias{coord_traj}
 \title{Return a list of sf_POINTS or a data.frame from a sftraj object}
 \usage{
-pts_traj(traj)
+pts_traj(traj, sfc = FALSE, first = T)
 
 coord_traj(traj)
 }

@@ -94,6 +94,11 @@ check_active_burst <- function(burst, active_burst = NULL, check_all = T){
   }
   if(!check){stop('not all active bursts found in burst names')}
 }
+
+check_burst_id <- function(burst){
+  if(!('id'%in%burst| 'id'%in%names(burst))){stop('There is no `id` column in burst names')}
+
+}
 ###################
 # coordinate related checks
 

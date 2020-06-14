@@ -113,9 +113,16 @@ test_that('subset works correctly',{
     time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
   expect_equal(class(my_sftraj[1:3,]),c('sftraj','sf','data.frame'))
 
-  expect_message(my_sftraj[,3,])
+  expect_equal(ncol(my_sftraj[,3,]),4)
+
 
   expect_silent(my_sftraj[,3,drop = T])
+
+  expect_equal(nrow(my_sftraj[,3,drop = T]),NULL)
+
+  # subset by colname without dropped columns
+  expect_equal(colnames(my_sftraj[,c('id','month')]), c('id','month','burst','timez','geometry'))
+
 
   # rbind
   df2 <- df1
@@ -133,7 +140,8 @@ test_that('subset works correctly',{
 
   # check that geometries were recalculated
   active_burst(my_sftraj2)
-  my_sftraj2$geometry
+  unlist(my_sftraj2$geometry)
+  expect_equal(unlist(my_sftraj2$geometry), c(27,27,-80,-81,27,27,-81,-82,27,27,-82,-83,27,-83))
 })
 
 
