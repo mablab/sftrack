@@ -492,9 +492,9 @@ rbind.sftrack <- function(...){
   for(i in seq_along(all)){
   class(all[[i]]) <- setdiff(class(all[[i]]),c('sftrack','sf'))
   }
-  df1 <- do.call(rbind,all)
-  class(df1) <- setdiff(class(df1),c('sftrack','sf'))
-  ret <- new_sftrack(data = df1, burst = 'burst',
+  new_df <- do.call(rbind,all)
+  class(new_df) <- setdiff(class(new_df),c('sftrack','sf'))
+  ret <- new_sftrack(data = new_df, burst = 'burst',
     time = time_col, error = error_col, sf_col = sf_col)
 
   #Sanity checks
