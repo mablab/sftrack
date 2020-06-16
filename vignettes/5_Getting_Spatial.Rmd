@@ -36,7 +36,7 @@ As stated earlier, the geometry column is built using `sf`, so functions exactly
 my_sftrack$geometry
 ```
 
-An `sftrack` object is simply an `sfc` of `sf_POINTS`, this contrasts with an `sftraj` object which is a mixture of a `GEOMETERYCOLLECTION` and `LINESTRING`. This is because a trajectory can have a start point and an NA end point, a line segment, or an NA and an end point. This allows no-loss conversion back and forth between `sftrack` and an `sftraj`, and because linestrings can not have a NULL point in them.
+An `sftrack` object is simply an `sfc` of `sf_POINTS`, this contrasts with an `sftraj` object which is a mixture of a `POINT` and `LINESTRING`. This is because a trajectory can have a start point and an NA end point, a line segment, or an NA and an end point. This allows no-loss conversion back and forth between `sftrack` and an `sftraj`, and because linestrings can not have a NULL point in them.
 
 ```{r}
 my_sftraj$geometry
@@ -66,11 +66,53 @@ is_linestring(my_sftraj$geometry)[1:10]
 new_sftraj <- my_sftraj[is_linestring(my_sftraj$geometry),]
 head(new_sftraj)
 ```
+## Working with sf
+
+As sftrack object is an sf object, all of the sf functions apply to it.
+
+```{r}
+st_length(my_sftraj)
+
+df1 <- data.frame(
+  id = c(1,1,1,1),
+  time = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4),
+  x = c(1,3,3,2),
+  y = c(1,1,3,4)
+)
+
+road <- st_linestring(rbind(
+  c(1,2),
+  c(5,2),
+  c(5,0)
+)
+)
+
+animal1 <- as_sftraj(df1)
+plot(animal1)
+
+plot(road, add = T, col = 'red')
+
+# Does the animal cross the road?
+
+any(st_intersects(animal1, road, sparse = F))
+
+# When?
+animal1$time[st_intersects(animal1, road, sparse = F)]
+
+# How often does the animal stay near the road?
+st_is_within_distance(animal1, road, 1)
+
+# How close is the animal from the road?
+
+st_distance(animal1, road)
+```
+
+The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasionally a function may not work with it. In those cases is_linestring would be appropriate to filter out points with no t2.
 
 ## Plotting
 
 ##### Base plotting 
-Currently there are some basic plotting methods. Base plotting currently does not have any thrills built into it, and assumes that the `active_burst` is the grouping/coloring variable.  
+Currently there are some basic plotting methods. Base plotting is built ontop of the sf functionality, while simply controlling how to group and color the points. 
 
 
 ```{r}
@@ -85,8 +127,15 @@ active_burst(my_sftraj$burst)
 plot(my_sftraj)
 ```
 
+Because it feeds plot an sf object, the same arguments for `plot.sf` are all available. 
+
+```{r}
+plot(my_sftrack, axes = TRUE, cex=5)
+```
+
+
 ##### ggplot
-This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function. That'll change as I look more into it. Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
+This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
 
 ```{r}
 library(ggplot2)

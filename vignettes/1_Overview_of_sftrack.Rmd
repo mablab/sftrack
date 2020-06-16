@@ -24,9 +24,17 @@ We'll begin with a brief overview of an `sftrack` object. An `sftrack` object is
 
 An `sftrack` object has 4 parts to it, 3 of which are required:  
  - **Geometry** This is stored as an `sfc` object from `sf`. Accepts x,y,z coordinates, although z is rarely used.  
- - **Burst** This is the grouping variables, which contains at minimum an id field to identify the subject.  
+ - **Burst** This is the grouping variables, which contains at minimum an id field to identify the subject. Grouping variables can be turned on at various stages based on the 'active' burst, allowing for the column to be more dynamic than any standard grouping variable
  - **Time** This can either be a POSIX object or an integer.  
  - **Error** (optional). This is the field with error data in it.  
+
+There are two different classes of objects:
+
+#### sftrack objects
+A standard sftrack consists of a point object, where each row represents a data point and is stored in the geometry column as a `POINT`.
+
+#### sftraj object
+A trajectory object, where each row represents a step from one point to another, each stored as a `LINESTRING` from point t1 ->t2 for each burst grouping. t2 is automatically assumed to be the next t2 in time. This means that when an sftraj object is modified the steps likely need to be recalculated. Internally anytime active_bursts are changed, then the geometry is recalculated.
 
 ## Definitions
 

@@ -14,6 +14,9 @@ devtools::load_all("/home/matt/r_programs/sftrack")
 #library(sftrack)
 
 ```
+
+`sftrack` objects can be read in via raw data or from `sf` or `ltraj` objects.
+
 ## Loading in raw data
 
 To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` function, depending on your desired output. Both have the same arguments and output but differ in the way the geometry field is calculated.  
@@ -24,7 +27,7 @@ To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` func
 These are options that are required regardless of which input type you use.  
 
 **data** - is a data.frame containing your data. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists.  
-**crs** - the coordinate references system/projection of the data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later.  
+**crs** - the coordinate references system/projection of the data, as implemented by rgdal. see CRS-class for more information. If none is supplied crs is set as NA and can be set later using the `sf` function CRS.  
 **active_burst** - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. Can change active_burst whenever. If no value is supplied it defaults to all bursts.  
 
 ### Variable inputs
@@ -33,7 +36,7 @@ must be found in the data.frame supplied by `data`. If using entirely vector inp
 
 **burst** - a list with named vectors to group the sftrack where each list item is length(vector) = nrow(data). One item must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for burst categories.   
 **cords** - data.frame of x,y,z coordinates where column with order : `c(x, y, z)`, z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  Or a vector naming the column names for coordinates in x,y,z order.
-**time** - a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'. Or the column name for the time column
+**time** - a vector containing the time information, must be either POSIX or an integer where length(time) == nrow(data). Using this argument will name the time column as 'reloc_time'. Or the column name for the time column. The output object will be sorted by the time column.
 **error** - a vector containing the error information where length(error) == nrow(data). Using this argument will name the error information as 'track_error'. Input can be singular NA, inwhich the column is filled with NAs. Or the column name for the error column
 
 ### Examples (Vector)
@@ -91,7 +94,7 @@ head(my_sftraj)
 `as_sftrack()` and `as_sftraj()` also accept other data types, and the arguments differ depending on the class. It currenly accepts, `sf`, `ltraj`, and eventually `tibbles`. 
 
 ### Import from ltraj
-For an ltraj all you need is the ltraj object, all relevant information is taken from the object.  
+For an ltraj all you need is the ltraj object, all relevant information is taken from the object. The burst as defined in an ltraj is slightly different than in an sftrack, so it assumes the ltraj 'burst' is the id field of the sftrack object.
 
 ```{r, message = FALSE}
 library(adehabitatLT)
@@ -124,7 +127,7 @@ head(new_sftrack)
 
 ```
 ### Inter-class conversion
-Additionally `as_sftrack` and `as_sftraj` can convert back and forth between each other.
+Additionally `as_sftrack` and `as_sftraj` can convert back and forth between each other with no loss in information.
 
 ```{r}
 # Make tracks from raw data
@@ -146,3 +149,17 @@ identical(my_sftraj,new_sftraj)
 identical(my_sftrack,new_sftrack)
 ```
 
+A common issue with movement data is when duplicated gps time stamps are logged.
+When sftrack comes into contact with these records, it returns an error:
+
+```{r}
+
+data$time[1] <- data$time[2]
+ try(as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error))
+
+```
+It can be hard to identify which records are duplicated. You can use the which_duplicated function to check your inputs:
+
+```{r}
+which_duplicated(data = data , burst = burst, time = time)
+```

@@ -82,21 +82,24 @@ coord_traj <- function(traj) {
 #' of the steps is NA. This function checks a trajectory geometry if its a linestring and returns
 #' a vector of T/F. Largely an internal function, but can be used to subset sftraj objects.
 #' @export
-#' @param traj an sftraj object
-is_linestring <- function(traj) {
-  if (inherits(traj, 'sftraj')) {
-    pts <- traj[[attr(traj, 'sf_column')]]
+#' @param x an sftraj object
+is_linestring <- function(x) {
+  if (inherits(x, 'sftraj')) {
+    pts <- x[[attr(x, 'sf_column')]]
   }
-  if (inherits(traj, 'sfc')) {
-    pts <- traj
+  if (inherits(x, 'sfc')) {
+    pts <- x
   }
-  if ('XY' %in% class(pts[[1]])) {
-    dim = c('X', 'Y')
-  } else{
-    dim = c('X', 'Y', 'Z')
-  }
-  vapply(traj, function(x)
-    inherits(x, 'LINESTRING'), NA)
+  # if ('XY' %in% class(pts[[1]])) {
+  #   dim = c('X', 'Y')
+  # } else{
+  #   dim = c('X', 'Y', 'Z')
+  # }
+  vapply(x, function(y)
+    inherits(y, 'LINESTRING'), NA)
+
+  # the sf version might be faster?
+  #st_is(x,'LINESTRING')
 }
 
 #' @title Summarize sftrack objects
@@ -172,22 +175,47 @@ sfg_is_empty = function(x) {
 }
 
 #' @export
-which_duplicated <- function(data, burst_list, time_col){
-  # data = sub_gps
-  # time_col = 'timez'
-  # burst_list = list(id = sub_gps$id)
-  # data$timez[1] <- data$timez[2]
+which_duplicated <- function(data, burst, time){
+  # coords = c('longitude','latitude')
+  # burst = c(id = 'sensor_code', month = 'month')
+  # time = 'time'
+  # data$time[1] <- data$time[2]
+  # data$time[4] <- data$time[5]
+  if(all(sapply(burst,length)==nrow(data))){
+    # check id in burst
+    check_burst_id(burst)
+    burst_list <- burst
+  } else{
+    # check names exist
+    check_names_exist(data, burst)
+    # check id in burst
+    # check id in burst
+    check_burst_id(burst)
+    # create burst list from names
+    burst_list <- lapply(data[, burst, FALSE], function(x) x)
+    if(!is.null(names(burst))){ names(burst_list) <- names(burst) } else {names(burst_list) <- burst}
+  }
+
+  if (length(time)==nrow(data) ) {
+    reloc_time <- time
+
+  } else {
+    check_names_exist(data, time)
+    reloc_time <- data[[time]]
+
+  }
+  check_time(reloc_time)
+
+
   burst <-
-    make_multi_burst(burst_list = burst_list)
+    make_multi_burst(x = burst_list)
 
-  results <- unlist(tapply(data[[time_col]], burst_labels(burst, TRUE), duplicated))
+  results <- unlist(tapply(reloc_time, burst_labels(burst, TRUE), duplicated))
+  blt <- paste0(burst_labels(burst, TRUE),' | ',reloc_time)
 
-  data.frame(
-    burst = burst_labels(burst, TRUE)[results],
-    time = data[[time_col]][results],
-    row = which(results),
-    row.names = NULL
-  )
+  results <- blt[duplicated(blt)]
+  ret <- lapply(results, function(x) data.frame('burst_time' = x, row = which(blt ==x)))
+  do.call(rbind, ret)
 }
 
 #' Get the position of x2, given the time
@@ -198,11 +226,4 @@ get_x2 <- function(time){
 }
 
 
-unique_active_bursts <-
-  function(burst){
-    #burst = list(burst1,burst2)
-    #burst = list(x[[1]],value[[1]])
-    if(length(unique(vapply(burst, function(x) paste(attr(x,'active_burst'),collapse=''),NA_character_)))!=1){
-      stop('There are more than one possible active bursts')
-    }
-  }
+

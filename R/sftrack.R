@@ -91,10 +91,10 @@ new_sftrack <- function(data, burst_col, sf_col, time_col, error_col = NA) {
 as_sftrack.data.frame <- function(
   data =  data.frame(),
   ...,
-  coords,
-  burst,
+  coords = c('x','y'),
+  burst = 'id',
   active_burst = NA,
-  time,
+  time = 'time',
   error = NA,
   crs = NA,
   zeroNA = FALSE
