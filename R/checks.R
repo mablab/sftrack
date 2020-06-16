@@ -149,6 +149,7 @@ check_time <- function(time) {
   # This function was originally envisioned to contain all time checks
   # Currently its not but can expand if we feel its necessary to have
   # is integer or posixct
+  if(inherits(time, c('sftrack','sftraj'))){time <- time[[attr(time, 'time')]]}
   if (!(inherits(time, 'integer') | inherits(time, 'POSIXct'))) {
     stop('Time needs to be an integer or POSIXct')
   }
@@ -192,3 +193,12 @@ dup_timestamp <- function(x, time) {
     ))
   }
 }
+
+unique_active_bursts <-
+  function(burst){
+    #burst = list(burst1,burst2)
+    #burst = list(x[[1]],value[[1]])
+    if(length(unique(vapply(burst, function(x) paste(attr(x,'active_burst'),collapse=''),NA_character_)))!=1){
+      stop('There are more than one possible active bursts')
+    }
+  }

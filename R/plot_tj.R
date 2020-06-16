@@ -8,10 +8,10 @@ plot.sftrack <- function(x, ...) {
   bl <-   burst_labels(x$burst,factor=TRUE)
   b_lvl <- levels(bl)
   what <- as.numeric(bl)
-  col1 <- scales::alpha(what, 0.2)
+  col1 <- scales::alpha(what, 0.5)
   my_pts <- st_geometry(x)
   graphics::plot(my_pts,
-    col = col1, cex = 1,...)
+    col = col1,...)
 }
 
 #' @title methods for plot sftrack/sftraj
@@ -40,7 +40,7 @@ plot.sftraj <- function(x, ...) {
     graphics::plot(here[[i]],
       type = 'l',
       add = TRUE ,
-      col = i)
+      col = i,...)
   }
 }
 
@@ -72,19 +72,19 @@ geom_sftrack <- function(data, ...) {
 
 #' @rdname geom_sftrack
 #' @export
-geom_sftrack.sftrack <- function(data, ...) {
+geom_sftrack.sftrack <- function(mapping = aes(),data = NULL,...) {
   sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
   bl <- burst_labels(sub$burst, factor = T)
   list(ggplot2::geom_sf(data = sub, ggplot2::aes(
     color = bl, fill = bl
   )),
     ggplot2::guides(color = FALSE) ,
-    ggplot2::labs(fill = "Bursts"))
+    ggplot2::labs(fill = "Bursts"),...)
 }
 
 #'@name geom_sftrack
 #'@export
-geom_sftrack.sftraj <- function(data, ...) {
+geom_sftrack.sftraj <- function(mapping = aes(),data = NULL,...) {
   sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
   bl <- burst_labels(sub$burst, factor = T)
   list(

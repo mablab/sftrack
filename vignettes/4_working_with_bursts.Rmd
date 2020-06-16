@@ -114,7 +114,7 @@ mb[1]
 And the burst names must match the ones in the multi_burst
 ```{r}
 # Try to add an ind_burst with a month field when the original burst had year instead 
-tryCatch(mb[1] <- make_ind_burst(list(id=3,month=2019)), error = function(e) e)
+try( mb[1] <- make_ind_burst(list(id=3,month=2019)) )
 ```
 
 ##### selecting a burst

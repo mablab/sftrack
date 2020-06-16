@@ -182,7 +182,7 @@ str.multi_burst <- function(object, ...) {
   cat(paste0(class(object)[1],' object \n'))
     str(unclass(object), list.len=1)
 }
-# str.multi_burst(my_track$burst)
+# str.multi_burst(my_sftrack$burst)
 
 #' @export
 format.ind_burst <- function(x, ...) {
@@ -250,7 +250,9 @@ format.multi_burst <- function(x, ...) {
 
 #' @export
 summary.multi_burst <- function(object, ...) {
+  ab <- paste0(attr(object, 'active_burst'),collapse=', ')
   object <- burst_labels(object, factor = T)
+  levels(object) <- c(levels(object), paste('active_burst:',ab))
  NextMethod()
 }
 #summary(mb1)
