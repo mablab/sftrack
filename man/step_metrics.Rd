@@ -7,8 +7,19 @@
 step_metrics(sftraj)
 }
 \arguments{
-\item{sftrack}{an sftrack/sftraj object}
+\item{sftraj}{an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.}
 }
 \description{
 Calculates step metrics including distance, dt, dx, and dy.
+}
+\examples{
+#'
+raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+  # Input is a data.frame
+my_sftraj <- as_sftraj(raccoon_data, burst = burstz, time = 'acquisition_time',
+  error = NA, coords = c('longitude','latitude'))
+
+step_metrics(my_sftraj)[1:10,]
 }

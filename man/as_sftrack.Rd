@@ -2,7 +2,6 @@
 % Please edit documentation in R/sftrack.R
 \name{as_sftrack}
 \alias{as_sftrack}
-\alias{new_sftrack}
 \alias{as_sftrack.data.frame}
 \alias{as_sftrack.sftraj}
 \alias{as_sftrack.ltraj}
@@ -11,10 +10,9 @@
 \usage{
 as_sftrack(data = data.frame(), ...)
 
-new_sftrack(data, burst_col, sf_col, time_col, error_col = NA)
-
-\method{as_sftrack}{data.frame}(data = data.frame(), ..., coords, burst,
-  active_burst = NA, time, error = NA, crs = NA, zeroNA = FALSE)
+\method{as_sftrack}{data.frame}(data = data.frame(), ...,
+  coords = c("x", "y"), burst = "id", active_burst = NA,
+  time = "time", error = NA, crs = NA, zeroNA = FALSE)
 
 \method{as_sftrack}{sftraj}(data, ...)
 
@@ -24,35 +22,23 @@ new_sftrack(data, burst_col, sf_col, time_col, error_col = NA)
   time, error = NA)
 }
 \arguments{
-\item{data}{(global) a data.frame of the movement data}
+\item{data}{a data.frame of the movement data, if supplied all data.frame inputs, than is optional}
 
-\item{...}{extra information to be past to as_sftrack}
+\item{...}{extra information to be passed on to as_sftrack}
 
-\item{burst_col}{(data.frame - optional) a character vector naming the other grouping columns in `data`.}
+\item{coords}{a character vector describing where the x,y,z coordinates are located in `data` or a list with x,y,z (optional) vectors}
 
-\item{time_col}{(data.frame) a character string naming the column in `data` where the time information is located}
+\item{burst}{a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.}
 
-\item{error_col}{(data.frame - optional) a character string naming the column in `data` where the error information is located}
+\item{active_burst}{a character vector of the burst names to be 'active' to group data by for analysis}
 
-\item{coords}{(data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`}
+\item{time}{a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located}
 
-\item{burst}{a multi_burst}
-
-\item{active_burst}{(global) a character vector of the burst names to be 'active' to group data by for analysis}
-
-\item{time}{(vector) a vector of time information, can be either POSIX or an integer}
-
-\item{error}{(vector - optional) a vector of error information for the movement data}
+\item{error}{(optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located}
 
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
-
-\item{xyz}{(vector) a data.frame of xy or xyz coordinates}
-
-\item{burst_list}{(vector) a list of named vectors describing multiple grouping variables}
-
-\item{id}{(data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs}
 
 \item{geometry}{a vector of sf geometries}
 }
@@ -62,7 +48,7 @@ Creates a `burst` column to group movement data and sets dedicated time and erro
 
 Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
-Either input is allowed, but vector mode over.writes data.frame mode if both are given.
+Either input is allowed on any given argument.
 
 Some options are global and required regardless
 }
@@ -70,14 +56,7 @@ Some options are global and required regardless
 Convert objects into sftrack objects.
 }
 \examples{
-
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-  # Input is a data.frame
-my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
-  error = NA, coords = c('longitude','latitude'),
-  burst_list = burstz)
+#'
 
   # Input is a ltraj
   library(adehabitatLT)
@@ -85,6 +64,7 @@ my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
   date = as.POSIXct(raccoon_data$acquisition_time),
   id = raccoon_data$sensor_code, typeII = TRUE,
   infolocs = raccoon_data[,1:6] )
+
   my_sftrack <- as_sftrack(ltraj_df)
   head(my_sftrack)
 
@@ -92,16 +72,14 @@ my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
   library(sf)
   df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
   sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
-  id = 'sensor_code'
-  time_col = 'acquisition_time'
 
-  new_sftrack <- as_sftrack(sf_df, id=id, time_col = time_col)
+  new_sftrack <- as_sftrack(sf_df, burst = c(id = 'sensor_code'),time = 'acquisition_time')
   head(new_sftrack)
 
   # Input is an sftraj object
-  my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
+  my_traj <- as_sftraj(raccoon_data, time = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),
-  burst_list = burstz)
+  burst = burstz)
 
   new_track <- as_sftrack(my_traj)
   head(new_track)

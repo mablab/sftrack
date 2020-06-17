@@ -4,7 +4,7 @@
 #' @param x sftrack object
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
-#' #'
+#' @examples
 #' library(sftrack)
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')

@@ -6,12 +6,14 @@
 \alias{coord_traj}
 \title{Return a list of sf_POINTS or a data.frame from a sftraj object}
 \usage{
-pts_traj(traj, sfc = FALSE, first = T)
+pts_traj(traj, sfc = FALSE)
 
 coord_traj(traj)
 }
 \arguments{
 \item{traj}{a trajectory geometery from sf_traj}
+
+\item{sfc}{TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE}
 }
 \description{
 Return a list of sf_POINTS or a data.frame from a sftraj object
