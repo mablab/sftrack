@@ -1,8 +1,29 @@
 #' @title methods for plot sftrack/sftraj
+#' @name plot_sftrack
 #' @export
 #' @param x sftrack object
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
+#' #'
+#' library(sftrack)
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#'   burstz <- c(id = 'sensor_code')
+#' my_sftrack <- as_sftrack(raccoon_data, time = 'acquisition_time',
+#'    coords = c('longitude','latitude'),
+#'   burst = burstz)
+#'
+#' # Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
+#'
+#' plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
+#'
+#' # sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+#' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+#'   coords = c('longitude','latitude'),
+#'   burst = burstz)
+#' plot(my_sftraj, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80', graticule = TRUE)
+
+
 plot.sftrack <- function(x, ...) {
  # x <- my_sftrack
   bl <-   burst_labels(x$burst,factor=TRUE)
@@ -16,6 +37,7 @@ plot.sftrack <- function(x, ...) {
 
 #' @title methods for plot sftrack/sftraj
 #' @export
+#' @rdname plot_sftrack
 #' @param x sftrack object
 #' @param ... arguments to passed to plot
 #' @method plot sftraj
@@ -55,16 +77,20 @@ plot.sftraj <- function(x, ...) {
 #' @param data the sftraj or sftrack object.
 #' @param ... arguments to passed to ggplot
 #' @examples
+#' #'
 #' library(ggplot2)
 #' library(sftrack)
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#' my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
-#'    coords = c('longitude','latitude'),
-#'   burst_list =burstz)
+#'   burstz <- c(id = 'sensor_code')
 #'
-#' ggplot() + geom_sftrack(data = my_step)
+#' # sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+#' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+#'   coords = c('longitude','latitude'),
+#'   burst = burstz)
+#'
+#' ggplot() + geom_sftrack(data = my_sftraj)
+
 #' @export
 geom_sftrack <- function(data, ...) {
   UseMethod('geom_sftrack')

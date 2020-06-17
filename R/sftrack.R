@@ -7,36 +7,29 @@
 #'
 #' Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 #' length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
-#' Either input is allowed, but vector mode over.writes data.frame mode if both are given.
+#' Either input is allowed on any given argument.
 #'
 #' Some options are global and required regardless
-#' @param data (global) a data.frame of the movement data
-#' @param xyz (vector) a data.frame of xy or xyz coordinates
-#' @param coords (data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`
-#' @param burst_list (vector) a list of named vectors describing multiple grouping variables
-#' @param id (data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs
-#' @param burst_col (data.frame - optional) a character vector naming the other grouping columns in `data`.
-#' @param active_burst (global) a character vector of the burst names to be 'active' to group data by for analysis
-#' @param time (vector) a vector of time information, can be either POSIX or an integer
-#' @param time_col (data.frame) a character string naming the column in `data` where the time information is located
-#' @param error (vector - optional) a vector of error information for the movement data
-#' @param error_col (data.frame - optional) a character string naming the column in `data` where the error information is located
+#' @param data a data.frame of the movement data, if supplied all data.frame inputs, than is optional
+#' @param coords a character vector describing where the x,y,z coordinates are located in `data` or a list with x,y,z (optional) vectors
+#' @param burst a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.
+#' @param active_burst a character vector of the burst names to be 'active' to group data by for analysis
+#' @param time a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located
+#' @param error (optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
-#' @param ... extra information to be past to as_sftrack
-#' @param burst a multi_burst
+#' @param ... extra information to be passed on to as_sftrack
 #' @param geometry a vector of sf geometries
 #' @import sf
 #' @export
 #' @examples
-#'
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#'   # Input is a data.frame
-#' my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
-#'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list = burstz)
+#' #'
+# raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+# raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#   # Input is a data.frame
+# my_track <- as_sftrack(raccoon_data, burst = burstz, time = 'acquisition_time',
+#   error = NA, coords = c('longitude','latitude'))
 #'
 #'   # Input is a ltraj
 #'   library(adehabitatLT)
@@ -44,7 +37,7 @@
 #'   date = as.POSIXct(raccoon_data$acquisition_time),
 #'   id = raccoon_data$sensor_code, typeII = TRUE,
 #'   infolocs = raccoon_data[,1:6] )
-
+#'
 #'   my_sftrack <- as_sftrack(ltraj_df)
 #'   head(my_sftrack)
 #'
@@ -52,16 +45,14 @@
 #'   library(sf)
 #'   df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
 #'   sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
-#'   id = 'sensor_code'
-#'   time_col = 'acquisition_time'
 #'
-#'   new_sftrack <- as_sftrack(sf_df, id=id, time_col = time_col)
+#'   new_sftrack <- as_sftrack(sf_df, burst = c(id = 'sensor_code'),time = 'acquisition_time')
 #'   head(new_sftrack)
 #'
 #'   # Input is an sftraj object
-#'   my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
+#'   my_traj <- as_sftraj(raccoon_data, time = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list = burstz)
+#'   burst = burstz)
 #'
 #'   new_track <- as_sftrack(my_traj)
 #'   head(new_track)
@@ -71,7 +62,12 @@ as_sftrack <- function(data = data.frame(), ...) {
   UseMethod('as_sftrack', object = data)
 }
 
-#' @rdname as_sftrack
+#' @title Define an sftrack
+#' @param data  data.frame with multi_burst column, geometry column, time_col (integer/POSIXct), and error column (optional)
+#' @param burst_col column name of multi_burst in `data`
+#' @param sf_col column name of geometry in `data`
+#' @param time_col column name of time in `data`
+#' @param error_col column name of error in `data`
 #' @export
 new_sftrack <- function(data, burst_col, sf_col, time_col, error_col = NA) {
 
@@ -364,6 +360,11 @@ as_sftrack.sf <- function(
 
 # Methods for 'sftrack' class
 
+#' @title Print methods for sftrack
+#' @name Print_sftrack_objects
+#' @param x sftrack/sftraj object
+#' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
+#' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
 #' @export
 print.sftrack <- function(x, n_row, n_col, ...) {
   if (missing(n_col)) {
@@ -479,6 +480,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
 
 }
 
+#' @export
 rbind.sftrack <- function(...){
   all = list(...)
   #all = list(my_sftrack, my_sftrack2)

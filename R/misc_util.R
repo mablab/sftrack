@@ -4,6 +4,7 @@
 #' @title Return a list of sf_POINTS or a data.frame from a sftraj object
 #' @name traj_geom
 #' @param traj a trajectory geometery from sf_traj
+#' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
@@ -20,7 +21,7 @@
 #' # or a data.frame of points
 #' coord_traj(my_traj)
 #' @export
-pts_traj <- function(traj, sfc = FALSE, first = T) {
+pts_traj <- function(traj, sfc = FALSE) {
   if (inherits(traj, 'sftraj')) {
     pts <- st_geometry(traj)
   }
@@ -75,12 +76,12 @@ coord_traj <- function(traj) {
 
 }
 
-#' @title Is a trajectory geometry a linestring or a geometerycollection
+#' @title Is a trajectory geometry a linestring or a point
 #' @description A step is a movement from one point to the next, with an sftraj object
 #' this manifests as a linestring. If, however, one of these two points is missing, the sftraj
 #' is created as a geometery collection of two points, the beginning and the end point, where one
 #' of the steps is NA. This function checks a trajectory geometry if its a linestring and returns
-#' a vector of T/F. Largely an internal function, but can be used to subset sftraj objects.
+#' a vector of T/F.
 #' @export
 #' @param x an sftraj object
 is_linestring <- function(x) {
@@ -174,8 +175,15 @@ sfg_is_empty = function(x) {
   )
 }
 
+
+#' @title Which burst/time stamp combos are duplicated.
+#' @description This function returns a data.frame of which rows are duplicated and their time stamps.
 #' @export
-which_duplicated <- function(data, burst, time){
+#' @param data a data.frame containing burst or time data (if necessary)
+#' @param burst a list where each entry is a vector of bursts where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data
+#' @param time a vector of as.POSIXct time, or a character of the column name where it can be found in data
+#' @param
+which_duplicated <- function(data = data.frame(), burst, time){
   # coords = c('longitude','latitude')
   # burst = c(id = 'sensor_code', month = 'month')
   # time = 'time'
@@ -219,7 +227,7 @@ which_duplicated <- function(data, burst, time){
 }
 
 #' Get the position of x2, given the time
-#' @export
+
 get_x2 <- function(time){
   or <- order(time)
   seq_along(time)[or][or+1][order(or)]
