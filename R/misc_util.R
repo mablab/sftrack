@@ -182,7 +182,7 @@ sfg_is_empty = function(x) {
 #' @param data a data.frame containing burst or time data (if necessary)
 #' @param burst a list where each entry is a vector of bursts where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data
 #' @param time a vector of as.POSIXct time, or a character of the column name where it can be found in data
-#' @param
+
 which_duplicated <- function(data = data.frame(), burst, time){
   # coords = c('longitude','latitude')
   # burst = c(id = 'sensor_code', month = 'month')

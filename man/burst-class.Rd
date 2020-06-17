@@ -8,7 +8,7 @@
 \alias{c.multi_burst}
 \title{A class to group movement data}
 \usage{
-make_ind_burst(burst, active_burst = NULL)
+make_ind_burst(x, active_burst = NULL)
 
 make_multi_burst(x = NULL, active_burst = NULL)
 
@@ -17,19 +17,17 @@ make_multi_burst(x = NULL, active_burst = NULL)
 \method{c}{multi_burst}(..., recursive = FALSE)
 }
 \arguments{
-\item{burst}{a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may'). In the case of a multi_burst can be a list of ind_bursts.}
+\item{x}{a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may'). For a multi_burst: A list of ind_bursts or
+a list of equal length named vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)}
 
 \item{active_burst}{a vector of the names of the bursts to be considered 'active' for the sake of analysis.}
 
 \item{...}{objects to be pasted together into a multi_burst}
 
 \item{recursive}{ignored}
-
-\item{burst_list}{a list of equal length vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)}
 }
 \description{
-This class describes a burst, which is a grouping variable
-in which to split the data for analysis purposes.
+This class describes a burst, which is a grouping variable for movement data.
 It is composed of a list with named vectors.
 One of which must be 'id', the id of the subject monitored,
 and can be any length beyond that.
@@ -52,13 +50,14 @@ You can create bursts with make_ind_burst and make multi_burst.
 }
 \examples{
 # Make a single burst
+
 make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 
 # Make a multi burst
  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
  raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
- mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
+ mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
  str(mb1)
 
 # Make a multi_burst from many ind_bursts

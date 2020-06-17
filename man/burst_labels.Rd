@@ -7,11 +7,9 @@
 burst_labels(x, ...)
 }
 \arguments{
-\item{burst}{a multi_burst}
+\item{x}{a sftrack or burst object}
 
-\item{factor}{logical, whether to return a factor, defaults return is a character}
-
-\item{active_burst}{(optional), the active_burst to subset by, defaults to the current active_burst.}
+\item{factor}{logical, whether to return a factor, default return is a character}
 }
 \description{
 Shows burst labels created from the ind_burst and the active_burst
