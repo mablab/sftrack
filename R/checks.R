@@ -30,6 +30,7 @@ check_ordered <- function(burst, time_data, return = TRUE) {
 #' @param names the inputted column names
 check_names_exist <- function(data, names) {
   # check burst
+  if(!is.character(names)){stop('Column names must be a character')}
   col_names <- colnames(data)
   test <- !(names %in% colnames(data))
   if (any(test)) {
@@ -51,6 +52,14 @@ check_NA_burst <- function(burst) {
   if (any(is.na(unlist(burst)))) {
     stop('NAs not allowed in burst')
   }
+}
+
+#' @title Check there is aburst id present
+#' @export
+#' @param burst a multi_burst
+check_burst_id <- function(burst){
+  if(!('id'%in%burst| 'id'%in%names(burst))){stop('There is no `id` column in burst names')}
+
 }
 
 # more than one relocation for a burst
@@ -85,6 +94,7 @@ check_burst_names <- function(burst) {
   }
 }
 
+# How many bursts are there when combining two different multi_bursts
 check_active_burst <- function(burst, active_burst = NULL, check_all = T){
   if(is.null(active_burst)){active_burst <- active_burst(burst)}
   if(!check_all){
@@ -95,10 +105,7 @@ check_active_burst <- function(burst, active_burst = NULL, check_all = T){
   if(!check){stop('not all active bursts found in burst names')}
 }
 
-check_burst_id <- function(burst){
-  if(!('id'%in%burst| 'id'%in%names(burst))){stop('There is no `id` column in burst names')}
 
-}
 ###################
 # coordinate related checks
 
@@ -174,7 +181,8 @@ check_t_regular <- function(sftrack) {
 }
 
 #' @title check that time is unique
-#' @param x An sftrack/sftraj object
+#' @param x An sftrack/sftraj object or a multi_burst
+#' @param time vector of time, not required if given a sftrack object.
 #' @export
 dup_timestamp <- function(x, time) {
   if(inherits(x,c('sftrack','sftraj'))){

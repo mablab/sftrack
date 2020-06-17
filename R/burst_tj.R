@@ -1,7 +1,6 @@
 #' @name burst-class
 #' @title A class to group movement data
-#' @description This class describes a burst, which is a grouping variable
-#' in which to split the data for analysis purposes.
+#' @description This class describes a burst, which is a grouping variable for movement data.
 #' It is composed of a list with named vectors.
 #' One of which must be 'id', the id of the subject monitored,
 #' and can be any length beyond that.
@@ -20,20 +19,21 @@
 #' to the new grouping levels.
 #'
 #' You can create bursts with make_ind_burst and make multi_burst.
-#' @param burst a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may'). In the case of a multi_burst can be a list of ind_bursts.
-#' @param burst_list a list of equal length vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)
+#' @param x a list containing named burst variables, one item must be named 'id'. ex: list(id = 1, month = 'may'). For a multi_burst: A list of ind_bursts or
+#' a list of equal length named vectors which will be combined to create a multi_burst. ex: list(x = 1st_vector, y = 2nd_vector)
 #' @param active_burst a vector of the names of the bursts to be considered 'active' for the sake of analysis.
 #' @export make_multi_burst
 #' @export make_ind_burst
 #' @examples
 #' # Make a single burst
+#'
 #' make_ind_burst(burst=list(id='CJ11',month=3, height=10))
 #'
 #' # Make a multi burst
 #'  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #'  raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#'  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
+#'  mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
 #'  str(mb1)
 #'
 #' # Make a multi_burst from many ind_bursts
@@ -44,16 +44,16 @@
 #'  c(a, b, c)
 
 #' @rdname burst-class
-make_ind_burst <- function(burst, active_burst = NULL) {
+make_ind_burst <- function(x, active_burst = NULL) {
   # check duplicated
-  if (any(duplicated(names(burst)))) {
+  if (any(duplicated(names(x)))) {
     stop('burst names are duplicated')
   }
 
   # check id in burst
-  check_burst_id(burst)
+  check_burst_id(x)
 
-  new_burst <- lapply(burst, as.character)
+  new_burst <- lapply(x, as.character)
   ind_burst(new_burst, active_burst)
 
 }
@@ -258,9 +258,8 @@ summary.multi_burst <- function(object, ...) {
 #summary(mb1)
 
 #' @title Shows burst labels created from the ind_burst and the active_burst
-#' @param burst a multi_burst
-#' @param factor logical, whether to return a factor, defaults return is a character
-#' @param active_burst (optional), the active_burst to subset by, defaults to the current active_burst.
+#' @param x a sftrack or burst object
+#' @param factor logical, whether to return a factor, default return is a character
 #' @export
 burst_labels <- function(x, ...) {
   UseMethod('burst_labels', object = x)
@@ -321,7 +320,7 @@ burst_labels.multi_burst <- function(x, factor = F) {
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#'  mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
+#'  mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
 #'
 #'  # see the current active burst
 #'  active_burst(mb1)
@@ -330,9 +329,9 @@ burst_labels.multi_burst <- function(x, factor = F) {
 #'  active_burst(mb1) <- 'id'
 #'
 #'  # Using a full data set
-#'  my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
+#'  my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list = burstz)
+#'   burst = burstz)
 #'
 #'  summary(my_track)
 #'
@@ -340,7 +339,7 @@ burst_labels.multi_burst <- function(x, factor = F) {
 #'  active_burst(my_track$burst) <- 'id'
 #'
 #'  summary(my_track)
-#'
+#' #'
 active_burst <- function(burst) {
   if(inherits(burst,c('sftrack','sftraj'))){return(attr(burst$burst, 'active_burst'))}
   #check_burst_names(x)
@@ -409,9 +408,4 @@ active_burst <- function(burst) {
 
 }
 #' # active_burst(my_sftrack) <- c('id','numSat')
-#' #' @export
-#' levels.multi_burst <- function(x){
-#'   x = burst_labels(x, factor = T)
-#'   NextMethod()
-#' }
-#
+
