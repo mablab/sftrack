@@ -51,7 +51,7 @@ You can create bursts with make_ind_burst and make multi_burst.
 \examples{
 # Make a single burst
 
-make_ind_burst(burst=list(id='CJ11',month=3, height=10))
+make_ind_burst(x = list(id='CJ11',month=3, height=10))
 
 # Make a multi burst
  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))

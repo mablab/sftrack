@@ -24,7 +24,7 @@ test_that('multi_burst works', {
   mb <- make_multi_burst(x = burstz,active_burst = 'id')
   expect_equal(attr(mb[[1]],'active_burst'), 'id')
 
-  expect_warning(make_multi_burst(x = burstz))
+  expect_message(make_multi_burst(x = burstz))
 
   # check levels
 

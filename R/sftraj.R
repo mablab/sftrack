@@ -1,42 +1,35 @@
-#' Convert objects into sftraj objects.
+#' Convert objects into sftrack objects.
 #' @name as_sftraj
-#' @title Convert objects into sftraj objects.
+#' @title Convert objects into sftrack objects.
 #' @description
 #' This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
 #' Creates a `burst` column to group movement data and sets dedicated time and error columns.
 #'
-#' Raw data input can be done using two 'modes': vector or data.frame. 'Vector' inputs gives the argument as a vector where
+#' Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 #' length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
-#' Either input is allowed, but vector mode over.writes data.frame mode if both are given.
+#' Either input is allowed on any given argument.
 #'
 #' Some options are global and required regardless
-#' @param data (global) a data.frame of the movement data
-#' @param xyz (vector) a data.frame of xy or xyz coordinates
-#' @param coords (data.frame) a character vector describing where the x,y,z (optional) coordinates are located in `data`
-#' @param burst_list (vector) a list of named vectors describing multiple grouping variables
-#' @param id (data.frame) a character string naming the 'id' field in `data`. Required if using data.frame inputs
-#' @param burst_col (data.frame - optional) a character vector naming the other grouping columns in `data`.
-#' @param active_burst (global) a character vector of the burst names to be 'active' to group data by for analysis
-#' @param time (vector) a vector of time information, can be either POSIX or an integer
-#' @param time_col (data.frame) a character string naming the column in `data` where the time information is located
-#' @param error (vector - optional) a vector of error information for the movement data
-#' @param error_col (data.frame - optional) a character string naming the column in `data` where the error information is located
+#' @param data a data.frame of the movement data, if supplied all data.frame inputs, than is optional
+#' @param coords a character vector describing where the x,y,z coordinates are located in `data` or a list with x,y,z (optional) vectors
+#' @param burst a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.
+#' @param active_burst a character vector of the burst names to be 'active' to group data by for analysis
+#' @param time a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located
+#' @param error (optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
-#' @param ... extra information to be past to as_sftraj
-#' @param burst a multi_burst
+#' @param ... extra information to be passed on to as_sftraj
 #' @param geometry a vector of sf geometries
 #' @import sf
 #' @export
 #' @examples
-#'
+#' #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_traj <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
-#'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list = burstz)
+#' my_track <- as_sftraj(raccoon_data, burst = burstz, time = 'acquisition_time',
+#'   error = NA, coords = c('longitude','latitude'))
 #'
 #'   # Input is a ltraj
 #'   library(adehabitatLT)
@@ -44,33 +37,36 @@
 #'   date = as.POSIXct(raccoon_data$acquisition_time),
 #'   id = raccoon_data$sensor_code, typeII = TRUE,
 #'   infolocs = raccoon_data[,1:6] )
-
-#'   my_sftraj <- as_sftraj(ltraj_df)
-#'   head(my_sftraj)
+#'
+#'   my_sftrack <- as_sftraj(ltraj_df)
+#'   head(my_sftrack)
 #'
 #'   # Input is a sf object
 #'   library(sf)
 #'   df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
 #'   sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
-#'   id = 'sensor_code'
-#'   time_col = 'acquisition_time'
 #'
-#'   new_sftraj <- as_sftraj(sf_df, id=id, time_col = time_col)
-#'   head(new_sftraj)
+#'   new_sftrack <- as_sftrack(sf_df, burst = c(id = 'sensor_code'),time = 'acquisition_time')
+#'   head(new_sftrack)
 #'
 #'   # Input is an sftrack object
-#'   my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
+#'   my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
 #'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list = burstz)
+#'   burst = burstz)
 #'
 #'   new_traj <- as_sftraj(my_track)
 #'   head(new_traj)
-
+######################
 as_sftraj <- function(data = data.frame(), ...) {
   UseMethod('as_sftraj', object = data)
 }
 
-#' @rdname as_sftraj
+#' @title Define an sftraj
+#' @param data  data.frame with multi_burst column, geometry column, time_col (integer/POSIXct), and error column (optional)
+#' @param burst_col column name of multi_burst in `data`
+#' @param sf_col column name of geometry in `data`
+#' @param time_col column name of time in `data`
+#' @param error_col column name of error in `data`
 #' @export
 new_sftraj <- function(data, burst_col, sf_col, time_col, error_col = NA) {
 
@@ -384,6 +380,11 @@ as_sftraj.ltraj <- function(data, ...) {
   return(ret)
 }
 
+#' @title Print methods for sftraj
+#' @name Print_sftraj_objects
+#' @param x sftraj object
+#' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
+#' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
 #' @export
 print.sftraj <- function(x, n_row, n_col, ...) {
   if (missing(n_col)) {
