@@ -73,7 +73,7 @@ check_two_bursts <- function(burst,..., active_burst) {
   }
   count <- table(lvlz)
   if (any(count == 1)) {
-    warning(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
+    message(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
   }
 }
 #' @title Are burst names equivalent for each ind_burst?

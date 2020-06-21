@@ -27,7 +27,7 @@
 #' @examples
 #' # Make a single burst
 #'
-#' make_ind_burst(burst=list(id='CJ11',month=3, height=10))
+#' make_ind_burst(x = list(id='CJ11',month=3, height=10))
 #'
 #' # Make a multi burst
 #'  raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
@@ -129,6 +129,7 @@ make_multi_burst <-
 c.ind_burst <- function(...) {
   ret = list(...)
   #ret = list(ind_burst(list(id=1)), ind_burst(list(id=2)))
+  unique_active_bursts(ret)
   make_multi_burst(ret)
   # check_burst_names(ret)
   # active_burst <- names(ret[[1]])
@@ -354,7 +355,8 @@ active_burst <- function(burst) {
   UseMethod('active_burst<-', object = x)
 }
 
-
+#' @export
+#' @name active_burst
 'active_burst<-.sftrack' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'
@@ -367,7 +369,8 @@ active_burst <- function(burst) {
     x$burst <-  make_multi_burst(burst, active_burst = value)
     structure(x)
 }
-
+#' @export
+#' @name active_burst
 'active_burst<-.sftraj' <- function(x, value) {
   #x = my_sftraj
   #value = 'id'
@@ -382,6 +385,8 @@ active_burst <- function(burst) {
 
 }
 
+#' @export
+#' @name active_burst
 'active_burst<-.multi_burst' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'
@@ -395,6 +400,8 @@ active_burst <- function(burst) {
 
 }
 
+#' @export
+#' @name active_burst
 'active_burst<-.ind_burst' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'

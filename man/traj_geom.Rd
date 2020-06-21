@@ -23,14 +23,14 @@ raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrac
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # Input is a data.frame
-my_traj <- as_sftraj(raccoon_data, time_col ='acquisition_time',
+my_traj <- as_sftraj(raccoon_data, time ='acquisition_time',
   error = NA, coords = c('longitude','latitude'),
-  burst_list =burstz)
+  burst =burstz)
 print(my_traj, 5, 10)
 
 # extract a list of points
-pts_traj(my_traj)
+pts_traj(my_traj)[1:10]
 
 # or a data.frame of points
-coord_traj(my_traj)
+coord_traj(my_traj)[1:10]
 }

@@ -24,12 +24,12 @@
 #' @export
 #' @examples
 #' #'
-# raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-# raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-#   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#   # Input is a data.frame
-# my_track <- as_sftrack(raccoon_data, burst = burstz, time = 'acquisition_time',
-#   error = NA, coords = c('longitude','latitude'))
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#'   # Input is a data.frame
+#' my_track <- as_sftrack(raccoon_data, burst = burstz, time = 'acquisition_time',
+#'   error = NA, coords = c('longitude','latitude'))
 #'
 #'   # Input is a ltraj
 #'   library(adehabitatLT)
@@ -362,7 +362,7 @@ as_sftrack.sf <- function(
 
 #' @title Print methods for sftrack
 #' @name Print_sftrack_objects
-#' @param x sftrack/sftraj object
+#' @param x sftraj object
 #' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
 #' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
 #' @export
