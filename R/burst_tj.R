@@ -357,7 +357,7 @@ active_burst <- function(burst) {
 #' @title Set new active burst
 #' @export
 #' @rdname active_burst_replace
-#' @rdname x sftrack/sftraj/multi_burst/ind_burst object
+#' @param x sftrack/sftraj/multi_burst/ind_burst object
 #' @param value character vector of the burst names to make active
 'active_burst<-' <- function(x, value) {
   UseMethod('active_burst<-', object = x)
