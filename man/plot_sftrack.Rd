@@ -33,7 +33,8 @@ my_sftrack <- as_sftrack(raccoon_data, time = 'acquisition_time',
 
 plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
 
-# sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+# sftraj will as well for the most part, however as its a more
+# complex structure to speed up plotting.
 my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
   coords = c('longitude','latitude'),
   burst = burstz)
