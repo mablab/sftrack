@@ -18,7 +18,7 @@
 #' plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
 #'
 #' # sftraj will as well for the most part, however as its a more
-#' complex structure to speed up plotting.
+#' # complex structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)
@@ -85,7 +85,7 @@ plot.sftraj <- function(x, ...) {
 #'   burstz <- c(id = 'sensor_code')
 #'
 #' # sftraj will as well for the most part, however as its a more complex
-#' structure to speed up plotting.
+#' # structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)

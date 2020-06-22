@@ -33,7 +33,8 @@ raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrac
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
   burstz <- c(id = 'sensor_code')
 
-# sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+# sftraj will as well for the most part, however as its a more complex
+# structure to speed up plotting.
 my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
   coords = c('longitude','latitude'),
   burst = burstz)
