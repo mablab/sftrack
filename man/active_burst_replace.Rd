@@ -20,6 +20,8 @@ active_burst(x) <- value
 \method{active_burst}{ind_burst}(x) <- value
 }
 \arguments{
+\item{x}{sftrack/sftraj/multi_burst/ind_burst object}
+
 \item{value}{character vector of the burst names to make active}
 }
 \description{
