@@ -2,17 +2,12 @@
 % Please edit documentation in R/burst_tj.R
 \name{active_burst}
 \alias{active_burst}
-\alias{active_burst<-}
 \title{Access the active_burst value}
 \usage{
 active_burst(burst)
-
-active_burst(burst) <- value
 }
 \arguments{
 \item{burst}{a multi_burst}
-
-\item{value}{character vector of the burst names to make active}
 }
 \description{
 The active burst is the combination of bursts that group the data sets.
@@ -22,7 +17,7 @@ The active_bursts are essentially a paste(names_of_bursts, sep = '_') grouping v
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
- mb1 <- make_multi_burst(burst_list=burstz, active_burst=c('id','month'))
+ mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
 
  # see the current active burst
  active_burst(mb1)
@@ -31,9 +26,9 @@ raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST'
  active_burst(mb1) <- 'id'
 
  # Using a full data set
- my_track <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
+ my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),
-  burst_list = burstz)
+  burst = burstz)
 
  summary(my_track)
 
@@ -41,5 +36,5 @@ raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST'
  active_burst(my_track$burst) <- 'id'
 
  summary(my_track)
-
+#'
 }

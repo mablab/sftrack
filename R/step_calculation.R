@@ -1,23 +1,27 @@
 #' @title Calculate step geometries given a set of bursts, time, and geometries
 #'
 #' @description This calculates step geometries as individual line segments based on the active_burst
-#' @param burst a multi_burst
+#' @param burst a multi_burst object
 #' @param time_data time vector
 #' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
 #' @export make_step_geom
 #' @examples
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-#' burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-#' data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
-#'   error = NA, coords = c('longitude','latitude'),
-#'   burst_list =burstz)
+#' library(sf)
+#' geom = st_as_sf(data.frame(
+#'   x = c(1,2,2,5),
+#'   y = c(0,1,5,7)
+#' ), coords = c('x','y'))
 #'
-#' make_step_geom(burst = data_sf$burst,
-#'                geometry = data_sf$geometry,
-#'                time_data = data_sf$acquisition_time)
+#' burst = list(id = rep(1,4))
+#' time = 1:4
+#'
+#' mb = make_multi_burst(burst)
+#'
+#' make_step_geom(burst = mb,
+#'                geometry = geom$geometry,
+#'                time_data = time)
+#'
 make_step_geom <- function(burst, time_data, geometry) {
-  # Need to check if time is ordered, if not throw an error
   # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon)
   # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
   # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
@@ -27,12 +31,11 @@ make_step_geom <- function(burst, time_data, geometry) {
   # if (length(burst[[1]]) > 1) {
   #   message('more than one burst selected, bursts will be combined for step geometry')
   # }
-  burst <- burst_select(burst)
-  as.character(burst[[3]]$id)
-  idz <- factor(paste0(burst))
+
+  idz <- burst_labels(burst, factor = T)
   #
   unique_idz <- levels(idz)[table(idz) > 0]
-  check_ordered(burst, time_data, return = FALSE)
+
   step_geometry <- rep(NA, length(geometry))
 
   # check dimensions
@@ -57,11 +60,15 @@ make_step_geom <- function(burst, time_data, geometry) {
     first_point <- min(which(subz))
 
     x3 <- mapply(function(x, y) {
-      # x <- x1[[12]]
-      # y <- x2[[12]]
+      # x <- x1[[1]]
+      # y <- x2[[1]]
       if (any(c(is.na(x), is.na(y)))) {
-        new_geom <- sf::st_geometrycollection(list(x, y))
-      } else{
+        if (all(!is.na(x))) {
+          new_geom <- sf::st_point(x)
+        } else {
+          new_geom <- sf::st_point()
+        }
+      } else {
         new_geom <- sf::st_linestring(rbind(x, y))
       }
       new_geom
@@ -81,36 +88,108 @@ make_step_geom <- function(burst, time_data, geometry) {
 #
 # here <- make_step_geom(burst = data_sf$burst, geometry = data_sf$geometry)
 
-#step functions taken from ltraj
-#These will need to be transformed into sf calculations
-#Although some like dx/dy are not possible as an st_function
+#step function
 #' @title Calculates step metrics including distance, dt, dx, and dy.
-#' @param sftrack an sftrack/sftraj object
+#' @param sftraj an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
 #' @export
-step_calc <- function(sftrack) {
-  ret <- lapply(levels(burst_sort(sftrack$burst)), function(index) {
-    #index = 'CJ11_1'
-    sub <- sftrack[burst_sort(sftrack$burst) == index, ]
-    xy <- st_coordinates(sub[, attr(sub, 'sf_column')])
-    time <- sub[, attr(sub, 'time')]
-    x1 <- xy[-1, ]
-    x2 <- xy[-nrow(xy), ]
-    dist <- c(sqrt((x1[, 1] - x2[, 1]) ^ 2 + (x1[, 2] - x2[, 2]) ^ 2), NA)
-    dt <- c(unclass(time[-1]) - unclass(time[-length(time)]), NA)
-    R2n <- (xy[, 1] - xy[1, 1]) ^ 2 + (xy[, 2] - xy[1, 2]) ^ 2
-    dx <- c(x1[, 1] - x2[, 1], NA)
-    dy <- c(x1[, 2] - x2[, 2], NA)
-    abs.angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
-    so <- cbind.data.frame(
-      dx = dx,
-      dy = dy,
-      dist = dist,
-      dt = dt,
-      R2n = R2n,
-      abs.angle = abs.angle
-    )
-    so$burst_id <- burst_sort(sub$burst)
-    return(so)
-  })
-  do.call(rbind, ret)
+#' @examples
+#' #'
+#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#'   # Input is a data.frame
+#' my_sftraj <- as_sftraj(raccoon_data, burst = burstz, time = 'acquisition_time',
+#'   error = NA, coords = c('longitude','latitude'))
+#'
+#' step_metrics(my_sftraj)[1:10,]
+
+step_metrics <- function(sftraj) {
+  if (inherits(sftraj, 'sftrack')) {
+    sftraj <- as_sftraj(sftraj)
+  }
+  sftraj$sftrack_id <-
+    paste0(burst_labels(sftraj[['burst']]), '_', sftraj[[attr(sftraj, 'time')]])
+  order_t <- order(sftraj$sftrack_id)
+  sftraj <- sftraj[order_t, ]
+  ret <-
+    lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
+      # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
+      sub <- sftraj[burst_labels(sftraj$burst) == index,]
+
+      # if only 1 row
+      if (nrow(sub) == 1) {
+        return(
+          data.frame(
+            dx = NA,
+            dy = NA,
+            dist = NA,
+            dt = NA,
+            abs_angle = NA,
+            speed = NA,
+            sftrack_id = sub$sftrack_id
+          )
+        )
+      }
+
+
+      x1 <- coord_traj(sub[[attr(sub, 'sf_column')]])
+      x2 <- rbind(x1[-1, ], c(NA, NA))
+      time <- sub[[attr(sub, 'time')]]
+      dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
+      dt <- unclass(time[-1]) - unclass(time[-length(time)])
+      if (is.na(attr(st_geometry(sftraj), 'crs'))) {
+        dx <- c(x2[, 1] - x1[, 1])[-nrow(x1)]
+        dy <- c(x2[, 2] - x1[, 2])[-nrow(x1)]
+        abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
+      } else {
+        abs_angle <-
+          geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) * pi / 180 + pi /
+          2
+        dx <- sin(abs_angle) * dist
+        dy <- cos(abs_angle) * dist
+      }
+
+      speed <- dist / dt
+      so <- cbind.data.frame(
+        dx = dx,
+        dy = dy,
+        dist = dist,
+        dt = dt,
+        abs_angle = abs_angle,
+        speed = speed
+
+      )
+      so <- rbind(so, rep(NA, ncol(so)))
+      so$sftrack_id = sub$sftrack_id
+      return(so)
+    })
+  ret <- do.call(rbind, ret)
+  ret[order(order_t), ]
+}
+
+#' @title recalculate step geometry
+#' @description Step geometeries in sftraj objects are linestrings going from t1 to t2 of a 'step'. As these are stored at the row level they are not dynamic to changes in t2.
+#' step_recalc allows you to recalculate these geometeries if your data.frame has changed because of subsetting or filtering.
+#' @param x an sftraj object.
+#' @param return return step_geometry instead of replacing sftraj object with new step geometry. Defaults to FALSE
+#' @export
+step_recalc <- function(x, return = FALSE) {
+  if (!inherits(x, 'sftraj')) {
+    stop('object is not an sftraj object')
+  }
+  att <- attributes(x)
+  time_col <- att$time
+  sf_col <- att$sf_column
+  geom <- pts_traj(x[[sf_col]], sfc = T)
+  step_geometry <-
+    make_step_geom(burst = x$burst,
+      geometry = geom,
+      time_data = x[[time_col]])
+  if (return) {
+    return(step_geometry)
+  }
+
+  x[[sf_col]] <- step_geometry
+  x
+
 }

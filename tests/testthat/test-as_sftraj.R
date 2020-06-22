@@ -1,30 +1,147 @@
 test_that("sftraj is built correct", {
-  # multiple bursts become combined
+  # data.frame mode works successfully
   df1 <- data.frame(
     id = c(1, 1, 1, 1),
     month = c(1,1,2,2),
     x = c(27, 27, 27, 27),
     y = c(-80,-81,-82,-83),
-    z = 0:3,
-    timez = Sys.time() + 60*60*(1:4)
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
   )
-  my_sftraj <- as_sftraj(data = df1,burst_list=list(id=df1$id, month = df1$month),
-    time_col = 'timez', active_burst = c('id','month'), coords = c('x','y','z'))
-  expect_equal(unlist(my_sftraj$geometry), c( 27,27,-80,-81,0,1,27,-81,1,NA,NA,NA,27,27,-82,-83,2,3,27,-83,3,NA,NA,NA))
+  my_sftraj <- as_sftraj(data = df1,burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  expect_equal(colnames(my_sftraj),c('id','month','x','y','z','timez','reloc_time','burst','geometry'))
+  expect_equal(class(my_sftraj$geometry)[1], 'sfc_GEOMETRY')
 
-  # test that sf_step can change active_bursts
+  # vector mode with data
+
+  my_sftraj <- as_sftraj(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  expect_equal(colnames(my_sftraj),c('id','month','x','y','z','timez','burst','geometry'))
+
+  # data.frame mode without data; accepts null
+  my_sftraj <- as_sftraj(burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  expect_equal(colnames(my_sftraj),c('sftrack_id','reloc_time','burst','geometry'))
+
+  # check 2 dimensions
+  expect_equal(class(my_sftraj$geometry[[1]])[1], 'XY')
+
+  # test that sftraj can change active_bursts
   expect_equal(attr(my_sftraj$burst,'active_burst'), c('id','month'))
-  my_sftraj <- suppressMessages(as_sftraj(data = df1,burst_list=list(id=df1$id, month = df1$month),
-    time_col = 'timez', active_burst = c('id'), coords = c('x','y','z')))
+  my_sftraj <- suppressMessages( as_sftraj(burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id'), coords = df1[,c('x','y','z')]))
   expect_equal(attr(my_sftraj$burst,'active_burst'), c('id'))
 
   # test that dimensions are created equally
   expect_equal(class(my_sftraj$geometry[[1]])[1], 'XYZ')
-  # test that dimensions change as coordinate dimensions changes
 
-  my_sftraj_2d <- suppressMessages(as_sftraj(data = df1,burst_list=list(id=df1$id, month = df1$month),
-    time_col = 'timez', active_burst = c('id'), coords = c('x','y')))
-  expect_equal(class(my_sftraj_2d$geometry[[1]])[1], 'XY')
+
+  # Correctly makes lines and points
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1,1,1),
+    month = c(1,1,1,1,1,1),
+    x = c(27, 27, 27, NA,29,30),
+    y = c(-80,-81,-82,NA, 83,83),
+    z = c(0,1,2,3,4,5),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:6)
+  )
+  my_sftraj <- as_sftraj(data = df1,burst=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  expect_equal(
+  unlist(my_sftraj$geometry),
+  c(27,  27, -80, -81,  27,  27, -81, -82,  27, -82,  NA,  NA,  29,  30,  83,  83,  30,  83)
+  )
+})
+
+test_that("as_sftraj and sftraj convert back and forth successfully", {
+
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+  my_sftrack <- as_sftrack(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  my_sftraj <- as_sftraj(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  new_sftraj <- as_sftraj(my_sftrack)
+  expect_equal(new_sftraj, my_sftraj)
+  new_sftrack <- as_sftrack(my_sftraj)
+  expect_equal(new_sftrack, my_sftrack)
+
+
+})
+
+test_that("input as sf successfully", {
+  # Input is a sf object
+
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+
+  sf_df <- st_as_sf(df1, coords=c('x','y'))
+  new_sftraj <- as_sftraj(data = sf_df, burst = 'id', time = 'timez')
+
+  # Not include sfc_point
+  sf_df <- st_as_sf(df1, coords=c('x','y'))
+  sf_df$geometry <- st_sfc(list(st_multipoint(), st_multipoint(),st_multipoint(),st_multipoint()))
+
+  expect_error(as_sftraj(data = sf_df, burst = 'id', time = 'timez'))
+})
+
+
+test_that('subset works correctly',{
+  df1 <- data.frame(
+    id = c(1, 1, 1, 1),
+    month = c(1,1,2,2),
+    x = c(27, 27, 27, 27),
+    y = c(-80,-81,-82,-83),
+    z = c(0,1,2,3),
+    timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:4)
+  )
+  # retains sftraj class
+  my_sftraj <- as_sftraj(data = df1,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  expect_equal(class(my_sftraj[1:3,]),c('sftraj','sf','data.frame'))
+
+  expect_equal(ncol(my_sftraj[,3,]),4)
+
+
+  expect_silent(my_sftraj[,3,drop = T])
+
+  expect_equal(nrow(my_sftraj[,3,drop = T]),NULL)
+
+  # subset by colname without dropped columns
+  expect_equal(colnames(my_sftraj[,c('id','month')]), c('id','month','burst','timez','geometry'))
+
+
+  # rbind
+  df2 <- df1
+  df2$timez <- df2$timez + 10
+  my_sftraj2 <- as_sftraj(data = df2,burst=c('id','month'),
+    time = 'timez', active_burst = c('id','month'), coords = c('x','y'))
+  my_sftraj3 <- rbind(my_sftraj, my_sftraj2)
+  expect_equal(class(my_sftraj3)[1], 'sftraj')
+
+  expect_equal(nrow(my_sftraj3),8)
+
+  # change active burst
+  active_burst(my_sftraj2) <- 'id'
+  expect_equal(attr(my_sftraj2$burst,'active_burst'), 'id')
+
+  # check that geometries were recalculated
+  active_burst(my_sftraj2)
+  unlist(my_sftraj2$geometry)
+  expect_equal(unlist(my_sftraj2$geometry), c(27,27,-80,-81,27,27,-81,-82,27,27,-82,-83,27,-83))
 })
 
 
