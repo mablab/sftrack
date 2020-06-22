@@ -138,7 +138,7 @@ step_metrics <- function(sftraj) {
       dy <- c(x2[,2] - x1[,2])[-nrow(x1)]
       abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
     } else {
-      abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])*pi/180+pi/2
+      abs_angle <- bearing(x1[-nrow(x1),],x2[-nrow(x2),])*pi/180+pi/2
       dx <- sin(abs_angle) * dist
       dy <- cos(abs_angle) * dist
     }

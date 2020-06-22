@@ -30,7 +30,7 @@ plot.sftrack <- function(x, ...) {
   bl <-   burst_labels(x$burst,factor=TRUE)
   b_lvl <- levels(bl)
   what <- as.numeric(bl)
-  col1 <- scales::alpha(what, 0.5)
+  col1 <- alpha(what, 0.5)
   my_pts <- st_geometry(x)
   graphics::plot(my_pts,
     col = col1,...)
