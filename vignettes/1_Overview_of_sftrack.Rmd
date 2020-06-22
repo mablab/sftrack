@@ -6,8 +6,8 @@ output:
     toc_float:
       collapsed: false
       smooth_scroll: false
-    toc_depth: 2>
-vignette: |
+    toc_depth: 2
+vignette: >
   %\VignetteIndexEntry{1. Overview of sftrack}
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
