@@ -1,7 +1,6 @@
 #' @title methods for plot sftrack/sftraj
 #' @name plot_sftrack
 #' @export
-#' @importFrom scales alpha
 #' @param x sftrack/sftraj object
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
@@ -18,7 +17,8 @@
 #'
 #' plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
 #'
-#' # sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+#' # sftraj will as well for the most part, however as its a more
+#' complex structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)
@@ -30,7 +30,7 @@ plot.sftrack <- function(x, ...) {
   bl <-   burst_labels(x$burst,factor=TRUE)
   b_lvl <- levels(bl)
   what <- as.numeric(bl)
-  col1 <- alpha(what, 0.5)
+  col1 <- scales::alpha(what, 0.5)
   my_pts <- st_geometry(x)
   graphics::plot(my_pts,
     col = col1,...)
@@ -84,7 +84,8 @@ plot.sftraj <- function(x, ...) {
 #' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
 #'   burstz <- c(id = 'sensor_code')
 #'
-#' # sftraj will as well for the most part, however as its a more complex structure to speed up plotting.
+#' # sftraj will as well for the most part, however as its a more complex
+#' structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)

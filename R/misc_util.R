@@ -226,8 +226,7 @@ which_duplicated <- function(data = data.frame(), burst, time){
   do.call(rbind, ret)
 }
 
-#' Get the position of x2, given the time
-
+# Get the position of x2, given the time
 get_x2 <- function(time){
   or <- order(time)
   seq_along(time)[or][or+1][order(or)]

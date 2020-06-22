@@ -8,6 +8,8 @@ step_recalc(x, return = FALSE)
 }
 \arguments{
 \item{x}{an sftraj object.}
+
+\item{return}{return step_geometry instead of replacing sftraj object with new step geometry. Defaults to FALSE}
 }
 \description{
 Step geometeries in sftraj objects are linestrings going from t1 to t2 of a 'step'. As these are stored at the row level they are not dynamic to changes in t2.

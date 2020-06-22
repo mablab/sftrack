@@ -354,16 +354,17 @@ active_burst <- function(burst) {
   attr(burst, 'active_burst')
 }
 #active_burst(my_sftrack)
-
+#' @title Set new active burst
 #' @export
-#' @rdname active_burst
+#' @rdname active_burst_replace
+#' @rdname x sftrack/sftraj/multi_burst/ind_burst object
 #' @param value character vector of the burst names to make active
 'active_burst<-' <- function(x, value) {
   UseMethod('active_burst<-', object = x)
 }
 
 #' @export
-#' @name active_burst
+#' @name active_burst_replace
 'active_burst<-.sftrack' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'
@@ -377,7 +378,7 @@ active_burst <- function(burst) {
     structure(x)
 }
 #' @export
-#' @name active_burst
+#' @name active_burst_replace
 'active_burst<-.sftraj' <- function(x, value) {
   #x = my_sftraj
   #value = 'id'
@@ -393,7 +394,7 @@ active_burst <- function(burst) {
 }
 
 #' @export
-#' @name active_burst
+#' @name active_burst_replace
 'active_burst<-.multi_burst' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'
@@ -408,7 +409,7 @@ active_burst <- function(burst) {
 }
 
 #' @export
-#' @name active_burst
+#' @name active_burst_replace
 'active_burst<-.ind_burst' <- function(x, value) {
   #x = my_sftrack
   #value = 'id'
