@@ -62,10 +62,11 @@ make_step_geom <- function(burst, time_data, geometry) {
     x3 <- mapply(function(x, y) {
       # x <- x1[[1]]
       # y <- x2[[1]]
-      if (any(c(is.na(x),is.na(y)))) {
-        if(all(!is.na(x))){ new_geom <- sf::st_point(x)
+      if (any(c(is.na(x), is.na(y)))) {
+        if (all(!is.na(x))) {
+          new_geom <- sf::st_point(x)
         } else {
-        new_geom <- sf::st_point()
+          new_geom <- sf::st_point()
         }
       } else {
         new_geom <- sf::st_linestring(rbind(x, y))
@@ -103,61 +104,67 @@ make_step_geom <- function(burst, time_data, geometry) {
 #' step_metrics(my_sftraj)[1:10,]
 
 step_metrics <- function(sftraj) {
-  if(inherits(sftraj,'sftrack')){sftraj <- as_sftraj(sftraj)}
-  sftraj$sftrack_id <- paste0(burst_labels(sftraj[['burst']]),'_',sftraj[[attr(sftraj,'time')]])
+  if (inherits(sftraj, 'sftrack')) {
+    sftraj <- as_sftraj(sftraj)
+  }
+  sftraj$sftrack_id <-
+    paste0(burst_labels(sftraj[['burst']]), '_', sftraj[[attr(sftraj, 'time')]])
   order_t <- order(sftraj$sftrack_id)
-  sftraj <- sftraj[order_t,]
-  ret <- lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
-    # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
-    sub <- sftraj[burst_labels(sftraj$burst) == index, ]
+  sftraj <- sftraj[order_t, ]
+  ret <-
+    lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
+      # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
+      sub <- sftraj[burst_labels(sftraj$burst) == index,]
 
-    # if only 1 row
-    if(nrow(sub)==1){
-      return(
-        data.frame(
-          dx = NA,
-          dy = NA,
-          dist = NA,
-          dt = NA,
-          abs_angle = NA,
-          speed = NA,
-          sftrack_id = sub$sftrack_id
+      # if only 1 row
+      if (nrow(sub) == 1) {
+        return(
+          data.frame(
+            dx = NA,
+            dy = NA,
+            dist = NA,
+            dt = NA,
+            abs_angle = NA,
+            speed = NA,
+            sftrack_id = sub$sftrack_id
+          )
         )
+      }
+
+
+      x1 <- coord_traj(sub[[attr(sub, 'sf_column')]])
+      x2 <- rbind(x1[-1, ], c(NA, NA))
+      time <- sub[[attr(sub, 'time')]]
+      dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
+      dt <- unclass(time[-1]) - unclass(time[-length(time)])
+      if (is.na(attr(st_geometry(sftraj), 'crs'))) {
+        dx <- c(x2[, 1] - x1[, 1])[-nrow(x1)]
+        dy <- c(x2[, 2] - x1[, 2])[-nrow(x1)]
+        abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
+      } else {
+        abs_angle <-
+          geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) * pi / 180 + pi /
+          2
+        dx <- sin(abs_angle) * dist
+        dy <- cos(abs_angle) * dist
+      }
+
+      speed <- dist / dt
+      so <- cbind.data.frame(
+        dx = dx,
+        dy = dy,
+        dist = dist,
+        dt = dt,
+        abs_angle = abs_angle,
+        speed = speed
+
       )
-    }
-
-
-    x1 <- coord_traj(sub[[attr(sub, 'sf_column')]])
-    x2 <- rbind(x1[-1,],c(NA,NA))
-    time <- sub[[attr(sub, 'time')]]
-    dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
-    dt <- unclass(time[-1]) - unclass(time[-length(time)])
-    if(is.na(attr(st_geometry(sftraj),'crs'))){
-      dx <- c(x2[,1] - x1[,1])[-nrow(x1)]
-      dy <- c(x2[,2] - x1[,2])[-nrow(x1)]
-      abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
-    } else {
-      abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])*pi/180+pi/2
-      dx <- sin(abs_angle) * dist
-      dy <- cos(abs_angle) * dist
-    }
-
-    speed <- dist/dt
-    so <- cbind.data.frame(
-      dx = dx,
-      dy = dy,
-      dist = dist,
-      dt = dt,
-      abs_angle = abs_angle,
-      speed = speed
-
-    )
-    so <- rbind(so,rep(NA,ncol(so)))
-    so$sftrack_id = sub$sftrack_id
-    return(so)
-  })
+      so <- rbind(so, rep(NA, ncol(so)))
+      so$sftrack_id = sub$sftrack_id
+      return(so)
+    })
   ret <- do.call(rbind, ret)
-  ret[order(order_t),]
+  ret[order(order_t), ]
 }
 
 #' @title recalculate step geometry
@@ -166,19 +173,21 @@ step_metrics <- function(sftraj) {
 #' @param x an sftraj object.
 #' @param return return step_geometry instead of replacing sftraj object with new step geometry. Defaults to FALSE
 #' @export
-step_recalc <- function(x, return = FALSE){
-  if(!inherits(x,'sftraj')){stop('object is not an sftraj object')}
+step_recalc <- function(x, return = FALSE) {
+  if (!inherits(x, 'sftraj')) {
+    stop('object is not an sftraj object')
+  }
   att <- attributes(x)
   time_col <- att$time
   sf_col <- att$sf_column
-  geom <- pts_traj(x[[sf_col]], sfc =T)
+  geom <- pts_traj(x[[sf_col]], sfc = T)
   step_geometry <-
-    make_step_geom(
-      burst = x$burst,
+    make_step_geom(burst = x$burst,
       geometry = geom,
-      time_data = x[[time_col]]
-    )
-  if(return){ return(step_geometry)}
+      time_data = x[[time_col]])
+  if (return) {
+    return(step_geometry)
+  }
 
   x[[sf_col]] <- step_geometry
   x
