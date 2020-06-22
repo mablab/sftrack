@@ -4,10 +4,12 @@
 \alias{dup_timestamp}
 \title{check that time is unique}
 \usage{
-dup_timestamp(x)
+dup_timestamp(x, time)
 }
 \arguments{
-\item{x}{An sftrack/sftraj object}
+\item{x}{An sftrack/sftraj object or a multi_burst}
+
+\item{time}{vector of time, not required if given a sftrack object.}
 }
 \description{
 check that time is unique

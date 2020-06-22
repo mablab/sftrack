@@ -6,13 +6,17 @@
 \alias{geom_sftrack.sftraj}
 \title{Function to plot sftrack objects in ggplot}
 \usage{
-geom_sftrack(data, ...)
+geom_sftrack(mapping, data, ...)
 
-\method{geom_sftrack}{sftrack}(data, ...)
+\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL,
+  ...)
 
-\method{geom_sftrack}{sftraj}(data, ...)
+\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL,
+  ...)
 }
 \arguments{
+\item{mapping}{mapping aesthetics for ggplot.}
+
 \item{data}{the sftraj or sftrack object.}
 
 \item{...}{arguments to passed to ggplot}
@@ -22,14 +26,18 @@ This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function
 }
 \examples{
+#'
 library(ggplot2)
 library(sftrack)
 raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-my_step <- as_sftraj(raccoon_data, time_col = 'acquisition_time',
-   coords = c('longitude','latitude'),
-  burst_list =burstz)
+  burstz <- c(id = 'sensor_code')
 
-ggplot() + geom_sftrack(data = my_step)
+# sftraj will as well for the most part, however as its a more complex
+# structure to speed up plotting.
+my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+  coords = c('longitude','latitude'),
+  burst = burstz)
+
+ggplot() + geom_sftrack(data = my_sftraj)
 }

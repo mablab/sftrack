@@ -7,7 +7,7 @@
 make_step_geom(burst, time_data, geometry)
 }
 \arguments{
-\item{burst}{a multi_burst}
+\item{burst}{a multi_burst object}
 
 \item{time_data}{time vector}
 
@@ -17,14 +17,19 @@ make_step_geom(burst, time_data, geometry)
 This calculates step geometries as individual line segments based on the active_burst
 }
 \examples{
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-data_sf <- as_sftrack(raccoon_data, time_col = 'acquisition_time',
-  error = NA, coords = c('longitude','latitude'),
-  burst_list =burstz)
+library(sf)
+geom = st_as_sf(data.frame(
+  x = c(1,2,2,5),
+  y = c(0,1,5,7)
+), coords = c('x','y'))
 
-make_step_geom(burst = data_sf$burst,
-               geometry = data_sf$geometry,
-               time_data = data_sf$acquisition_time)
+burst = list(id = rep(1,4))
+time = 1:4
+
+mb = make_multi_burst(burst)
+
+make_step_geom(burst = mb,
+               geometry = geom$geometry,
+               time_data = time)
+
 }

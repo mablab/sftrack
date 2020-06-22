@@ -2,17 +2,17 @@
 % Please edit documentation in R/misc_util.R
 \name{is_linestring}
 \alias{is_linestring}
-\title{Is a trajectory geometry a linestring or a geometerycollection}
+\title{Is a trajectory geometry a linestring or a point}
 \usage{
-is_linestring(traj)
+is_linestring(x)
 }
 \arguments{
-\item{traj}{an sftraj object}
+\item{x}{an sftraj object}
 }
 \description{
 A step is a movement from one point to the next, with an sftraj object
 this manifests as a linestring. If, however, one of these two points is missing, the sftraj
 is created as a geometery collection of two points, the beginning and the end point, where one
 of the steps is NA. This function checks a trajectory geometry if its a linestring and returns
-a vector of T/F. Largely an internal function, but can be used to subset sftraj objects.
+a vector of T/F.
 }
