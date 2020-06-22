@@ -39,8 +39,6 @@ as_sftraj(data = data.frame(), ...)
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
-
-\item{geometry}{a vector of sf geometries}
 }
 \description{
 This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.

@@ -11,7 +11,7 @@
 \usage{
 active_burst(burst)
 
-active_burst(x, ...) <- value
+active_burst(x) <- value
 
 \method{active_burst}{sftrack}(x) <- value
 

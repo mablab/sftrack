@@ -1,7 +1,8 @@
 #' @title methods for plot sftrack/sftraj
 #' @name plot_sftrack
 #' @export
-#' @param x sftrack object
+#' @importFrom scales alpha
+#' @param x sftrack/sftraj object
 #' @param ... arguments to passed to plot
 #' @method plot sftrack
 #' @examples
@@ -38,8 +39,6 @@ plot.sftrack <- function(x, ...) {
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
-#' @param x sftrack object
-#' @param ... arguments to passed to plot
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
   #x <- my_sftraj
@@ -74,6 +73,7 @@ plot.sftraj <- function(x, ...) {
 #' This function can be added to ggplot() to plot an sftrack and sftraj
 #' Function does not yet work with ggplot grammer so you must but data= in this function
 #' @name geom_sftrack
+#' @param mapping mapping aesthetics for ggplot.
 #' @param data the sftraj or sftrack object.
 #' @param ... arguments to passed to ggplot
 #' @examples
@@ -92,13 +92,13 @@ plot.sftraj <- function(x, ...) {
 #' ggplot() + geom_sftrack(data = my_sftraj)
 
 #' @export
-geom_sftrack <- function(data, ...) {
+geom_sftrack <- function(mapping, data, ...) {
   UseMethod('geom_sftrack')
 }
 
 #' @rdname geom_sftrack
 #' @export
-geom_sftrack.sftrack <- function(mapping = aes(),data = NULL,...) {
+geom_sftrack.sftrack <- function(mapping = ggplot2::aes(),data = NULL,...) {
   sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
   bl <- burst_labels(sub$burst, factor = T)
   list(ggplot2::geom_sf(data = sub, ggplot2::aes(
@@ -110,7 +110,7 @@ geom_sftrack.sftrack <- function(mapping = aes(),data = NULL,...) {
 
 #'@name geom_sftrack
 #'@export
-geom_sftrack.sftraj <- function(mapping = aes(),data = NULL,...) {
+geom_sftrack.sftraj <- function(mapping = ggplot2::aes(),data = NULL,...) {
   sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]),]
   bl <- burst_labels(sub$burst, factor = T)
   list(

@@ -1,17 +1,21 @@
 ---
 title: "2. Reading in an sftrack"
 output:
-  pdf_document: default
-  html_document: default
-vignette: |
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
   %\VignetteIndexEntry{2. Reading in an sftrack}
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-devtools::load_all("/home/matt/r_programs/sftrack")
-#library(sftrack)
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
 
 ```
 Creating sftrack objects is relatively straight forward and can be read in a variety of ways including as a standard `data.frame`, `sf` object, or `ltraj` object (from `adehabitatLT`).  

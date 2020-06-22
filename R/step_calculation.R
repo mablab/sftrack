@@ -6,7 +6,7 @@
 #' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
 #' @export make_step_geom
 #' @examples
-#' #'
+#' library(sf)
 #' geom = st_as_sf(data.frame(
 #'   x = c(1,2,2,5),
 #'   y = c(0,1,5,7)
@@ -91,6 +91,7 @@ make_step_geom <- function(burst, time_data, geometry) {
 #' @title Calculates step metrics including distance, dt, dx, and dy.
 #' @param sftraj an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
 #' @export
+#' @importFrom geosphere bearing
 #' @examples
 #' #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
