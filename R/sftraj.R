@@ -19,7 +19,6 @@
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
 #' @param ... extra information to be passed on to as_sftraj
-#' @param geometry a vector of sf geometries
 #' @import sf
 #' @export
 #' @examples
@@ -219,7 +218,7 @@ as_sftraj.sftrack <- function(data, ...) {
     burst_col = burst,
     sf_col = sf_col,
     error_col = error,
-    time = time
+    time_col = time
   )
   return(ret)
 }
@@ -385,6 +384,7 @@ as_sftraj.ltraj <- function(data, ...) {
 #' @param x sftraj object
 #' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
 #' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
+#' @param ... other arguments passed onto print
 #' @export
 print.sftraj <- function(x, n_row, n_col, ...) {
   if (missing(n_col)) {
@@ -435,7 +435,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   } else ret <- x
 
   ret <- ret[1:row_l,]
-  print(ret)
+  print(ret,...)
 
 }
 #'@export
@@ -468,7 +468,7 @@ rbind.sftraj <- function(...){
     )
   class(df1) <- setdiff(class(df1),c('sftraj','sf'))
   ret <- new_sftraj(data = df1, burst_col = 'burst',
-    time = time_col, error = error_col, sf_col = sf_col)
+    time_col = time_col, error_col = error_col, sf_col = sf_col)
   #Sanity checks
   dup_timestamp(ret)
   return(ret)
@@ -520,7 +520,7 @@ rbind.sftraj <- function(...){
   #     '\n Use drop = FALSE to retain class'))
   #
   #     }
-  new_sftraj(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
+  new_sftraj(x, burst_col = 'burst', sf_col = sf_col,time_col = time_col, error_col = error_col)
 
 }
 

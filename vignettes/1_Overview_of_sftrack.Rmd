@@ -1,8 +1,12 @@
 ---
 title: "1. Overview of sftrack"
 output:
-  pdf_document: default
-  html_document: default
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2>
 vignette: |
   %\VignetteIndexEntry{1. Overview of sftrack}
    %\VignetteEncoding{UTF-8}

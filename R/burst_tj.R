@@ -178,10 +178,11 @@ print.multi_burst <- function(x, ...) {
 }
 
 #' @export
+#' @importFrom utils str
 str.multi_burst <- function(object, ...) {
   n <- length(object)
   cat(paste0(class(object)[1],' object \n'))
-    str(unclass(object), list.len=1)
+    utils::str(unclass(object), list.len=1)
 }
 # str.multi_burst(my_sftrack$burst)
 
@@ -259,8 +260,10 @@ summary.multi_burst <- function(object, ...) {
 #summary(mb1)
 
 #' @title Shows burst labels created from the ind_burst and the active_burst
+#' @name burst_labels
 #' @param x a sftrack or burst object
 #' @param factor logical, whether to return a factor, default return is a character
+#' @param ... ignored
 #' @export
 burst_labels <- function(x, ...) {
   UseMethod('burst_labels', object = x)
@@ -268,7 +271,8 @@ burst_labels <- function(x, ...) {
 
 
 #' @export
-burst_labels.sftrack <-   function(x, factor = F) {
+#' @rdname burst_labels
+burst_labels.sftrack <-   function(x,..., factor = F) {
   burst <- x$burst
 
   ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
@@ -280,7 +284,8 @@ burst_labels.sftrack <-   function(x, factor = F) {
 }
 
 #' @export
-burst_labels.sftraj <- function(x, factor = F) {
+#' @rdname burst_labels
+burst_labels.sftraj <- function(x,..., factor = F) {
   burst <- x$burst
 
   ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
@@ -291,6 +296,7 @@ burst_labels.sftraj <- function(x, factor = F) {
   return(ret)
 }
 #' @export
+#' @rdname burst_labels
 burst_labels.ind_burst <- function(x, ...) {
   burst <- x
 
@@ -300,7 +306,8 @@ burst_labels.ind_burst <- function(x, ...) {
 }
 
 #' @export
-burst_labels.multi_burst <- function(x, factor = F) {
+#' @rdname burst_labels
+burst_labels.multi_burst <- function(x,..., factor = F) {
   burst <- x
 
   ret <- vapply(burst, function(x) {attr(x,'label')},NA_character_)
@@ -351,7 +358,7 @@ active_burst <- function(burst) {
 #' @export
 #' @rdname active_burst
 #' @param value character vector of the burst names to make active
-'active_burst<-' <- function(x, ...) {
+'active_burst<-' <- function(x, value) {
   UseMethod('active_burst<-', object = x)
 }
 

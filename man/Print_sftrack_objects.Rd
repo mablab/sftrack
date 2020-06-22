@@ -13,6 +13,8 @@
 \item{n_row}{Integer of number of rows to display. Defaults to global option default if non supplied}
 
 \item{n_col}{Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied}
+
+\item{...}{other arguments passed onto print}
 }
 \description{
 Print methods for sftrack

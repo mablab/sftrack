@@ -17,7 +17,7 @@ make_step_geom(burst, time_data, geometry)
 This calculates step geometries as individual line segments based on the active_burst
 }
 \examples{
-#'
+library(sf)
 geom = st_as_sf(data.frame(
   x = c(1,2,2,5),
   y = c(0,1,5,7)

@@ -2,12 +2,26 @@
 % Please edit documentation in R/burst_tj.R
 \name{burst_labels}
 \alias{burst_labels}
+\alias{burst_labels.sftrack}
+\alias{burst_labels.sftraj}
+\alias{burst_labels.ind_burst}
+\alias{burst_labels.multi_burst}
 \title{Shows burst labels created from the ind_burst and the active_burst}
 \usage{
 burst_labels(x, ...)
+
+\method{burst_labels}{sftrack}(x, ..., factor = F)
+
+\method{burst_labels}{sftraj}(x, ..., factor = F)
+
+\method{burst_labels}{ind_burst}(x, ...)
+
+\method{burst_labels}{multi_burst}(x, ..., factor = F)
 }
 \arguments{
 \item{x}{a sftrack or burst object}
+
+\item{...}{ignored}
 
 \item{factor}{logical, whether to return a factor, default return is a character}
 }

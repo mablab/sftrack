@@ -11,11 +11,7 @@
 \method{plot}{sftraj}(x, ...)
 }
 \arguments{
-\item{x}{sftrack object}
-
-\item{...}{arguments to passed to plot}
-
-\item{x}{sftrack object}
+\item{x}{sftrack/sftraj object}
 
 \item{...}{arguments to passed to plot}
 }

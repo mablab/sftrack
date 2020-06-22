@@ -19,7 +19,6 @@
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
 #' @param ... extra information to be passed on to as_sftrack
-#' @param geometry a vector of sf geometries
 #' @import sf
 #' @export
 #' @examples
@@ -215,7 +214,7 @@ as_sftrack.sftraj <- function(data, ...) {
     burst_col = burst,
     sf_col = sf_col,
     error_col = error,
-    time = time
+    time_col = time
   )
 
   return(ret)
@@ -365,6 +364,7 @@ as_sftrack.sf <- function(
 #' @param x sftraj object
 #' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
 #' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
+#' @param ... other arguments passed onto print
 #' @export
 print.sftrack <- function(x, n_row, n_col, ...) {
   if (missing(n_col)) {
@@ -415,7 +415,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   } else ret <- x
 
   ret <- ret[1:row_l,]
-  print(ret)
+  print(ret,...)
 
 }
 # print(my_track,10,10)
@@ -476,7 +476,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   #     '\n Use drop = FALSE to retain class'))
   #
   #     }
-    new_sftrack(x, burst = 'burst', sf_col = sf_col,time = time_col, error = error_col)
+    new_sftrack(x, burst_col = 'burst', sf_col = sf_col,time_col = time_col, error_col = error_col)
 
 }
 
@@ -496,8 +496,8 @@ rbind.sftrack <- function(...){
   }
   new_df <- do.call(rbind,all)
   class(new_df) <- setdiff(class(new_df),c('sftrack','sf'))
-  ret <- new_sftrack(data = new_df, burst = 'burst',
-    time = time_col, error = error_col, sf_col = sf_col)
+  ret <- new_sftrack(data = new_df, burst_col = 'burst',
+    time_col = time_col, error_col = error_col, sf_col = sf_col)
 
   #Sanity checks
   dup_timestamp(ret)

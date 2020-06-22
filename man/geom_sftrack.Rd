@@ -6,13 +6,17 @@
 \alias{geom_sftrack.sftraj}
 \title{Function to plot sftrack objects in ggplot}
 \usage{
-geom_sftrack(data, ...)
+geom_sftrack(mapping, data, ...)
 
-\method{geom_sftrack}{sftrack}(mapping = aes(), data = NULL, ...)
+\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL,
+  ...)
 
-\method{geom_sftrack}{sftraj}(mapping = aes(), data = NULL, ...)
+\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL,
+  ...)
 }
 \arguments{
+\item{mapping}{mapping aesthetics for ggplot.}
+
 \item{data}{the sftraj or sftrack object.}
 
 \item{...}{arguments to passed to ggplot}
