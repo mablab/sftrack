@@ -91,7 +91,6 @@ make_step_geom <- function(burst, time_data, geometry) {
 #' @title Calculates step metrics including distance, dt, dx, and dy.
 #' @param sftraj an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
 #' @export
-#' @importFrom geosphere bearing
 #' @examples
 #' #'
 #' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
@@ -138,7 +137,7 @@ step_metrics <- function(sftraj) {
       dy <- c(x2[,2] - x1[,2])[-nrow(x1)]
       abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
     } else {
-      abs_angle <- bearing(x1[-nrow(x1),],x2[-nrow(x2),])*pi/180+pi/2
+      abs_angle <- geosphere::bearing(x1[-nrow(x1),],x2[-nrow(x2),])*pi/180+pi/2
       dx <- sin(abs_angle) * dist
       dy <- cos(abs_angle) * dist
     }
@@ -165,6 +164,7 @@ step_metrics <- function(sftraj) {
 #' @description Step geometeries in sftraj objects are linestrings going from t1 to t2 of a 'step'. As these are stored at the row level they are not dynamic to changes in t2.
 #' step_recalc allows you to recalculate these geometeries if your data.frame has changed because of subsetting or filtering.
 #' @param x an sftraj object.
+#' @param return return step_geometry instead of replacing sftraj object with new step geometry. Defaults to FALSE
 #' @export
 step_recalc <- function(x, return = FALSE){
   if(!inherits(x,'sftraj')){stop('object is not an sftraj object')}

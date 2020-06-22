@@ -2,29 +2,12 @@
 % Please edit documentation in R/burst_tj.R
 \name{active_burst}
 \alias{active_burst}
-\alias{active_burst<-}
-\alias{active_burst<-.sftrack}
-\alias{active_burst<-.sftraj}
-\alias{active_burst<-.multi_burst}
-\alias{active_burst<-.ind_burst}
 \title{Access the active_burst value}
 \usage{
 active_burst(burst)
-
-active_burst(x) <- value
-
-\method{active_burst}{sftrack}(x) <- value
-
-\method{active_burst}{sftraj}(x) <- value
-
-\method{active_burst}{multi_burst}(x) <- value
-
-\method{active_burst}{ind_burst}(x) <- value
 }
 \arguments{
 \item{burst}{a multi_burst}
-
-\item{value}{character vector of the burst names to make active}
 }
 \description{
 The active burst is the combination of bursts that group the data sets.
