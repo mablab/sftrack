@@ -27,50 +27,32 @@
 
 plot.sftrack <- function(x, ...) {
   # x <- my_sftrack
+  sf_col <- attr(x,'sf_column')
   bl <-   burst_labels(x$burst, factor = TRUE)
-  b_lvl <- levels(bl)
-  what <- as.numeric(bl)
-  col1 <- scales::alpha(what, 0.5)
-  my_pts <- st_geometry(x)
-  graphics::plot(my_pts,
-    col = col1, ...)
+  x = st_sf(data.frame(st_geometry(x), bursts = bl),sf_column_name = sf_col )
+  NextMethod()
 }
-
+plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
-  #x <- my_sftraj
+ # x <- my_sftraj
   bl <-   burst_labels(x$burst, factor = TRUE)
   b_lvl <- levels(bl)
   geom = st_geometry(x)
   il <- is_linestring(geom)
-  col1 <-
-    vapply(burst_labels(x[['burst']][!il]), function(x)
-      which(x == b_lvl), NA_integer_)
-  my_pts <- geom[!il]
-  attr(my_pts, 'bbox') <- st_bbox(geom)
-  graphics::plot(my_pts, col = col1, ...)
 
   here = lapply(b_lvl, function(y) {
     st_multilinestring(geom[bl == y & il])
   })
-
-  for (i in seq_along(here)) {
-    if (is.null(here[[i]])) {
-      next
-    }
-    #lvl <- names(here[[i]])
-    graphics::plot(here[[i]],
-      type = 'l',
-      add = TRUE ,
-      col = i,
-      ...)
-  }
+  new_sfc <- st_sfc(here, crs = attr(geom, 'crs'))
+  x = st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
+  NextMethod()
 }
 
-
+#plot(my_sftraj, lwd=5, axes = T)
 # plot(my_step)
 #' @title Function to plot sftrack objects in ggplot
 #' @name geom_sftrack
@@ -124,13 +106,23 @@ geom_sftrack.sftraj <-
   function(mapping = ggplot2::aes(),
     data = NULL,
     ...) {
-    sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]), ]
-    bl <- burst_labels(sub$burst, factor = T)
+    x = my_sftraj
+    bl <-   burst_labels(x$burst, factor = TRUE)
+    b_lvl <- levels(bl)
+    geom = st_geometry(x)
+    il <- is_linestring(geom)
+
+    here = lapply(b_lvl, function(y) {
+      st_multilinestring(geom[bl == y & il])
+    })
+    new_sfc <- st_sfc(here, crs = attr(geom, 'crs'))
+    x = st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
+
     list(
-      ggplot2::geom_sf(data = st_sfc(pts_traj(sub), crs = attr(sub[[attr(sub, 'sf_column')]], 'crs')), ggplot2::aes(color = bl)),
-      ggplot2::geom_sf(data = sub, ggplot2::aes(color = bl, fill = bl)),
-      ggplot2::guides(color = FALSE) ,
-      ggplot2::labs(fill = "Bursts")
-    )
+      ggplot2::geom_sf(data = x, ggplot2::aes(color = burst, fill = burst)),
+      ggplot2::guides(color = FALSE),
+      ggplot2::labs(fill = "Bursts"))
   }
+
+
 #ggplot() + geom_sftrack(data = my_sftraj)
