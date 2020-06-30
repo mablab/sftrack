@@ -428,7 +428,8 @@ print.sftraj <- function(x, n_row, n_col, ...) {
 
   # active burst
   ab <- attr(x[[burst_col]], 'active_burst')
-  bn <- names(x[[burst_col]][[1]])
+  bn <- attr(x[[burst_col]], 'burst_names')
+  if(nrow(x)>0){geomxy <- class(x[[sf_col]][[1]])[1]}else{geomxy <- NA}
   active_burst_names <- paste0('*', ab, '*')
   burst_mes <-
     paste0(active_burst_names, bn[!ab %in%  bn], collapse = ', ')
@@ -448,7 +449,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
     'Geometry : \"',
     sf_col,
     '\" (',
-    class(x[[sf_col]][[1]])[1],
+    geomxy,
     ', crs: ',
     format(sf_attr$crs),
     ') \n'

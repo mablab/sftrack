@@ -32,7 +32,7 @@ plot.sftrack <- function(x, ...) {
   x = st_sf(data.frame(st_geometry(x), bursts = bl),sf_column_name = sf_col )
   NextMethod()
 }
-plot(my_sftrack)
+#plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
@@ -106,7 +106,8 @@ geom_sftrack.sftraj <-
   function(mapping = ggplot2::aes(),
     data = NULL,
     ...) {
-    x = my_sftraj
+    #x = my_sftraj
+    x = data
     bl <-   burst_labels(x$burst, factor = TRUE)
     b_lvl <- levels(bl)
     geom = st_geometry(x)

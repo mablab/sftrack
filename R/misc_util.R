@@ -99,7 +99,7 @@ is_linestring <- function(x) {
   # } else{
   #   dim = c('X', 'Y', 'Z')
   # }
-  vapply(x, function(y)
+  vapply(pts, function(y)
     inherits(y, 'LINESTRING'), NA)
 
   # the sf version might be faster?
