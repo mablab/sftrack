@@ -23,7 +23,7 @@ test_that('multi_burst works', {
 
   mb <- make_multi_burst(x = burstz,active_burst = 'id')
   expect_equal(attr(mb[[1]],'active_burst'), 'id')
-
+  expect_equal(attr(mb,'active_burst'), 'id')
   expect_message(make_multi_burst(x = burstz))
 
   # check levels
@@ -96,4 +96,8 @@ test_that('subset multi_bursts',{
  active_burst(ib) <- 'id'
  expect_equal(attr(ib, 'active_burst'), 'id')
  expect_equal(attr(ib,'label'), 'test')
+
+ # subset to 0
+mb_attr <- attributes(burst1[F])
+expect_equal(mb_attr, list(active_burst = c('id','col2'), burst_names = c('id','col2'), class = 'multi_burst'))
 })

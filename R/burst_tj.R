@@ -76,16 +76,12 @@ ind_burst <- function(x = list(), active_burst = NULL) {
 
 #ind_burst(x=list(id='CJ11',month=3, height=10))
 
-multi_burst <- function(x = list()) {
-  # if (is.null(active_burst)) {
-  #   if( inherits(x,'multi_burst')) {
-  #     active_burst = active_burst(x)
-  #   } else
-  #     active_burst <- names(x[[1]])
-  # }
-
+multi_burst <- function(x = list(), active_burst = NA, burst_names = NA) {
+  if(is.na(active_burst[1]) & length(x)>0){active_burst <- attr(x[[1]], 'active_burst')}
+  if(is.na(burst_names[1]) & length(x)>0){burst_names <- names(x[[1]])}
   structure(x,
-    active_burst = attr(x[[1]], 'active_burst'),
+    active_burst = active_burst,
+    burst_names = burst_names,
     class = c('multi_burst'))
 }
 
@@ -212,7 +208,9 @@ format.multi_burst <- function(x, ...) {
   if (!missing(i) && is.character(i)) {
     i = which(lapply(x, attr, 'label') %in% i)
   }
-  multi_burst(NextMethod())
+  active_burst <- attr(x, 'active_burst')
+  burst_names <- attr(x, 'burst_names')
+  multi_burst(NextMethod(),active_burst = active_burst, burst_names = burst_names)
 }
 # mb[1:10]
 #mb1[1:10]
