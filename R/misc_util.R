@@ -200,14 +200,14 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   # data$time[4] <- data$time[5]
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
-    check_burst_id(burst)
+    # check_burst_id(burst)
     burst_list <- burst
   } else{
     # check names exist
-    check_names_exist(data, burst)
+    # check_names_exist(data, burst)
     # check id in burst
     # check id in burst
-    check_burst_id(burst)
+    # check_burst_id(burst)
     # create burst list from names
     burst_list <- lapply(data[, burst, FALSE], function(x)
       x)
@@ -223,27 +223,21 @@ which_duplicated <- function(data = data.frame(), burst, time) {
     reloc_time <- time
 
   } else {
-    check_names_exist(data, time)
+    #check_names_exist(data, time)
     reloc_time <- data[[time]]
 
   }
-  check_time(reloc_time)
-
-
+  # check_time(reloc_time)
   burst <-
     make_multi_burst(x = burst_list)
-
+  bl <- burst_labels(burst, TRUE)
   results <-
-    unlist(tapply(reloc_time, burst_labels(burst, TRUE), duplicated))
-  blt <- paste0(burst_labels(burst, TRUE), ' | ', reloc_time)
+    unlist(tapply(reloc_time, bl, duplicated))
 
-  results <- blt[duplicated(blt)]
-  ret <-
-    lapply(results, function(x)
-      data.frame('burst_time' = x, row = which(blt == x)))
-  do.call(rbind, ret)
+  rowz <- which(bl[results]==bl & reloc_time[results]==reloc_time)
+  data.frame(burst = bl[rowz],time = reloc_time[rowz], which_row = rowz)
+
 }
-
 # Get the position of x2, given the time
 get_x2 <- function(time) {
   or <- order(time)
