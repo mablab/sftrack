@@ -14,9 +14,6 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
-
 ```
 Creating sftrack objects is relatively straight forward and can be read in a variety of ways including as a standard `data.frame`, `sf` object, or `ltraj` object (from `adehabitatLT`).  
 
@@ -56,21 +53,24 @@ In the case of vector inputs, the vectors are cbinded to `data` if data is suppl
 
 
 ```{r}
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
+#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 
 #data
-data = raccoon_data
+data('raccoon', package = 'sftrack')
+
 #xyz
-coords = data[,c('longitude','latitude')]
+coords = raccoon[,c('longitude','latitude')]
 crs = '+init=epsg:4326'
 #bursts
-burst = list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon+1)
+burst = list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon+1)
 active_burst = c('id','month')
 #time
-time = as.POSIXct(raccoon_data$acquisition_time, tz='EST')
+time = as.POSIXct(raccoon$acquisition_time, tz='EST')
 #error
-error = data$fix
-my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, 
+error = raccoon$fix
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, 
                          active_burst = active_burst, time = time, 
                          crs = crs, error = error)
 
@@ -82,21 +82,21 @@ As you can see in this case the data is not overwritten, but extra columns added
 
 -------------
 
-### data.frame inputs  
+### raccoon.frame inputs  
 
-Data.frame inputs generally describe the columns in the data that represent each field. If the columns are not found in the data, an error is thrown. 
+Data.frame inputs generally describe the columns in the raccoon that represent each field. If the columns are not found in the data, an error is thrown. 
 
 
 ```{r}
-data$time <- as.POSIXct(data$acquisition_time, tz='EST')
-data$month <- as.POSIXlt(data$acquisition_time)$mon+1
+raccoon$time <- as.POSIXct(raccoon$acquisition_time, tz='EST')
+raccoon$month <- as.POSIXlt(raccoon$acquisition_time)$mon+1
 
 coords = c('longitude','latitude')
 burst = c(id = 'sensor_code', month = 'month')
 time = 'time'
 error = 'fix'
 
-my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error)
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error)
 
 head(my_sftraj)
 ```
@@ -111,9 +111,9 @@ To read in an ltraj object all you need is an ltraj object created in `adehabita
 ```{r, message = FALSE}
 library(adehabitatLT)
 
-ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')], date = as.POSIXct(raccoon_data$acquisition_time),
- id = raccoon_data$sensor_code, typeII = TRUE,
- infolocs = raccoon_data[,1:6] )
+ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$acquisition_time),
+ id = raccoon$sensor_code, typeII = TRUE,
+ infolocs = raccoon[,1:6] )
 
 my_sf <- as_sftrack(ltraj_df)
 head(my_sf)
@@ -126,7 +126,7 @@ head(my_sf)
 
 ```{r}
 library(sf)
-df1 <- data[!is.na(raccoon_data$latitude),]
+df1 <- raccoon[!is.na(raccoon$latitude),]
 sf_df <- st_as_sf(df1, coords=c('longitude','latitude'), crs = crs)
 burst = c(id = 'sensor_code')
 time_col = 'time'
@@ -149,8 +149,8 @@ burst = c(id = 'sensor_code', month = 'month')
 time = 'time'
 error = 'fix'
 
-my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error)
-my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error)
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error)
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error)
 
 # Convert between types
 new_sftrack <- as_sftrack(my_sftraj)
@@ -167,15 +167,15 @@ A common issue with movement data is when duplicated gps time stamps are logged 
 
 ```{r}
 
-data$time[1] <- data$time[2]
- try(as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error))
+raccoon$time[1] <- raccoon$time[2]
+ try(as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error))
 
 ```
 To help determine which rows are duplicated you can use the `which_duplicated` function to check your inputs. After which you can delete the superfluous rows and try again:
 
 ```{r}
-which_duplicated(data = data , burst = burst, time = time)
-data <- data[-2,]
-my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error)
+which_duplicated(data = raccoon , burst = burst, time = time)
+raccoon <- raccoon[-2,]
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error)
 
 ```

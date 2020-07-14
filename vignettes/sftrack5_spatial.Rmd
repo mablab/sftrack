@@ -14,24 +14,25 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
-
 ```
 
 ```{r}
-# Make tracks from raw data
-data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-data$month <- as.POSIXlt(data$acquisition_time)$mon+1
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
 
-data$time <- as.POSIXct(data$acquisition_time, tz='EST')
+# Make tracks from raw data
+# raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+data('raccoon', package = 'sftrack')
+raccoon$month <- as.POSIXlt(raccoon$acquisition_time)$mon+1
+
+raccoon$time <- as.POSIXct(raccoon$acquisition_time, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = data$sensor_code, month = as.POSIXlt(data$acquisition_time)$mon+1)
+burst = list(id = raccoon$sensor_code, month = as.POSIXlt(raccoon$acquisition_time)$mon+1)
 time = 'time'
 error = 'fix'
 crs = '+init=epsg:4326'
-my_sftrack <- as_sftrack(data = data, coords = coords, burst = burst, time = time, error = error, crs = crs)
-my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
 ```
 ## Geometry column  
 
