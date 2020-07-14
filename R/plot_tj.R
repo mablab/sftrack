@@ -6,10 +6,10 @@
 #' @method plot sftrack
 #' @examples
 #' library(sftrack)
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#' data('raccoon')
+#' raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
 #'   burstz <- c(id = 'sensor_code')
-#' my_sftrack <- as_sftrack(raccoon_data, time = 'acquisition_time',
+#' my_sftrack <- as_sftrack(raccoon, time = 'acquisition_time',
 #'    coords = c('longitude','latitude'),
 #'   burst = burstz)
 #'
@@ -19,7 +19,7 @@
 #'
 #' # sftraj will as well for the most part, however as its a more
 #' # complex structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+#' my_sftraj <- as_sftraj(raccoon, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)
 #' plot(my_sftraj, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80', graticule = TRUE)
@@ -67,13 +67,13 @@ plot.sftraj <- function(x, ...) {
 #' #'
 #' library(ggplot2)
 #' library(sftrack)
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+#' data('raccoon')
+#' raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
 #'   burstz <- c(id = 'sensor_code')
 #'
 #' # sftraj will as well for the most part, however as its a more complex
 #' # structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+#' my_sftraj <- as_sftraj(raccoon, time = 'acquisition_time',
 #'   coords = c('longitude','latitude'),
 #'   burst = burstz)
 #'

@@ -6,11 +6,11 @@
 #' @param traj a trajectory geometery from sf_traj
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
-#' raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-#' raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-#'   burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+#' data('raccoon')
+#' raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
+#'   burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
 #'   # Input is a data.frame
-#' my_traj <- as_sftraj(raccoon_data, time ='acquisition_time',
+#' my_traj <- as_sftraj(raccoon, time ='acquisition_time',
 #'   error = NA, coords = c('longitude','latitude'),
 #'   burst =burstz)
 #' print(my_traj, 5, 10)
@@ -22,42 +22,26 @@
 #' coord_traj(my_traj)[1:10]
 #' @export
 pts_traj <- function(traj, sfc = FALSE) {
-  if (inherits(traj, 'sftraj')) {
-    pts <- st_geometry(traj)
-  }
-  if (inherits(traj, 'sfc')) {
-    pts <- traj
-  }
-  if ('XY' %in% class(pts[[1]])) {
-    dim = 2
-  } else{
-    dim = 3
-  }
-  this_seq <- seq(1, dim * 2, by = 2)
-  ret = lapply(pts, function(x) {
-    if (inherits(x, 'POINT')) {
+  pts <- st_geometry(traj)
+
+  ret <- lapply(pts, function(x){
+    if(inherits(x,'LINESTRING')){
+      st_point(unclass(x)[1L, , drop = TRUE])
+    } else {
       x
-    } else{
-      st_point(x[this_seq])
     }
   })
-  if (sfc) {
-    st_sfc(ret, crs = attr(pts, 'crs'))
-  } else {
-    ret
-  }
+  if(!sfc){ return(ret) }
+
+  st_sfc(ret, crs = st_crs(pts),
+    precision = st_precision(pts))
 }
 
 #' @rdname traj_geom
 #' @export
 coord_traj <- function(traj) {
   # traj = my_sftraj
-  if (inherits(traj, 'sftraj')) {
-    pts <- traj[[attr(traj, 'sf_column')]]
-  }
-  if (inherits(traj, 'sfc')) {
-    pts <- traj
-  }
+  pts <- st_geometry(traj)
 
   if ('XY' %in% class(pts[[1]])) {
     dim = 2
@@ -78,6 +62,22 @@ coord_traj <- function(traj) {
   do.call(rbind, ret)
 
 }
+#' @export
+st_coordinates.sftraj <- function(x, return = 'all') {
+  # x = my_sftraj
+  pts <- sf::st_geometry(x)
+
+  ret <- lapply(pts,
+    function(x) {
+      coords <- data.frame(st_coordinates(x))
+      coords$Point <- seq_len(nrow(coords))
+      coords[,c('X','Y','Point')]
+    })
+  ret <- do.call(rbind,ret)
+  choice <- switch(return, start = 1, end =2, all = c(1,2))
+  ret[ret$Point%in%unlist(choice),]
+}
+
 
 #' @title Is a trajectory geometry a linestring or a point
 #' @description A step is a movement from one point to the next, with an sftraj object
@@ -200,14 +200,14 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   # data$time[4] <- data$time[5]
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
-    # check_burst_id(burst)
+    check_burst_id(burst)
     burst_list <- burst
   } else{
     # check names exist
-    # check_names_exist(data, burst)
+    check_names_exist(data, burst)
     # check id in burst
     # check id in burst
-    # check_burst_id(burst)
+    check_burst_id(burst)
     # create burst list from names
     burst_list <- lapply(data[, burst, FALSE], function(x)
       x)
@@ -223,11 +223,11 @@ which_duplicated <- function(data = data.frame(), burst, time) {
     reloc_time <- time
 
   } else {
-    #check_names_exist(data, time)
+    check_names_exist(data, time)
     reloc_time <- data[[time]]
 
   }
-  # check_time(reloc_time)
+  check_time(reloc_time)
   burst <-
     make_multi_burst(x = burst_list)
   bl <- burst_labels(burst, TRUE)

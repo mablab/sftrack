@@ -14,9 +14,9 @@ The active burst is the combination of bursts that group the data sets.
 The active_bursts are essentially a paste(names_of_bursts, sep = '_') grouping variable.
 }
 \examples{
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
- burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+data('raccoon')
+raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
+ burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
  mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
 
  # see the current active burst
@@ -26,7 +26,7 @@ raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST'
  active_burst(mb1) <- 'id'
 
  # Using a full data set
- my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
+ my_track <- as_sftrack(raccoon, time = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),
   burst = burstz)
 

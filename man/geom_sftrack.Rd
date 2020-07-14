@@ -29,13 +29,13 @@ Function does not yet work with ggplot grammer so you must but data= in this fun
 #'
 library(ggplot2)
 library(sftrack)
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
+data('raccoon')
+raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
   burstz <- c(id = 'sensor_code')
 
 # sftraj will as well for the most part, however as its a more complex
 # structure to speed up plotting.
-my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
+my_sftraj <- as_sftraj(raccoon, time = 'acquisition_time',
   coords = c('longitude','latitude'),
   burst = burstz)
 

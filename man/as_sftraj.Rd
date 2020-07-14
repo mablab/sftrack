@@ -55,33 +55,33 @@ Convert objects into sftrack objects.
 }
 \examples{
 #'
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
+data('raccoon')
+raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
+  burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
   # Input is a data.frame
-my_track <- as_sftraj(raccoon_data, burst = burstz, time = 'acquisition_time',
+my_track <- as_sftraj(raccoon, burst = burstz, time = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'))
 
   # Input is a ltraj
   library(adehabitatLT)
-  ltraj_df <- as.ltraj(xy=raccoon_data[,c('longitude','latitude')],
-  date = as.POSIXct(raccoon_data$acquisition_time),
-  id = raccoon_data$sensor_code, typeII = TRUE,
-  infolocs = raccoon_data[,1:6] )
+  ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')],
+  date = as.POSIXct(raccoon$acquisition_time),
+  id = raccoon$sensor_code, typeII = TRUE,
+  infolocs = raccoon[,1:6] )
 
   my_sftrack <- as_sftraj(ltraj_df)
   head(my_sftrack)
 
   # Input is a sf object
   library(sf)
-  df1 <- raccoon_data[!is.na(raccoon_data$latitude),]
+  df1 <- raccoon[!is.na(raccoon$latitude),]
   sf_df <- st_as_sf(df1, coords=c('longitude','latitude'))
 
   new_sftrack <- as_sftrack(sf_df, burst = c(id = 'sensor_code'),time = 'acquisition_time')
   head(new_sftrack)
 
   # Input is an sftrack object
-  my_track <- as_sftrack(raccoon_data, time = 'acquisition_time',
+  my_track <- as_sftrack(raccoon, time = 'acquisition_time',
   error = NA, coords = c('longitude','latitude'),
   burst = burstz)
 
