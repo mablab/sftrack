@@ -506,10 +506,10 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
     if (drop) {
       return(x[i, j, drop = drop])
     } else{
-      error_col <- if (is.na(error_col))
+      error_col <- if (is.na(error_col)){
         NULL
-      else
-        error_col
+      } else {
+        error_col}
       x[i, union(colnames(x)[j], c('burst', sf_col, time_col, error_col))]
     }
   }
@@ -522,14 +522,15 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   #     '\n Use drop = FALSE to retain class'))
   #
   #     }
-  new_sftrack(
+  ret <- new_sftrack(
     x,
     burst_col = 'burst',
     sf_col = sf_col,
     time_col = time_col,
     error_col = error_col
   )
-
+  dup_timestamp(ret)
+  ret
 }
 
 #' @export

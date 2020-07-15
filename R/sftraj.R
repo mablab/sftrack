@@ -521,7 +521,7 @@ rbind.sftraj <- function(...) {
 
 #' @export
 `[.sftraj` <- function(x, i, j, ..., drop = FALSE) {
-  #x = my_sftrack
+  #x = my_sftraj
   #i = 1:10
   #j=c(1,2,3)
   #rm(j)
@@ -551,10 +551,11 @@ rbind.sftraj <- function(...) {
     if (drop) {
       return(x[i, j, drop = drop])
     } else{
-      error_col <- if (is.na(error_col))
+      error_col <- if (is.na(error_col)){
         NULL
-      else
+        }else{
         error_col
+      }
       x[i, union(colnames(x)[j], c('burst', sf_col, time_col, error_col))]
     }
   }
@@ -567,12 +568,14 @@ rbind.sftraj <- function(...) {
   #     '\n Use drop = FALSE to retain class'))
   #
   #     }
-  new_sftraj(
+  ret <- new_sftraj(
     x,
     burst_col = 'burst',
     sf_col = sf_col,
     time_col = time_col,
     error_col = error_col
   )
+  dup_timestamp(ret)
+  ret
 
 }
