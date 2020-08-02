@@ -6,55 +6,57 @@
 #' @method plot sftrack
 #' @examples
 #' library(sftrack)
-#' data('raccoon')
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
-#'   burstz <- c(id = 'animal_id')
-#' my_sftrack <- as_sftrack(raccoon, time = 'timestamp',
-#'    coords = c('longitude','latitude'),
-#'   burst = burstz)
+#' data("raccoon")
+#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+#' burstz <- c(id = "animal_id")
+#' my_sftrack <- as_sftrack(raccoon,
+#'   time = "timestamp",
+#'   coords = c("longitude", "latitude"),
+#'   burst = burstz
+#' )
 #'
 #' # Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
 #'
-#' plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
+#' plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 #'
 #' # sftraj will as well for the most part, however as its a more
 #' # complex structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon, time = 'timestamp',
-#'   coords = c('longitude','latitude'),
-#'   burst = burstz)
-#' plot(my_sftraj, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80', graticule = TRUE)
-
-
+#' my_sftraj <- as_sftraj(raccoon,
+#'   time = "timestamp",
+#'   coords = c("longitude", "latitude"),
+#'   burst = burstz
+#' )
+#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 plot.sftrack <- function(x, ...) {
   # x <- my_sftrack
-  par(oma=c(1,1,1,4))
-  sf_col <- attr(x,'sf_column')
-  bl <-   burst_labels(x$burst, factor = TRUE)
-  x = st_sf(data.frame(st_geometry(x), bursts = bl),sf_column_name = sf_col )
+  par(oma = c(1, 1, 1, 4))
+  sf_col <- attr(x, "sf_column")
+  bl <- burst_labels(x$burst, factor = TRUE)
+  x <- st_sf(data.frame(st_geometry(x), bursts = bl), sf_column_name = sf_col)
   NextMethod()
 }
-#plot(my_sftrack)
+# plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
- # x <- my_sftraj
-  par(oma=c(1,1,1,4))
-  bl <-   burst_labels(x$burst, factor = TRUE)
+  # x <- my_sftraj
+  par(oma = c(1, 1, 1, 4))
+  bl <- burst_labels(x$burst, factor = TRUE)
   b_lvl <- levels(bl)
-  geom = st_geometry(x)
+  geom <- st_geometry(x)
   il <- is_linestring(geom)
 
-  here = lapply(b_lvl, function(y) {
+  here <- lapply(b_lvl, function(y) {
     st_multilinestring(geom[bl == y & il])
   })
-  new_sfc <- st_sfc(here, crs = attr(geom, 'crs'))
-  x = st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
+  new_sfc <- st_sfc(here, crs = attr(geom, "crs"))
+  x <- st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
   NextMethod()
 }
 
-#plot(my_sftraj, lwd=5, axes = T)
+# plot(my_sftraj, lwd=5, axes = T)
 # plot(my_step)
 #' @title Function to plot sftrack objects in ggplot
 #' @name geom_sftrack
@@ -69,63 +71,66 @@ plot.sftraj <- function(x, ...) {
 #' #'
 #' library(ggplot2)
 #' library(sftrack)
-#' data('raccoon')
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
-#'   burstz <- c(id = 'animal_id')
+#' data("raccoon")
+#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+#' burstz <- c(id = "animal_id")
 #'
 #' # sftraj will as well for the most part, however as its a more complex
 #' # structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon, time = 'timestamp',
-#'   coords = c('longitude','latitude'),
-#'   burst = burstz)
+#' my_sftraj <- as_sftraj(raccoon,
+#'   time = "timestamp",
+#'   coords = c("longitude", "latitude"),
+#'   burst = burstz
+#' )
 #'
-#' ggplot() + geom_sftrack(data = my_sftraj)
-
+#' ggplot() +
+#'   geom_sftrack(data = my_sftraj)
 #' @export
 geom_sftrack <- function(mapping, data, ...) {
-  UseMethod('geom_sftrack')
+  UseMethod("geom_sftrack")
 }
 
 #' @rdname geom_sftrack
 #' @export
 geom_sftrack.sftrack <-
   function(mapping = ggplot2::aes(),
-    data = NULL,
-    ...) {
-    sub <- data[!st_is_empty(data[[attr(data, 'sf_column')]]), ]
+           data = NULL,
+           ...) {
+    sub <- data[!st_is_empty(data[[attr(data, "sf_column")]]), ]
     bl <- burst_labels(sub$burst, factor = T)
     list(
       ggplot2::geom_sf(data = sub, ggplot2::aes(color = bl, fill = bl)),
-      ggplot2::guides(color = FALSE) ,
+      ggplot2::guides(color = FALSE),
       ggplot2::labs(fill = "Bursts"),
       ...
     )
   }
 
-#'@name geom_sftrack
-#'@export
+#' @name geom_sftrack
+#' @export
 geom_sftrack.sftraj <-
   function(mapping = ggplot2::aes(),
-    data = NULL,
-    ...) {
-    #x = my_sftraj
-    x = data
-    bl <-   burst_labels(x$burst, factor = TRUE)
+           data = NULL,
+           ...) {
+    # x = my_sftraj
+    x <- data
+    bl <- burst_labels(x$burst, factor = TRUE)
     b_lvl <- levels(bl)
-    geom = st_geometry(x)
+    geom <- st_geometry(x)
     il <- is_linestring(geom)
 
-    here = lapply(b_lvl, function(y) {
+    here <- lapply(b_lvl, function(y) {
       st_multilinestring(geom[bl == y & il])
     })
-    new_sfc <- st_sfc(here, crs = attr(geom, 'crs'))
-    x = st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
+    new_sfc <- st_sfc(here, crs = attr(geom, "crs"))
+    x <- st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
 
     list(
       ggplot2::geom_sf(data = x, ggplot2::aes(color = burst, fill = burst)),
       ggplot2::guides(color = FALSE),
-      ggplot2::labs(fill = "Bursts"))
+      ggplot2::labs(fill = "Bursts")
+    )
   }
 
 
-#ggplot() + geom_sftrack(data = my_sftraj)
+# ggplot() + geom_sftrack(data = my_sftraj)
