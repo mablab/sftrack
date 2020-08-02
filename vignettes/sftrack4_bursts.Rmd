@@ -26,8 +26,8 @@ A `multi-burst` is a collection of `ind_bursts` and exists at the column level. 
 
 We start by looking at the structure of a `multi_burst`
 ```{r}
-#devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
+devtools::load_all("/home/matt/r_programs/sftrack")
+#library(sftrack)
 data('raccoon', package = 'sftrack')
 #raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 burst_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
@@ -74,7 +74,7 @@ str(indb)
 indb <- make_ind_burst(list(id='CJ13', month = 4))
 str(indb)
 
-````
+```
 
 You can access or change the `active burst` at anytime using the `active_burst()` function. The active burst tells any analysis to group by that mix of variables. 
 
@@ -155,7 +155,7 @@ burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1
 time = 'time'
 
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time)
-head(my_sftraj[burst_labels(my_sftraj) %in% c('TTP-058'), ])
+head(my_sftraj[burst_labels(my_sftraj) %in% c('TTP-058_1'), ])
 
 
 ```
