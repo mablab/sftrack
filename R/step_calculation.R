@@ -22,10 +22,10 @@
 #'                time_data = time)
 #'
 make_step_geom <- function(burst, time_data, geometry) {
-  # burstz <- list(id = raccoon_data$sensor_code, month = as.POSIXlt(raccoon_data$utc_date)$mon)
-  # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
+  # burstz <- list(id = raccoon_data$animal_id, month = as.POSIXlt(raccoon_data$timestamp)$mon)
+  # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$timestamp),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
   # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
-  # time_data = raccoon_data$acquisition_time
+  # time_data = raccoon_data$timestamp
 
   #if theres more than one burst, then we combine bursts
   # if (length(burst[[1]]) > 1) {
@@ -81,8 +81,8 @@ make_step_geom <- function(burst, time_data, geometry) {
   return(sf::st_sfc(step_geometry, crs = attr(geometry, 'crs')))
 }
 #
-# burstz <- list(month = as.POSIXlt(raccoon_data$utc_date)$mon, height =as.numeric(raccoon_data$height>5))
-# data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$acquisition_time), id = raccoon_data$sensor_code,
+# burstz <- list(month = as.POSIXlt(raccoon_data$timestamp)$mon, height =as.numeric(raccoon_data$height>5))
+# data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$timestamp), id = raccoon_data$animal_id,
 #      error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',
 #      burst =burstz)
 #
@@ -95,10 +95,10 @@ make_step_geom <- function(burst, time_data, geometry) {
 #' @examples
 #' #'
 #' data('raccoon')
-#' raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
-#'   burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
+#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
+#'   burstz <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon)
 #'   # Input is a data.frame
-#' my_sftraj <- as_sftraj(raccoon, burst = burstz, time = 'acquisition_time',
+#' my_sftraj <- as_sftraj(raccoon, burst = burstz, time = 'timestamp',
 #'   error = NA, coords = c('longitude','latitude'))
 #'
 #' step_metrics(my_sftraj)[1:10,]

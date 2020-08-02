@@ -30,12 +30,12 @@ Function does not yet work with ggplot grammer so you must but data= in this fun
 library(ggplot2)
 library(sftrack)
 data('raccoon')
-raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
-  burstz <- c(id = 'sensor_code')
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
+  burstz <- c(id = 'animal_id')
 
 # sftraj will as well for the most part, however as its a more complex
 # structure to speed up plotting.
-my_sftraj <- as_sftraj(raccoon, time = 'acquisition_time',
+my_sftraj <- as_sftraj(raccoon, time = 'timestamp',
   coords = c('longitude','latitude'),
   burst = burstz)
 

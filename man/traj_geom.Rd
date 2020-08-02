@@ -20,10 +20,10 @@ Return a list of sf_POINTS or a data.frame from a sftraj object
 }
 \examples{
 data('raccoon')
-raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
-  burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
+  burstz <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon)
   # Input is a data.frame
-my_traj <- as_sftraj(raccoon, time ='acquisition_time',
+my_traj <- as_sftraj(raccoon, time ='timestamp',
   error = NA, coords = c('longitude','latitude'),
   burst =burstz)
 print(my_traj, 5, 10)
