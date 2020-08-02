@@ -82,7 +82,7 @@ As you can see in this case the data is not overwritten, but extra columns added
 
 -------------
 
-### raccoon.frame inputs  
+### data.frame inputs  
 
 Data.frame inputs generally describe the columns in the raccoon that represent each field. If the columns are not found in the data, an error is thrown. 
 

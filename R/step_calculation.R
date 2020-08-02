@@ -111,6 +111,7 @@ step_metrics <- function(sftraj) {
     paste0(burst_labels(sftraj[['burst']]), '_', sftraj[[attr(sftraj, 'time')]])
   order_t <- order(sftraj$sftrack_id)
   sftraj <- sftraj[order_t, ]
+  is_latlong <- any(st_is_longlat(sftraj),na.rm=TRUE)
   ret <-
     lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
       # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
@@ -137,7 +138,7 @@ step_metrics <- function(sftraj) {
       time <- sub[[attr(sub, 'time')]]
       dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
       dt <- unclass(time[-1]) - unclass(time[-length(time)])
-      if (is.na(attr(st_geometry(sftraj), 'crs'))) {
+      if (!is_latlong) {
         dx <- c(x2[, 1] - x1[, 1])[-nrow(x1)]
         dy <- c(x2[, 2] - x1[, 2])[-nrow(x1)]
         abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
@@ -148,8 +149,8 @@ step_metrics <- function(sftraj) {
         dx <- sin(abs_angle) * dist
         dy <- cos(abs_angle) * dist
       }
-
-      speed <- dist / dt
+      dist[is.na(dx)|is.na(dy)] <- NA
+      speed <- ifelse(is.na(dist),NA,dist / dt)
       so <- cbind.data.frame(
         dx = dx,
         dy = dy,
@@ -164,6 +165,7 @@ step_metrics <- function(sftraj) {
       return(so)
     })
   ret <- do.call(rbind, ret)
+
   ret[order(order_t), ]
 }
 

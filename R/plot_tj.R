@@ -27,6 +27,7 @@
 
 plot.sftrack <- function(x, ...) {
   # x <- my_sftrack
+  par(oma=c(1,1,1,4))
   sf_col <- attr(x,'sf_column')
   bl <-   burst_labels(x$burst, factor = TRUE)
   x = st_sf(data.frame(st_geometry(x), bursts = bl),sf_column_name = sf_col )
@@ -39,6 +40,7 @@ plot.sftrack <- function(x, ...) {
 #' @method plot sftraj
 plot.sftraj <- function(x, ...) {
  # x <- my_sftraj
+  par(oma=c(1,1,1,4))
   bl <-   burst_labels(x$burst, factor = TRUE)
   b_lvl <- levels(bl)
   geom = st_geometry(x)

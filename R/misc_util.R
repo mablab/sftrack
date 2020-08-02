@@ -198,6 +198,7 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   # time = 'time'
   # data$time[1] <- data$time[2]
   # data$time[4] <- data$time[5]
+  if(length(burst)==1){names(burst) <- 'id'}
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)

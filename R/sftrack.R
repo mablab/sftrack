@@ -111,6 +111,7 @@ as_sftrack.data.frame <- function(data =  data.frame(),
     data <- data.frame(sftrack_id = seq_along(time))
   }
   # bursts
+  if(length(burst)==1){names(burst) <- 'id'}
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)
@@ -309,6 +310,7 @@ as_sftrack.sf <- function(data,
   # Id
 
   # bursts
+  if(length(burst)==1){names(burst) <- 'id'}
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)
@@ -485,6 +487,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   error_col = attr(x, 'error')
   #if(is.na(error_col)){ error_col <- NULL}
   nargs = nargs()
+ # print(nargs)
   if (!missing(j) && missing(i)) {
     i <- seq_len(nrow(x))
   }
