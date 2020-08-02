@@ -7,10 +7,10 @@
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
 #' data('raccoon')
-#' raccoon$acquisition_time <- as.POSIXct(raccoon$acquisition_time, 'EST')
-#'   burstz <- list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon)
+#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
+#'   burstz <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon)
 #'   # Input is a data.frame
-#' my_traj <- as_sftraj(raccoon, time ='acquisition_time',
+#' my_traj <- as_sftraj(raccoon, time ='timestamp',
 #'   error = NA, coords = c('longitude','latitude'),
 #'   burst =burstz)
 #' print(my_traj, 5, 10)
@@ -194,7 +194,7 @@ sfg_is_empty = function(x) {
 
 which_duplicated <- function(data = data.frame(), burst, time) {
   # coords = c('longitude','latitude')
-  # burst = c(id = 'sensor_code', month = 'month')
+  # burst = c(id = 'animal_id', month = 'month')
   # time = 'time'
   # data$time[1] <- data$time[2]
   # data$time[4] <- data$time[5]
