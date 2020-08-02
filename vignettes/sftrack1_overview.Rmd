@@ -17,11 +17,7 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r, include =FALSE}
-#devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
 
-```
 *This vignette acts as a proto how-to manually mainly for highlighting features for anyone testing sftrack. It will eventually evolve into the full vignette.*
 
 We'll begin with a brief overview of an `sftrack` object. An `sftrack` object is a data object that describes the movement of a subject, it has x,y coordinates (sometimes z), some measurement of time (clock time or a sequence of integers), and some grouping variable that identifies the subjects. For the spatial aspects of `sftrack` we are using the package `sf`, this powerful tool lets us quickly calculate spatial attributes and plot with ease with its full integration with `rgdal`. 

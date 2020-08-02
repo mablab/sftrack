@@ -19,13 +19,15 @@ coord_traj(traj)
 Return a list of sf_POINTS or a data.frame from a sftraj object
 }
 \examples{
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-  burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
-  # Input is a data.frame
-my_traj <- as_sftraj(raccoon_data, time ='acquisition_time',
-  error = NA, coords = c('longitude','latitude'),
-  burst =burstz)
+data("raccoon")
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+# Input is a data.frame
+my_traj <- as_sftraj(raccoon,
+  time = "timestamp",
+  error = NA, coords = c("longitude", "latitude"),
+  burst = burstz
+)
 print(my_traj, 5, 10)
 
 # extract a list of points
