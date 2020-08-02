@@ -111,6 +111,7 @@ as_sftraj.data.frame <- function(data = data.frame(),
     data <- data.frame(sftrack_id = seq_along(time))
   }
   # bursts
+  if(length(burst)==1){names(burst) <- 'id'}
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)
@@ -260,6 +261,7 @@ as_sftraj.sf <-  function(data,
   }
 
   # bursts
+  if(length(burst)==1){names(burst) <- 'id'}
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)

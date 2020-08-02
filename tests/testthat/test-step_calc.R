@@ -49,11 +49,11 @@ sm <- step_metrics(my_sftraj)
 ans <- data.frame(
   dx = c(0,0,NA,NA,1,NA),
   dy = c(1,1,NA,NA,0,NA),
-  dist = c(1,1,0,0,1,NA),
+  dist = c(1,1,NA,NA,1,NA),
   dt = c(3600,3600,3600,3600,3600,NA),
   abs_angle = c(1.570796,1.570796,NA,NA,0,NA)
 )
-ans$speed <- ans$dist/ans$dt
+ans$speed <- ifelse(is.na(ans$dist),NA,ans$dist/ans$dt)
 
 expect_equivalent(ans, sm[,1:6], tolerance = 1e-06)
 })
