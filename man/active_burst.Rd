@@ -14,27 +14,29 @@ The active burst is the combination of bursts that group the data sets.
 The active_bursts are essentially a paste(names_of_bursts, sep = '_') grouping variable.
 }
 \examples{
-data('raccoon')
-raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
- burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
- mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
+data("raccoon")
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+mb1 <- make_multi_burst(x = burstz, active_burst = c("id", "month"))
 
- # see the current active burst
- active_burst(mb1)
+# see the current active burst
+active_burst(mb1)
 
- # change the active burst
- active_burst(mb1) <- 'id'
+# change the active burst
+active_burst(mb1) <- "id"
 
- # Using a full data set
- my_track <- as_sftrack(raccoon, time = 'timestamp',
-  error = NA, coords = c('longitude','latitude'),
-  burst = burstz)
+# Using a full data set
+my_track <- as_sftrack(raccoon,
+  time = "timestamp",
+  error = NA, coords = c("longitude", "latitude"),
+  burst = burstz
+)
 
- summary(my_track)
+summary(my_track)
 
- # change active_burst
- active_burst(my_track$burst) <- 'id'
+# change active_burst
+active_burst(my_track$burst) <- "id"
 
- summary(my_track)
+summary(my_track)
 #'
 }

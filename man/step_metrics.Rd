@@ -14,12 +14,14 @@ Calculates step metrics including distance, dt, dx, and dy.
 }
 \examples{
 #'
-data('raccoon')
-raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
-  burstz <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon)
-  # Input is a data.frame
-my_sftraj <- as_sftraj(raccoon, burst = burstz, time = 'timestamp',
-  error = NA, coords = c('longitude','latitude'))
+data("raccoon")
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+# Input is a data.frame
+my_sftraj <- as_sftraj(raccoon,
+  burst = burstz, time = "timestamp",
+  error = NA, coords = c("longitude", "latitude")
+)
 
-step_metrics(my_sftraj)[1:10,]
+step_metrics(my_sftraj)[1:10, ]
 }
