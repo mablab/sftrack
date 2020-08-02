@@ -6,13 +6,15 @@
 #' @param traj a trajectory geometery from sf_traj
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
-#' data('raccoon')
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, 'EST')
-#'   burstz <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon)
-#'   # Input is a data.frame
-#' my_traj <- as_sftraj(raccoon, time ='timestamp',
-#'   error = NA, coords = c('longitude','latitude'),
-#'   burst =burstz)
+#' data("raccoon")
+#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+#' burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+#' # Input is a data.frame
+#' my_traj <- as_sftraj(raccoon,
+#'   time = "timestamp",
+#'   error = NA, coords = c("longitude", "latitude"),
+#'   burst = burstz
+#' )
 #' print(my_traj, 5, 10)
 #'
 #' # extract a list of points
@@ -24,17 +26,21 @@
 pts_traj <- function(traj, sfc = FALSE) {
   pts <- st_geometry(traj)
 
-  ret <- lapply(pts, function(x){
-    if(inherits(x,'LINESTRING')){
+  ret <- lapply(pts, function(x) {
+    if (inherits(x, "LINESTRING")) {
       st_point(unclass(x)[1L, , drop = TRUE])
     } else {
       x
     }
   })
-  if(!sfc){ return(ret) }
+  if (!sfc) {
+    return(ret)
+  }
 
-  st_sfc(ret, crs = st_crs(pts),
-    precision = st_precision(pts))
+  st_sfc(ret,
+    crs = st_crs(pts),
+    precision = st_precision(pts)
+  )
 }
 
 #' @rdname traj_geom
@@ -43,39 +49,40 @@ coord_traj <- function(traj) {
   # traj = my_sftraj
   pts <- st_geometry(traj)
 
-  if ('XY' %in% class(pts[[1]])) {
-    dim = 2
-  } else{
-    dim = 3
+  if ("XY" %in% class(pts[[1]])) {
+    dim <- 2
+  } else {
+    dim <- 3
   }
   this_seq <- seq(1, dim * 2, by = 2)
   ret <- lapply(pts, function(x) {
     #  x = pts[[499]]
-    if (inherits(x, 'POINT')) {
+    if (inherits(x, "POINT")) {
       st_coordinates(x)
       x[1:dim]
-    } else{
+    } else {
       x[this_seq]
       # st_coordinates(x)[pos, dim]
     }
   })
   do.call(rbind, ret)
-
 }
 #' @export
-st_coordinates.sftraj <- function(x, return = 'all') {
+st_coordinates.sftraj <- function(x, return = "all") {
   # x = my_sftraj
   pts <- sf::st_geometry(x)
 
-  ret <- lapply(pts,
+  ret <- lapply(
+    pts,
     function(x) {
       coords <- data.frame(st_coordinates(x))
       coords$Point <- seq_len(nrow(coords))
-      coords[,c('X','Y','Point')]
-    })
-  ret <- do.call(rbind,ret)
-  choice <- switch(return, start = 1, end =2, all = c(1,2))
-  ret[ret$Point%in%unlist(choice),]
+      coords[, c("X", "Y", "Point")]
+    }
+  )
+  ret <- do.call(rbind, ret)
+  choice <- switch(return, start = 1, end = 2, all = c(1, 2))
+  ret[ret$Point %in% unlist(choice), ]
 }
 
 
@@ -88,10 +95,10 @@ st_coordinates.sftraj <- function(x, return = 'all') {
 #' @export
 #' @param x an sftraj object
 is_linestring <- function(x) {
-  if (inherits(x, 'sftraj')) {
-    pts <- x[[attr(x, 'sf_column')]]
+  if (inherits(x, "sftraj")) {
+    pts <- x[[attr(x, "sf_column")]]
   }
-  if (inherits(x, 'sfc')) {
+  if (inherits(x, "sfc")) {
     pts <- x
   }
   # if ('XY' %in% class(pts[[1]])) {
@@ -99,11 +106,12 @@ is_linestring <- function(x) {
   # } else{
   #   dim = c('X', 'Y', 'Z')
   # }
-  vapply(pts, function(y)
-    inherits(y, 'LINESTRING'), NA)
+  vapply(pts, function(y) {
+    inherits(y, "LINESTRING")
+  }, NA)
 
   # the sf version might be faster?
-  #st_is(x,'LINESTRING')
+  # st_is(x,'LINESTRING')
 }
 
 #' @title Summarize sftrack objects
@@ -111,24 +119,25 @@ is_linestring <- function(x) {
 #' @export
 summary_sftrack <- function(x) {
   track_class <- class(x)[1]
-  #x = my_sftrack
-  time_col <- attr(x, 'time')
-  error_col <- attr(x, 'error')
-  sf_col <- attr(x, 'sf_column')
+  # x = my_sftrack
+  time_col <- attr(x, "time")
+  error_col <- attr(x, "error")
+  sf_col <- attr(x, "sf_column")
 
-  sub <- x[,]
+  sub <- x[, ]
   levelz <- burst_labels(x$burst, factor = TRUE)
   statz <-
-    tapply(sub[[time_col]], levelz, function(x)
+    tapply(sub[[time_col]], levelz, function(x) {
       list(
-        'begin' = min(x),
-        'end' = max(x),
-        'points' = length(x),
-        'NAs' = sum(is.na(x))
-      ))
+        "begin" = min(x),
+        "end" = max(x),
+        "points" = length(x),
+        "NAs" = sum(is.na(x))
+      )
+    })
 
-  if (track_class == 'sftrack') {
-    my_crs <- attr(sub[[sf_col]], 'crs')
+  if (track_class == "sftrack") {
+    my_crs <- attr(sub[[sf_col]], "crs")
     lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
       new_pts <- pts[!vapply(pts, st_is_empty, NA)]
       my_sfc <-
@@ -136,30 +145,34 @@ summary_sftrack <- function(x) {
       st_length(my_sfc)
     })
   }
-  if (track_class == 'sftraj') {
+  if (track_class == "sftraj") {
     lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
       sum(st_length(pts))
     })
   }
-  points = vapply(
+  points <- vapply(
     statz,
-    FUN = function(x)
-      x$points,
+    FUN = function(x) {
+      x$points
+    },
     numeric(1)
   )
-  NAs = vapply(
+  NAs <- vapply(
     statz,
-    FUN = function(x)
-      x$NAs,
+    FUN = function(x) {
+      x$NAs
+    },
     numeric(1)
   )
-  begin_time = lapply(statz, function(x)
-    x$begin)
-  end_time = lapply(statz, function(x)
-    x$end)
+  begin_time <- lapply(statz, function(x) {
+    x$begin
+  })
+  end_time <- lapply(statz, function(x) {
+    x$end
+  })
   class(begin_time) <- class(end_time) <- c("POSIXct", "POSIXt")
-  attr(begin_time, "tzone") <- attr(x[[attr(x, 'time')]], "tzone")
-  attr(end_time, "tzone") <- attr(x[[attr(x, 'time')]], "tzone")
+  attr(begin_time, "tzone") <- attr(x[[attr(x, "time")]], "tzone")
+  attr(end_time, "tzone") <- attr(x[[attr(x, "time")]], "tzone")
   data.frame(
     burst = levels(levelz),
     points,
@@ -171,8 +184,8 @@ summary_sftrack <- function(x) {
   )
 }
 
-#recalculates empty geometries (take from sf as it is an internal as well)
-sfg_is_empty = function(x) {
+# recalculates empty geometries (take from sf as it is an internal as well)
+sfg_is_empty <- function(x) {
   switch(
     class(x)[2],
     POINT = any(!is.finite(x)),
@@ -198,20 +211,23 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   # time = 'time'
   # data$time[1] <- data$time[2]
   # data$time[4] <- data$time[5]
-  if(length(burst)==1){names(burst) <- 'id'}
+  if (length(burst) == 1) {
+    names(burst) <- "id"
+  }
   if (all(sapply(burst, length) == nrow(data))) {
     # check id in burst
     check_burst_id(burst)
     burst_list <- burst
-  } else{
+  } else {
     # check names exist
     check_names_exist(data, burst)
     # check id in burst
     # check id in burst
     check_burst_id(burst)
     # create burst list from names
-    burst_list <- lapply(data[, burst, FALSE], function(x)
-      x)
+    burst_list <- lapply(data[, burst, FALSE], function(x) {
+      x
+    })
     if (!is.null(names(burst))) {
       names(burst_list) <-
         names(burst)
@@ -222,11 +238,9 @@ which_duplicated <- function(data = data.frame(), burst, time) {
 
   if (length(time) == nrow(data)) {
     reloc_time <- time
-
   } else {
     check_names_exist(data, time)
     reloc_time <- data[[time]]
-
   }
   check_time(reloc_time)
   burst <-
@@ -235,9 +249,8 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   results <-
     unlist(tapply(reloc_time, bl, duplicated))
 
-  rowz <- which(bl[results]==bl & reloc_time[results]==reloc_time)
-  data.frame(burst = bl[rowz],time = reloc_time[rowz], which_row = rowz)
-
+  rowz <- which(bl[results] == bl & reloc_time[results] == reloc_time)
+  data.frame(burst = bl[rowz], time = reloc_time[rowz], which_row = rowz)
 }
 # Get the position of x2, given the time
 get_x2 <- function(time) {

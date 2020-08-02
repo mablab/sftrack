@@ -9,15 +9,16 @@ check_ordered <- function(burst, time_data, return = TRUE) {
 
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
-    all(tapply(time_data, idz, function(x)
+    all(tapply(time_data, idz, function(x) {
       identical(order(x), seq_len(length(
         x
-      )))))
+      )))
+    }))
   if (isOrdered & return) {
     return(seq_along(time_data))
   }
   if (!isOrdered) {
-    message(paste0('time was not ordered for each burst, reordering output...'))
+    message(paste0("time was not ordered for each burst, reordering output..."))
     if (return) {
       return(order(idz, time_data))
     }
@@ -31,18 +32,17 @@ check_ordered <- function(burst, time_data, return = TRUE) {
 check_names_exist <- function(data, names) {
   # check burst
   if (!is.character(names)) {
-    stop('Column names must be a character')
+    stop("Column names must be a character")
   }
   col_names <- colnames(data)
   test <- !(names %in% colnames(data))
   if (any(test)) {
     stop(paste0(
-      paste0(names[test], collapse = ' & '),
-      ' not found in data frame',
-      collapse = ' '
+      paste0(names[test], collapse = " & "),
+      " not found in data frame",
+      collapse = " "
     ))
   }
-
 }
 
 ##### Burst related checks
@@ -50,11 +50,11 @@ check_names_exist <- function(data, names) {
 #' @export
 #' @param burst a multi_burst
 check_NA_burst <- function(burst) {
-  if (inherits(burst, c('sftrack', 'sftraj'))) {
+  if (inherits(burst, c("sftrack", "sftraj"))) {
     burst <- burst$burst
   }
   if (any(is.na(unlist(burst)))) {
-    stop('NAs not allowed in burst')
+    stop("NAs not allowed in burst")
   }
 }
 
@@ -62,54 +62,55 @@ check_NA_burst <- function(burst) {
 #' @export
 #' @param burst a multi_burst
 check_burst_id <- function(burst) {
-  if (!('id' %in% burst |
-      'id' %in% names(burst))) {
-    stop('There is no `id` column in burst names')
+  if (!("id" %in% burst |
+    "id" %in% names(burst))) {
+    stop("There is no `id` column in burst names")
   }
-
 }
 
 # more than one relocation for a burst
 check_two_bursts <- function(burst, ..., active_burst) {
-  if (inherits(burst, 'multi_burst')) {
+  if (inherits(burst, "multi_burst")) {
     lvlz <- burst_labels(burst, factor = T)
-    active_burst <- attr(burst, 'active_burst')
+    active_burst <- attr(burst, "active_burst")
   } else {
     lvlz <-
       vapply(burst, function(y) {
-        paste0(y[active_burst], collapse = '_')
+        paste0(y[active_burst], collapse = "_")
       }, NA_character_)
   }
   count <- table(lvlz)
   if (any(count == 1)) {
-    message(paste0(paste0(names(count)[count == 1], collapse = ' & '), ' has only one relocation'))
+    message(paste0(paste0(names(count)[count == 1], collapse = " & "), " has only one relocation"))
   }
 }
 #' @title Are burst names equivalent for each ind_burst?
 #' @export
 #' @param burst a multi_burst
 check_burst_names <- function(burst) {
-  if (inherits(burst, c('sftrack', 'sftraj'))) {
+  if (inherits(burst, c("sftrack", "sftraj"))) {
     burst <- burst$burst
   }
-  if (length(unique(vapply(burst, function(y)
-    paste(names(y), collapse = ''), NA_character_))) != 1) {
-    stop('Burst names do not match')
+  if (length(unique(vapply(burst, function(y) {
+    paste(names(y), collapse = "")
+  }, NA_character_))) != 1) {
+    stop("Burst names do not match")
   }
 
-  if (any(unlist(lapply(burst, function(x)
+  if (any(unlist(lapply(burst, function(x) {
     duplicated(names(
       x
-    )))))) {
-    stop('burst names can not be duplicated')
+    ))
+  })))) {
+    stop("burst names can not be duplicated")
   }
 }
 
 # How many bursts are there when combining two different multi_bursts
 check_active_burst <-
   function(burst,
-    active_burst = NULL,
-    check_all = T) {
+           active_burst = NULL,
+           check_all = T) {
     if (is.null(active_burst)) {
       active_burst <- active_burst(burst)
     }
@@ -117,11 +118,12 @@ check_active_burst <-
       check <- all(active_burst %in% names(burst[[1]]))
     } else {
       check <-
-        all(vapply(burst, function(x)
-          all(active_burst %in% names(x)), NA))
+        all(vapply(burst, function(x) {
+          all(active_burst %in% names(x))
+        }, NA))
     }
     if (!check) {
-      stop('not all active bursts found in burst names')
+      stop("not all active bursts found in burst names")
     }
   }
 
@@ -135,7 +137,7 @@ check_active_burst <-
 #' @export
 fix_zero <- function(xyz) {
   zero_row <- apply(!is.na(xyz[, 1:2]) & xyz[, 1:2] == 0, 1, any)
-  xyz[zero_row,] <- NA
+  xyz[zero_row, ] <- NA
   return(xyz)
 }
 
@@ -144,28 +146,30 @@ fix_zero <- function(xyz) {
 #' @param xyz a data.frame of xy or xyz coordinates
 #' @export
 check_NA_coords <- function(xyz) {
-  check_row <- lapply(xyz, function(x)
-    which(is.na(x)))
+  check_row <- lapply(xyz, function(x) {
+    which(is.na(x))
+  })
   NAs <-
-    vapply(check_row, function(x)
-      any(!unique(unlist(check_row)) %in% x), NA)
+    vapply(check_row, function(x) {
+      any(!unique(unlist(check_row)) %in% x)
+    }, NA)
   if (any(NAs)) {
     stop(paste0(
-      paste0(c('x', 'y', 'z')[!NAs], collapse = ' '),
-      ' column has NAs that are not found in other coordinate columns'
+      paste0(c("x", "y", "z")[!NAs], collapse = " "),
+      " column has NAs that are not found in other coordinate columns"
     ))
   }
 }
 
 # Checks if z coordinates and returns a message
 check_z_coords <- function(x) {
-  if ('XYZ' %in% class(st_geometry(x)[[1]])) {
+  if ("XYZ" %in% class(st_geometry(x)[[1]])) {
     message(
-      'Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry'
+      "Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry"
     )
   }
 }
-#check_z_coords(my_track)
+# check_z_coords(my_track)
 
 ################
 # Time
@@ -176,11 +180,11 @@ check_time <- function(time) {
   # This function was originally envisioned to contain all time checks
   # Currently its not but can expand if we feel its necessary to have
   # is integer or posixct
-  if (inherits(time, c('sftrack', 'sftraj'))) {
-    time <- time[[attr(time, 'time')]]
+  if (inherits(time, c("sftrack", "sftraj"))) {
+    time <- time[[attr(time, "time")]]
   }
-  if (!(inherits(time, 'integer') | inherits(time, 'POSIXct'))) {
-    stop('Time needs to be an integer or POSIXct')
+  if (!(inherits(time, "integer") | inherits(time, "POSIXct"))) {
+    stop("Time needs to be an integer or POSIXct")
   }
 }
 
@@ -189,7 +193,7 @@ check_time <- function(time) {
 #' @export
 check_t_regular <- function(sftrack) {
   # is complete
-  time_col = attr(sftrack, 'time')
+  time_col <- attr(sftrack, "time")
   idz <- burst_labels(sftrack$burst, factor = T)
   sftrack <-
     sftrack[check_ordered(idz, sftrack[[time_col]]), ]
@@ -207,31 +211,33 @@ check_t_regular <- function(sftrack) {
 #' @param time vector of time, not required if given a sftrack object.
 #' @export
 dup_timestamp <- function(x, time) {
-  if (inherits(x, c('sftrack', 'sftraj'))) {
+  if (inherits(x, c("sftrack", "sftraj"))) {
     burst <- x$burst
-    time <- x[[attr(x, 'time')]]
-  } else{
-    burst = x
+    time <- x[[attr(x, "time")]]
+  } else {
+    burst <- x
   }
 
   test <-
-    tapply(time, burst_labels(burst, TRUE), function(y)
-      any(duplicated(y)))
+    tapply(time, burst_labels(burst, TRUE), function(y) {
+      any(duplicated(y))
+    })
   if (any(test)) {
     stop(paste0(
-      'bursts: ',
-      paste0(names(test)[test], collapse = ', '),
-      ' have duplicated time stamps'
+      "bursts: ",
+      paste0(names(test)[test], collapse = ", "),
+      " have duplicated time stamps"
     ))
   }
 }
 
 unique_active_bursts <-
   function(burst) {
-    #burst = list(burst1,burst2)
-    #burst = list(x[[1]],value[[1]])
-    if (length(unique(vapply(burst, function(x)
-      paste(attr(x, 'active_burst'), collapse = ''), NA_character_))) != 1) {
-      stop('There are more than one possible active bursts')
+    # burst = list(burst1,burst2)
+    # burst = list(x[[1]],value[[1]])
+    if (length(unique(vapply(burst, function(x) {
+      paste(attr(x, "active_burst"), collapse = "")
+    }, NA_character_))) != 1) {
+      stop("There are more than one possible active bursts")
     }
   }

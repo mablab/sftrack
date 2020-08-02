@@ -1,4 +1,4 @@
 library(testthat)
 library(sftrack)
-#library(adehabitatLT)
+# library(adehabitatLT)
 test_check("sftrack")
