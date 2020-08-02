@@ -155,7 +155,7 @@ burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1
 time = 'time'
 
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time)
-head(my_sftraj[burst_labels(my_sftraj) %in% c('CJ11_1'), ])
+head(my_sftraj[burst_labels(my_sftraj) %in% c('TTP-058'), ])
 
 
 ```
@@ -165,7 +165,7 @@ You can also subset by entering the burst label of the burst itself in either th
 ```{r}
 head(mb['1_2020'])
 
-sub <- my_sftraj['CJ13_1',]
+sub <- my_sftraj['TTP-058_1',]
 print(sub,5, 3)
 ```
 ##### active_burst 
