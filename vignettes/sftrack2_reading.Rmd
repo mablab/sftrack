@@ -64,10 +64,10 @@ data('raccoon', package = 'sftrack')
 coords = raccoon[,c('longitude','latitude')]
 crs = '+init=epsg:4326'
 #bursts
-burst = list(id = raccoon$sensor_code,month = as.POSIXlt(raccoon$utc_date)$mon+1)
+burst = list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon+1)
 active_burst = c('id','month')
 #time
-time = as.POSIXct(raccoon$acquisition_time, tz='EST')
+time = as.POSIXct(raccoon$timestamp, tz='EST')
 #error
 error = raccoon$fix
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, 
@@ -88,11 +88,11 @@ Data.frame inputs generally describe the columns in the raccoon that represent e
 
 
 ```{r}
-raccoon$time <- as.POSIXct(raccoon$acquisition_time, tz='EST')
-raccoon$month <- as.POSIXlt(raccoon$acquisition_time)$mon+1
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
 coords = c('longitude','latitude')
-burst = c(id = 'sensor_code', month = 'month')
+burst = c(id = 'animal_id', month = 'month')
 time = 'time'
 error = 'fix'
 
@@ -111,8 +111,8 @@ To read in an ltraj object all you need is an ltraj object created in `adehabita
 ```{r, message = FALSE}
 library(adehabitatLT)
 
-ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$acquisition_time),
- id = raccoon$sensor_code, typeII = TRUE,
+ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$timestamp),
+ id = raccoon$animal_id, typeII = TRUE,
  infolocs = raccoon[,1:6] )
 
 my_sf <- as_sftrack(ltraj_df)
@@ -128,7 +128,7 @@ head(my_sf)
 library(sf)
 df1 <- raccoon[!is.na(raccoon$latitude),]
 sf_df <- st_as_sf(df1, coords=c('longitude','latitude'), crs = crs)
-burst = c(id = 'sensor_code')
+burst = c(id = 'animal_id')
 time_col = 'time'
 
 new_sftraj <- as_sftraj(sf_df,burst = burst, time = time_col) 
@@ -145,7 +145,7 @@ Additionally `as_sftrack` and `as_sftraj` can convert back and forth between eac
 ```{r}
 # Make tracks from raw data
 coords = c('longitude','latitude')
-burst = c(id = 'sensor_code', month = 'month')
+burst = c(id = 'animal_id', month = 'month')
 time = 'time'
 error = 'fix'
 

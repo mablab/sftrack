@@ -23,11 +23,11 @@ library(sftrack)
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
-raccoon$month <- as.POSIXlt(raccoon$acquisition_time)$mon+1
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
-raccoon$time <- as.POSIXct(raccoon$acquisition_time, tz='EST')
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = raccoon$sensor_code, month = as.POSIXlt(raccoon$acquisition_time)$mon+1)
+burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 error = 'fix'
 crs = '+init=epsg:4326'
