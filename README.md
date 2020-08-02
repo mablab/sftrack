@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) 
+
 # sftraj: A central class for tracking and movement data
 
 ![sftraj logo](Figures/sftraj-200-white.png "sftraj logo")
