@@ -1,8 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-LICENSE.md
+LICENSE\.md
 \.github
 CODE_OF_CONDUCT.md
 Figures
 Proposal
 DevFlowDiagram
+^\.travis\.yml

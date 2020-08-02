@@ -14,8 +14,6 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-#devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
 
 ```
 
@@ -28,8 +26,11 @@ A `multi-burst` is a collection of `ind_bursts` and exists at the column level. 
 
 We start by looking at the structure of a `multi_burst`
 ```{r}
-data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-burst_list = list(id = data$sensor_code, month = as.POSIXlt(data$acquisition_time)$mon+1)
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
+data('raccoon', package = 'sftrack')
+#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+burst_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 
 mb1 <- make_multi_burst(x=burst_list, active_burst=c('id','month'))
 str(mb1)
@@ -144,16 +145,17 @@ burst_labels(mb)[1:10]
 
 # Subsetting a particular sensor from our raccoon data
 
-data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-data$month <- as.POSIXlt(data$acquisition_time)$mon+1
+#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
+data('raccoon', package = 'sftrack')
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
-data$time <- as.POSIXct(data$acquisition_time, tz='EST')
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = data$sensor_code, month = as.POSIXlt(data$acquisition_time)$mon+1)
+burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 
-my_sftraj <- as_sftraj(data = data, coords = coords, burst = burst, time = time)
-head(my_sftraj[burst_labels(my_sftraj) %in% c('CJ11_1'), ])
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time)
+head(my_sftraj[burst_labels(my_sftraj) %in% c('TTP-058'), ])
 
 
 ```
@@ -163,11 +165,11 @@ You can also subset by entering the burst label of the burst itself in either th
 ```{r}
 head(mb['1_2020'])
 
-sub <- my_sftraj['CJ13_1',]
+sub <- my_sftraj['TTP-058_1',]
 print(sub,5, 3)
 ```
 ##### active_burst 
-The active_burst is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active_burst of a multi_burst with `active_burst()`. Once changed, it changes the active_burst for all `ind_burst` and recalculates their labels.
+The active_burst is a simple yet powerful feature. It dictates how your raccoon is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active_burst of a multi_burst with `active_burst()`. Once changed, it changes the active_burst for all `ind_burst` and recalculates their labels.
 
 Active_bursts can be changed for any sftrack/straj/multi_burst/ind_burst
 

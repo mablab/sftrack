@@ -22,21 +22,25 @@ methods for plot sftrack/sftraj
 }
 \examples{
 library(sftrack)
-raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
-  burstz <- c(id = 'sensor_code')
-my_sftrack <- as_sftrack(raccoon_data, time = 'acquisition_time',
-   coords = c('longitude','latitude'),
-  burst = burstz)
+data("raccoon")
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+burstz <- c(id = "animal_id")
+my_sftrack <- as_sftrack(raccoon,
+  time = "timestamp",
+  coords = c("longitude", "latitude"),
+  burst = burstz
+)
 
 # Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
 
-plot(my_sftrack, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80')
+plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 
 # sftraj will as well for the most part, however as its a more
 # complex structure to speed up plotting.
-my_sftraj <- as_sftraj(raccoon_data, time = 'acquisition_time',
-  coords = c('longitude','latitude'),
-  burst = burstz)
-plot(my_sftraj, axes = TRUE, lwd =5 ,cex=5, bgc = 'gray80', graticule = TRUE)
+my_sftraj <- as_sftraj(raccoon,
+  time = "timestamp",
+  coords = c("longitude", "latitude"),
+  burst = burstz
+)
+plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 }

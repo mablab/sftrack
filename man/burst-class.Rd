@@ -51,19 +51,19 @@ You can create bursts with make_ind_burst and make multi_burst.
 \examples{
 # Make a single burst
 
-make_ind_burst(x = list(id='CJ11',month=3, height=10))
+make_ind_burst(x = list(id = "CJ11", month = 3, height = 10))
 
 # Make a multi burst
- raccoon_data <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
- raccoon_data$acquisition_time <- as.POSIXct(raccoon_data$acquisition_time, 'EST')
- burstz <- list(id = raccoon_data$sensor_code,month = as.POSIXlt(raccoon_data$utc_date)$mon)
- mb1 <- make_multi_burst(x=burstz, active_burst=c('id','month'))
- str(mb1)
+data("raccoon")
+raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
+burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+mb1 <- make_multi_burst(x = burstz, active_burst = c("id", "month"))
+str(mb1)
 
 # Make a multi_burst from many ind_bursts
- a <- make_ind_burst(list(id = 1, year = 2020))
- b <- make_ind_burst(list(id = 1, year = 2020))
- c <- make_ind_burst(list(id = 2, year = 2020))
+a <- make_ind_burst(list(id = 1, year = 2020))
+b <- make_ind_burst(list(id = 1, year = 2020))
+c <- make_ind_burst(list(id = 2, year = 2020))
 
- c(a, b, c)
+c(a, b, c)
 }

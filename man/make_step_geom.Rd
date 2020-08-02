@@ -18,18 +18,19 @@ This calculates step geometries as individual line segments based on the active_
 }
 \examples{
 library(sf)
-geom = st_as_sf(data.frame(
-  x = c(1,2,2,5),
-  y = c(0,1,5,7)
-), coords = c('x','y'))
+geom <- st_as_sf(data.frame(
+  x = c(1, 2, 2, 5),
+  y = c(0, 1, 5, 7)
+), coords = c("x", "y"))
 
-burst = list(id = rep(1,4))
-time = 1:4
+burst <- list(id = rep(1, 4))
+time <- 1:4
 
-mb = make_multi_burst(burst)
+mb <- make_multi_burst(burst)
 
-make_step_geom(burst = mb,
-               geometry = geom$geometry,
-               time_data = time)
-
+make_step_geom(
+  burst = mb,
+  geometry = geom$geometry,
+  time_data = time
+)
 }

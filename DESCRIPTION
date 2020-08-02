@@ -1,6 +1,6 @@
 Package: sftrack
 Title: Central classes for movement data
-Version: 0.0.0.9000
+Version: 0.3
 Date: 2019-12-17
 Authors@R: 
     c(person(given = "Matthew",
@@ -36,7 +36,7 @@ Description: Movement classes for tracking data and trajectories,
     of locations with at least 2-dimensional spatial coordinates (x,y)
     and a time index (t); trajectories are the line representation of
     the path, composed by steps, i.e. the straightline segments
-    connecting successive locations. `sftraj` is designed to handle
+    connecting successive locations. `sftrack` is designed to handle
     movement of both living organisms and inanimate objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -46,4 +46,4 @@ VignetteBuilder: knitr
 URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
 BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
-    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales
+    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr
