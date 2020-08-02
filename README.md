@@ -12,71 +12,46 @@ complementary pillars: a broad involvement of the movement community,
 a robust conceptual data model, and a sf-based implementation in R.
 
 
-## Project plan
+## Get started
 
-All of the work is going to happen openly on GitHub, in this
-repository. The code will be released under the [MIT
-license](https://opensource.org/licenses/MIT) for the package, a fully
-open license that allows for more contributions, and wide acceptation
-by other package developers. Last but not least, we abide by a strict
-[code of conduct](CODE_OF_CONDUCT.md) to enforce a safe and inclusive
-environment for the community interested in `sftraj`.
+To get started, install from github
 
-The time frame of this project is over 6 months, until
-March 2020. Following the [MoSCoW
-method](https://en.wikipedia.org/wiki/MoSCoW_method), we determined
-what will be delivered from this project, starting from a minimum
-viable product to future development.
+```
+# To install the stable version
+devtools::install_github('mablab/sftrack')
 
-### Must have
+# To install with built vignettes
+devtools::install_github('mablab/sftrack', build_opts = c("--no-resave-data", "--no-manual"),build_vignettes = TRUE)
 
-*Must have* are requirements necessary for project completion, which
-define together our minimum viable product, i.e. a usable `sftraj`
-package:
- 
-* Use cases described [month 1–2]
-* Data model revisited and class definitions [month 3]
-* Creators and converters from basic objects (`data.frames`, `sf`,
-  trajectories) [month 4]
-* Installable package (GitHub) [months 4–6]
-* Accessors and summaries (`print`, `summary`) [month 5]
-* Full function documentation and unit testing [months 5–6]
+# To install the dev version:
+devtools::install_github('mablab/sftrack',ref='dev')
 
-### Should have
+```
+The dev version is updated much more frequently and should pass the majority of CRAN checks. However, if you install the dev version, understand it is still may contain some bugs. Please submit any bugs you find to the `issues` page.
 
-*Should have* are important requirements, which are however not
-necessary for project completion:
+## creating an `sftrack` 
 
-* Vignette [month 6]
+In order to convert your raw data into `sftrack` use function `as_sftrack()`. The function requires three main things:  
+- coordinate columns in atleast the xy axis (UTM, lat/long, etc...)  
+- a timestamp column in POSIXct *or* an integer  
+- a grouping column (refered to as a 'burst')  
 
-### Could have
+```
+#raccoon <- read.csv(system.file('my_data/raccoon_data.csv')
 
-*Could have* are desirable requirements developed if time allows:
+#xyz
+coords = c('longitude','latitude')
+crs = '+init=epsg:4326'
 
-* Package on [CRAN](https://cran.r-project.org/) (the package will be
-  installable from GitHub as a *must have*)
-* Basic plot (static) of trajectory object
+#burst
+burst = 'animal_id'
 
-### Won't have
+#time
+time = as.POSIXct(raccoon$timestamp, tz='EST')
 
-*Won’t have* are requirements that are identified, but not planned at
-this stage of the work:
-
-* Full-fledged package, including submission to
-  [CRAN](https://cran.r-project.org/) and
-  [rOpenSci](https://ropensci.org/).
-* Preparation of a detailed article (targeting the [R
-  Journal](https://journal.r-project.org/)) to present the technical
-  choices and the solution offered by `sftraj`, in order to favor
-  adoption by users and package developers.
-* Broad adoption by package developers, by continuing open
-  conversation with them, and help them develop conversion tools to
-  major existing classes.
-* Dynamic visualization of trajectories, allowing keyboard- and
-  mouse-controlled exploration of trajectories, step by step (based on
-  the solution provided in `rpostgisLT`).
-
-
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, 
+                         time = time, crs = crs)
+```
 ## How can you help?
 
 Although we have set out a precise work plan, the very first step will
