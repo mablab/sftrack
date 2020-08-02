@@ -4,3 +4,7 @@ cache: packages
 warnings_are_errors: true
 after_success:
     - Rscript -e 'covr::coveralls()'
+addons:
+  apt:
+    packages:
+      - libudunits2-dev
