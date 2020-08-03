@@ -26,7 +26,7 @@ A `multi-burst` is a collection of `ind_bursts` and exists at the column level. 
 
 We start by looking at the structure of a `multi_burst`
 ```{r}
-devtools::load_all("/home/matt/r_programs/sftrack")
+#devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
 data('raccoon', package = 'sftrack')
 #raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
