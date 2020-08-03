@@ -179,7 +179,7 @@ active_burst(my_sftraj)
 summary(my_sftraj, stats = T)
 active_burst(my_sftraj) <- c('id')
 active_burst(my_sftraj)
-summary(my_sftraj, stats = T)
+#summary(my_sftraj, stats = T)
 
 # multi_burst
 active_burst(mb)
