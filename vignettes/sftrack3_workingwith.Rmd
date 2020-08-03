@@ -22,6 +22,8 @@ To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with
 ```{r}
 #devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
+library(sf)
+library(lwgeom)
 # Make tracks from raw data
 data('raccoon', package = 'sftrack')
 #raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
