@@ -10,14 +10,21 @@
 \usage{
 as_sftraj(data = data.frame(), ...)
 
-\method{as_sftraj}{data.frame}(data = data.frame(), ...,
-  coords = c("x", "y"), burst = "id", active_burst = NA,
-  time = "time", error = NA, crs = NA, zeroNA = FALSE)
+\method{as_sftraj}{data.frame}(
+  data = data.frame(),
+  ...,
+  coords = c("x", "y"),
+  burst = "id",
+  active_burst = NA,
+  time = "time",
+  error = NA,
+  crs = NA,
+  zeroNA = FALSE
+)
 
 \method{as_sftraj}{sftrack}(data, ...)
 
-\method{as_sftraj}{sf}(data, ..., coords, burst, active_burst = NA, time,
-  error = NA)
+\method{as_sftraj}{sf}(data, ..., coords, burst, active_burst = NA, time, error = NA)
 
 \method{as_sftraj}{ltraj}(data, ...)
 }

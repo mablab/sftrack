@@ -611,3 +611,9 @@ cbind.sftrack <- function(..., deparse.level = 1) {
     stop('More than one column named "burst" found')
   }
 }
+
+#' @export
+"[[<-.sftrack" = function(x, i, value) {
+
+  x = structure(NextMethod(), class = c("sftrack", "sf", "data.frame"))
+}

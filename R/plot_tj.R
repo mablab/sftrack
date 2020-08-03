@@ -63,7 +63,6 @@ plot.sftraj <- function(x, ...) {
 #' @description
 #' This function can be added to ggplot() to plot an sftrack and sftraj
 #' Function does not yet work with ggplot grammer so you must but data= in this function
-#' @name geom_sftrack
 #' @param mapping mapping aesthetics for ggplot.
 #' @param data the sftraj or sftrack object.
 #' @param ... arguments to passed to ggplot
