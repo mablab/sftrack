@@ -14,13 +14,13 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(lwgeom)
 ```
 
 ```{r}
 #devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
-library(sf)
-library(lwgeom)
+
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
