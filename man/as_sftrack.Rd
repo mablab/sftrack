@@ -10,16 +10,23 @@
 \usage{
 as_sftrack(data = data.frame(), ...)
 
-\method{as_sftrack}{data.frame}(data = data.frame(), ...,
-  coords = c("x", "y"), burst = "id", active_burst = NA,
-  time = "time", error = NA, crs = NA, zeroNA = FALSE)
+\method{as_sftrack}{data.frame}(
+  data = data.frame(),
+  ...,
+  coords = c("x", "y"),
+  burst = "id",
+  active_burst = NA,
+  time = "time",
+  error = NA,
+  crs = NA,
+  zeroNA = FALSE
+)
 
 \method{as_sftrack}{sftraj}(data, ...)
 
 \method{as_sftrack}{ltraj}(data, ...)
 
-\method{as_sftrack}{sf}(data, ..., coords, burst, active_burst = NA,
-  time, error = NA)
+\method{as_sftrack}{sf}(data, ..., coords, burst, active_burst = NA, time, error = NA)
 }
 \arguments{
 \item{data}{a data.frame of the movement data, if supplied all data.frame inputs, than is optional}

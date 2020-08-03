@@ -4,7 +4,8 @@
 \name{raccoon}
 \alias{raccoon}
 \title{Movements of two raccoons in an urban park in Florida}
-\format{A data frame with 445 rows and 10 variables:
+\format{
+A data frame with 445 rows and 10 variables:
 \describe{
   \item{animal_id}{ID of individual. TTP: tree tops park, i.e the tagging site.}
   \item{timestamp}{The date and time of gps fix in UTC}
@@ -14,7 +15,8 @@
   \item{hdop}{Horizontal precision}
   \item{vdop}{Vertical precision}
   \item{fix}{The number of satellite fixes}
-}}
+}
+}
 \usage{
 raccoon
 }

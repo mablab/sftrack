@@ -8,11 +8,9 @@
 \usage{
 geom_sftrack(mapping, data, ...)
 
-\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL,
-  ...)
+\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL, ...)
 
-\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL,
-  ...)
+\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL, ...)
 }
 \arguments{
 \item{mapping}{mapping aesthetics for ggplot.}
