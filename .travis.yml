@@ -11,10 +11,8 @@ addons:
             - netcdf-bin
 
 r_packages:
-    - marmap
     - ncdf4
-    - oce
-    - ocedata
     - rgdal
     - sf
     - covr
+    - lwgeom
