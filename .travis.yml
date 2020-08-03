@@ -11,8 +11,6 @@ addons:
             - netcdf-bin
 
 r_packages:
-    - ncdf4
     - rgdal
     - sf
-    - covr
     - lwgeom
