@@ -1,73 +1,14 @@
-language: R
-sudo: false
+language: r
 cache: packages
-warnings_are_errors: true
-after_success:
-    - Rscript -e 'covr::coveralls()'
-addons:
-  # postgresql: "10"
-  apt:
-    sources:
-      - sourceline: 'ppa:opencpu/jq'
-      - sourceline: 'ppa:ubuntugis/ubuntugis-unstable'
-      - sourceline: 'deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main'
-        key_url: 'https://www.postgresql.org/media/keys/ACCC4CF8.asc'
-    packages:
-      - devscripts # checkbashisms
-      - libprotobuf-dev
-      - protobuf-compiler
-      - libv8-3.14-dev
-      - libjq-dev
-      - libudunits2-dev
-      - libproj-dev
-      - libgeos-dev
-      - libspatialite-dev
-      - libgdal-dev
-      - libjson-c-dev
-      - libnetcdf-dev
-      - netcdf-bin
-      # - postgresql-server-dev-9.6
-      # - postgis
+sudo: required
+dist: trusty
+
 before_install:
   - sudo add-apt-repository ppa:ubuntugis/ppa --yes
   - sudo apt-get --yes --force-yes update -qq
   - sudo apt-get install --yes libudunits2-dev libproj-dev libgeos-dev libgdal-dev
-  # install postgis from source, to avoid dependency conflict with GDAL >= 2.0:
-  #- wget http://download.osgeo.org/postgis/source/postgis-3.0.1.tar.gz
-  #- (mv postgis* /tmp; cd /tmp; tar xzf postgis-3.0.1.tar.gz)
-  #- (cd /tmp/postgis-3.0.1 ; ./configure; make; sudo make install)
 
-  # activate liblwgeom by:
-  ## - sudo ldconfig
-  # create postgis databases:
-  #- sudo service postgresql restart
-  #- createdb postgis
-  #- psql -d postgis -c "CREATE EXTENSION postgis;"
-  #- psql -d postgis -c "GRANT CREATE ON DATABASE postgis TO travis"
-  #- psql -d postgis -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO travis"
-  #- createdb empty
-  #- psql -d empty -c "CREATE EXTENSION postgis;"
-  - R -e 'install.packages("rgdal", repos="http://R-Forge.R-project.org")'
-  - R -q -e 'install.packages("remotes"); remotes::install_github("ropenscilabs/tic"); tic::prepare_all_stages()'
+warnings_are_errors: true
 
 after_success:
-  #- dropdb postgis
-  #- dropdb empty
-  #- createdb postgis
-  #- psql -d postgis -c "CREATE EXTENSION postgis;"
-  #- psql -d postgis -c "GRANT CREATE ON DATABASE postgis TO travis"
-  #- psql -d postgis -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO travis"
-  #- createdb empty
-  #- psql -d empty -c "CREATE EXTENSION postgis;"
-install: R -q -e 'tic::install()'
-script: R -q -e 'tic::script()'
-before_deploy: R -q -e 'tic::before_deploy()'
-deploy:
-   provider: script
-   script: R -q -e 'tic::deploy()'
-   on:
-     branch: master
-     condition:
-       - $TRAVIS_PULL_REQUEST = false
-       - $TRAVIS_EVENT_TYPE != cron
-       - $TRAVIS_R_VERSION_STRING = release
+    - Rscript -e 'covr::coveralls()'
