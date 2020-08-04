@@ -14,7 +14,7 @@ steps (the straight-line segments connecting successive
 locations). `sftrack` is designed to handle movement of both living
 organisms and inanimate objects.
 
-![data definitions](Figures/definitions.png "data definitions")
+![data definitions](Figures/definitions-512.png "data definitions")
 
 The development and design of the `sftrack` package follow three
 simple principles:
