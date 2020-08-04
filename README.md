@@ -2,7 +2,7 @@
 
 # sftrack: Central classes for tracking and movement data
 
-![sftrack logo](Figures/sftrack-200-white-bg.png "sftrack logo")
+![sftrack logo](Figures/sftrack-logo-200-transp-bg.png "sftrack logo")
 
 `sftrack` provides modern classes for **tracking and movement data**,
 relying on `sf` spatial infrastructure. Tracking data are made of
@@ -14,7 +14,7 @@ steps (the straight-line segments connecting successive
 locations). `sftrack` is designed to handle movement of both living
 organisms and inanimate objects.
 
-![data definitions](Figures/definitions.png.png "data definitions")
+![data definitions](Figures/definitions.png "data definitions")
 
 The development and design of the `sftrack` package follow three
 simple principles:
