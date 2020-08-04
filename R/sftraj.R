@@ -618,7 +618,6 @@ rbind.sftraj <- function(...) {
 }
 
 #' @export
-"[[<-.sftraj" = function(x, i, value) {
-
-  x = structure(NextMethod(), class = c("sftraj", "sf", "data.frame"))
+"[[<-.sftraj" <- function(x, i, value) {
+  x <- structure(NextMethod(), class = c("sftraj", "sf", "data.frame"))
 }

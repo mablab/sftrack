@@ -613,7 +613,6 @@ cbind.sftrack <- function(..., deparse.level = 1) {
 }
 
 #' @export
-"[[<-.sftrack" = function(x, i, value) {
-
-  x = structure(NextMethod(), class = c("sftrack", "sf", "data.frame"))
+"[[<-.sftrack" <- function(x, i, value) {
+  x <- structure(NextMethod(), class = c("sftrack", "sf", "data.frame"))
 }

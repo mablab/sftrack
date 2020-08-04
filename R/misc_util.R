@@ -136,7 +136,9 @@ summary_sftrack <- function(x) {
       )
     })
 
-  if(!track_class %in% c('sftrack','sftraj')){stop(paste0('input class not sftrack or sftraj: ',track_class))}
+  if (!track_class %in% c("sftrack", "sftraj")) {
+    stop(paste0("input class not sftrack or sftraj: ", track_class))
+  }
   if (track_class == "sftrack") {
     my_crs <- attr(sub[[sf_col]], "crs")
     lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
