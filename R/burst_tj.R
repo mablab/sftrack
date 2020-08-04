@@ -414,7 +414,6 @@ active_burst <- function(burst) {
 
   x$burst <- make_multi_burst(burst, active_burst = value)
   ret <- step_recalc(x)
-
 }
 
 #' @export
