@@ -30,30 +30,28 @@
 plot.sftrack <- function(x, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
-  sf_col <- attr(x, "sf_column")
-  bl <- burst_labels(x$burst, factor = TRUE)
-  x <- st_sf(data.frame(st_geometry(x), bursts = bl), sf_column_name = sf_col)
-  NextMethod()
+  x$burst <- burst_labels(x)
+  class(x) <- setdiff(class(x), c("sftrack"))
+  x <- x['burst']
+  plot(x,...)
 }
 # plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
-plot.sftraj <- function(x, ...) {
+plot.sftraj <- function(x,y,...,step_mode = FALSE) {
   # x <- my_sftraj
   graphics::par(oma = c(1, 1, 1, 4))
-  bl <- burst_labels(x$burst, factor = TRUE)
-  b_lvl <- levels(bl)
-  geom <- st_geometry(x)
-  il <- is_linestring(geom)
+  if(step_mode){
+    x$burst <- burst_labels(x)
+    class(x) <- setdiff(class(x), c("sftraj"))
+    x <- x['burst']
+  } else {
+    x <- merge_traj(x)
+  }
 
-  here <- lapply(b_lvl, function(y) {
-    st_multilinestring(geom[bl == y & il])
-  })
-  new_sfc <- st_sfc(here, crs = attr(geom, "crs"))
-  x <- st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
-  NextMethod()
+  plot(x,...)
 }
 
 # plot(my_sftraj, lwd=5, axes = T)
@@ -63,10 +61,14 @@ plot.sftraj <- function(x, ...) {
 #' @description
 #' This function can be added to ggplot() to plot an sftrack and sftraj
 #' Function does not yet work with ggplot grammer so you must but data= in this function
+#' @details step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
+#' plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
+#' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 #' @name geom_sftrack
 #' @param mapping mapping aesthetics for ggplot.
 #' @param data the sftraj or sftrack object.
 #' @param ... arguments to passed to ggplot
+#' @param step_mode TRUE/FALSE, whether to plot in step_mode, See details
 #' @examples
 #' #'
 #' library(ggplot2)
@@ -96,12 +98,9 @@ geom_sftrack.sftrack <-
   function(mapping = ggplot2::aes(),
            data = NULL,
            ...) {
-    sub <- data[!st_is_empty(data[[attr(data, "sf_column")]]), ]
-    bl <- burst_labels(sub$burst, factor = T)
+    bursts <- burst_labels(data, factor = T)
     list(
-      ggplot2::geom_sf(data = sub, ggplot2::aes(color = bl, fill = bl)),
-      ggplot2::guides(color = FALSE),
-      ggplot2::labs(fill = "Bursts"),
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts)),
       ...
     )
   }
@@ -111,24 +110,18 @@ geom_sftrack.sftrack <-
 geom_sftrack.sftraj <-
   function(mapping = ggplot2::aes(),
            data = NULL,
-           ...) {
+           ..., step_mode = FALSE) {
     # x = my_sftraj
-    x <- data
-    bl <- burst_labels(x$burst, factor = TRUE)
-    b_lvl <- levels(bl)
-    geom <- st_geometry(x)
-    il <- is_linestring(geom)
-
-    here <- lapply(b_lvl, function(y) {
-      st_multilinestring(geom[bl == y & il])
-    })
-    new_sfc <- st_sfc(here, crs = attr(geom, "crs"))
-    x <- st_sf(data.frame(geometry = new_sfc, burst = b_lvl))
-
+    if(step_mode){
+      data$burst <- burst_labels(data)
+      class(data) <- setdiff(class(data), c("sftraj"))
+      data <- data['burst']
+    } else {
+      data <- merge_traj(data)
+    }
     list(
-      ggplot2::geom_sf(data = x, ggplot2::aes(color = burst, fill = burst)),
-      ggplot2::guides(color = FALSE),
-      ggplot2::labs(fill = "Bursts")
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst, fill = burst)),
+      ...
     )
   }
 

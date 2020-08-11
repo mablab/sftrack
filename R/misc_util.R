@@ -257,3 +257,15 @@ get_x2 <- function(time) {
   or <- order(time)
   seq_along(time)[or][or + 1][order(or)]
 }
+
+#' @title Merge connected lines and create an sf object
+#' @description This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each burst
+#' @export
+#' @param x an sftraj object
+merge_traj <- function(x){
+  x <- x[order(x[[attr(x,'time')]]),]
+  ret <- aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y){
+    st_line_merge(st_combine(y[st_is(y,'LINESTRING')]))
+  })
+  st_sf(ret, crs = attr(geom, "crs"))
+}
