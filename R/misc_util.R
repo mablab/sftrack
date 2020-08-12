@@ -267,10 +267,11 @@ get_x2 <- function(time) {
 #' @title Merge connected lines and create an sf object
 #' @description This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each burst
 #' @export
+#' @importFrom stats aggregate
 #' @param x an sftraj object
 merge_traj <- function(x) {
   x <- x[order(x[[attr(x, "time")]]), ]
-  ret <- aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+  ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
     # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
     geom <- y[st_is(y, "LINESTRING")]
     if (length(geom) > 1) {
