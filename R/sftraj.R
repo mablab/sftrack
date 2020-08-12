@@ -556,7 +556,7 @@ rbind.sftraj <- function(...) {
 }
 
 #' @export
-`[.sftraj` <- function(x, i, j, ..., drop = FALSE) {
+"[.sftraj" <- function(x, i, j, ..., drop = FALSE) {
   # x = my_sftraj
   # i = 1:10
   # j=c(1,2,3)
@@ -615,4 +615,9 @@ rbind.sftraj <- function(...) {
   )
   dup_timestamp(ret)
   ret
+}
+
+#' @export
+"[[<-.sftraj" <- function(x, i, value) {
+  x <- structure(NextMethod(), class = c("sftraj", "sf", "data.frame"))
 }

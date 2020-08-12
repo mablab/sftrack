@@ -14,6 +14,7 @@ vignette: >
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(lwgeom)
 ```
 
 ```{r}
@@ -131,7 +132,7 @@ Currently there are some basic plotting methods. Base plotting is built ontop of
 
 
 ```{r}
-plot(my_sftraj)
+#plot(my_sftraj)
 ```
 
 And changing the active burst will change the plot view
@@ -139,13 +140,13 @@ And changing the active burst will change the plot view
 ```{r}
 active_burst(my_sftraj$burst) <- 'id'
 active_burst(my_sftraj$burst)
-plot(my_sftraj)
+#plot(my_sftraj)
 ```
 
 Because it feeds plot an sf object, the same arguments for `plot.sf` are all available. 
 
 ```{r}
-plot(my_sftrack, axes = TRUE, cex=5)
+#plot(my_sftrack, axes = TRUE, cex=5)
 ```
 
 
@@ -153,8 +154,8 @@ plot(my_sftrack, axes = TRUE, cex=5)
 This is a work in progress, but theres a rudimentary geom_sftrack function. As of now you have to input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're track of traj
 
 ```{r}
-library(ggplot2)
-ggplot() + geom_sftrack(data = my_sftraj)
+# library(ggplot2)
+# ggplot() + geom_sftrack(data = my_sftraj)
 ```
 
 
