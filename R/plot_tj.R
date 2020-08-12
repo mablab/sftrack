@@ -2,7 +2,12 @@
 #' @name plot_sftrack
 #' @export
 #' @param x sftrack/sftraj object
+#' @param y ignored
+#' @param step_mode TRUE/FALSE, whether to plot in step_mode, See details
 #' @param ... arguments to passed to plot
+#' @details step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
+#' plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
+#' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 #' @method plot sftrack
 #' @examples
 #' library(sftrack)
@@ -27,7 +32,7 @@
 #'   burst = burstz
 #' )
 #' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
-plot.sftrack <- function(x, ...) {
+plot.sftrack <- function(x,y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
   x$burst <- burst_labels(x)
