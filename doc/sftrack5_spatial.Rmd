@@ -19,7 +19,7 @@ library(lwgeom)
 
 ```{r}
 #devtools::load_all("/home/matt/r_programs/sftrack")
-library(sftrack)
+#library(sftrack)
 
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
