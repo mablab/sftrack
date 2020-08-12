@@ -7,3 +7,6 @@ Figures
 Proposal
 DevFlowDiagram
 ^\.travis\.yml
+tic.R
+^doc$
+^Meta$

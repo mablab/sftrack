@@ -53,7 +53,8 @@ check_NA_burst <- function(burst) {
   if (inherits(burst, c("sftrack", "sftraj"))) {
     burst <- burst$burst
   }
-  if (any(is.na(unlist(burst)))) {
+
+  if (any(vapply(burst, function(x) any(is.na(x)), logical(1)))) {
     stop("NAs not allowed in burst")
   }
 }
