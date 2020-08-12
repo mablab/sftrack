@@ -10,11 +10,7 @@ geom_sftrack(mapping, data, ...)
 
 \method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL, ...)
 
-<<<<<<< HEAD
 \method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL, ..., step_mode = FALSE)
-=======
-\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL, ...)
->>>>>>> master
 }
 \arguments{
 \item{mapping}{mapping aesthetics for ggplot.}

@@ -32,26 +32,26 @@ plot.sftrack <- function(x, ...) {
   graphics::par(oma = c(1, 1, 1, 4))
   x$burst <- burst_labels(x)
   class(x) <- setdiff(class(x), c("sftrack"))
-  x <- x['burst']
-  plot(x,...)
+  x <- x["burst"]
+  plot(x, ...)
 }
 # plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
-plot.sftraj <- function(x,y,...,step_mode = FALSE) {
+plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
   # x <- my_sftraj
   graphics::par(oma = c(1, 1, 1, 4))
-  if(step_mode){
+  if (step_mode) {
     x$burst <- burst_labels(x)
     class(x) <- setdiff(class(x), c("sftraj"))
-    x <- x['burst']
+    x <- x["burst"]
   } else {
     x <- merge_traj(x)
   }
 
-  plot(x,...)
+  plot(x, reset = FALSE, ...)
 }
 
 # plot(my_sftraj, lwd=5, axes = T)
@@ -99,7 +99,7 @@ geom_sftrack.sftrack <-
            ...) {
     bursts <- burst_labels(data, factor = T)
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts),...)
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts), ...)
     )
   }
 
@@ -110,15 +110,15 @@ geom_sftrack.sftraj <-
            data = NULL,
            ..., step_mode = FALSE) {
     # x = my_sftraj
-    if(step_mode){
+    if (step_mode) {
       data$burst <- burst_labels(data)
       class(data) <- setdiff(class(data), c("sftraj"))
-      data <- data['burst']
+      data <- data["burst"]
     } else {
       data <- merge_traj(data)
     }
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst),...)
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst), ...)
     )
   }
 
