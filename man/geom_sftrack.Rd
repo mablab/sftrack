@@ -8,11 +8,9 @@
 \usage{
 geom_sftrack(mapping, data, ...)
 
-\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL,
-  ...)
+\method{geom_sftrack}{sftrack}(mapping = ggplot2::aes(), data = NULL, ...)
 
-\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL,
-  ...)
+\method{geom_sftrack}{sftraj}(mapping = ggplot2::aes(), data = NULL, ..., step_mode = FALSE)
 }
 \arguments{
 \item{mapping}{mapping aesthetics for ggplot.}
@@ -20,10 +18,17 @@ geom_sftrack(mapping, data, ...)
 \item{data}{the sftraj or sftrack object.}
 
 \item{...}{arguments to passed to ggplot}
+
+\item{step_mode}{TRUE/FALSE, whether to plot in step_mode, See details}
 }
 \description{
 This function can be added to ggplot() to plot an sftrack and sftraj
 Function does not yet work with ggplot grammer so you must but data= in this function
+}
+\details{
+step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
+plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
+The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 }
 \examples{
 #'

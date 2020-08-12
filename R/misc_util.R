@@ -265,7 +265,14 @@ get_x2 <- function(time) {
 merge_traj <- function(x){
   x <- x[order(x[[attr(x,'time')]]),]
   ret <- aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y){
-    st_line_merge(st_combine(y[st_is(y,'LINESTRING')]))
+   # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
+    geom <- y[st_is(y,'LINESTRING')]
+    if(length(geom)>1){
+    st_line_merge(st_combine(geom))
+    }else{
+    st_sfc(st_multilinestring(list(st_linestring())), crs = st_crs(y))
+    }
   })
-  st_sf(ret, crs = attr(geom, "crs"))
+
+  st_sf(ret, crs = attr(st_geometry(x), "crs"),sf_column_name = 'geometry')
 }

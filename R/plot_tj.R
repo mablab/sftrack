@@ -64,7 +64,6 @@ plot.sftraj <- function(x,y,...,step_mode = FALSE) {
 #' @details step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
 #' plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
 #' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
-#' @name geom_sftrack
 #' @param mapping mapping aesthetics for ggplot.
 #' @param data the sftraj or sftrack object.
 #' @param ... arguments to passed to ggplot
@@ -100,8 +99,7 @@ geom_sftrack.sftrack <-
            ...) {
     bursts <- burst_labels(data, factor = T)
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts)),
-      ...
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts),...)
     )
   }
 
@@ -120,8 +118,7 @@ geom_sftrack.sftraj <-
       data <- merge_traj(data)
     }
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst, fill = burst)),
-      ...
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst),...)
     )
   }
 

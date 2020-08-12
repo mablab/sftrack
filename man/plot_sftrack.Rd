@@ -8,7 +8,7 @@
 \usage{
 \method{plot}{sftrack}(x, ...)
 
-\method{plot}{sftraj}(x, ...)
+\method{plot}{sftraj}(x, y, ..., step_mode = FALSE)
 }
 \arguments{
 \item{x}{sftrack/sftraj object}
