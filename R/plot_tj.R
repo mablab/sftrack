@@ -38,7 +38,7 @@ plot.sftrack <- function(x,y, ...) {
   x$burst <- burst_labels(x)
   class(x) <- setdiff(class(x), c("sftrack"))
   x <- x["burst"]
-  plot(x, ...)
+  plot(x, reset = FALSE, ...)
 }
 # plot(my_sftrack)
 #' @title methods for plot sftrack/sftraj
