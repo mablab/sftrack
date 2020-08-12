@@ -6,19 +6,28 @@
 \alias{plot.sftraj}
 \title{methods for plot sftrack/sftraj}
 \usage{
-\method{plot}{sftrack}(x, ...)
+\method{plot}{sftrack}(x, y, ...)
 
 \method{plot}{sftraj}(x, y, ..., step_mode = FALSE)
 }
 \arguments{
 \item{x}{sftrack/sftraj object}
 
+\item{y}{ignored}
+
 \item{...}{arguments to passed to plot}
+
+\item{step_mode}{TRUE/FALSE, whether to plot in step_mode, See details}
 }
 \description{
 methods for plot sftrack/sftraj
 
 methods for plot sftrack/sftraj
+}
+\details{
+step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
+plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
+The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 }
 \examples{
 library(sftrack)
