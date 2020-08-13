@@ -104,7 +104,7 @@ road <- st_linestring(rbind(
 )
 
 animal1 <- as_sftraj(df1)
-plot(animal1)
+#plot(animal1)
 
 #plot(road, add = T, col = 'red')
 

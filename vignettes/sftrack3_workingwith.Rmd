@@ -118,9 +118,9 @@ If your subsetting will also change the end points for steps, then you can recal
 plot(my_sftraj, main ='original', axes = T)
 new_traj <- my_sftraj[seq(10,nrow(my_sftraj),10),]
 
-plot(new_traj, main ='before recalculation', axes = T)
+#plot(new_traj, main ='before recalculation', axes = T)
 
-plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
+#plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
 ```
 
 ### Some basic functionality of sf_track and sf_traj objects
