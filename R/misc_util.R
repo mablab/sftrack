@@ -282,5 +282,5 @@ merge_traj <- function(x) {
     }
   })
 
-  st_sf(ret, crs = attr(st_geometry(x), "crs"), sf_column_name = "geometry")
+  st_sf(ret, crs = crs, sf_column_name = "geometry")
 }
