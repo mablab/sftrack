@@ -29,7 +29,7 @@
 #' my_sftraj <- as_sftraj(raccoon,
 #'   time = "timestamp",
 #'   coords = c("longitude", "latitude"),
-#'   burst = burstz
+#'   burst = burstz, crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
 #' )
 #' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 plot.sftrack <- function(x,y, ...) {
