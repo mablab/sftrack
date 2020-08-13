@@ -7,8 +7,6 @@ addons:
         packages:
             - libgdal-dev
             - libudunits2-dev
-            - libnetcdf-dev
-            - netcdf-bin
 
 r_packages:
     - rgdal
