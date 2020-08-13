@@ -31,6 +31,7 @@ The alternative method is to merge the steps into a multilinestring of continuou
 }
 \examples{
 library(sftrack)
+library(sf)
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- c(id = "animal_id")
