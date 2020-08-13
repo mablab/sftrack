@@ -26,12 +26,17 @@
 #'
 #' # sftraj will as well for the most part, however as its a more
 #' # complex structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon,
-#'   time = "timestamp",
-#'   coords = c("longitude", "latitude"),
-#'   burst = burstz, crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
-#' )
-#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
+#' # my_sftraj <- as_sftraj(raccoon,
+#'   # time = "timestamp",
+#'   # coords = c("longitude", "latitude"),
+#'   # burst = burstz
+#' # )
+#'
+#'plot(st_as_sf(raccoon, coords = c("longitude", "latitude"),na.fail=FALSE )['animal_id'])
+#'
+#'new <- raccoon[!is.na(raccoon$latitude),]
+#' plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
+#' # plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 plot.sftrack <- function(x,y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
