@@ -77,3 +77,4 @@ export(which_duplicated)
 import(sf)
 importFrom(stats,aggregate)
 importFrom(utils,str)
+
