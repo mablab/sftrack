@@ -84,5 +84,4 @@ attributes(st_geometry(obj))
 colnames(df1)
 attributes(df1$geometry)
 st_crs(st_geometry(obj))
-stop()
 }
