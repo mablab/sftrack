@@ -272,7 +272,7 @@ get_x2 <- function(time) {
 merge_traj <- function(x) {
   x <- x[order(x[[attr(x, "time")]]), ]
   crs <- st_crs(x)
-  ret <- stats:::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+  ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
     # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
     geom <- y[st_is(y, "LINESTRING")]
     if (length(geom) > 1) {

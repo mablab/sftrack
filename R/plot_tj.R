@@ -64,7 +64,6 @@
 #' colnames(df1)
 #' attributes(df1$geometry)
 #' st_crs(st_geometry(obj))
-#' stop()
 plot.sftrack <- function(x,y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))

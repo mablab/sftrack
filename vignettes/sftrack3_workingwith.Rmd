@@ -119,12 +119,12 @@ my_sftrack[1:3,c(1:3), drop = TRUE]
 If your subsetting will also change the end points for steps, then you can recalculate using `step_recalc()`. The output which is your original straj object but with the geometry column recalculated to the new t2s. 
 
 ```{r}
-#plot(my_sftraj, main ='original', axes = T)
+plot(my_sftraj, main ='original', axes = T)
 new_traj <- my_sftraj[seq(10,nrow(my_sftraj),10),]
 
-#plot(new_traj, main ='before recalculation', axes = T)
+plot(new_traj, main ='before recalculation', axes = T)
 
-#plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
+plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
 ```
 
 ### Some basic functionality of sf_track and sf_traj objects
