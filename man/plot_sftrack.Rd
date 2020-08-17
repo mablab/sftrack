@@ -57,5 +57,5 @@ plot(st_as_sf(raccoon, coords = c("longitude", "latitude"),na.fail=FALSE )['anim
 
 new <- raccoon[!is.na(raccoon$latitude),]
 plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
-# plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
+ plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode=TRUE)
 }
