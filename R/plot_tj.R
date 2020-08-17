@@ -38,6 +38,24 @@
 #'new <- raccoon[!is.na(raccoon$latitude),]
 #' plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
 #'  plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode=TRUE)
+#'
+#'   x = my_sftraj
+#'
+#' x <- x[order(x[[attr(x, "time")]]), ]
+#' crs <- st_crs(x)
+#' ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+#'   # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
+#'   geom <- y[st_is(y, "LINESTRING")]
+#'   if (length(geom) > 1) {
+#'     st_line_merge(st_combine(geom))
+#'   } else {
+#'     st_sfc(st_multilinestring(list(st_linestring())), crs = crs)
+#'   }
+#' })
+#'
+#'  st_sf(ret, crs = crs, sf_column_name = "geometry")
+#'
+#'
 plot.sftrack <- function(x,y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
