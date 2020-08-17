@@ -54,8 +54,9 @@
 #' })
 #'
 #' df1 <-  st_sf(ret, crs = crs, sf_column_name = "geometry")
-#'
-#' st_bbox(df1)
+#'print(options("digits")$digits)
+#'st_bbox(df1)
+#' stop()
 plot.sftrack <- function(x,y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
