@@ -57,7 +57,7 @@
 #'print(options("digits")$digits)
 #' obj <- df1
 #' class(obj)
-#' st_geometry(obj)
+#' tt <- st_geometry(obj)
 #' class(st_geometry(obj))
 #' attr(st_geometry(obj), "bbox")
 #' st_crs(st_geometry(obj))
