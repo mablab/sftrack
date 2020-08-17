@@ -80,6 +80,7 @@ class(obj)
 tt <- st_geometry(obj)
 class(st_geometry(obj))
 attr(st_geometry(obj), "bbox")
+attributes(st_geometry(obj))
 st_crs(st_geometry(obj))
 stop()
 }
