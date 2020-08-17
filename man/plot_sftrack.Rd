@@ -31,7 +31,7 @@ The alternative method is to merge the steps into a multilinestring of continuou
 }
 \examples{
 library(sftrack)
-library(sf)
+
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- c(id = "animal_id")
@@ -47,11 +47,11 @@ plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 
 # sftraj will as well for the most part, however as its a more
 # complex structure to speed up plotting.
-# my_sftraj <- as_sftraj(raccoon,
-  # time = "timestamp",
-  # coords = c("longitude", "latitude"),
-  # burst = burstz
-# )
+my_sftraj <- as_sftraj(raccoon,
+   time = "timestamp",
+   coords = c("longitude", "latitude"),
+  burst = burstz
+ )
 
 plot(st_as_sf(raccoon, coords = c("longitude", "latitude"),na.fail=FALSE )['animal_id'])
 

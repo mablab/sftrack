@@ -33,7 +33,7 @@ make_step_geom <- function(burst, time_data, geometry) {
   #   message('more than one burst selected, bursts will be combined for step geometry')
   # }
 
-  idz <- burst_labels(burst, factor = T)
+  idz <- burst_labels(burst)
   #
   unique_idz <- levels(idz)[table(idz) > 0]
 
@@ -117,7 +117,7 @@ step_metrics <- function(sftraj) {
   sftraj <- sftraj[order_t, ]
   is_latlong <- any(st_is_longlat(sftraj), na.rm = TRUE)
   ret <-
-    lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
+    lapply(levels(burst_labels(sftraj$burst)), function(index) {
       # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
       sub <- sftraj[burst_labels(sftraj$burst) == index, ]
 

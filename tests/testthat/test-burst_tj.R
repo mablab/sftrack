@@ -4,9 +4,6 @@ test_that("ind_burst works", {
   ind <- make_ind_burst(list(id = 1, month = "Jan"))
   expect_equal(names(ind), c("id", "month"))
 
-  # labels made correctly
-  expect_equal(attr(ind, "label"), "1_Jan")
-
   # burst names not duplicated
   expect_error(make_ind_burst(list(id = 1, id = 1)), "burst names are duplicated")
 
@@ -21,7 +18,6 @@ test_that("multi_burst works", {
   expect_equal(sapply(obj1, function(x) x$col1), as.character(c("1", "1", "2", "2")))
 
   mb <- make_multi_burst(x = burstz, active_burst = "id")
-  expect_equal(attr(mb[[1]], "active_burst"), "id")
   expect_equal(attr(mb, "active_burst"), "id")
   expect_message(make_multi_burst(x = burstz))
 
@@ -42,7 +38,7 @@ test_that("concatenate bursts", {
 
   burst1 <- make_multi_burst(list(id = rep(1, 4), col1 = c(1, 1, 2, 2)))
   burst2 <- make_multi_burst(list(id = rep(1, 4), col2 = c("A", "B", "B", "A")))
-  expect_error(c(burst1, burst2), "There are more than one possible active bursts")
+  expect_error(c(burst1, burst2), "Burst names do not match")
 })
 
 test_that("active bursts can change correctly", {
@@ -79,7 +75,7 @@ test_that("subset multi_bursts", {
   burst1 <- make_multi_burst(list(id = rep(1, 5), col2 = c("A", "A", "C", "C", "A")))
   burst1[2] <- ind_burst(list(id = 1, col2 = "C"))
   expect_equal(class(burst1[[2]]), "ind_burst")
-  expect_equal(attr(burst1[[2]], "label"), "1_C")
+  expect_equal(as.character(attr(burst1, "sort_index")[2]), "1_C")
 
   # replacing an individual element in an ind burst
   ib <- make_ind_burst(list(id = 1, month = "Jan"))

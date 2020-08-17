@@ -8,7 +8,7 @@
 \alias{c.multi_burst}
 \title{A class to group movement data}
 \usage{
-make_ind_burst(x, active_burst = NULL)
+make_ind_burst(x)
 
 make_multi_burst(x = NULL, active_burst = NULL)
 
