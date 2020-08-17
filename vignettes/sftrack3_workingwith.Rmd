@@ -44,7 +44,7 @@ my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = ti
 When creating an object, `sftrack` creates the appropriate `sf` geometry column for the class, it then creates the burst class and bundles all the data and creates an `sf` object using sf::st_as_sf(). Finally, this input is used to create the `sftrack` object. Because of this there are 5 novel attributes in an `sftrack` object. Because it is also an `sf` object, the `sf_column` and `agr` attributes are created and used by sf. Addtionally, `burst`, `time`, and `error` are creatd by `sftrack` to describe which column contains the appropriate data set. `sftraj` is identical.
 ```{r testsection}
 plot(my_sftrack)
-plot(my_sftraj)
+#plot(my_sftraj)
 plot(my_sftraj, step_mode=T)
 ```
 ```{r}
