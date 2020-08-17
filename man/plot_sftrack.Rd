@@ -62,7 +62,7 @@ plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
   x = my_sftraj
 
 x <- x[order(x[[attr(x, "time")]]), ]
-crs <- st_crs(x)
+crs <-  if(is.na(st_crs(x))) NA_crs_ else st_crs(x)
 ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
   # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
   geom <- y[st_is(y, "LINESTRING")]
@@ -76,5 +76,6 @@ ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TR
 df1 <-  st_sf(ret, crs = crs, sf_column_name = "geometry")
 print(options("digits")$digits)
 st_bbox(df1)
+st_crs(df1)
 stop()
 }
