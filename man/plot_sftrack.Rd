@@ -62,18 +62,18 @@ plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
   x = my_sftraj
 
 x <- x[order(x[[attr(x, "time")]]), ]
-crs <-  if(is.na(st_crs(x))) NA_crs_ else st_crs(x)
-ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
-  # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
-  geom <- y[st_is(y, "LINESTRING")]
-  if (length(geom) > 1) {
-    st_line_merge(st_combine(geom))
-  } else {
-    st_sfc(st_multilinestring(list(st_linestring())), crs = crs)
-  }
+crs <- st_crs(x)
+ret <- stats:::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+ # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
+ geom <- y[st_is(y, "LINESTRING")]
+ if (length(geom) > 1) {
+   st_line_merge(st_combine(geom))
+ } else {
+   st_multilinestring(list(st_linestring()))
+ }
 })
-
-df1 <-  st_sf(ret, crs = crs, sf_column_name = "geometry")
+ret$geometry <- st_sfc(ret$geometry,crs=crs)
+df1 <- st_sf(ret, sf_column_name = 'geometry')
 print(options("digits")$digits)
 obj <- df1
 class(obj)
