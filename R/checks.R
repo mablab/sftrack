@@ -5,7 +5,7 @@
 #' @param time_data a vector of time
 #' @param return the new order or not?
 check_ordered <- function(burst, time_data, return = TRUE) {
-  idz <- burst_labels(burst, factor = TRUE)
+  idz <- burst_labels(burst)
 
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
@@ -72,7 +72,7 @@ check_burst_id <- function(burst) {
 # more than one relocation for a burst
 check_two_bursts <- function(burst, ..., active_burst) {
   if (inherits(burst, "multi_burst")) {
-    lvlz <- burst_labels(burst, factor = T)
+    lvlz <- burst_labels(burst)
     active_burst <- attr(burst, "active_burst")
   } else {
     lvlz <-
@@ -195,7 +195,7 @@ check_time <- function(time) {
 check_t_regular <- function(sftrack) {
   # is complete
   time_col <- attr(sftrack, "time")
-  idz <- burst_labels(sftrack$burst, factor = T)
+  idz <- burst_labels(sftrack$burst)
   sftrack <-
     sftrack[check_ordered(idz, sftrack[[time_col]]), ]
   ans <-
@@ -220,7 +220,7 @@ dup_timestamp <- function(x, time) {
   }
 
   test <-
-    tapply(time, burst_labels(burst, TRUE), function(y) {
+    tapply(time, burst_labels(burst), function(y) {
       any(duplicated(y))
     })
   if (any(test)) {

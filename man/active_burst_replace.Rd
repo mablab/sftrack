@@ -6,7 +6,6 @@
 \alias{active_burst<-.sftrack}
 \alias{active_burst<-.sftraj}
 \alias{active_burst<-.multi_burst}
-\alias{active_burst<-.ind_burst}
 \title{Set new active burst}
 \usage{
 active_burst(x) <- value
@@ -16,8 +15,6 @@ active_burst(x) <- value
 \method{active_burst}{sftraj}(x) <- value
 
 \method{active_burst}{multi_burst}(x) <- value
-
-\method{active_burst}{ind_burst}(x) <- value
 }
 \arguments{
 \item{x}{sftrack/sftraj/multi_burst/ind_burst object}

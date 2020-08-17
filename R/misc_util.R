@@ -125,7 +125,7 @@ summary_sftrack <- function(x) {
   sf_col <- attr(x, "sf_column")
 
   sub <- x[, ]
-  levelz <- burst_labels(x$burst, factor = TRUE)
+  levelz <- burst_labels(x$burst)
   statz <-
     tapply(sub[[time_col]], levelz, function(x) {
       list(
@@ -251,7 +251,7 @@ which_duplicated <- function(data = data.frame(), burst, time) {
   check_time(reloc_time)
   burst <-
     make_multi_burst(x = burst_list)
-  bl <- burst_labels(burst, TRUE)
+  bl <- burst_labels(burst)
   results <-
     unlist(tapply(reloc_time, bl, duplicated))
 
@@ -272,7 +272,7 @@ get_x2 <- function(time) {
 merge_traj <- function(x) {
   x <- x[order(x[[attr(x, "time")]]), ]
   crs <- st_crs(x)
-  ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+  ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x)), function(y) {
     # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
     geom <- y[st_is(y, "LINESTRING")]
     if (length(geom) > 1) {
