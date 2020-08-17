@@ -75,7 +75,8 @@ ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TR
 
 df1 <-  st_sf(ret, crs = crs, sf_column_name = "geometry")
 print(options("digits")$digits)
-st_bbox(df1)
-st_crs(df1)
+obj <- df1
+attr(st_geometry(obj), "bbox")
+st_crs(st_geometry(obj))
 stop()
 }
