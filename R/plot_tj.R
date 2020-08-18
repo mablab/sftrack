@@ -28,17 +28,13 @@
 #' # sftraj will as well for the most part, however as its a more
 #' # complex structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon,
-#'    time = "timestamp",
-#'    coords = c("longitude", "latitude"),
+#'   time = "timestamp",
+#'   coords = c("longitude", "latitude"),
 #'   burst = burstz
-#'  )
+#' )
 #'
-#'plot(st_as_sf(raccoon, coords = c("longitude", "latitude"),na.fail=FALSE )['animal_id'])
-#'
-#'new <- raccoon[!is.na(raccoon$latitude),]
-#' plot(st_as_sf(new, coords = c("longitude", "latitude"))['animal_id'])
-#'  plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode=TRUE)
-plot.sftrack <- function(x,y, ...) {
+#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
+plot.sftrack <- function(x, y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
   x$burst <- burst_labels(x)
@@ -108,7 +104,7 @@ geom_sftrack.sftrack <-
   function(mapping = ggplot2::aes(),
            data = NULL,
            ...) {
-    bursts <- burst_labels(data, factor = T)
+    bursts <- burst_labels(data)
     list(
       ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts), ...)
     )
