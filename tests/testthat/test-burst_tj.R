@@ -77,21 +77,12 @@ test_that("subset multi_bursts", {
   expect_equal(class(burst1[[2]]), "ind_burst")
   expect_equal(as.character(attr(burst1, "sort_index")[2]), "1_C")
 
-  # replacing an individual element in an ind burst
-  ib <- make_ind_burst(list(id = 1, month = "Jan"))
-  ib$id <- 2
-  expect_equal(attr(ib, "label"), "2_Jan")
-
   # replacing an individual element in a multi_burst
   burst1[[1]]$id <- 3
   expect_equal(burst1 [[1]][[1]], "3")
 
-  ib <- make_ind_burst(list(id = "test", month = "Jan"))
-  active_burst(ib) <- "id"
-  expect_equal(attr(ib, "active_burst"), "id")
-  expect_equal(attr(ib, "label"), "test")
 
   # subset to 0
   mb_attr <- attributes(burst1[F])
-  expect_equal(mb_attr, list(active_burst = c("id", "col2"), burst_names = c("id", "col2"), class = "multi_burst"))
+  expect_equal(mb_attr, list(active_burst = c("id", "col2"), sort_index = factor(NULL), class = "multi_burst"))
 })

@@ -52,7 +52,7 @@ ind_bursts convert these variables into characters and creates a label from the 
 
 ```{r}
 
-indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst = c('id','month'))
+indb <- make_ind_burst(list(id='CJ13', month = 4))
 str(indb)
 ```
 
@@ -69,7 +69,7 @@ str(indb)
 `ind_burst`s is a grouping class where you can have different groups 'turned on' (aka activated) as the analysis allows. Which groups are activated is determined by the 'active burst'. You can set this when creating an ind_burst. If no active_burst is given it defaults to all grouping names being the active_burst. 
 
 ```{r}
-indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst = c('id'))
+indb <- make_ind_burst(list(id='CJ13', month = 4))
 str(indb)
 indb <- make_ind_burst(list(id='CJ13', month = 4))
 str(indb)
@@ -79,8 +79,7 @@ str(indb)
 You can access or change the `active burst` at anytime using the `active_burst()` function. The active burst tells any analysis to group by that mix of variables. 
 
 ```{r}
-active_burst(indb)
-active_burst(indb) <- 'id'
+
 str(indb)
 
 ```
@@ -88,7 +87,6 @@ str(indb)
 To speed up this process by calculating a 'label' attribute is calculated for each ind_burst which is a combination of the active burst variables. This label is to increase calculation and subsetting speed, and is therefore not available for renaming. It can be accessed however by `burst_labels`. This can be useful when refering to a burst or selecting many bursts in a column
 
 ```{r}
-burst_labels(indb)
 burst_labels(mb1)[1:10]
 ```
 
@@ -171,7 +169,7 @@ print(sub,5, 3)
 ##### active_burst 
 The active_burst is a simple yet powerful feature. It dictates how your raccoon is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active_burst of a multi_burst with `active_burst()`. Once changed, it changes the active_burst for all `ind_burst` and recalculates their labels.
 
-Active_bursts can be changed for any sftrack/straj/multi_burst/ind_burst
+Active_bursts can be changed for any sftrack/straj/multi_burst
 
 ```{r}
 # sftrack
@@ -185,10 +183,5 @@ summary(my_sftraj, stats = T)
 active_burst(mb)
 active_burst(mb) <- 'id'
 active_burst(mb)
-
-# ind_burst
-active_burst(indb)
-active_burst(indb) <- 'id'
-active_burst(indb)
 
 ```

@@ -17,10 +17,6 @@ burst_labels(x)
 }
 \arguments{
 \item{x}{a sftrack or burst object}
-
-\item{factor}{logical, whether to return a factor, default return is a character}
-
-\item{...}{ignored}
 }
 \description{
 Shows burst labels created from the ind_burst and the active_burst

@@ -62,12 +62,12 @@ ind_burst <- function(x = list(), active_burst = NULL) {
   # if (is.null(active_burst)) {
   #   active_burst <- names(x)
   # }
-  #label <- paste(x[active_burst], collapse = "_")
+  # label <- paste(x[active_burst], collapse = "_")
 
   structure(
     x,
     #  active_burst = active_burst,
-    #label = label,
+    # label = label,
     class = c("ind_burst")
   )
 }
@@ -81,9 +81,9 @@ multi_burst <- function(x = list(), active_burst = NA) {
 
   sort_index <- calc_sort_index(x, active_burst)
   structure(x,
-            active_burst = active_burst,
-            sort_index = sort_index,
-            class = c("multi_burst")
+    active_burst = active_burst,
+    sort_index = sort_index,
+    class = c("multi_burst")
   )
 }
 
@@ -121,7 +121,7 @@ make_multi_burst <-
         make_ind_burst(x)
       }
     )
-    #ret
+    # ret
     mb <- multi_burst(ret, active_burst = active_burst)
 
     return(mb)
@@ -221,7 +221,7 @@ format.multi_burst <- function(x, ...) {
 }
 # mb[1:10]
 # mb1[1:10]
-# mb1['CJ13_1']
+# mb1['TTP-058_0']
 # my_sftrack['ID101_1_IS_FU4_3',]
 #' @export
 "[<-.multi_burst" <- function(x, i, value) {
@@ -274,8 +274,6 @@ summary.multi_burst <- function(object, ...) {
 #' @title Shows burst labels created from the ind_burst and the active_burst
 #' @name burst_labels
 #' @param x a sftrack or burst object
-#' @param factor logical, whether to return a factor, default return is a character
-#' @param ... ignored
 #' @export
 burst_labels <- function(x) {
   UseMethod("burst_labels", object = x)
@@ -285,23 +283,20 @@ burst_labels <- function(x) {
 #' @export
 #' @rdname burst_labels
 burst_labels.sftrack <- function(x) {
-attr(x[[attr(x,'burst')]], 'sort_index')
-
+  attr(x[[attr(x, "burst")]], "sort_index")
 }
 
 #' @export
 #' @rdname burst_labels
 burst_labels.sftraj <- function(x) {
-  attr(x[[attr(x,'burst')]], 'sort_index')
-
+  attr(x[[attr(x, "burst")]], "sort_index")
 }
 
 
 #' @export
 #' @rdname burst_labels
 burst_labels.multi_burst <- function(x) {
-  attr(x, 'sort_index')
-
+  attr(x, "sort_index")
 }
 
 #' @title Access the active_burst value
@@ -364,24 +359,23 @@ active_burst <- function(burst) {
     stop("not all names found in burst")
   }
 
-  attr(x$burst, 'active_burst') <- value
-  attr(x$burst, 'sort_index') <- calc_sort_index(x$burst)
+  attr(x$burst, "active_burst") <- value
+  attr(x$burst, "sort_index") <- calc_sort_index(x$burst)
   structure(x)
 }
 #' @export
 #' @name active_burst_replace
 "active_burst<-.sftraj" <- function(x, value) {
-  # x = my_sftraj
+  # x = my_sftraj2
   # value = 'id'
-  burst <- x$burst
 
-  if (!all(value %in% names(burst[[1]]))) {
+  if (!all(value %in% names(x$burst[[1]]))) {
     stop("not all names found in burst")
   }
 
-  attr(x$burst, 'active_burst') <- value
-  attr(x$burst, 'sort_index') <- calc_sort_index(x$burst)
-  ret <- step_recalc(x)
+  attr(x$burst, "active_burst") <- value
+  attr(x$burst, "sort_index") <- calc_sort_index(x$burst)
+  step_recalc(x)
 }
 
 #' @export
@@ -395,18 +389,24 @@ active_burst <- function(burst) {
     stop("not all names found in burst")
   }
 
-  attr(x, 'active_burst') <- value
-  attr(x, 'sort_index') <- calc_sort_index(x)
+  attr(x, "active_burst") <- value
+  attr(x, "sort_index") <- calc_sort_index(x)
   structure(x)
 }
 
-
+#' @title Calculate a new sort index for bursts
+#' @param x burst or sftrack object
+#' @param active_burst (optional), a new active burst to calculate the sort index on. If not included, defaults  to the active burst (if a multi_burst) or the burst names
 #' @export
-calc_sort_index <- function(x, active_burst=NA){
-  if(any(is.na(active_burst))){active_burst <- names(x[[1]])}
+calc_sort_index <- function(x, active_burst = NA) {
+  if (inherits(x, "multi_burst")) {
+    active_burst <- attr(x, "active_burst")
+  }
+  if (any(is.na(active_burst))) {
+    active_burst <- names(x[[1]])
+  }
 
-  factor(vapply(x, function(y){
-    paste0(y[active_burst],collapse='_')
+  factor(vapply(x, function(y) {
+    paste0(y[active_burst], collapse = "_")
   }, character(1)))
-
 }

@@ -104,23 +104,23 @@ road <- st_linestring(rbind(
 )
 
 animal1 <- as_sftraj(df1)
-plot(animal1)
+#plot(animal1)
 
-plot(road, add = T, col = 'red')
+plot(road,  col = 'red')
 
 # Does the animal cross the road?
 
-any(st_intersects(animal1, road, sparse = F))
+#any(st_intersects(animal1, road, sparse = F))
 
 # When?
-animal1$time[st_intersects(animal1, road, sparse = F)]
+#animal1$time[st_intersects(animal1, road, sparse = F)]
 
 # How often does the animal stay near the road?
-st_is_within_distance(animal1, road, 1)
+#st_is_within_distance(animal1, road, 1)
 
 # How close is the animal from the road?
 
-st_distance(animal1, road)
+#st_distance(animal1, road)
 ```
 
 The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasionally a function may not work with it. In those cases is_linestring would be appropriate to filter out points with no t2.
