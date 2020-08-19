@@ -26,7 +26,7 @@ To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` func
 
 `as_sftrack()/as_sftraj` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable, and can mix types between arguments.
 
-**Vector** inputs to `as_sftrack` in general involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule. If using entirely vector inputs for burst, geometry, time, and error then `data` is not required. 
+**Vector** inputs to `as_sftrack` generally involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule. If using entirely vector inputs for burst, geometry, time, and error then `data` is not required. 
 
 **data.frame** inputs on the other hand are simply character vectors describing the column name in `data` where the appropriate data is found.
 
@@ -34,9 +34,9 @@ To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` func
 
 **data** - is a data.frame containing your data. At present we are reserving 'burst' as a column name, so data will be overwritten if this column name exists. Data is optional if all inputs are done in vector mode where the appropriate vectors are given for geometry, burst, and time.   
 
-**burst** (required) - a list with named vectors to group the sftrack. One group must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for each burst category.     
+**burst** (required) - a list with named vectors to group the sftrack. One group must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for each burst category. If onnly one variable is given then that vector is assumed to be the id column.  
 
-**coords** (required) - The x,y,z coordinates to calculate geometries from. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown.  
+**coords** (required) - The x,y,z coordinates to calculate geometries via `sf`. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown. Taken from `sf`.    
 
 **time** (required) - Time information in either `POSIXct` or as an `integer`. Accepts either a vector of time, or the column name found in `data`. The outputed object will be sorted by the time column.  
 
@@ -44,12 +44,12 @@ To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` func
 
 **crs** - the coordinate references system/projection of the data, as implemented by rgdal. see ?rgdal::`CRS-class` for more information. If none is supplied crs is set as NA and can be set later using `sf::st_crs()` from `sf`.  
 
-**active_burst** (required) - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. If no value is supplied it defaults to all bursts. Can change active_burst later using `active_burst()<-'myvalue'`. 
+**active_burst** (required) - This is a vector containing what bursts are 'active'. Meaning calculations and graphing will be grouped by these bursts. If no value is supplied it defaults to all grouping variables. Can change active_burst later using `active_burst()<-'myvalue'`. 
 
 
 ### Vector inputs
 
-In the case of vector inputs, the vectors are cbinded to `data` if data is supplied. Therefore you may experience duplicate columns if you did not subset appropriately. Column names are created for that vector data that was supplied where burst = 'burst', time = 'reloc_time', error = 'sftrack_error'. Geometry = 'Geometry' regardless of the input type.
+In the case of vector inputs, the vectors are cbinded to `data` if data is supplied. Therefore you may experience duplicate columns if you did not subset appropriately. Column names are created when vector data is supplied where burst = 'burst', time = 'reloc_time', error = 'sftrack_error'. Geometry = 'Geometry' regardless of the input type.
 
 
 ```{r}
@@ -84,7 +84,7 @@ As you can see in this case the data is not overwritten, but extra columns added
 
 ### data.frame inputs  
 
-Data.frame inputs generally describe the columns in the raccoon that represent each field. If the columns are not found in the data, an error is thrown. 
+Data.frame inputs generally describe the columns that represent the variables in `data`. If the columns are not found in `data`, an error is returned. 
 
 
 ```{r}
@@ -122,7 +122,7 @@ head(my_sf)
 ```
 
 ### sf objects
-`sf` objects are handled similiarly to the standard way you input raw data, except you do not need to input any information about the coordinates or projection. Burst and time are still required.
+`sf` objects are handled similarly as before except you do not need to input any information about the coordinates or projection. Burst and time are still required.
 
 ```{r}
 library(sf)
@@ -162,7 +162,7 @@ identical(my_sftraj,new_sftraj)
 identical(my_sftrack,new_sftrack)
 ```
 ### Duplicated data
-A common issue with movement data is when duplicated gps time stamps are logged for a sensor. When this happens it can be impossible for `sftrack` know which point to use. For this reason, sftrack returns and error if any `burst` + `time` combinations are duplicated. 
+A common issue with movement data is when duplicated gps time stamps are logged for a sensor. When this happens it can be impossible for `sftrack` to know which point to use. For this reason, sftrack returns an error if any `burst` + `time` combinations are duplicated. 
 
 
 ```{r}
