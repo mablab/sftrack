@@ -410,3 +410,20 @@ calc_sort_index <- function(x, active_burst = NA) {
     paste0(y[active_burst], collapse = "_")
   }, character(1)))
 }
+
+burst_names <- function(x){
+  UseMethod("burst_names", object = x)
+}
+
+burst_names.multi_burst <- function(x){
+  levels(attr(x, 'sort_index'))
+}
+
+burst_names.sftraj <- function(x){
+  levels(attr(x$burst, 'sort_index'))
+}
+
+burst_names.sftrack <- function(x){
+  levels(attr(x$burst, 'sort_index'))
+}
+
