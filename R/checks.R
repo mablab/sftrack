@@ -184,7 +184,7 @@ check_time <- function(time) {
   if (inherits(time, c("sftrack", "sftraj"))) {
     time <- time[[attr(time, "time")]]
   }
-  if (!(inherits(time, "integer") | inherits(time, "POSIXct"))) {
+  if (!(inherits(time, "integer") | inherits(time, "POSIXct") | inherits(time, "numeric"))) {
     stop("Time needs to be an integer or POSIXct")
   }
 }
