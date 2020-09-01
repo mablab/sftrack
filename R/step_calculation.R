@@ -113,7 +113,9 @@ step_metrics <- function(sftraj) {
   }
   sftraj$sftrack_id <-
     paste0(burst_labels(sftraj[["burst"]]), "_", sftraj[[attr(sftraj, "time")]])
-  order_t <- order(sftraj$sftrack_id)
+
+  # Have to order by burst and time separately not on trackid, because factor ordering will return a different value
+  order_t <- order(burst_labels(sftraj[["burst"]]), sftraj[[attr(sftraj, "time")]])
   sftraj <- sftraj[order_t, ]
   is_latlong <- any(st_is_longlat(sftraj), na.rm = TRUE)
   ret <-
@@ -149,7 +151,7 @@ step_metrics <- function(sftraj) {
       } else {
         abs_angle <-
           geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) * pi / 180 + pi /
-            2
+          2
         dx <- sin(abs_angle) * dist
         dy <- cos(abs_angle) * dist
       }
