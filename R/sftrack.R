@@ -199,8 +199,11 @@ as_sftrack.data.frame <- function(data = data.frame(),
   attr(geom[, attr(geom, "sf_column")], "n_empty") <-
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
+  data$burst <- burst
+  data$geometry <-  st_geometry(geom)
+
   ret <- new_sftrack(
-    data = data.frame(data, burst, geometry = geom),
+    data = data,
     burst_col = "burst",
     sf_col = "geometry",
     error_col = error_col,
@@ -381,8 +384,10 @@ as_sftrack.sf <- function(data,
   # earliest reasonable time to check time stamps
   dup_timestamp(time = data[[time_col]], x = burst)
 
+  data$burst <- burst
+
   ret <- new_sftrack(
-    data = data.frame(data, burst),
+    data = data,
     burst_col = "burst",
     sf_col = "geometry",
     error_col = error_col,
