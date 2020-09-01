@@ -238,7 +238,7 @@ as_sftraj.sftrack <- function(data, ...) {
       time_data = data[[time]]
     )
 
-  data[[sf_col]] <- st_geometry(geom)
+  data[[sf_col]] <- st_geometry(geometry)
 
   new_data <- as.data.frame(data)
   ret <- new_sftraj(
