@@ -126,6 +126,9 @@ as_sftrack.data.frame <- function(data = data.frame(),
     burst_list <- burst
   } else {
     # check names exist
+    if(inherits(burst,'list')){
+      burst <- vapply(burst,c, character(1))
+    }
     check_names_exist(data, burst)
     # check id in burst
     # check id in burst
