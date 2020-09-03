@@ -49,15 +49,16 @@ test_that("step metrics works", {
   )
   sm <- step_metrics(my_sftraj)
   ans <- data.frame(
-    dx = c(0, 0, NA, NA, 1, NA),
-    dy = c(1, 1, NA, NA, 0, NA),
-    dist = c(1, 1, NA, NA, 1, NA),
+    dx = c(0, 0, 0, NA, 1, NA),
+    dy = c(1, 1, 0, NA, 0, NA),
+    dist = c(1, 1, 0, NA, 1, NA),
     dt = c(3600, 3600, 3600, 3600, 3600, NA),
-    abs_angle = c(1.570796, 1.570796, NA, NA, 0, NA)
+    abs_angle = c(1.570796, 1.570796, NA, NA, 0, NA),
+    rel_angle = c(NA,0,NA,NA,NA,NA)
   )
   ans$speed <- ifelse(is.na(ans$dist), NA, ans$dist / ans$dt)
 
-  expect_equivalent(ans, sm[, 1:6], tolerance = 1e-06)
+  expect_equivalent(ans, sm[, 1:7], tolerance = 1e-06)
 
   # Test that step_metrics returns the correct order when given a numeric
   df1 <- data.frame(

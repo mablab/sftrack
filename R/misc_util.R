@@ -284,3 +284,33 @@ merge_traj <- function(x) {
   ret$geometry <- st_sfc(ret$geometry,crs=crs)
   st_sf(ret, sf_column_name = 'geometry')
 }
+
+get_point <- function(x, position = 'x1'){
+  # position = 'x2'
+  x = st_geometry(x)
+  if(inherits(x[[1]], 'XY')){
+    vapply(x, function(y){
+      # y = st_geometry(x)[[10]]
+      if(inherits(y, 'POINT')){
+        # 3 just represents a non-position here, as NA would fail for empty points
+        pos = switch(position, x1 = 1, x2 = 3, y1 = 2, y2 = 3, xy1 = c(1,2), xy2 = c(3,3))
+      } else {
+        pos = switch(position, x1 = 1, x2 = 2, y1 = 3, y2 = 4, xy1 = c(1,3), xy2 = c(2,4))
+      }
+      y[pos]
+    },
+    numeric(1))
+  } else {
+    vapply(x, function(y){
+      if(inherits(y, 'POINT')){
+        # 4 just represents a non-position here, as NA would fail for empty points
+        pos = switch(position, x1 = 1, x2 = 4, y1 = 2, y2 = 4, z1 = 3, z2 = 4, xy1 = c(1,2), xy2 = c(4,4), xyz1 = c(1,2,3), xyz2 = c(4,4,4))
+      } else {
+      pos = switch(position, x1 = 1, x2 = 2, y1 = 3, y2 = 4, z1 = 5, z2 = 6, xy1 = c(1,3), xy2 = c(2,4), xyz1 = c(1,3,5), xyz2 = c(2,4,6))
+      }
+       y[pos][[1]]
+    },
+    numeric(1))
+  }
+}
+

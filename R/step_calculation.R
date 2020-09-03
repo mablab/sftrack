@@ -113,15 +113,16 @@ step_metrics <- function(sftraj) {
   }
   sftraj$sftrack_id <-
     paste0(burst_labels(sftraj[["burst"]]), "_", sftraj[[attr(sftraj, "time")]])
-
-  # Have to order by burst and time separately not on trackid, because factor ordering will return a different value
   order_t <- order(burst_labels(sftraj[["burst"]]), sftraj[[attr(sftraj, "time")]])
   sftraj <- sftraj[order_t, ]
   is_latlong <- any(st_is_longlat(sftraj), na.rm = TRUE)
+
+
   ret <-
     lapply(levels(burst_labels(sftraj$burst, factor = TRUE)), function(index) {
       # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
       sub <- sftraj[burst_labels(sftraj$burst) == index, ]
+
 
       # if only 1 row
       if (nrow(sub) == 1) {
@@ -138,34 +139,41 @@ step_metrics <- function(sftraj) {
         )
       }
 
+      dx <- get_dx(sub)
+      dy <- get_dy(sub)
+      dist <- as.numeric(st_length(sub))
 
-      x1 <- coord_traj(sub[[attr(sub, "sf_column")]])
-      x2 <- rbind(x1[-1, ], c(NA, NA))
       time <- sub[[attr(sub, "time")]]
-      dist <- as.numeric(sf::st_length(sub)[-nrow(sub)])
-      dt <- unclass(time[-1]) - unclass(time[-length(time)])
+      dt <- c(unclass(time[-1]) - unclass(time[-length(time)]), NA)
+
       if (!is_latlong) {
-        dx <- c(x2[, 1] - x1[, 1])[-nrow(x1)]
-        dy <- c(x2[, 2] - x1[, 2])[-nrow(x1)]
         abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
       } else {
-        abs_angle <-
-          geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) * pi / 180 + pi /
-          2
-        dx <- sin(abs_angle) * dist
-        dy <- cos(abs_angle) * dist
+        x1 <- coord_traj(sub[[attr(sub, "sf_column")]])
+        x2 <- rbind(x1[-1, ], c(NA, NA))
+        abs_angle <- c((geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ])-90) * -pi/180, NA)
+        abs_angle[!is.na(abs_angle) & abs_angle> (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle> (pi)]- 2*pi
       }
       dist[is.na(dx) | is.na(dy)] <- NA
+
       speed <- ifelse(is.na(dist), NA, dist / dt)
+
+
+      rel_angle <- c(NA,abs_angle[-1] - abs_angle[-length(abs_angle)] )
+      rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
+      rel_angle <- ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
+
+
       so <- cbind.data.frame(
         dx = dx,
         dy = dy,
         dist = dist,
         dt = dt,
         abs_angle = abs_angle,
+        rel_angle = rel_angle,
         speed = speed
       )
-      so <- rbind(so, rep(NA, ncol(so)))
+      so[nrow(so),c('dx','dy','dist','dt','abs_angle','rel_angle','speed')] <- NA
       so$sftrack_id <- sub$sftrack_id
       return(so)
     })
@@ -200,4 +208,36 @@ step_recalc <- function(x, return = FALSE) {
 
   x[[sf_col]] <- step_geometry
   x
+}
+
+get_dx <- function(x){
+  # position = 'x2'
+  x = st_geometry(x)
+  crs = st_crs(x)
+  ret <- vapply(x, function(y){
+    #y = st_geometry(x)[[1]]
+    if(inherits(y, 'LINESTRING')){
+      st_length(st_sfc(st_linestring(rbind(c(y[1],y[3]),c(y[2],y[3]))), crs = crs))
+    } else{0}
+  },
+  numeric(1))
+  ret[st_is_empty(x)] <- NA
+  ret
+}
+
+
+get_dy <- function(x){
+  # position = 'x2'
+  x = st_geometry(x)
+  crs = st_crs(x)
+  ret <- vapply(x, function(y){
+    #y = st_geometry(x)[[1]]
+    if(inherits(y, 'LINESTRING')){
+      st_length(st_sfc(st_linestring(rbind(c(y[1],y[3]),c(y[1],y[4]))), crs = crs))
+    } else{0}
+  },
+  numeric(1))
+
+  ret[st_is_empty(x)] <- NA
+  ret
 }

@@ -121,10 +121,14 @@ as_sftraj.data.frame <- function(data = data.frame(),
     names(burst) <- "id"
   }
   if (all(sapply(burst, length) == nrow(data))) {
+
     # check id in burst
     check_burst_id(burst)
     burst_list <- burst
   } else {
+    if(inherits(burst,'list')){
+      burst <- vapply(burst,c, character(1))
+    }
     # check names exist
     check_names_exist(data, burst)
     # check id in burst
