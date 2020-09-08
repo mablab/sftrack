@@ -151,15 +151,15 @@ step_metrics <- function(sftraj) {
       } else {
         x1 <- coord_traj(sub[[attr(sub, "sf_column")]])
         x2 <- rbind(x1[-1, ], c(NA, NA))
-        abs_angle <- c((geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ])-90) * -pi/180, NA)
-        abs_angle[!is.na(abs_angle) & abs_angle> (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle> (pi)]- 2*pi
+        abs_angle <- c((geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) - 90) * -pi / 180, NA)
+        abs_angle[!is.na(abs_angle) & abs_angle > (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle > (pi)] - 2 * pi
       }
       dist[is.na(dx) | is.na(dy)] <- NA
 
       speed <- ifelse(is.na(dist), NA, dist / dt)
 
 
-      rel_angle <- c(NA,abs_angle[-1] - abs_angle[-length(abs_angle)] )
+      rel_angle <- c(NA, abs_angle[-1] - abs_angle[-length(abs_angle)])
       rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
       rel_angle <- ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
 
@@ -173,7 +173,7 @@ step_metrics <- function(sftraj) {
         rel_angle = rel_angle,
         speed = speed
       )
-      so[nrow(so),c('dx','dy','dist','dt','abs_angle','rel_angle','speed')] <- NA
+      so[nrow(so), c("dx", "dy", "dist", "dt", "abs_angle", "rel_angle", "speed")] <- NA
       so$sftrack_id <- sub$sftrack_id
       return(so)
     })
@@ -210,33 +210,41 @@ step_recalc <- function(x, return = FALSE) {
   x
 }
 
-get_dx <- function(x){
+get_dx <- function(x) {
   # position = 'x2'
-  x = st_geometry(x)
-  crs = st_crs(x)
-  ret <- vapply(x, function(y){
-    #y = st_geometry(x)[[1]]
-    if(inherits(y, 'LINESTRING')){
-      st_length(st_sfc(st_linestring(rbind(c(y[1],y[3]),c(y[2],y[3]))), crs = crs))
-    } else{0}
-  },
-  numeric(1))
+  x <- st_geometry(x)
+  crs <- st_crs(x)
+  ret <- vapply(
+    x, function(y) {
+      # y = st_geometry(x)[[1]]
+      if (inherits(y, "LINESTRING")) {
+        st_length(st_sfc(st_linestring(rbind(c(y[1], y[3]), c(y[2], y[3]))), crs = crs))
+      } else {
+        0
+      }
+    },
+    numeric(1)
+  )
   ret[st_is_empty(x)] <- NA
   ret
 }
 
 
-get_dy <- function(x){
+get_dy <- function(x) {
   # position = 'x2'
-  x = st_geometry(x)
-  crs = st_crs(x)
-  ret <- vapply(x, function(y){
-    #y = st_geometry(x)[[1]]
-    if(inherits(y, 'LINESTRING')){
-      st_length(st_sfc(st_linestring(rbind(c(y[1],y[3]),c(y[1],y[4]))), crs = crs))
-    } else{0}
-  },
-  numeric(1))
+  x <- st_geometry(x)
+  crs <- st_crs(x)
+  ret <- vapply(
+    x, function(y) {
+      # y = st_geometry(x)[[1]]
+      if (inherits(y, "LINESTRING")) {
+        st_length(st_sfc(st_linestring(rbind(c(y[1], y[3]), c(y[1], y[4]))), crs = crs))
+      } else {
+        0
+      }
+    },
+    numeric(1)
+  )
 
   ret[st_is_empty(x)] <- NA
   ret

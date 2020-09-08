@@ -126,8 +126,8 @@ as_sftraj.data.frame <- function(data = data.frame(),
     check_burst_id(burst)
     burst_list <- burst
   } else {
-    if(inherits(burst,'list')){
-      burst <- vapply(burst,c, character(1))
+    if (inherits(burst, "list")) {
+      burst <- vapply(burst, c, character(1))
     }
     # check names exist
     check_names_exist(data, burst)
@@ -210,7 +210,7 @@ as_sftraj.data.frame <- function(data = data.frame(),
       time_data = data[[time_col]]
     )
   data$burst <- burst
-  data$geometry = geom
+  data$geometry <- geom
 
   ret <- new_sftraj(
     data = data,
