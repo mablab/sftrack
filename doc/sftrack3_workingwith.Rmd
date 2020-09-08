@@ -21,8 +21,8 @@ This is section will go more depth into the structure of sftrack/sftraj objects 
 To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with the 3 required columns (burst, geometry, and time). However, they are also of the subclass `sf`. This allows them to act like sf objects when working with functions in the `sf` package but act as `sftrack` objects for all other actions. It shold be noted that when possible sftrack objects will mimic sf functionality and thus many of the same words and tactics are used.
 
 ```{r}
-devtools::load_all("/home/matt/r_programs/sftrack")
-#library(sftrack)
+#devtools::load_all("/home/matt/r_programs/sftrack")
+library(sftrack)
 
 
 # Make tracks from raw data
@@ -35,14 +35,18 @@ coords = c('longitude','latitude')
 burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 error = 'fix'
-crs = '+init=epsg:4326'
+crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs '
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
 
 ```
 
 When creating an object, `sftrack` creates the appropriate `sf` geometry column for the class, it then creates the burst class and bundles all the data and creates an `sf` object using sf::st_as_sf(). Finally, this input is used to create the `sftrack` object. Because of this there are 5 novel attributes in an `sftrack` object. Because it is also an `sf` object, the `sf_column` and `agr` attributes are created and used by sf. Addtionally, `burst`, `time`, and `error` are creatd by `sftrack` to describe which column contains the appropriate data set. `sftraj` is identical.
-
+```{r testsection}
+plot(my_sftrack)
+#plot(my_sftraj)
+plot(my_sftraj, step_mode=T)
+```
 ```{r}
 attributes(my_sftrack)
 ```
