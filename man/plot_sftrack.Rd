@@ -48,10 +48,10 @@ plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 # sftraj will as well for the most part, however as its a more
 # complex structure to speed up plotting.
 my_sftraj <- as_sftraj(raccoon,
-   time = "timestamp",
-   coords = c("longitude", "latitude"),
+  time = "timestamp",
+  coords = c("longitude", "latitude"),
   burst = burstz
- )
+)
 
- plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode=TRUE)
+plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
 }
