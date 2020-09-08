@@ -121,10 +121,14 @@ as_sftraj.data.frame <- function(data = data.frame(),
     names(burst) <- "id"
   }
   if (all(sapply(burst, length) == nrow(data))) {
+
     # check id in burst
     check_burst_id(burst)
     burst_list <- burst
   } else {
+    if (inherits(burst, "list")) {
+      burst <- vapply(burst, c, character(1))
+    }
     # check names exist
     check_names_exist(data, burst)
     # check id in burst
@@ -205,8 +209,11 @@ as_sftraj.data.frame <- function(data = data.frame(),
       geometry = st_geometry(geom),
       time_data = data[[time_col]]
     )
+  data$burst <- burst
+  data$geometry <- geom
+
   ret <- new_sftraj(
-    data = data.frame(data, burst, geometry = geom),
+    data = data,
     burst_col = "burst",
     sf_col = "geometry",
     error_col = error_col,
@@ -235,7 +242,7 @@ as_sftraj.sftrack <- function(data, ...) {
       time_data = data[[time]]
     )
 
-  data[[sf_col]] <- geometry
+  data[[sf_col]] <- st_geometry(geometry)
 
   new_data <- as.data.frame(data)
   ret <- new_sftraj(
@@ -340,13 +347,17 @@ as_sftraj.sf <- function(data,
       time_data = data[[time_col]]
     )
   data[[sf_col]] <- geom
+
+  data$burst <- burst
+
   ret <- new_sftraj(
-    data = data.frame(data, burst),
+    data = data,
     burst_col = "burst",
-    sf_col = sf_col,
+    sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
+
   # Sanity checks
   ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
 
