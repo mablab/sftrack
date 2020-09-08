@@ -54,11 +54,11 @@ test_that("sftrack is built correct", {
     timez = as.POSIXct("2020-01-01 12:00:00", tz = "UTC") + 60 * 60 * (1:4)
   )
   my_sftrack <- as_sftrack(
-    data = df1, burst = c(id = 'burst'),
+    data = df1, burst = c(id = "burst"),
     time = df1$timez, active_burst = c("id"), coords = df1[, c("x", "y")]
   )
 
-  expect_equal(colnames(my_sftrack),c('burst','month','x','y','z','timez','reloc_time','geometry'))
+  expect_equal(colnames(my_sftrack), c("burst", "month", "x", "y", "z", "timez", "reloc_time", "geometry"))
 })
 
 test_that("as_sftrack and sftraj convert back and forth successfully", {
@@ -148,4 +148,3 @@ test_that("subset works correctly", {
   active_burst(my_sftrack2) <- "id"
   expect_equal(attr(my_sftrack2$burst, "active_burst"), "id")
 })
-

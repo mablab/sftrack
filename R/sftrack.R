@@ -126,8 +126,8 @@ as_sftrack.data.frame <- function(data = data.frame(),
     burst_list <- burst
   } else {
     # check names exist
-    if(inherits(burst,'list')){
-      burst <- vapply(burst,c, character(1))
+    if (inherits(burst, "list")) {
+      burst <- vapply(burst, c, character(1))
     }
     check_names_exist(data, burst)
     # check id in burst
@@ -203,7 +203,7 @@ as_sftrack.data.frame <- function(data = data.frame(),
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
   data$burst <- burst
-  data$geometry <-  st_geometry(geom)
+  data$geometry <- st_geometry(geom)
 
   ret <- new_sftrack(
     data = data,
