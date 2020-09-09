@@ -101,16 +101,21 @@ as_sftraj.data.frame <- function(data = data.frame(),
                                  time = "time",
                                  error = NA,
                                  crs = NA,
-                                 zeroNA = FALSE) {
-  # data =sub_gps
-  # coords = c('longitude','latitude')
-  # burst = 'id'
-  # active_burst = 'id'
-  # time = 'timez'
+                                 zeroNA = FALSE,
+                                 burst_name = 'burst',
+                                 timestamp_name = 'sft_timestamp',
+                                 error_name = 'sft_error',
+                                 overwrite_names = FALSE
+) {
+  # data = data.frame()
+  # coords = sub_gps[,c('longitude','latitude')]
+  # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
+  # time = sub_gps[,'timez']
   # crs='+init=epsg:4326'
   # error = NA
   # zeroNA = FALSE
-  #######################
+  # active_burst = NA
+  ######################
   # Check inputs
   # Id
   if (nrow(data) == 0) {
@@ -121,15 +126,14 @@ as_sftraj.data.frame <- function(data = data.frame(),
     names(burst) <- "id"
   }
   if (all(sapply(burst, length) == nrow(data))) {
-
     # check id in burst
     check_burst_id(burst)
     burst_list <- burst
   } else {
+    # check names exist
     if (inherits(burst, "list")) {
       burst <- vapply(burst, c, character(1))
     }
-    # check names exist
     check_names_exist(data, burst)
     # check id in burst
     # check id in burst
@@ -159,11 +163,17 @@ as_sftraj.data.frame <- function(data = data.frame(),
   }
   check_NA_coords(xyz)
 
-
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    if( timestamp_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",timestamp_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
+
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -172,8 +182,15 @@ as_sftraj.data.frame <- function(data = data.frame(),
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    # Decide whether to overwrite names or not
+    if( error_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",error_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[error_name]] <- error
+    }
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -209,12 +226,19 @@ as_sftraj.data.frame <- function(data = data.frame(),
       geometry = st_geometry(geom),
       time_data = data[[time_col]]
     )
-  data$burst <- burst
+  # Decide whether to overwrite names or not
+  if( burst_name%in%colnames(data) && !overwrite_names) {
+    stop(paste0("column name: \"",burst_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+  } else {
+    data[[burst_name]] <- burst
+  }
   data$geometry <- geom
 
   ret <- new_sftraj(
     data = data,
-    burst_col = "burst",
+    burst_col = burst_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
@@ -260,27 +284,29 @@ as_sftraj.sftrack <- function(data, ...) {
 #' @method as_sftraj sf
 #' @export
 as_sftraj.sf <- function(data,
-                         ...,
-                         coords,
-                         burst,
-                         active_burst = NA,
-                         time,
-                         error = NA) {
-  # data(raccoon)
-  # burst = list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$utc_date)$mon, height =as.numeric(raccoon$height>5))
-  # error = rep(NA, nrow(data))
-  # time = as.POSIXct(data$timestamp, tz = 'UTC')
-  # coords = c('latitude','longitude','height')
+                          ...,
+                          coords,
+                          burst,
+                          active_burst = NA,
+                          time,
+                          error = NA,
+                          burst_name = 'burst',
+                          timestamp_name = 'sft_timestamp',
+                          error_name = 'sft_error',
+                          overwrite_names = FALSE
+) {
   geom <- st_geometry(data)
-  sf_col <- attr(data, "sf_column")
-  data <- as.data.frame(data)
 
+  data <- as.data.frame(data)
   # Check inputs
-  # Geom
+  # geom
   if (attributes(geom)$class[1] != "sfc_POINT") {
     stop("sf column must be an sfc_POINT")
   }
-
+  # Id
+  if (nrow(data) == 0) {
+    data <- data.frame(sftrack_id = seq_along(time))
+  }
   # bursts
   if (length(burst) == 1) {
     names(burst) <- "id"
@@ -291,6 +317,9 @@ as_sftraj.sf <- function(data,
     burst_list <- burst
   } else {
     # check names exist
+    if (inherits(burst, "list")) {
+      burst <- vapply(burst, c, character(1))
+    }
     check_names_exist(data, burst)
     # check id in burst
     # check id in burst
@@ -309,8 +338,15 @@ as_sftraj.sf <- function(data,
 
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    if( timestamp_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",timestamp_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
+
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -319,8 +355,15 @@ as_sftraj.sf <- function(data,
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    # Decide whether to overwrite names or not
+    if( error_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",error_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[error_name]] <- error
+    }
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -329,8 +372,7 @@ as_sftraj.sf <- function(data,
       error_col <- NA
     }
   }
-
-  # pull out other relevant info
+  #
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
   }
@@ -340,31 +382,37 @@ as_sftraj.sf <- function(data,
   # earliest reasonable time to check time stamps
   dup_timestamp(time = data[[time_col]], x = burst)
 
+  # Decide whether to overwrite names or not
+  if( burst_name%in%colnames(data) && !overwrite_names) {
+    stop(paste0("column name: \"",burst_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+  } else {
+    data[[burst_name]] <- burst
+  }
+
   geom <-
     make_step_geom(
       burst = burst,
       geometry = geom,
       time_data = data[[time_col]]
     )
-  data[[sf_col]] <- geom
-
-  data$burst <- burst
-
-  ret <- new_sftraj(
+  data$geometry <- st_geometry(geom)
+  ret <- new_sftrack(
     data = data,
-    burst_col = "burst",
+    burst_col = burst_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
-
   # Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret,'burst')]], ret[[attr(ret, "time")]]), ]
 
   check_z_coords(ret)
 
   return(ret)
 }
+
 
 #' @rdname as_sftraj
 #' @method as_sftraj ltraj
@@ -575,6 +623,7 @@ rbind.sftraj <- function(...) {
   sf_col <- attr(x, "sf_column")
   time_col <- attr(x, "time")
   error_col <- attr(x, "error")
+  burst_col <- attr(x,'burst')
   # if(is.na(error_col)){ error_col <- NULL}
   nargs <- nargs()
   if (!missing(j) && missing(i)) {
@@ -605,7 +654,7 @@ rbind.sftraj <- function(...) {
       } else {
         error_col
       }
-      x[i, union(colnames(x)[j], c("burst", sf_col, time_col, error_col))]
+      x[i, union(colnames(x)[j], c(burst_col, sf_col, time_col, error_col))]
     }
   }
 
@@ -619,7 +668,7 @@ rbind.sftraj <- function(...) {
   #     }
   ret <- new_sftraj(
     x,
-    burst_col = "burst",
+    burst_col = burst_col,
     sf_col = sf_col,
     time_col = time_col,
     error_col = error_col
