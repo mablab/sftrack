@@ -101,7 +101,12 @@ as_sftrack.data.frame <- function(data = data.frame(),
                                   time = "time",
                                   error = NA,
                                   crs = NA,
-                                  zeroNA = FALSE) {
+                                  zeroNA = FALSE,
+                                  burst_name = 'burst',
+                                  timestamp_name = 'sft_timestamp',
+                                  error_name = 'sft_error',
+                                  overwrite_names = FALSE
+                                    ) {
   # data = data.frame()
   # coords = sub_gps[,c('longitude','latitude')]
   # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
@@ -161,8 +166,8 @@ as_sftrack.data.frame <- function(data = data.frame(),
 
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    data[[timestamp_name]] <- time
+    time_col <- timestamp_name
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -172,7 +177,7 @@ as_sftrack.data.frame <- function(data = data.frame(),
   # Error
   if (length(error) == nrow(data)) {
     data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -202,18 +207,25 @@ as_sftrack.data.frame <- function(data = data.frame(),
   attr(geom[, attr(geom, "sf_column")], "n_empty") <-
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
-  data$burst <- burst
+  # Decide whether to overwrite names or not
+  if( burst_name%in%colnames(data) && !overwrite_names) {
+    stop(paste0(burst_name," already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+  } else {
+    data[[burst_name]] <- burst
+  }
   data$geometry <- st_geometry(geom)
 
   ret <- new_sftrack(
     data = data,
-    burst_col = "burst",
+    burst_col = burst_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(burst_label(ret), ret[[attr(ret, "time")]]), ]
 
   check_z_coords(ret)
 
