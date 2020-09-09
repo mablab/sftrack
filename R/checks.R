@@ -213,7 +213,7 @@ check_t_regular <- function(sftrack) {
 #' @export
 dup_timestamp <- function(x, time) {
   if (inherits(x, c("sftrack", "sftraj"))) {
-    burst <- x$burst
+    burst <- x[[attr(x,'burst')]]
     time <- x[[attr(x, "time")]]
   } else {
     burst <- x

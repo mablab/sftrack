@@ -163,11 +163,17 @@ as_sftrack.data.frame <- function(data = data.frame(),
   }
   check_NA_coords(xyz)
 
-
   # Time
   if (length(time) == nrow(data)) {
-    data[[timestamp_name]] <- time
-    time_col <- timestamp_name
+    if( timestamp_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",timestamp_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
+
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -176,7 +182,14 @@ as_sftrack.data.frame <- function(data = data.frame(),
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
+    # Decide whether to overwrite names or not
+    if( error_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",error_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[error_name]] <- error
+    }
     error_col <- error_name
   } else {
     if (!is.na(error)) {
@@ -209,7 +222,7 @@ as_sftrack.data.frame <- function(data = data.frame(),
 
   # Decide whether to overwrite names or not
   if( burst_name%in%colnames(data) && !overwrite_names) {
-    stop(paste0(burst_name," already found in data.frame.
+    stop(paste0("column name: \"",burst_name,"\" already found in data.frame.
 If youd like to overwrite column use overwrite_names = TRUE"))
 
   } else {
@@ -225,7 +238,7 @@ If youd like to overwrite column use overwrite_names = TRUE"))
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(burst_label(ret), ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret,'burst')]], ret[[attr(ret, "time")]]), ]
 
   check_z_coords(ret)
 
@@ -329,7 +342,12 @@ as_sftrack.sf <- function(data,
                           burst,
                           active_burst = NA,
                           time,
-                          error = NA) {
+                          error = NA,
+                          burst_name = 'burst',
+                          timestamp_name = 'sft_timestamp',
+                          error_name = 'sft_error',
+                          overwrite_names = FALSE
+                          ) {
   geom <- st_geometry(data)
 
   data <- as.data.frame(data)
@@ -339,7 +357,9 @@ as_sftrack.sf <- function(data,
     stop("sf column must be an sfc_POINT")
   }
   # Id
-
+  if (nrow(data) == 0) {
+    data <- data.frame(sftrack_id = seq_along(time))
+  }
   # bursts
   if (length(burst) == 1) {
     names(burst) <- "id"
@@ -350,6 +370,9 @@ as_sftrack.sf <- function(data,
     burst_list <- burst
   } else {
     # check names exist
+    if (inherits(burst, "list")) {
+      burst <- vapply(burst, c, character(1))
+    }
     check_names_exist(data, burst)
     # check id in burst
     # check id in burst
@@ -368,8 +391,15 @@ as_sftrack.sf <- function(data,
 
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    if( timestamp_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",timestamp_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
+
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -378,8 +408,15 @@ as_sftrack.sf <- function(data,
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    # Decide whether to overwrite names or not
+    if( error_name%in%colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"",error_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+    } else {
+      data[[error_name]] <- error
+    }
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -388,7 +425,6 @@ as_sftrack.sf <- function(data,
       error_col <- NA
     }
   }
-
   #
   if (any(is.na(active_burst))) {
     active_burst <- names(burst_list)
@@ -399,17 +435,24 @@ as_sftrack.sf <- function(data,
   # earliest reasonable time to check time stamps
   dup_timestamp(time = data[[time_col]], x = burst)
 
-  data$burst <- burst
+  # Decide whether to overwrite names or not
+  if( burst_name%in%colnames(data) && !overwrite_names) {
+    stop(paste0("column name: \"",burst_name,"\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+
+  } else {
+    data[[burst_name]] <- burst
+  }
 
   ret <- new_sftrack(
     data = data,
-    burst_col = "burst",
+    burst_col = burst_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret,'burst')]], ret[[attr(ret, "time")]]), ]
 
   check_z_coords(ret)
 
@@ -521,6 +564,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   # i = 1:10
   # j=c(1,2,3)
   # rm(j)
+  burst_col <- attr(x, "burst")
   sf_col <- attr(x, "sf_column")
   time_col <- attr(x, "time")
   error_col <- attr(x, "error")
@@ -555,7 +599,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
       } else {
         error_col
       }
-      x[i, union(colnames(x)[j], c("burst", sf_col, time_col, error_col))]
+      x[i, union(colnames(x)[j], c(burst_col, sf_col, time_col, error_col))]
     }
   }
 
@@ -569,7 +613,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   #     }
   ret <- new_sftrack(
     x,
-    burst_col = "burst",
+    burst_col = burst_col,
     sf_col = sf_col,
     time_col = time_col,
     error_col = error_col
@@ -593,6 +637,7 @@ rbind.sftrack <- function(...) {
   att <- attributes(all[[1]])
   time_col <- att$time
   error_col <- att$error
+  burst_col <- att$burst
   sf_col <- att$sf_column
   for (i in seq_along(all)) {
     class(all[[i]]) <- setdiff(class(all[[i]]), c("sftrack", "sf"))
@@ -601,7 +646,7 @@ rbind.sftrack <- function(...) {
   class(new_df) <- setdiff(class(new_df), c("sftrack", "sf"))
   ret <- new_sftrack(
     data = new_df,
-    burst_col = "burst",
+    burst_col = burst_col,
     time_col = time_col,
     error_col = error_col,
     sf_col = sf_col
