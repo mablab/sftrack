@@ -23,16 +23,16 @@ trajectory, mainly for highlighting features for anyone testing
 sftrack. It will eventually evolve into the full vignette.*
 
 
-# Definitions
+## Definitions
 
 We start by defining the main objects that `sftrack` is dealing
 with. At the top level, there is a **path**, i.e. the real-world
 (continuous) curve made by moving objects (Fig. 1).
 
 <!-- MB: Please use whichever form below that makes more sense for a -->
-<!-- vignette; and remove this comment. -->
+<!-- vignette; and remove this comment. Do the same for all figures. -->
 
-![Fig.1: Glossary introducing the main concepts.](glossary.png "Fig.1: Glossary introducing the main concepts.")
+![Fig. 1: Glossary introducing the main concepts.](glossary.png "Fig. 1: Glossary introducing the main concepts.")
 
 ```{r, out.width = "75%", fig.align = "center", fig.cap = "Fig.1: Glossary introducing the main concepts."}
 knitr::include_graphics('glossary.png')
@@ -74,11 +74,103 @@ individual (not necessarily connected) finally forms a **trajectory**.
 [^martin]: Martin, J., Tolon, V., Van Moorter, B., Basille, M., & Calenge, C. (2009). On the use of telemetry in habitat selection studies. In D. Barculo, & J. Daniels (Eds.), Telemetry: Research, Technology and Applications (pp. 37–55). Nova Science Publishers Inc.
 
 
-# Conceptual model
+## A conceptual model for movement
+
+<!-- MB: Please check this part, and correct if it does not match your -->
+<!-- work. Let me know if some things are not clear. -->
+
+To organize these elements of data and how they relate to one another
+and to properties of the real world entities (here a moving object),
+we followed the methodology for conceptual modeling of geographic
+information that is specified in the International Standards (ISO/TC
+211), which relies on a standard conceptual model specified in Unified
+Modeling Language (UML)[^roswell].
+
+[^roswell]: Roswell, C. (2011). Modeling of geographic information. Springer Handbook of Geographic Information, 3–6. http://dx.doi.org/10.1007/978-3-540-72680-7_1
 
 
-# Implementation
+### Tracking locations
 
+The basic element of the movement data is a **tracking location**. A
+tracking location is, in its simplest form, a point defined by its
+spatial coordinates $(x, y, z, t)$, with $z$ being optional,
+associated to the corresponding timestamp $t$ (note that the time can
+also be a simple integer defining the order, for instance in the case
+of a track in the snow), and the identity of the moving object. This
+is the raw data of movement, which is usually directly provided by a
+tracking device.
+
+![Fig. 2: The location model.](conceptual-model-loc.png "Fig. 2: The location model.")
+
+Additionally, "grouping" information can be provided for the location:
+this needs to be *a minima* the individual (`ind`), e.g. the actual
+moving object (for instance an animal), but can also be extended to
+other hierarchical level of the data, such as the year, the burst, the
+movement behavior, etc.
+
+Spatial points are never exact and can be characterized by an
+error. Typically, GPS and Argos data will provide information on the
+quality of the location, such as satellite data or dilution of
+precision (for GPS data). The challenge with this information on the
+error is the complete lack of standardization — as such, this will be
+left open for the time being.
+
+Finally, a tracking location can also include any information at the
+level of the point, such as environmental data measured at the
+location (e.g. land cover).
+
+
+### Tracking data
+
+Tracking data, in the form of **tracks**, is a series of **tracking
+locations**. This can be modeled as a collection of tracking
+locations, unique and ordered in time by individual. As such,
+locations are the vertices of a single track object; conversely, all
+locations can be directly extracted from a single track (without any
+loss of information).  The strong constraint on time is necessary and
+sufficient to organize the data in a track.
+
+![Fig. 3: The track model.](conceptual-model-track.png "Fig. 3: The track model.")
+
+
+### Steps
+
+A **step** is specifically defined as the straight-line segment
+connecting two successive **tracking locations**. In other words, it
+takes two and only two locations to define a step, with the
+constraints that they belong to the same grouping level (individual in
+its simplest form), and that the second location comes temporally
+after the first one.
+
+![Fig. 4: The step model.](conceptual-model-step.png "Fig. 4: The step model.")
+
+Note that a step can also include information at the level of the line
+segment. This can be for instance the amount of forest along the step,
+or the movement rate (i.e. speed).
+
+
+### Trajectories
+
+Similarly to tracks, **trajectories** are defined by a series of
+**steps**.  A trajectory is thus modeled as a collection of steps,
+unique and ordered in time by individual. As such, steps are the
+vertices of a single trajectory object; conversely, all steps can be
+directly extracted from a single trajectory (without any loss of
+information).  The strong constraint on time is necessary and
+sufficient to organize the data in a trajectory.
+
+![Fig. 5: The trajectory model.](conceptual-model-traj.png "Fig. 5: The trajectory model.")
+
+Given the double equivalence between tracking locations and tracks, on
+the one hand, and steps and trajectories, on the other hand, it
+follows that there is also a direct equivalence between a track and a
+trajectory (based on the same movement data); lossless conversion is
+possible in both directions.
+
+![Fig. 6: Full model.](conceptual-model-full.png "Fig. 6: Full model.")
+
+
+## Implementation
 
 We'll begin with a brief overview of an `sftrack` object. An `sftrack` object is a data object that describes the movement of a subject, it has x,y coordinates (sometimes z), some measurement of time (clock time or a sequence of integers), and some grouping variable that identifies the subjects. For the spatial aspects of `sftrack` we are using the package `sf`, this powerful tool lets us quickly calculate spatial attributes and plot with ease with its full integration with `rgdal`. 
 
@@ -90,12 +182,10 @@ An `sftrack` object has 4 parts to it, 3 of which are required:
 
 There are two different classes of objects:
 
-#### sftrack objects
+### sftrack objects
+
 An `sftrack` object is a data.frame where the geometries are stored as a `POINT` for each row.
 
-#### sftraj object
+### sftraj object
+
 An sftraj object is a data.frame where the geometries are stored as a `LINESTRING` for each row. The linestring is a line built from the two points at t1 -> t2. This means that when an sftraj object is modified the steps likely need to be recalculated. Internally anytime active_bursts are changed, then the geometry is recalculated.
-
-## Definitions
-
-## Theory
