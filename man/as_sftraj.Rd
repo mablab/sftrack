@@ -14,30 +14,46 @@ as_sftraj(data = data.frame(), ...)
   data = data.frame(),
   ...,
   coords = c("x", "y"),
-  burst = "id",
-  active_burst = NA,
+  group = "id",
+  active_group = NA,
   time = "time",
   error = NA,
   crs = NA,
-  zeroNA = FALSE
+  zeroNA = FALSE,
+  group_name = "sft_group",
+  timestamp_name = "sft_timestamp",
+  error_name = "sft_error",
+  overwrite_names = FALSE
 )
 
 \method{as_sftraj}{sftrack}(data, ...)
 
-\method{as_sftraj}{sf}(data, ..., coords, burst, active_burst = NA, time, error = NA)
+\method{as_sftraj}{sf}(
+  data,
+  ...,
+  coords,
+  group,
+  active_group = NA,
+  time,
+  error = NA,
+  group_name = "sft_group",
+  timestamp_name = "sft_timestamp",
+  error_name = "sft_error",
+  overwrite_names = FALSE
+)
 
 \method{as_sftraj}{ltraj}(data, ...)
 }
 \arguments{
 \item{data}{a data.frame of the movement data, if supplied all data.frame inputs, than is optional}
 
-\item{...}{extra information to be passed on to as_sftraj}
+\item{...}{extra information to be passed on to as_sftrack}
 
 \item{coords}{a character vector describing where the x,y,z coordinates are located in `data` or a list with x,y,z (optional) vectors}
 
-\item{burst}{a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.}
+\item{group}{a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.}
 
-\item{active_burst}{a character vector of the burst names to be 'active' to group data by for analysis}
+\item{active_group}{a character vector of the burst names to be 'active' to group data by for analysis}
 
 \item{time}{a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located}
 
@@ -46,10 +62,18 @@ as_sftraj(data = data.frame(), ...)
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
+
+\item{group_name}{(optional) new column name for grouping data}
+
+\item{timestamp_name}{(optional) new column name for time data}
+
+\item{error_name}{(optional) new column name for error data}
+
+\item{overwrite_names}{T/F Whether to overwrite data if a group/time/error column name is supplied but already in data}
 }
 \description{
 This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
-Creates a `burst` column to group movement data and sets dedicated time and error columns.
+Creates a `grouping` column to group movement data and sets dedicated time and error columns.
 
 Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
@@ -67,7 +91,7 @@ raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
 # Input is a data.frame
 my_track <- as_sftraj(raccoon,
-  burst = burstz, time = "timestamp",
+  group = burstz, time = "timestamp",
   error = NA, coords = c("longitude", "latitude")
 )
 
@@ -88,14 +112,14 @@ library(sf)
 df1 <- raccoon[!is.na(raccoon$latitude), ]
 sf_df <- st_as_sf(df1, coords = c("longitude", "latitude"))
 
-new_sftrack <- as_sftrack(sf_df, burst = c(id = "animal_id"), time = "timestamp")
+new_sftrack <- as_sftrack(sf_df, group = c(id = "animal_id"), time = "timestamp")
 head(new_sftrack)
 
 # Input is an sftrack object
 my_track <- as_sftrack(raccoon,
   time = "timestamp",
   error = NA, coords = c("longitude", "latitude"),
-  burst = burstz
+  group = burstz
 )
 
 new_traj <- as_sftraj(my_track)

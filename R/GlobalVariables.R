@@ -1,1 +1,1 @@
-globalVariables("burst")
+globalVariables("group")

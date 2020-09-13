@@ -34,7 +34,7 @@ There are two different classes of objects:
 An `sftrack` object is a data.frame where the geometries are stored as a `POINT` for each row.
 
 #### sftraj object
-An sftraj object is a data.frame where the geometries are stored as a `LINESTRING` for each row. The linestring is a line built from the two points at t1 -> t2. This means that when an sftraj object is modified the steps likely need to be recalculated. Internally anytime active_bursts are changed, then the geometry is recalculated.
+An sftraj object is a data.frame where the geometries are stored as a `LINESTRING` for each row. The linestring is a line built from the two points at t1 -> t2. Internally any time active_bursts are changed, then the geometry is recalculated.
 
 ## Definitions
 
