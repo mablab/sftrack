@@ -2,15 +2,15 @@
 % Please edit documentation in R/burst_tj.R
 \name{calc_sort_index}
 \alias{calc_sort_index}
-\title{Calculate a new sort index for bursts}
+\title{Calculate a new sort index for groups}
 \usage{
-calc_sort_index(x, active_burst = NA)
+calc_sort_index(x, active_group = NA)
 }
 \arguments{
-\item{x}{burst or sftrack object}
+\item{x}{group or sftrack object}
 
-\item{active_burst}{(optional), a new active burst to calculate the sort index on. If not included, defaults  to the active burst (if a multi_burst) or the burst names}
+\item{active_group}{(optional), a new active group. If not included, defaults  to the active group (if a c_grouping) or the group names}
 }
 \description{
-Calculate a new sort index for bursts
+Calculate a new sort index for groups
 }

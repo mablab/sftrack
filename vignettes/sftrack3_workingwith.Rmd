@@ -18,7 +18,7 @@ library(lwgeom)
 ```
 This is section will go more depth into the structure of sftrack/sftraj objects and how to work with them.
 
-To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with the 3 required columns (burst, geometry, and time). However, they are also of the subclass `sf`. This allows them to act like sf objects when working with functions in the `sf` package but act as `sftrack` objects for all other actions. It should be noted that when possible sftrack objects will mimic sf functionality and thus many of the same words and tactics are used.
+To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with the 3 required columns (group, geometry, and time). However, they are also of the subclass `sf`. This allows them to act like sf objects when working with functions in the `sf` package but act as `sftrack` objects for all other actions. It should be noted that when possible sftrack objects will mimic sf functionality and thus many of the same words and tactics are used.
 
 ```{r}
 #devtools::load_all("/home/matt/r_programs/sftrack")
@@ -32,19 +32,19 @@ raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
 raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+group = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 error = 'fix'
 crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs '
 # create a sftrack object
-my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
 
 # create a sftraj object
-my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
 
 ```
 
-When creating an object, `sftrack` creates the appropriate `sf` geometry column for the class, it then creates the burst class and bundles all the data and creates an `sf` object using sf::st_as_sf(). Finally, this input is used to create the `sftrack` object. Because of this there are 5 attributes in an `sftrack` object. Because it is also an `sf` object, the `sf_column` and `agr` attributes are created and used by sf. Addtionally, `burst`, `time`, and `error` are creatd by `sftrack` to describe which column contains the appropriate data set. `sftraj` is identical.
+When creating an object, `sftrack` creates the appropriate `sf` geometry column for the class, it then creates the grouping class and bundles all the data and creates an `sf` object using sf::st_as_sf(). Finally, this input is used to create the `sftrack` object. Because of this there are 5 attributes in an `sftrack` object. Because it is also an `sf` object, the `sf_column` and `agr` attributes are created and used by sf. Additionally, `group_col`, `time_col`, and `error_col` are creatd by `sftrack` to describe which column contains the appropriate data set. `sftraj` is identical.
 ```{r testsection}
 plot(my_sftrack)
 #plot(my_sftraj)
@@ -54,7 +54,7 @@ plot(my_sftraj, step_mode=T)
 attributes(my_sftrack)[-(1:2)]
 ```
 
-The `sftrack` level attributes are simply pointers to the data. Any attributes relevant to the burst or geometry are stored in those columns themselves. 
+The `sftrack` level attributes are simply pointers to the data. Any attributes relevant to the grouping or geometry are stored in those columns themselves. 
 
 ### Geometry
 
@@ -63,7 +63,7 @@ The geometry column contains all attributes you would expect from an `sfc` objec
 my_sftrack$geometry
 ```
 
-An `sftraj` differs only in the geometry column. Where it is a `GEOMETRY` with mixture of `LINESTRINGS` **AND** `POINTS`. `LINESTRINGS` are lines created from points t1->t2 for each row. However, because `LINESTRINGS` can not have one point of the line be NULL, when t1 is a known point but t2 is an Unknown point then the geometry bcomes a `POINT` object of t1. When t1 is unknown this row is an empty `POINT` object, regardless of the known status of t2. This allows lossless conversion between sftrack and sftraj while still having `sf` treat the data appropriately.
+An `sftraj` differs only in the geometry column. Where it is a `GEOMETRY` with mixture of `LINESTRINGS` **AND** `POINTS`. `LINESTRINGS` are lines created from points t1->t2 for each row. However, because `LINESTRINGS` can not have one point of the line be NULL, when t1 is a known point but t2 is an Unknown point then the geometry bcomes a `POINT` object of t1. When t1 is unknown this row is an empty `POINT` object, regardless of the known status of t2. This allows loss-less conversion between sftrack and sftraj while still having `sf` treat the data appropriately.
 
 
 ```{r}
@@ -75,16 +75,16 @@ An `sftraj` differs only in the geometry column. Where it is a `GEOMETRY` with m
     timez = as.POSIXct('2020-01-01 12:00:00', tz = 'UTC') + 60*60*(1:6)
   )
 
-  test_sftraj <- as_sftraj(data = df1,burst=list(id=df1$id, month = df1$month),
-    time = df1$timez, active_burst = c('id','month'), coords = df1[,c('x','y')])
+  test_sftraj <- as_sftraj(data = df1,group=list(id=df1$id, month = df1$month),
+    time = df1$timez, active_group = c('id','month'), coords = df1[,c('x','y')])
   test_sftraj$geometry
 ```
 
-##### Burst
-The burst column is very specialized, and we will cover it in it's own section. At present, the novel attributes it stores are the 'active_burst' and the 'sort_index' which is a factor to help grouping calculations. A burst column is a class `multi_burst` consisting of multiple `ind_burst`s. `multi_bursts` are a collection of `ind_bursts` with the same `names()`. This mimics `sf` functionality where the `sfc` class is at the column level and `sfg` class is at the individual row level.
+##### Grouping
+The grouping column is very specialized, and we will cover it in it's own section. At present, the novel attributes it stores are the 'active_group' and the 'sort_index' which is a factor to help grouping calculations. A grouping column is a class `c_grouping` consisting of multiple `s_group`s. `c_grouping` are a collection of `s_group` with the same `names()`. This mimics `sf` functionality where the `sfc` class is at the column level and `sfg` class is at the individual row level.
 
 ```{r}
-attributes(my_sftrack$burst[1:10])
+attributes(my_sftrack$sft_group[1:10])
 summary(my_sftrack)
 ```
 
@@ -97,7 +97,7 @@ The error column is the column with the relevant error information for the spati
 
 ## Subsetting
 
-An sftrack object acts like a data.frame and sf whenever appropriate. Because of this you can subset an sftrack object as you would a data.frame. Except, like sf, it attempts to retain the geometry, burst, and time columns, in order to maintain sftrack status.
+An sftrack object acts like a data.frame and sf whenever appropriate. Because of this you can subset an sftrack object as you would a data.frame. Except, like sf, it attempts to retain the geometry, group, and time columns, in order to maintain sftrack status.
 
 In this way row subsetting is very straight forward, as each row represents an individual point in time.
 
@@ -137,7 +137,7 @@ plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
 
 ##### print  
 
-`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `burst` `geometery`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. If neither is provided then print just uses default values in the global options. `n_col` and `n_row` are optional arguments, defaults to data.frame defaults.
+`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `grouping` `geometry`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. If neither is provided then print just uses default values in the global options. `n_col` and `n_row` are optional arguments, defaults to data.frame defaults.
 
 ```{r}
 
@@ -146,14 +146,14 @@ print(my_sftrack,5,10)
 
 ##### summary  
 
-`summary()` works as youd expect for a data.frame, except it displays the burst column as a count of each active_burst combination and the `active_burst `for that column.  
+`summary()` works as youd expect for a data.frame, except it displays the grouping column as a count of each active_group combination and the `active_group `for that column.  
 ```{r}
 summary(my_sftrack)
 ```
 
 ##### summary_sftrack  
 
-`summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each burst as well as the total distance of the burst. This function uses `st_distance` from the `sf` package and therefore outputs in units of the crs. In this example the distance is in meters.
+`summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each grouping as well as the total distance of the grouping. This function uses `st_distance` from the `sf` package and therefore outputs in units of the crs. In this example the distance is in meters.
 ```{r}
 summary_sftrack(my_sftrack)
 

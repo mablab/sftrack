@@ -4,18 +4,18 @@
 \alias{new_sftrack}
 \title{Define an sftrack}
 \usage{
-new_sftrack(data, burst_col, sf_col, time_col, error_col = NA)
+new_sftrack(data, group_col, sf_col, time_col, error_col = NA)
 }
 \arguments{
 \item{data}{data.frame with multi_burst column, geometry column, time_col (integer/POSIXct), and error column (optional)}
 
-\item{burst_col}{column name of multi_burst in `data`}
+\item{group_col}{column name of grouping info in `data`}
 
-\item{sf_col}{column name of geometry in `data`}
+\item{sf_col}{column name of geometry info in `data`}
 
-\item{time_col}{column name of time in `data`}
+\item{time_col}{column name of time info in `data`}
 
-\item{error_col}{column name of error in `data`}
+\item{error_col}{column name of error info in `data`}
 }
 \description{
 Define an sftrack

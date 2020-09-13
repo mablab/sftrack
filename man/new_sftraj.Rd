@@ -4,12 +4,12 @@
 \alias{new_sftraj}
 \title{Define an sftraj}
 \usage{
-new_sftraj(data, burst_col, sf_col, time_col, error_col = NA)
+new_sftraj(data, group_col, sf_col, time_col, error_col = NA)
 }
 \arguments{
 \item{data}{data.frame with multi_burst column, geometry column, time_col (integer/POSIXct), and error column (optional)}
 
-\item{burst_col}{column name of multi_burst in `data`}
+\item{group_col}{column name of multi_burst in `data`}
 
 \item{sf_col}{column name of geometry in `data`}
 
