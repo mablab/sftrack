@@ -2,14 +2,14 @@
 % Please edit documentation in R/misc_util.R
 \name{which_duplicated}
 \alias{which_duplicated}
-\title{Which burst/time stamp combos are duplicated.}
+\title{Which grouping/time stamp combos are duplicated.}
 \usage{
-which_duplicated(data = data.frame(), burst, time)
+which_duplicated(data = data.frame(), group, time)
 }
 \arguments{
 \item{data}{a data.frame containing burst or time data (if necessary)}
 
-\item{burst}{a list where each entry is a vector of bursts where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data}
+\item{group}{a list where each entry is a vector of groupings where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data}
 
 \item{time}{a vector of as.POSIXct time, or a character of the column name where it can be found in data}
 }

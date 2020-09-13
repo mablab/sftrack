@@ -1,11 +1,12 @@
 ###################
-# Misc utilitie functions
+# Misc utility functions
 ###################
 #' @title Return a list of sf_POINTS or a data.frame from a sftraj object
 #' @name traj_geom
 #' @param traj a trajectory geometery from sf_traj
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
+#' #'
 #' data("raccoon")
 #' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 #' burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
@@ -13,7 +14,7 @@
 #' my_traj <- as_sftraj(raccoon,
 #'   time = "timestamp",
 #'   error = NA, coords = c("longitude", "latitude"),
-#'   burst = burstz
+#'   group = burstz
 #' )
 #' print(my_traj, 5, 10)
 #'
@@ -67,6 +68,7 @@ coord_traj <- function(traj) {
   })
   do.call(rbind, ret)
 }
+
 #' @export
 st_coordinates.sftraj <- function(x, return = "all") {
   # x = my_sftraj
@@ -120,12 +122,12 @@ is_linestring <- function(x) {
 summary_sftrack <- function(x) {
   track_class <- class(x)[1]
   # x = my_sftrack
-  time_col <- attr(x, "time")
-  error_col <- attr(x, "error")
+  time_col <- attr(x, "time_col")
+  error_col <- attr(x, "error_col")
   sf_col <- attr(x, "sf_column")
-
+  group_col <- attr(x, "group_col")
   sub <- x[, ]
-  levelz <- burst_labels(x$burst, factor = TRUE)
+  levelz <- group_labels(x[[group_col]])
   statz <-
     tapply(sub[[time_col]], levelz, function(x) {
       list(
@@ -154,8 +156,6 @@ summary_sftrack <- function(x) {
     })
   }
 
-
-
   points <- vapply(
     statz,
     FUN = function(x) {
@@ -177,10 +177,10 @@ summary_sftrack <- function(x) {
     x$end
   })
   class(begin_time) <- class(end_time) <- c("POSIXct", "POSIXt")
-  attr(begin_time, "tzone") <- attr(x[[attr(x, "time")]], "tzone")
-  attr(end_time, "tzone") <- attr(x[[attr(x, "time")]], "tzone")
+  attr(begin_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
+  attr(end_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
   data.frame(
-    burst = levels(levelz),
+    group = levels(levelz),
     points,
     NAs,
     begin_time,
@@ -204,41 +204,41 @@ sfg_is_empty <- function(x) {
 }
 
 
-#' @title Which burst/time stamp combos are duplicated.
+#' @title Which grouping/time stamp combos are duplicated.
 #' @description This function returns a data.frame of which rows are duplicated and their time stamps.
 #' @export
 #' @param data a data.frame containing burst or time data (if necessary)
-#' @param burst a list where each entry is a vector of bursts where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data
+#' @param group a list where each entry is a vector of groupings where length == nrow(data)|nrow(time). Or a character vector describing the column name they are located in data
 #' @param time a vector of as.POSIXct time, or a character of the column name where it can be found in data
 
-which_duplicated <- function(data = data.frame(), burst, time) {
+which_duplicated <- function(data = data.frame(), group, time) {
   # coords = c('longitude','latitude')
   # burst = c(id = 'animal_id', month = 'month')
   # time = 'time'
   # data$time[1] <- data$time[2]
   # data$time[4] <- data$time[5]
-  if (length(burst) == 1) {
-    names(burst) <- "id"
+  if (length(group) == 1) {
+    names(group) <- "id"
   }
-  if (all(sapply(burst, length) == nrow(data))) {
+  if (all(sapply(group, length) == nrow(data))) {
     # check id in burst
-    check_burst_id(burst)
-    burst_list <- burst
+    check_group_id(group)
+    group_list <- group
   } else {
     # check names exist
-    check_names_exist(data, burst)
+    check_names_exist(data, group)
     # check id in burst
     # check id in burst
-    check_burst_id(burst)
+    check_group_id(group)
     # create burst list from names
-    burst_list <- lapply(data[, burst, FALSE], function(x) {
+    group_list <- lapply(data[, group, FALSE], function(x) {
       x
     })
-    if (!is.null(names(burst))) {
-      names(burst_list) <-
-        names(burst)
+    if (!is.null(names(group))) {
+      names(group_list) <-
+        names(group)
     } else {
-      names(burst_list) <- burst
+      names(group_list) <- group
     }
   }
 
@@ -249,15 +249,16 @@ which_duplicated <- function(data = data.frame(), burst, time) {
     reloc_time <- data[[time]]
   }
   check_time(reloc_time)
-  burst <-
-    make_multi_burst(x = burst_list)
-  bl <- burst_labels(burst, TRUE)
+  group <-
+    make_c_grouping(x = group_list)
+  gl <- group_labels(group)
   results <-
-    unlist(tapply(reloc_time, bl, duplicated))
+    unlist(tapply(reloc_time, gl, duplicated))
 
-  rowz <- which(bl[results] == bl & reloc_time[results] == reloc_time)
-  data.frame(burst = bl[rowz], time = reloc_time[rowz], which_row = rowz)
+  rowz <- which(gl[results] == gl & reloc_time[results] == reloc_time)
+  data.frame(group = gl[rowz], time = reloc_time[rowz], which_row = rowz)
 }
+
 # Get the position of x2, given the time
 get_x2 <- function(time) {
   or <- order(time)
@@ -265,14 +266,15 @@ get_x2 <- function(time) {
 }
 
 #' @title Merge connected lines and create an sf object
-#' @description This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each burst
+#' @description This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each grouping
 #' @export
 #' @importFrom stats aggregate
 #' @param x an sftraj object
 merge_traj <- function(x) {
-  x <- x[order(x[[attr(x, "time")]]), ]
+  group_col <- attr(x, "group_col")
+  x <- x[order(x[[attr(x, "time_col")]]), ]
   crs <- st_crs(x)
-  ret <- stats::aggregate(st_geometry(x), list(burst = burst_labels(x, factor = TRUE)), function(y) {
+  ret <- stats::aggregate(st_geometry(x), list(group = group_labels(x)), function(y) {
     # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
     geom <- y[st_is(y, "LINESTRING")]
     if (length(geom) > 1) {
@@ -281,6 +283,40 @@ merge_traj <- function(x) {
       st_multilinestring(list(st_linestring()))
     }
   })
-  ret$geometry <- st_sfc(ret$geometry,crs=crs)
-  st_sf(ret, sf_column_name = 'geometry')
+  ret$geometry <- st_sfc(ret$geometry, crs = crs)
+  ret[[group_col]] <- ret$group
+  st_sf(ret, sf_column_name = "geometry")
+}
+
+get_point <- function(x, position = "x1") {
+  # position = 'x2'
+  x <- st_geometry(x)
+  if (inherits(x[[1]], "XY")) {
+    vapply(
+      x, function(y) {
+        # y = st_geometry(x)[[10]]
+        if (inherits(y, "POINT")) {
+          # 3 just represents a non-position here, as NA would fail for empty points
+          pos <- switch(position, x1 = 1, x2 = 3, y1 = 2, y2 = 3, xy1 = c(1, 2), xy2 = c(3, 3))
+        } else {
+          pos <- switch(position, x1 = 1, x2 = 2, y1 = 3, y2 = 4, xy1 = c(1, 3), xy2 = c(2, 4))
+        }
+        y[pos]
+      },
+      numeric(1)
+    )
+  } else {
+    vapply(
+      x, function(y) {
+        if (inherits(y, "POINT")) {
+          # 4 just represents a non-position here, as NA would fail for empty points
+          pos <- switch(position, x1 = 1, x2 = 4, y1 = 2, y2 = 4, z1 = 3, z2 = 4, xy1 = c(1, 2), xy2 = c(4, 4), xyz1 = c(1, 2, 3), xyz2 = c(4, 4, 4))
+        } else {
+          pos <- switch(position, x1 = 1, x2 = 2, y1 = 3, y2 = 4, z1 = 5, z2 = 6, xy1 = c(1, 3), xy2 = c(2, 4), xyz1 = c(1, 3, 5), xyz2 = c(2, 4, 6))
+        }
+        y[pos][[1]]
+      },
+      numeric(1)
+    )
+  }
 }

@@ -10,15 +10,16 @@
 #' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 #' @method plot sftrack
 #' @examples
+#' #'
 #' library(sftrack)
-#' library(sf)
+#'
 #' data("raccoon")
 #' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 #' burstz <- c(id = "animal_id")
 #' my_sftrack <- as_sftrack(raccoon,
 #'   time = "timestamp",
 #'   coords = c("longitude", "latitude"),
-#'   burst = burstz
+#'   group = burstz
 #' )
 #'
 #' # Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
@@ -28,21 +29,24 @@
 #' # sftraj will as well for the most part, however as its a more
 #' # complex structure to speed up plotting.
 #' my_sftraj <- as_sftraj(raccoon,
-#'    time = "timestamp",
-#'    coords = c("longitude", "latitude"),
-#'   burst = burstz
-#'  )
-#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
+#'   time = "timestamp",
+#'   coords = c("longitude", "latitude"),
+#'   group = burstz
+#' )
 #'
-plot.sftrack <- function(x,y, ...) {
+#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
+#' #'
+plot.sftrack <- function(x, y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
-  x$burst <- burst_labels(x)
+  group_col <- attr(x, "group_col")
+  x[[group_col]] <- group_labels(x)
   class(x) <- setdiff(class(x), c("sftrack"))
-  x <- x["burst"]
+  x <- x[group_col]
   plot(x, reset = FALSE, ...)
 }
-# plot(my_sftrack)
+
+
 #' @title methods for plot sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
@@ -50,10 +54,11 @@ plot.sftrack <- function(x,y, ...) {
 plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
   # x <- my_sftraj
   graphics::par(oma = c(1, 1, 1, 4))
+  group_col <- attr(x, "group_col")
   if (step_mode) {
-    x$burst <- burst_labels(x)
+    x[[group_col]] <- group_labels(x)
     class(x) <- setdiff(class(x), c("sftraj"))
-    x <- x["burst"]
+    x <- x[group_col]
   } else {
     x <- merge_traj(x)
   }
@@ -61,8 +66,6 @@ plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
   plot(x, reset = FALSE, ...)
 }
 
-# plot(my_sftraj, lwd=5, axes = T)
-# plot(my_step)
 #' @title Function to plot sftrack objects in ggplot
 #' @name geom_sftrack
 #' @description
@@ -88,7 +91,7 @@ plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
 #' my_sftraj <- as_sftraj(raccoon,
 #'   time = "timestamp",
 #'   coords = c("longitude", "latitude"),
-#'   burst = burstz
+#'   group = burstz
 #' )
 #'
 #' ggplot() +
@@ -104,9 +107,9 @@ geom_sftrack.sftrack <-
   function(mapping = ggplot2::aes(),
            data = NULL,
            ...) {
-    bursts <- burst_labels(data, factor = T)
+    group <- group_labels(data)
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = bursts), ...)
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = group), ...)
     )
   }
 
@@ -116,18 +119,19 @@ geom_sftrack.sftraj <-
   function(mapping = ggplot2::aes(),
            data = NULL,
            ..., step_mode = FALSE) {
-    # x = my_sftraj
+    # data = my_sftraj
+    group_col <- attr(data, "group_col")
     if (step_mode) {
-      data$burst <- burst_labels(data)
+      data[[group_col]] <- group_labels(data)
       class(data) <- setdiff(class(data), c("sftraj"))
-      data <- data["burst"]
+      data <- data[group_col]
     } else {
       data <- merge_traj(data)
     }
+    group <- data[[group_col]]
     list(
-      ggplot2::geom_sf(data = data, ggplot2::aes(color = burst), ...)
+      ggplot2::geom_sf(data = data, ggplot2::aes(color = group), ...)
     )
   }
 
-
-# ggplot() + geom_sftrack(data = my_sftraj)
+# ggplot() + geom_sf(data = data, aes(color = .data[[group_col]]))

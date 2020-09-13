@@ -3,7 +3,7 @@
 #' @title Convert objects into sftrack objects.
 #' @description
 #' This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.
-#' Creates a `burst` column to group movement data and sets dedicated time and error columns.
+#' Creates a `grouping` column to group movement data and sets dedicated time and error columns.
 #'
 #' Raw data inputted in two ways: vector or data.frame. 'Vector' inputs gives the argument as a vector where
 #' length = nrow(data). 'Data.frame' inputs gives the arguments as the column name of `data` where the input can be found.
@@ -12,12 +12,16 @@
 #' Some options are global and required regardless
 #' @param data a data.frame of the movement data, if supplied all data.frame inputs, than is optional
 #' @param coords a character vector describing where the x,y,z coordinates are located in `data` or a list with x,y,z (optional) vectors
-#' @param burst a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.
-#' @param active_burst a character vector of the burst names to be 'active' to group data by for analysis
+#' @param group a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.
+#' @param active_group a character vector of the burst names to be 'active' to group data by for analysis
 #' @param time a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located
 #' @param error (optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
+#' @param group_name (optional) new column name for grouping data
+#' @param timestamp_name (optional) new column name for time data
+#' @param error_name (optional) new column name for error data
+#' @param overwrite_names T/F Whether to overwrite data if a group/time/error column name is supplied but already in data
 #' @param ... extra information to be passed on to as_sftrack
 #' @import sf
 #' @export
@@ -28,7 +32,7 @@
 #' burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
 #' # Input is a data.frame
 #' my_track <- as_sftrack(raccoon,
-#'   burst = burstz, time = "timestamp",
+#'   group = burstz, time = "timestamp",
 #'   error = NA, coords = c("longitude", "latitude")
 #' )
 #'
@@ -49,14 +53,14 @@
 #' df1 <- raccoon[!is.na(raccoon$latitude), ]
 #' sf_df <- st_as_sf(df1, coords = c("longitude", "latitude"))
 #'
-#' new_sftrack <- as_sftrack(sf_df, burst = c(id = "animal_id"), time = "timestamp")
+#' new_sftrack <- as_sftrack(sf_df, group = c(id = "animal_id"), time = "timestamp")
 #' head(new_sftrack)
 #'
 #' # Input is an sftraj object
 #' my_traj <- as_sftraj(raccoon,
 #'   time = "timestamp",
 #'   error = NA, coords = c("longitude", "latitude"),
-#'   burst = burstz
+#'   group = burstz
 #' )
 #'
 #' new_track <- as_sftrack(my_traj)
@@ -69,23 +73,23 @@ as_sftrack <- function(data = data.frame(), ...) {
 
 #' @title Define an sftrack
 #' @param data  data.frame with multi_burst column, geometry column, time_col (integer/POSIXct), and error column (optional)
-#' @param burst_col column name of multi_burst in `data`
-#' @param sf_col column name of geometry in `data`
-#' @param time_col column name of time in `data`
-#' @param error_col column name of error in `data`
+#' @param group_col column name of grouping info in `data`
+#' @param sf_col column name of geometry info in `data`
+#' @param time_col column name of time info in `data`
+#' @param error_col column name of error info in `data`
 #' @export
 new_sftrack <-
   function(data,
-           burst_col,
+           group_col,
            sf_col,
            time_col,
            error_col = NA) {
     data_sf <- sf::st_sf(data, sf_column_name = sf_col)
     structure(
       data_sf,
-      burst = burst_col,
-      time = time_col,
-      error = error_col,
+      group_col = group_col,
+      time_col = time_col,
+      error_col = error_col,
       class = c("sftrack", "sf", "data.frame")
     )
   }
@@ -96,12 +100,16 @@ new_sftrack <-
 as_sftrack.data.frame <- function(data = data.frame(),
                                   ...,
                                   coords = c("x", "y"),
-                                  burst = "id",
-                                  active_burst = NA,
+                                  group = "id",
+                                  active_group = NA,
                                   time = "time",
                                   error = NA,
                                   crs = NA,
-                                  zeroNA = FALSE) {
+                                  zeroNA = FALSE,
+                                  group_name = "sft_group",
+                                  timestamp_name = "sft_timestamp",
+                                  error_name = "sft_error",
+                                  overwrite_names = FALSE) {
   # data = data.frame()
   # coords = sub_gps[,c('longitude','latitude')]
   # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
@@ -117,28 +125,31 @@ as_sftrack.data.frame <- function(data = data.frame(),
     data <- data.frame(sftrack_id = seq_along(time))
   }
   # bursts
-  if (length(burst) == 1) {
-    names(burst) <- "id"
+  if (length(group) == 1) {
+    names(group) <- "id"
   }
-  if (all(sapply(burst, length) == nrow(data))) {
+  if (all(sapply(group, length) == nrow(data))) {
     # check id in burst
-    check_burst_id(burst)
-    burst_list <- burst
+    check_group_id(group)
+    group_list <- group
   } else {
     # check names exist
-    check_names_exist(data, burst)
+    if (inherits(group, "list")) {
+      group <- vapply(group, c, character(1))
+    }
+    check_names_exist(data, group)
     # check id in burst
     # check id in burst
-    check_burst_id(burst)
+    check_group_id(group)
     # create burst list from names
-    burst_list <- lapply(data[, burst, FALSE], function(x) {
+    group_list <- lapply(data[, group, FALSE], function(x) {
       x
     })
-    if (!is.null(names(burst))) {
-      names(burst_list) <-
-        names(burst)
+    if (!is.null(names(group))) {
+      names(group_list) <-
+        names(group)
     } else {
-      names(burst_list) <- burst
+      names(group_list) <- group
     }
   }
 
@@ -155,11 +166,15 @@ as_sftrack.data.frame <- function(data = data.frame(),
   }
   check_NA_coords(xyz)
 
-
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    if (timestamp_name %in% colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"", timestamp_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -168,8 +183,14 @@ as_sftrack.data.frame <- function(data = data.frame(),
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    # Decide whether to overwrite names or not
+    if (error_name %in% colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"", error_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+    } else {
+      data[[error_name]] <- error
+    }
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -180,14 +201,14 @@ as_sftrack.data.frame <- function(data = data.frame(),
   }
 
   # pull out other relevant info
-  if (any(is.na(active_burst))) {
-    active_burst <- names(burst_list)
+  if (any(is.na(active_group))) {
+    active_group <- names(group_list)
   }
-  burst <-
-    make_multi_burst(burst_list, active_burst = active_burst)
+  group <-
+    make_c_grouping(group_list, active_group = active_group)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], x = burst)
+  dup_timestamp(time = data[[time_col]], x = group)
 
   geom <-
     sf::st_as_sf(xyz,
@@ -199,18 +220,24 @@ as_sftrack.data.frame <- function(data = data.frame(),
   attr(geom[, attr(geom, "sf_column")], "n_empty") <-
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
-  data$burst <- burst
-  data$geometry <-  st_geometry(geom)
+  # Decide whether to overwrite names or not
+  if (group_name %in% colnames(data) && !overwrite_names) {
+    stop(paste0("column name: \"", group_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+  } else {
+    data[[group_name]] <- group
+  }
+  data$geometry <- st_geometry(geom)
 
   ret <- new_sftrack(
     data = data,
-    burst_col = "burst",
+    group_col = group_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
 
   check_z_coords(ret)
 
@@ -228,7 +255,7 @@ as_sftrack.sftraj <- function(data, ...) {
   crs <- attr(geometry, "crs")
 
   geometry <- sf::st_sfc(new_geom, crs = crs)
-  burst <- attr(data, "burst")
+  group <- attr(data, "group_col")
   error <- attr(data, "error")
   time <- attr(data, "time")
   sf_col <- attr(data, "sf_column")
@@ -237,7 +264,7 @@ as_sftrack.sftraj <- function(data, ...) {
   new_data <- as.data.frame(data)
   ret <- new_sftrack(
     data = new_data,
-    burst_col = burst,
+    group_col = group,
     sf_col = sf_col,
     error_col = error,
     time_col = time
@@ -259,25 +286,25 @@ as_sftrack.ltraj <- function(data, ...) {
     id <- attr(sub[[1]], "id")
     burst <- attr(sub[[1]], "burst")
     infolocs <- infolocs(data)[x]
-    reloc_time <- sub[[1]]$date
+    sft_timestamp <- sub[[1]]$date
     coords <- c("x", "y")
-    data.frame(sub[[1]][, coords], id, burst, reloc_time, infolocs)
+    data.frame(sub[[1]][, coords], id, burst, sft_timestamp, infolocs)
   })
   df1 <- do.call(rbind, new_data)
-  time <- "reloc_time"
-  burst <- list(id = df1$id)
+  time <- "sft_timestamp"
+  group <- list(id = df1$id)
   crs <- attr(data, "proj4string")
   # pull out id and burst from ltraj object
   id_lt <- vapply(data, function(x) {
     attr(x, "id")
   }, NA_character_)
-  burst_lt <-
+  group_lt <-
     vapply(data, function(x) {
       attr(x, "burst")
     }, NA_character_)
 
-  if (!all(burst_lt == id_lt)) {
-    burst$group <- df1$burst
+  if (!all(group_lt == id_lt)) {
+    group$group <- df1$burst
   }
   coords <- c("x", "y")
   geom <-
@@ -287,20 +314,20 @@ as_sftrack.ltraj <- function(data, ...) {
       na.fail = FALSE
     )
   # pull out other relevant info
-  df1$burst <- make_multi_burst(burst)
+  df1$sft_group <- make_c_grouping(group)
   error <- NA
   new_data <-
     cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(geom))
   ret <- new_sftrack(
     data = new_data,
-    burst_col = burst,
+    group_col = "sft_group",
     error_col = error,
     time_col = time,
     sf_col = "geometry"
   )
   # Sanity check. Which are necessary?
   ret <-
-    ret[check_ordered(ret$burst, ret[, attr(ret, "time"), drop = T]), ]
+    ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
   #
   return(ret)
 }
@@ -311,10 +338,14 @@ as_sftrack.ltraj <- function(data, ...) {
 as_sftrack.sf <- function(data,
                           ...,
                           coords,
-                          burst,
-                          active_burst = NA,
+                          group,
+                          active_group = NA,
                           time,
-                          error = NA) {
+                          error = NA,
+                          group_name = "sft_group",
+                          timestamp_name = "sft_timestamp",
+                          error_name = "sft_error",
+                          overwrite_names = FALSE) {
   geom <- st_geometry(data)
 
   data <- as.data.frame(data)
@@ -324,37 +355,47 @@ as_sftrack.sf <- function(data,
     stop("sf column must be an sfc_POINT")
   }
   # Id
-
-  # bursts
-  if (length(burst) == 1) {
-    names(burst) <- "id"
+  if (nrow(data) == 0) {
+    data <- data.frame(sftrack_id = seq_along(time))
   }
-  if (all(sapply(burst, length) == nrow(data))) {
+  # bursts
+  if (length(group) == 1) {
+    names(group) <- "id"
+  }
+  if (all(sapply(group, length) == nrow(data))) {
     # check id in burst
-    check_burst_id(burst)
-    burst_list <- burst
+    check_group_id(group)
+    group_list <- group
   } else {
     # check names exist
-    check_names_exist(data, burst)
+    if (inherits(group, "list")) {
+      group <- vapply(group, c, character(1))
+    }
+    check_names_exist(data, group)
     # check id in burst
     # check id in burst
-    check_burst_id(burst)
+    check_group_id(group)
     # create burst list from names
-    burst_list <- lapply(data[, burst, FALSE], function(x) {
+    group_list <- lapply(data[, group, FALSE], function(x) {
       x
     })
-    if (!is.null(names(burst))) {
-      names(burst_list) <-
-        names(burst)
+    if (!is.null(names(group))) {
+      names(group_list) <-
+        names(group)
     } else {
-      names(burst_list) <- burst
+      names(group_list) <- group
     }
   }
 
   # Time
   if (length(time) == nrow(data)) {
-    data$reloc_time <- time
-    time_col <- "reloc_time"
+    if (timestamp_name %in% colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"", timestamp_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+    } else {
+      data[[timestamp_name]] <- time
+      time_col <- timestamp_name
+    }
   } else {
     check_names_exist(data, time)
     time_col <- time
@@ -363,8 +404,14 @@ as_sftrack.sf <- function(data,
 
   # Error
   if (length(error) == nrow(data)) {
-    data$sftrack_error <- error
-    error_col <- "sftrack_error"
+    # Decide whether to overwrite names or not
+    if (error_name %in% colnames(data) && !overwrite_names) {
+      stop(paste0("column name: \"", error_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+    } else {
+      data[[error_name]] <- error
+    }
+    error_col <- error_name
   } else {
     if (!is.na(error)) {
       check_names_exist(data, error)
@@ -373,28 +420,33 @@ as_sftrack.sf <- function(data,
       error_col <- NA
     }
   }
-
   #
-  if (any(is.na(active_burst))) {
-    active_burst <- names(burst_list)
+  if (any(is.na(active_group))) {
+    active_group <- names(group_list)
   }
-  burst <-
-    make_multi_burst(burst_list, active_burst = active_burst)
+  group <-
+    make_c_grouping(group_list, active_group = active_group)
 
   # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], x = burst)
+  dup_timestamp(time = data[[time_col]], x = group)
 
-  data$burst <- burst
+  # Decide whether to overwrite names or not
+  if (group_name %in% colnames(data) && !overwrite_names) {
+    stop(paste0("column name: \"", group_name, "\" already found in data.frame.
+If youd like to overwrite column use overwrite_names = TRUE"))
+  } else {
+    data[[group_name]] <- group
+  }
 
   ret <- new_sftrack(
     data = data,
-    burst_col = "burst",
+    group_col = group_name,
     sf_col = "geometry",
     error_col = error_col,
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret$burst, ret[[attr(ret, "time")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
 
   check_z_coords(ret)
 
@@ -418,9 +470,9 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   if (missing(n_row)) {
     n_row <- nrow(x)
   }
-  burst_col <- attr(x, "burst")
+  group_col <- attr(x, "group_col")
   sf_col <- attr(x, "sf_column")
-  time_col <- attr(x, "time")
+  time_col <- attr(x, "time_col")
   sf_attr <- attributes(st_geometry(x))
   # time stuff
 
@@ -436,11 +488,11 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   }
 
   # active burst
-  ab <- attr(x[[burst_col]], "active_burst")
-  bn <- names(x[[burst_col]][[1]])
-  active_burst_names <- paste0("*", ab, "*")
-  burst_mes <-
-    paste0(active_burst_names, bn[!ab %in% bn], collapse = ", ")
+  ab <- attr(x[[group_col]], "active_group")
+  bn <- names(x[[group_col]][[1]])
+  active_group_names <- paste0("*", ab, "*")
+  group_mes <-
+    paste0(active_group_names, bn[!ab %in% bn], collapse = ", ")
   # print
   cat(
     paste0(
@@ -463,12 +515,12 @@ print.sftrack <- function(x, n_row, n_col, ...) {
     ") \n"
   ))
   cat(paste0('Timestamp : \"', time_col, '\" (', time_mes, ") \n"))
-  cat(paste0('Burst : \"', burst_col, '\" (', burst_mes, ") \n"))
+  cat(paste0('Groupings : \"', group_col, '\" (', group_mes, ") \n"))
   cat("-------------------------------\n")
   # Figure out the row and columns
   row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
   sub_col_names <-
-    colnames(x)[!colnames(x) %in% c(burst_col, sf_col, time_col)]
+    colnames(x)[!colnames(x) %in% c(group_col, sf_col, time_col)]
   col_l <- length(sub_col_names)
 
   x <- as.data.frame(x)
@@ -478,7 +530,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
     ret <- cbind(
       x[1:row_l, sub_col_names[1:p], drop = FALSE],
       data.frame("..." = rep("...", row_l)),
-      x[1:row_l, c(burst_col, sf_col, time_col)]
+      x[1:row_l, c(group_col, sf_col, time_col)]
     )
   } else {
     ret <- x
@@ -506,9 +558,10 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   # i = 1:10
   # j=c(1,2,3)
   # rm(j)
+  group_col <- attr(x, "group_col")
   sf_col <- attr(x, "sf_column")
-  time_col <- attr(x, "time")
-  error_col <- attr(x, "error")
+  time_col <- attr(x, "time_col")
+  error_col <- attr(x, "error_col")
   # if(is.na(error_col)){ error_col <- NULL}
   nargs <- nargs()
   # print(nargs)
@@ -517,7 +570,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   }
   if (!missing(i) && nargs > 2) {
     if (is.character(i)) {
-      i <- burst_labels(x) %in% i
+      i <- group_labels(x) %in% i
     }
   }
   if (!missing(j) && all(is.character(j))) {
@@ -540,7 +593,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
       } else {
         error_col
       }
-      x[i, union(colnames(x)[j], c("burst", sf_col, time_col, error_col))]
+      x[i, union(colnames(x)[j], c(group_col, sf_col, time_col, error_col))]
     }
   }
 
@@ -554,7 +607,7 @@ summary.sftrack <- function(object, ..., stats = FALSE) {
   #     }
   ret <- new_sftrack(
     x,
-    burst_col = "burst",
+    group_col = group_col,
     sf_col = sf_col,
     time_col = time_col,
     error_col = error_col
@@ -576,8 +629,9 @@ rbind.sftrack <- function(...) {
     stop("sf, time, and error columns must be the same")
   }
   att <- attributes(all[[1]])
-  time_col <- att$time
-  error_col <- att$error
+  time_col <- att$time_col
+  error_col <- att$error_col
+  group_col <- att$group_col
   sf_col <- att$sf_column
   for (i in seq_along(all)) {
     class(all[[i]]) <- setdiff(class(all[[i]]), c("sftrack", "sf"))
@@ -586,7 +640,7 @@ rbind.sftrack <- function(...) {
   class(new_df) <- setdiff(class(new_df), c("sftrack", "sf"))
   ret <- new_sftrack(
     data = new_df,
-    burst_col = "burst",
+    group_col = group_col,
     time_col = time_col,
     error_col = error_col,
     sf_col = sf_col
@@ -596,6 +650,7 @@ rbind.sftrack <- function(...) {
   dup_timestamp(ret)
   return(ret)
 }
+
 #' @export
 cbind.sftrack <- function(..., deparse.level = 1) {
   all <- list(...)
@@ -611,9 +666,9 @@ cbind.sftrack <- function(..., deparse.level = 1) {
   # I'll keep it till we can decide what we want cbind to do
   # check if theres two burst columns
   if (sum(unlist(lapply(all, function(x) {
-    colnames(x) == "burst"
+    colnames(x) == attr(x, "group_col")
   }))) > 1) {
-    stop('More than one column named "burst" found')
+    stop("More than one group column found")
   }
 }
 
