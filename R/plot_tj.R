@@ -40,9 +40,9 @@ plot.sftrack <- function(x, y, ...) {
   # x <- my_sftrack
   graphics::par(oma = c(1, 1, 1, 4))
   group_col <- attr(x, "group_col")
-  x[[group_col]] <- group_labels(x)
+  x[['group']] <- group_labels(x)
   class(x) <- setdiff(class(x), c("sftrack"))
-  x <- x[group_col]
+  x <- x['group']
   plot(x, reset = FALSE, ...)
 }
 
