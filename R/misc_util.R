@@ -284,7 +284,6 @@ merge_traj <- function(x) {
     }
   })
   ret$geometry <- st_sfc(ret$geometry, crs = crs)
-  ret[[group_col]] <- ret$group
   st_sf(ret, sf_column_name = "geometry")
 }
 
