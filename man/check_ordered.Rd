@@ -2,17 +2,17 @@
 % Please edit documentation in R/checks.R
 \name{check_ordered}
 \alias{check_ordered}
-\title{Checks if burst is ordered by time and then outputs the correct order}
+\title{Checks if grouping is ordered by time and then outputs the correct order}
 \usage{
-check_ordered(burst, time_data, return = TRUE)
+check_ordered(group, time_data, return = TRUE)
 }
 \arguments{
-\item{burst}{a multi_burst}
+\item{group}{a c_grouping}
 
 \item{time_data}{a vector of time}
 
-\item{return}{the new order or not?}
+\item{return}{T/F return the new order or just run check?}
 }
 \description{
-Checks if burst is ordered by time and then outputs the correct order
+Checks if grouping is ordered by time and then outputs the correct order
 }

@@ -19,6 +19,7 @@ coord_traj(traj)
 Return a list of sf_POINTS or a data.frame from a sftraj object
 }
 \examples{
+#'
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
@@ -26,7 +27,7 @@ burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon
 my_traj <- as_sftraj(raccoon,
   time = "timestamp",
   error = NA, coords = c("longitude", "latitude"),
-  burst = burstz
+  group = burstz
 )
 print(my_traj, 5, 10)
 

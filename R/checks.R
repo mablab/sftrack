@@ -1,11 +1,10 @@
-# Burst related checks
-#' @title Checks if burst is ordered by time and then outputs the correct order
+#' @title Checks if grouping is ordered by time and then outputs the correct order
 #' @export
-#' @param burst a multi_burst
+#' @param group a c_grouping
 #' @param time_data a vector of time
-#' @param return the new order or not?
-check_ordered <- function(burst, time_data, return = TRUE) {
-  idz <- burst_labels(burst)
+#' @param return T/F return the new order or just run check?
+check_ordered <- function(group, time_data, return = TRUE) {
+  idz <- group_labels(group)
 
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
@@ -45,39 +44,41 @@ check_names_exist <- function(data, names) {
   }
 }
 
-##### Burst related checks
+##### Grouping related checks
 #' @title Check there are no NAs in burst
 #' @export
-#' @param burst a multi_burst
-check_NA_burst <- function(burst) {
-  if (inherits(burst, c("sftrack", "sftraj"))) {
-    burst <- burst$burst
+#' @param x a c_grouping
+check_NA_group <- function(x) {
+  group <- x
+  if (inherits(x, c("sftrack", "sftraj"))) {
+    group <- x[[attr(x, "group_col")]]
   }
 
-  if (any(vapply(burst, function(x) any(is.na(x)), logical(1)))) {
-    stop("NAs not allowed in burst")
+  if (any(vapply(group, function(x) any(is.na(x)), logical(1)))) {
+    stop("NAs not allowed in groups")
   }
 }
 
-#' @title Check there is aburst id present
+#' @title Check there is a grouping id present
 #' @export
-#' @param burst a multi_burst
-check_burst_id <- function(burst) {
-  if (!("id" %in% burst |
-    "id" %in% names(burst))) {
-    stop("There is no `id` column in burst names")
+#' @param x a c_grouping
+check_group_id <- function(x) {
+  if (!("id" %in% x |
+    "id" %in% names(x))) {
+    stop("There is no `id` column in group names")
   }
 }
 
 # more than one relocation for a burst
-check_two_bursts <- function(burst, ..., active_burst) {
-  if (inherits(burst, "multi_burst")) {
-    lvlz <- burst_labels(burst)
-    active_burst <- attr(burst, "active_burst")
+check_two_groups <- function(x, ..., active_group) {
+  group <- x
+  if (inherits(group, "c_grouping")) {
+    lvlz <- group_labels(group)
+    active_group <- attr(group, "active_group")
   } else {
     lvlz <-
-      vapply(burst, function(y) {
-        paste0(y[active_burst], collapse = "_")
+      vapply(group, function(y) {
+        paste0(y[active_group], collapse = "_")
       }, NA_character_)
   }
   count <- table(lvlz)
@@ -85,46 +86,47 @@ check_two_bursts <- function(burst, ..., active_burst) {
     message(paste0(paste0(names(count)[count == 1], collapse = " & "), " has only one relocation"))
   }
 }
-#' @title Are burst names equivalent for each ind_burst?
+#' @title Are group names equivalent for each s_group?
 #' @export
-#' @param burst a multi_burst
-check_burst_names <- function(burst) {
-  if (inherits(burst, c("sftrack", "sftraj"))) {
-    burst <- burst$burst
+#' @param x a c_grouping
+check_group_names <- function(x) {
+  group <- x
+  if (inherits(x, c("sftrack", "sftraj"))) {
+    group <- x[[attr(x, "group_col")]]
   }
-  if (length(unique(vapply(burst, function(y) {
+  if (length(unique(vapply(group, function(y) {
     paste(names(y), collapse = "")
   }, NA_character_))) != 1) {
-    stop("Burst names do not match")
+    stop("Group names do not match")
   }
 
-  if (any(unlist(lapply(burst, function(x) {
+  if (any(unlist(lapply(group, function(x) {
     duplicated(names(
       x
     ))
   })))) {
-    stop("burst names can not be duplicated")
+    stop("group names can not be duplicated")
   }
 }
 
-# How many bursts are there when combining two different multi_bursts
-check_active_burst <-
-  function(burst,
-           active_burst = NULL,
+# How many bursts are there when combining two different c_groupings
+check_active_group <-
+  function(x,
+           active_group = NULL,
            check_all = T) {
-    if (is.null(active_burst)) {
-      active_burst <- active_burst(burst)
+    if (is.null(active_group)) {
+      active_group <- active_group(x)
     }
     if (!check_all) {
-      check <- all(active_burst %in% names(burst[[1]]))
+      check <- all(active_group %in% names(x[[1]]))
     } else {
       check <-
-        all(vapply(burst, function(x) {
-          all(active_burst %in% names(x))
+        all(vapply(x, function(y) {
+          all(active_group %in% names(y))
         }, NA))
     }
     if (!check) {
-      stop("not all active bursts found in burst names")
+      stop("not all new active group names found in current group names")
     }
   }
 
@@ -182,7 +184,7 @@ check_time <- function(time) {
   # Currently its not but can expand if we feel its necessary to have
   # is integer or posixct
   if (inherits(time, c("sftrack", "sftraj"))) {
-    time <- time[[attr(time, "time")]]
+    time <- time[[attr(time, "time_col")]]
   }
   if (!(inherits(time, "integer") | inherits(time, "POSIXct") | inherits(time, "numeric"))) {
     stop("Time needs to be an integer or POSIXct")
@@ -190,14 +192,14 @@ check_time <- function(time) {
 }
 
 #' @title Check if time is regular for each burst and returns logical for each burst
-#' @param sftrack an sftrack/sftraj object
+#' @param x an sftrack/sftraj object
 #' @export
-check_t_regular <- function(sftrack) {
+check_t_regular <- function(x) {
   # is complete
-  time_col <- attr(sftrack, "time")
-  idz <- burst_labels(sftrack$burst)
+  time_col <- attr(x, "time_col")
+  idz <- group_labels(x[[attr(x, "group_col")]])
   sftrack <-
-    sftrack[check_ordered(idz, sftrack[[time_col]]), ]
+    x[check_ordered(idz, x[[time_col]]), ]
   ans <-
     tapply(sftrack[[time_col]], idz, function(date) {
       x1 <- unclass(date[-1])
@@ -213,32 +215,32 @@ check_t_regular <- function(sftrack) {
 #' @export
 dup_timestamp <- function(x, time) {
   if (inherits(x, c("sftrack", "sftraj"))) {
-    burst <- x[[attr(x,'burst')]]
-    time <- x[[attr(x, "time")]]
+    group <- x[[attr(x, "group_col")]]
+    time <- x[[attr(x, "time_col")]]
   } else {
-    burst <- x
+    group <- x
   }
 
   test <-
-    tapply(time, burst_labels(burst), function(y) {
+    tapply(time, group_labels(group), function(y) {
       any(duplicated(y))
     })
   if (any(test)) {
     stop(paste0(
-      "bursts: ",
+      "groups: ",
       paste0(names(test)[test], collapse = ", "),
       " have duplicated time stamps"
     ))
   }
 }
 
-unique_active_bursts <-
-  function(burst) {
+unique_active_group <-
+  function(x) {
     # burst = list(burst1,burst2)
     # burst = list(x[[1]],value[[1]])
-    if (length(unique(vapply(burst, function(x) {
-      paste(attr(x, "active_burst"), collapse = "")
+    if (length(unique(vapply(x, function(y) {
+      paste(attr(y, "active_group"), collapse = "")
     }, NA_character_))) != 1) {
-      stop("There are more than one possible active bursts")
+      stop("There are more than one possible active groups")
     }
   }

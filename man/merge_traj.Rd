@@ -10,5 +10,5 @@ merge_traj(x)
 \item{x}{an sftraj object}
 }
 \description{
-This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each burst
+This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each grouping
 }

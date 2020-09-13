@@ -7,9 +7,9 @@ test_that("step geometry calculates correctly", {
     timez = Sys.time() + 60 * 60 * (1:4)
   )
   geom_ans <- c(27, 27, -80, -81, 27, -81, 27, 27, -82, -83, 27, -83)
-  my_track <- as_sftrack(data = df1, burst = "id", time = "timez", coords = c("x", "y"))
+  my_track <- as_sftrack(data = df1, group = "id", time = "timez", coords = c("x", "y"))
 
-  my_step_geom <- make_step_geom(burst = my_track$burst, geometry = my_track$geometry, time_data = my_track$timez)
+  my_step_geom <- make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time_data = my_track$timez)
   # order was done correctly
 
   expect_equal(unlist(my_step_geom), geom_ans)
@@ -25,9 +25,9 @@ test_that("step geometry calculates correctly", {
     z = 0:3,
     timez = Sys.time() + 60 * 60 * (1:4)
   )
-  my_track <- as_sftrack(data = df1, burst = c("id", "month"), time = "timez", coords = c("x", "y"))
+  my_track <- as_sftrack(data = df1, group = c("id", "month"), time = "timez", coords = c("x", "y"))
 
-  my_step_geom <- suppressMessages(make_step_geom(burst = my_track$burst, geometry = my_track$geometry, time_data = my_track$time))
+  my_step_geom <- suppressMessages(make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time_data = my_track$time))
 
   expect_equal(unlist(my_step_geom), geom_ans)
 
@@ -44,8 +44,8 @@ test_that("step metrics works", {
     timez = as.POSIXct("2020-01-01 12:00:00", tz = "UTC") + 60 * 60 * (1:6)
   )
   my_sftraj <- as_sftraj(
-    data = df1, burst = list(id = df1$id, month = df1$month),
-    time = df1$timez, active_burst = c("id", "month"), coords = df1[, c("x", "y")]
+    data = df1, group = list(id = df1$id, month = df1$month),
+    time = df1$timez, active_group = c("id", "month"), coords = df1[, c("x", "y")]
   )
   sm <- step_metrics(my_sftraj)
   ans <- data.frame(
@@ -70,8 +70,8 @@ test_that("step metrics works", {
     timez = c(1, 2, 3, 4, 5, 6)
   )
   my_sftraj <- as_sftraj(
-    data = df1, burst = list(id = df1$id, month = df1$month),
-    time = df1$timez, active_burst = c("id", "month"), coords = df1[, c("x", "y")]
+    data = df1, group = list(id = df1$id, month = df1$month),
+    time = df1$timez, active_group = c("id", "month"), coords = df1[, c("x", "y")]
   )
   expect_equal(step_metrics(my_sftraj)$sftrack_id, c("1_1_1", "1_1_2", "1_1_3", "1_1_4", "1_1_5", "1_1_6"))
 

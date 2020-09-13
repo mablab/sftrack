@@ -4,10 +4,10 @@
 \alias{check_t_regular}
 \title{Check if time is regular for each burst and returns logical for each burst}
 \usage{
-check_t_regular(sftrack)
+check_t_regular(x)
 }
 \arguments{
-\item{sftrack}{an sftrack/sftraj object}
+\item{x}{an sftrack/sftraj object}
 }
 \description{
 Check if time is regular for each burst and returns logical for each burst

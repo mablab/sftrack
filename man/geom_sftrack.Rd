@@ -43,7 +43,7 @@ burstz <- c(id = "animal_id")
 my_sftraj <- as_sftraj(raccoon,
   time = "timestamp",
   coords = c("longitude", "latitude"),
-  burst = burstz
+  group = burstz
 )
 
 ggplot() +

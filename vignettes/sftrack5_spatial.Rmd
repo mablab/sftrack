@@ -18,7 +18,6 @@ library(lwgeom)
 ```
 
 ```{r}
-#devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
 
 # Make tracks from raw data
@@ -28,12 +27,12 @@ raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
 raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+group = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 error = 'fix'
 crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
-my_sftrack <- as_sftrack(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
-my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time, error = error, crs = crs)
+my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
 ```
 ## Geometry column  
 
@@ -104,15 +103,15 @@ The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasio
 plot(my_sftraj)
 ```
 
-This means that evertyime you change the active_burst, the plot view will change.
+This means that evertyime you change the active_group, the plot view will change.
 
 ```{r}
-active_burst(my_sftraj$burst) <- 'id'
-active_burst(my_sftraj$burst)
+active_group(my_sftraj$sft_group) <- 'id'
+active_group(my_sftraj$sft_group)
 plot(my_sftraj)
 ```
 
-Most rguments for `plot.sf` are available to use as additional arguments to `plot`. 
+Most arguments for `plot.sf` are available to use as additional arguments to `plot`. 
 
 ```{r}
 plot(my_sftrack, axes = TRUE, cex=5)
@@ -120,7 +119,7 @@ plot(my_sftrack, axes = TRUE, cex=5)
 
 
 ##### ggplot
-This is a work in progress, but theres a geom_sftrack function that feeds `geom_sf` with the correct plotting information. Like `geom_sf` you input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_burst is the grouping variable. Plots vary slightly based on if they're sftrack of sftraj class
+This is a work in progress, but theres a geom_sftrack function that feeds `geom_sf` with the correct plotting information. Like `geom_sf` you input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_group is the grouping variable. Plots vary slightly based on if they're sftrack of sftraj class
 
 ```{r}
  library(ggplot2)

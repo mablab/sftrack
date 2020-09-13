@@ -2,21 +2,22 @@
 % Please edit documentation in R/step_calculation.R
 \name{make_step_geom}
 \alias{make_step_geom}
-\title{Calculate step geometries given a set of bursts, time, and geometries}
+\title{Calculate step geometries given a set of groupings, time, and geometries}
 \usage{
-make_step_geom(burst, time_data, geometry)
+make_step_geom(group, time_data, geometry)
 }
 \arguments{
-\item{burst}{a multi_burst object}
+\item{group}{a c_grouping object}
 
 \item{time_data}{time vector}
 
 \item{geometry}{the geometery data from either sf or sf_track. Must be an sf geometry class}
 }
 \description{
-This calculates step geometries as individual line segments based on the active_burst
+This calculates step geometries as individual line segments based on the active_group
 }
 \examples{
+#'
 library(sf)
 geom <- st_as_sf(data.frame(
   x = c(1, 2, 2, 5),
@@ -26,10 +27,10 @@ geom <- st_as_sf(data.frame(
 burst <- list(id = rep(1, 4))
 time <- 1:4
 
-mb <- make_multi_burst(burst)
+cg <- make_c_grouping(burst)
 
 make_step_geom(
-  burst = mb,
+  group = cg,
   geometry = geom$geometry,
   time_data = time
 )
