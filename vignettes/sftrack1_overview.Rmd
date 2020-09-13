@@ -17,12 +17,6 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-*This vignette acts as a proto vignette presenting concepts of a
-trajectory, mainly for highlighting features for anyone testing
-sftrack. It will eventually evolve into the full vignette.*
-
-
 ## Definitions of movement data
 
 We start by defining the main objects that `sftrack` is dealing
@@ -33,10 +27,6 @@ with. At the top level, there is a **path**, i.e. the real-world
 <!-- vignette; and remove this comment. Do the same for all figures. -->
 
 ![Fig. 1: Glossary introducing the main concepts.](glossary.png "Fig. 1: Glossary introducing the main concepts.")
-
-#### sftraj object
-An sftraj object is a data.frame where the geometries are stored as a `LINESTRING` for each row. The linestring is a line built from the two points at t1 -> t2. Internally any time active_groups are changed, then the geometry is recalculated.
-
 ```{r, out.width = "75%", fig.align = "center", fig.cap = "Fig.1: Glossary introducing the main concepts."}
 knitr::include_graphics('glossary.png')
 
@@ -78,9 +68,6 @@ individual (not necessarily connected) finally forms a **trajectory**.
 
 
 ## A conceptual model for movement
-
-<!-- MB: Please check this part, and correct if it does not match your -->
-<!-- work. Let me know if some things are not clear. -->
 
 To organize these elements of data and how they relate to one another
 and to properties of the real world entities (here a moving object),
@@ -175,8 +162,6 @@ possible in both directions.
 
 ## Implementation in the `sftrack` package
 
-<!-- MB: Does this need further update or more details? -->
-
 The `sftrack` package deals with all elements presented above,
 specifically **tracks** and **trajectories**. We'll begin with a brief
 overview of an `sftrack` object. An `sftrack` object is a data object
@@ -239,6 +224,8 @@ is changed, then the geometry is recalculated.
 ```{r sftraj-overview, echo = FALSE}
 my_sftraj <- as_sftraj(my_sftrack)
 head(my_sftraj)
-plot(my_sftraj)
+plot(my_sftraj, axes = TRUE)
 
 ```
+
+In the next vignettes we will go into more detail of sftrack objects, how to create them, an in-depth description of working with groupings, and how to plot with sftrack using base and ggplot.
