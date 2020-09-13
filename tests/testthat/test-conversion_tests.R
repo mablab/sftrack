@@ -9,7 +9,7 @@ test_that("sftraj conversions", {
     timez = Sys.time() + 60 * 60 * (1:4)
   )
   my_sftraj <- suppressMessages(as_sftraj(
-    data = df1, burst = c("id", "month"),
+    data = df1, group = c("id", "month"),
     time = "timez", coords = c("x", "y", "z")
   ))
   #  my_sftraj
@@ -32,7 +32,7 @@ test_that("sftrack conversions", {
     timez = Sys.time() + 60 * 60 * (1:4)
   )
   my_sftrack <- suppressMessages(as_sftrack(
-    data = df1, burst = c("id", "month"),
+    data = df1, group = c("id", "month"),
     time = "timez", coords = c("x", "y", "z")
   ))
   # my_sftrack
@@ -44,7 +44,7 @@ test_that("sftrack conversions", {
 
   # check coordinate dimensions get carried over
   my_sftrack_2d <- suppressMessages(suppressMessages(as_sftrack(
-    data = df1, burst = c("id", "month"),
+    data = df1, group = c("id", "month"),
     time = "timez", coords = c("x", "y")
   )))
   new_sftraj <- as_sftraj(my_sftrack_2d)

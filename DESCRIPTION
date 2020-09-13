@@ -1,6 +1,6 @@
 Package: sftrack
 Title: Central classes for movement data
-Version: 0.3
+Version: 0.5
 Date: 2019-12-17
 Authors@R: 
     c(person(given = "Matthew",

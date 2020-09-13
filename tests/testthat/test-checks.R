@@ -10,8 +10,8 @@ test_that("checks check successfully", {
     timez = Sys.time() + 60 * 60 * (c(1, 2, 3, 4))
   )
   expect_error(as_sftrack(
-    data = df1, burst = list(id = df1$id, month = df1$month),
-    time_col = "nottime", active_burst = c("id", "month"), coords = c("x", "y", "z")
+    data = df1, group = list(id = df1$id, month = df1$month),
+    time_col = "nottime", active_group = c("id", "month"), coords = c("x", "y", "z")
   ))
 
   # Z coordinates
@@ -25,8 +25,8 @@ test_that("checks check successfully", {
   )
   expect_message(
     as_sftrack(
-      data = df1, burst = list(id = df1$id, month = df1$month),
-      time = "timez", active_burst = c("id", "month"), coords = c("x", "y", "z")
+      data = df1, group = list(id = df1$id, month = df1$month),
+      time = "timez", active_group = c("id", "month"), coords = c("x", "y", "z")
     ),
     "Z coordinates found. Note that the vast majority of rgdal calculations are done using 2D geometry"
   )
@@ -41,10 +41,10 @@ test_that("checks check successfully", {
   )
   expect_error(
     as_sftrack(
-      data = df2, burst = c("id", "month"),
+      data = df2, group = c("id", "month"),
       time = "timez", coords = c("x", "y")
     ),
-    "bursts: 1_march have duplicated time stamps"
+    "groups: 1_march have duplicated time stamps"
   )
 
   # NAs in some coordinate columns
@@ -58,7 +58,7 @@ test_that("checks check successfully", {
   )
   expect_error(
     as_sftrack(
-      data = df3, burst = c("id", "month"),
+      data = df3, group = c("id", "month"),
       time = "timez", coords = c("x", "y", "z")
     ),
     "z column has NAs that are not found in other coordinate columns"
@@ -67,7 +67,7 @@ test_that("checks check successfully", {
   # check coord names exist
   expect_error(
     as_sftrack(
-      data = df1, burst = c("id", "month"),
+      data = df1, group = c("id", "month"),
       time = "timez", coords = c("x", "y", "z1")
     ),
     "z1 not found in data frame"
@@ -83,7 +83,7 @@ test_that("checks check successfully", {
   )
   expect_message(
     as_sftrack(
-      data = df4, burst = c("id", "month"),
+      data = df4, group = c("id", "month"),
       time = "timez", coords = c("x", "y")
     ),
     "time was not ordered for each burst"

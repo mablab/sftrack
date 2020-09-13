@@ -34,6 +34,9 @@ with. At the top level, there is a **path**, i.e. the real-world
 
 ![Fig. 1: Glossary introducing the main concepts.](glossary.png "Fig. 1: Glossary introducing the main concepts.")
 
+#### sftraj object
+An sftraj object is a data.frame where the geometries are stored as a `LINESTRING` for each row. The linestring is a line built from the two points at t1 -> t2. Internally any time active_bursts are changed, then the geometry is recalculated.
+
 ```{r, out.width = "75%", fig.align = "center", fig.cap = "Fig.1: Glossary introducing the main concepts."}
 knitr::include_graphics('glossary.png')
 
