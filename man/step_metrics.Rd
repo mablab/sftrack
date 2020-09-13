@@ -19,7 +19,7 @@ raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
 # Input is a data.frame
 my_sftraj <- as_sftraj(raccoon,
-  burst = burstz, time = "timestamp",
+  group = burstz, time = "timestamp",
   error = NA, coords = c("longitude", "latitude")
 )
 

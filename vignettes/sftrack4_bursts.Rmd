@@ -1,5 +1,5 @@
 ---
-title: "4. Fantastic Bursts and how to use them"
+title: "4. Fantastic Groups and how to use them"
 output:
   html_document:
     toc: true
@@ -8,7 +8,7 @@ output:
       smooth_scroll: false
     toc_depth: 2
 vignette: >
-  %\VignetteIndexEntry{4. Fantastic Bursts and how to use them}
+  %\VignetteIndexEntry{4. Fantastic Groupss and how to use them}
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -17,131 +17,102 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```
 
-## Bursts  
+## Groupings  
 
-Bursts are a big emphasis in `sftrack`. They are made in a similar vein to the `sfc` and `sfg` in `sf`. 
+Groupings are a big emphasis in `sftrack`. Structurally they are built with in the same vein as `sfc` and `sfg` classes in `sf`. 
 
-To begin an `ind_burst` is a singular burst. Its whats stored at the row level. 
-A `multi-burst` is a collection of `ind_bursts` and exists at the column level. Bursts also have an `active_burst` argument, which turns on and off certain bursts for analysis and plotting purposes.
+To begin an `s_group` is a singular grouping. Its whats stored at the row level. 
+A `c_grouping` is a collection of `s_groups` and exists at the column level. Groups also have an `active_group` argument, which turns on and off certain groups for analysis and plotting purposes.
 
-We start by looking at the structure of a `multi_burst`
+We start by looking at the structure of a `c_grouping`
 ```{r}
-#devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
 data('raccoon', package = 'sftrack')
 #raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-burst_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+group_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 
-mb1 <- make_multi_burst(x=burst_list, active_burst=c('id','month'))
-str(mb1)
-mb1[[1]]
+cg1 <- make_c_grouping(x=group_list, active_group=c('id','month'))
+str(cg1)
+cg1[[1]]
 ```
 
-A burst contains grouping information. The `id` of the subject/sensor is the lowest level of grouping for the data. Any additional grouping variables are optional. 
+A grouping contains group related information. The `id` of the subject/sensor is the lowest level of grouping for the data. Any additional grouping variables are optional. 
 
-A multi_burst is simply a collectino of `ind_bursts`. The `ind_burst` is where the actual data is stored, and can be modified at the row level. Labels are also created at the `ind_burst` level and created based on the active_burst. We'll discuss the use of these labels later, but they are largely internal but can be used to quickly subset data from a burst.
+A c_grouping is simply a collection of `s_group`s. The `s_group` is where the grouping data is stored, and can be modified at the row level. The `s_groups` main job is to store row level grouping information and maintain consistency of the grouping variables.
 
 #### Basics
 
-##### ind_bursts 
-An ind_burst is the grouping variables for a single row of data.  
+##### single groups (s_group) 
+An s_group is the grouping variables for a single row of data.  
 
-You can make an `ind_burst` object using `make_ind_burst()`, and giving it a list with the burst variables named. In this example we have a single sensor named 'CJ13' from a raccon, and an additional grouping varaiable of month (entered as its numeric interpretation).
+You can make an `s_group` object using `make_s_group()`, and giving it a list with the group variables named. In this example we have a single sensor named 'TTP_058' from a raccoon, and an additional grouping variable of month (entered as its numeric interpretation).
 
-ind_bursts convert these variables into characters and creates a label from the active_burst by paste0(sep = '_').
+All grouping information is converted and stored as a character in the s_group.
 
 ```{r}
 
-indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst = c('id','month'))
-str(indb)
+singlegroup <- make_s_group(list(id='TTP_058', month = 4))
+str(singlegroup)
 ```
 
-Because `ind_burst`s are simply lists, you can edit individual elements in an ind_burst
+Because `s_group`s are simply lists, you can edit individual elements in an s_group
 ```{r}
-indb 
-indb[1] <- 'CJ15'
-indb$month <- '5'
-str(indb)
+singlegroup 
+singlegroup[1] <- 'CJ15'
+singlegroup$month <- '5'
+str(singlegroup)
 ```
 
-#### Active burst of the ind_burst class
+##### Column groupings (c_grouping) 
+C_groupings are a collection of s_groups with the same grouping names and one 'active_group' activated for all s_groups.
 
-`ind_burst`s is a grouping class where you can have different groups 'turned on' (aka activated) as the analysis allows. Which groups are activated is determined by the 'active burst'. You can set this when creating an ind_burst. If no active_burst is given it defaults to all grouping names being the active_burst. 
+Similarly to s_group you can make a c_grouping with `make_s_group`. The argument `x` takes a list where each element is a vector indicating the named groupings as well as a vector of the active groups.
 
 ```{r}
-indb <- make_ind_burst(list(id='CJ13', month = 4), active_burst = c('id'))
-str(indb)
-indb <- make_ind_burst(list(id='CJ13', month = 4))
-str(indb)
-
+group_list <- list(id = rep(1:2,10), year = rep(2020, 10))
+cg <- make_c_grouping(x=group_list, active_group=c('id','year'))
+str(cg)
 ```
 
-You can access or change the `active burst` at anytime using the `active_burst()` function. The active burst tells any analysis to group by that mix of variables. 
+You can also make a c_grouping by concatenating multiple s_groups. All `s_groups` must have the same names or an error is returned.
 
 ```{r}
-active_burst(indb)
-active_burst(indb) <- 'id'
-str(indb)
+a <- make_s_group(list(id = 1, year = 2020))
+b <- make_s_group(list(id = 1, year = 2021))
+c <- make_s_group(list(id = 2, year = 2020))
+cg <- c(a, b , c)
 
+summary(cg)
 ```
 
-To speed up this process by calculating a 'label' attribute is calculated for each ind_burst which is a combination of the active burst variables. This label is to increase calculation and subsetting speed, and is therefore not available for renaming. It can be accessed however by `burst_labels`. This can be useful when refering to a burst or selecting many bursts in a column
+You can also combine c_grouping together with `c()`. All names and active_groups must be the same.  
 
 ```{r}
-burst_labels(indb)
-burst_labels(mb1)[1:10]
+cg_combine <- c(cg,cg)
+summary(cg_combine)
 ```
-
-##### multi_burst  
-Multi_bursts are a collection of ind_bursts where all ind_bursts have the same active_burst.
-
-Similarly to ind_burst you can make a multi_burst with `make_multi_burst()`. The argument `burst` takes a list where each element is a vector indicating the named burst as well as a vector of the active bursts.
-
+You can also edit groupings like a list, but you must replace it with an object of the appropriate class and active_group
 ```{r}
-burst_list <- list(id = rep(1:2,10), year = rep(2020, 10))
-mb <- make_multi_burst(x=burst_list, active_burst=c('id','year'))
-str(mb)
-```
-
-You can also make a multi_burst by concatenating multiple ind_bursts. All `ind_bursts` must have the same active_burst otherwise an error is returned
-
-```{r}
-a <- make_ind_burst(list(id = 1, year = 2020))
-b <- make_ind_burst(list(id = 1, year = 2021))
-c <- make_ind_burst(list(id = 2, year = 2020))
-mb <- c(a, b , c)
-
-summary(mb)
-```
-
-You can also combine multi_bursts together with `c()`.  
-
-```{r}
-mb_combine <- c(mb,mb)
-summary(mb_combine)
-```
-You can also edit bursts like a list, but you must replace it with an object of the appropriate class and active_burst
-```{r}
-mb[1]
-mb[1] <- make_ind_burst(list(id=3,year=2019))
-mb[1]
+cg[1]
+cg[1] <- make_s_group(list(id=3,year=2019))
+cg[1]
 
 ```
 
-And the burst names must match the ones in the multi_burst
+And the group names must match the ones in the c_grouping
 ```{r}
-# Try to add an ind_burst with a month field when the original burst had year instead 
-try( mb[1] <- make_ind_burst(list(id=3,month=2019)) )
+# Try to add an s_group with a month field when the original group had year instead 
+try( cg[1] <- make_s_group(list(id=3,month=2019)) )
 ```
 
-##### selecting a burst
+##### selecting a grouping
 
-As `multi_burst`s are stored as lists, it can be difficult to refer to a single burst or group of bursts. This is where the burst label can come in handy. The burst label is remade everytime an active burst changes, and therefore can be used to subset. Using `burst_label()` you can access the variable to subset with. Additionally the label comes with a factor argument that returns a factor instead of a character. But it should be noted the variable is stored internally as a character in each ind_burst and the factor is calculated later only when called, it is not stored. This functionality is largely for internal use, but may be of interest for people wanting speed up analysis.
+As `c_groupings` are stored as lists, it can be difficult to refer to a single group or combination of groupings. This is where the sort_index can come in handy. The sort_index is a factor of the combined active_group variables for each row (where paste(id, name1,name2,...,sep='_')). The group label is remade every time the active group changes, and therefore can be used to subset. Using `group_label()` you can access the sort_index. 
 
 ```{r}
-burst_list <- list(id = rep(1:2,10), year = rep(2020, 10))
-mb <- make_multi_burst(x=burst_list, active_burst=c('id','year'))
-burst_labels(mb)[1:10]
+group_list <- list(id = rep(1:2,10), year = rep(2020, 10))
+cg <- make_c_grouping(x=group_list, active_group=c('id','year'))
+group_labels(cg)[1:10]
 
 # Subsetting a particular sensor from our raccoon data
 
@@ -151,44 +122,39 @@ raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
 raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
 coords = c('longitude','latitude')
-burst = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+group = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
 time = 'time'
 
-my_sftraj <- as_sftraj(data = raccoon, coords = coords, burst = burst, time = time)
-head(my_sftraj[burst_labels(my_sftraj) %in% c('TTP-058_1'), ])
+my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time)
+head(my_sftraj[group_labels(my_sftraj) %in% c('TTP-058_1'), ])
 
 
 ```
 
-You can also subset by entering the burst label of the burst itself in either the multi_burst or the sftrack/sftraj object:
+You can also subset by entering the group label of the group itself in either the c_grouping or the sftrack/sftraj object:
 
 ```{r}
-head(mb['1_2020'])
+head(cg['1_2020'])
 
 sub <- my_sftraj['TTP-058_1',]
 print(sub,5, 3)
 ```
-##### active_burst 
-The active_burst is a simple yet powerful feature. It dictates how your raccoon is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active_burst of a multi_burst with `active_burst()`. Once changed, it changes the active_burst for all `ind_burst` and recalculates their labels.
+##### active group 
+The active_group is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active group of a column grouping with `active_group()`. Once changed, it recalculates the sort_index and in some cases recalculates the geometries.
 
-Active_bursts can be changed for any sftrack/straj/multi_burst/ind_burst
+Active groups can be changed for any sftrack/straj/c_grouping
 
 ```{r}
 # sftrack
-active_burst(my_sftraj)
+active_group(my_sftraj)
 summary(my_sftraj, stats = T)
-active_burst(my_sftraj) <- c('id')
-active_burst(my_sftraj)
+active_group(my_sftraj) <- c('id')
+active_group(my_sftraj)
 summary(my_sftraj, stats = T)
 
-# multi_burst
-active_burst(mb)
-active_burst(mb) <- 'id'
-active_burst(mb)
-
-# ind_burst
-active_burst(indb)
-active_burst(indb) <- 'id'
-active_burst(indb)
+# column grouping
+active_group(cg)
+active_group(cg) <- 'id'
+active_group(cg)
 
 ```
