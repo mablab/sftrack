@@ -19,7 +19,6 @@ library(lwgeom)
 
 ```{r}
 library(sftrack)
-
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
@@ -55,6 +54,7 @@ This does mean that not all `sf` functions will handle an `sftraj` object like i
 As sftrack object is an sf object, all of the sf functions apply to it.
 
 ```{r}
+library(sf)
 st_length(my_sftraj)[1:10]
 
 df1 <- data.frame(
