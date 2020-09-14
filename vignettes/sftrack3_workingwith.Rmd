@@ -21,9 +21,7 @@ This is section will go more depth into the structure of sftrack/sftraj objects 
 To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with the 3 required columns (group, geometry, and time). However, they are also of the subclass `sf`. This allows them to act like sf objects when working with functions in the `sf` package but act as `sftrack` objects for all other actions. It should be noted that when possible sftrack objects will mimic sf functionality and thus many of the same words and tactics are used.
 
 ```{r}
-#devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
-
 
 # Make tracks from raw data
 data('raccoon', package = 'sftrack')
@@ -44,12 +42,10 @@ my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = ti
 
 ```
 
-When creating an object, `sftrack` creates the appropriate `sf` geometry column for the class, it then creates the grouping class and bundles all the data and creates an `sf` object using sf::st_as_sf(). Finally, this input is used to create the `sftrack` object. Because of this there are 5 attributes in an `sftrack` object. Because it is also an `sf` object, the `sf_column` and `agr` attributes are created and used by sf. Additionally, `group_col`, `time_col`, and `error_col` are creatd by `sftrack` to describe which column contains the appropriate data set. `sftraj` is identical.
-```{r testsection}
-plot(my_sftrack)
-#plot(my_sftraj)
-plot(my_sftraj, step_mode=T)
-```
+In order for `sftrack` to function as an `sf` object, we create the data object as an `sf` object first (using st_as_sf()), and then add the `sftrack` attributes to the object. The class of an sftrack object is `sftrack` -> `sf` -> `data.frame` although the data.frame class is rarely called upon.
+
+There are five attributes total to an `sftrack` object, two of these are created by `sf` (`sf_column` and `agr`), and the additional three are created by `sftrack` (`group_col`, `time_col`, and `error_col`).
+
 ```{r}
 attributes(my_sftrack)[-(1:2)]
 ```
@@ -58,12 +54,12 @@ The `sftrack` level attributes are simply pointers to the data. Any attributes r
 
 ### Geometry
 
-The geometry column contains all attributes you would expect from an `sfc` object. We'll discuss in more detail in later sections, but an `sftrack` object is a collection of `POINT`. NA points are allowed and converted to Empty points. 
+The geometry column is an `sfc` object and contains the important spatial information for the track. As NA points are common and important in movement data, we create the `sfc` object with the option `na.fail = TRUE`. 
 ```{r}
 my_sftrack$geometry
 ```
 
-An `sftraj` differs only in the geometry column. Where it is a `GEOMETRY` with mixture of `LINESTRINGS` **AND** `POINTS`. `LINESTRINGS` are lines created from points t1->t2 for each row. However, because `LINESTRINGS` can not have one point of the line be NULL, when t1 is a known point but t2 is an Unknown point then the geometry bcomes a `POINT` object of t1. When t1 is unknown this row is an empty `POINT` object, regardless of the known status of t2. This allows loss-less conversion between sftrack and sftraj while still having `sf` treat the data appropriately.
+The `sfc` column varies in structure dependent on the movement class. An `sftrack` is a collection of `POINTs` while an `sftraj` is a `GEOMETRY` collection of `POINTs` and `LINESTRINGs`. 
 
 
 ```{r}
@@ -81,23 +77,25 @@ An `sftraj` differs only in the geometry column. Where it is a `GEOMETRY` with m
 ```
 
 ##### Grouping
-The grouping column is very specialized, and we will cover it in it's own section. At present, the novel attributes it stores are the 'active_group' and the 'sort_index' which is a factor to help grouping calculations. A grouping column is a class `c_grouping` consisting of multiple `s_group`s. `c_grouping` are a collection of `s_group` with the same `names()`. This mimics `sf` functionality where the `sfc` class is at the column level and `sfg` class is at the individual row level.
+
+The grouping column is very specialized, and we will cover it in it's own section. To begin, the novel attributes it stores are the `active_group` and the `sort_index` which is a factor of the current active groups. The grouping class consists of single row level group: `s_groups` (a.k.a single groups) and a column level collection of s_groups called a `c_grouping` (a.k.a column/collection grouping). This column acts as a robust storage column for the groupings and is maintained across a `sftrack` object.
 
 ```{r}
 attributes(my_sftrack$sft_group[1:10])
 summary(my_sftrack)
 ```
 
-### Time and Error
+### Time
 
-The time and error columns are not particularly specialized at this moment. The time column is either an integer or POSIXct relative to the users input, but the entire column must remain that type.
+The time column must be either an integer or POSIXct and the column must be of one type of time. Beyond that there is not much specialized functionality in the column. Sftrack uses the time column to order outputs for analysis, and attempts to order outputs when originally making an sftrack object, however, the data.frame is not required to be ordered for analysis. A call to `check_ordered()` is called before analysis, and otherwise it is assumed the order does not matter. This is particularly true for a sftraj, where the geometry level contains information about t1 and t2. 
+
+### Error
 
 The error column is the column with the relevant error information for the spatial points in it. At present we have not built particular functionality but plan to in the future or reserve this for other developers to build upon.
 
-
 ## Subsetting
 
-An sftrack object acts like a data.frame and sf whenever appropriate. Because of this you can subset an sftrack object as you would a data.frame. Except, like sf, it attempts to retain the geometry, group, and time columns, in order to maintain sftrack status.
+An sftrack object acts like a data.frame and sf whenever appropriate. Because of this you can subset an sftrack object as you would a data.frame. 
 
 In this way row subsetting is very straight forward, as each row represents an individual point in time.
 
@@ -106,7 +104,7 @@ In this way row subsetting is very straight forward, as each row represents an i
 my_sftrack[1:10,]
 ```
 
-Subsetting by column, however, sftrack attempts to retain important columns by default. This mirrors sf functionality except with multiple columns.  
+Unlike a data.frame, however, sftrack attempts to retain the geometry, group, and time columns, in order to maintain sftrack status. This is similar to how `sf` deals with the geometry column.
 
 ```{r}
 
@@ -114,7 +112,7 @@ my_sftrack[1:3,c(1:3)]
 ```
 }
 
-To turn off this feature, you just use the drop = T argument which returns a data.frame object instead, largely mimicking the argument in `sf` and `base` R.
+To turn off this feature, you use the `drop = T` argument which returns a data.frame object instead. If youd like to revert to an sf object, `sf::st_sf(data)` will return the object to an sf object.
 
 ```{r}
 my_sftrack[1:3,c(1:3), drop = TRUE]
@@ -122,7 +120,7 @@ my_sftrack[1:3,c(1:3), drop = TRUE]
 
 `sftraj`s work nearly the same as `sftrack`s, however because they are a step model where the steps are modeled as step1 (t1 ->t2) its important to note that subsetting will not automatically recalculate any new steps for you even if the original t2 point has been deleted.
 
-If your subsetting will also change the end points for steps, then you can recalculate using `step_recalc()`. The output which is your original sftraj object but with the geometry column recalculated to the new t2s. 
+If your subsetting will also change the end points for steps, then you can recalculate using `step_recalc()`. The output which is your original sftraj object but with the geometry column recalculated to the new t2s based on the timestamp. The results of which can be wildly different than the original subsetted data.frame. So be careful.
 
 ```{r}
 plot(my_sftraj, main ='original', axes = T)
@@ -133,11 +131,13 @@ plot(new_traj, main ='before recalculation', axes = T)
 plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
 ```
 
-### Some basic functionality of sf_track and sf_traj objects
+### Some basic methods and functions of sftrack and sftraj objects
 
 ##### print  
 
-`print()` prints out the type of object as well as specific data on the sf_track object. Additionally you can supply the number of rows or columns you'd like to display with arguments `n_row` and `n_col`. When using `n_col` the display will show the `grouping` `geometry`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. If neither is provided then print just uses default values in the global options. `n_col` and `n_row` are optional arguments, defaults to data.frame defaults.
+The `print()` layout is a modified version of the `sf` print function. It returns important info summarazing the sftrack object like the geometry information and burst information. The print function defaults to printing 1000 rows and displaying all the columns. This can be modified using the `n_row` and `n_col` arguments, which subset the printed output in the repsective axis. When using `n_col` the display will show the `grouping` `geometry`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. `n_col` and `n_row` are optional arguments, and if values are not supplied they default to the data.frame defaults. Note : `n_row` is not a corrolary to `head()`, as `head()` physically subsets the data while the `n_row` option just modifies the printed output. 
+
+If
 
 ```{r}
 
@@ -153,7 +153,8 @@ summary(my_sftrack)
 
 ##### summary_sftrack  
 
-`summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each grouping as well as the total distance of the grouping. This function uses `st_distance` from the `sf` package and therefore outputs in units of the crs. In this example the distance is in meters.
+`summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each grouping as well as the total distance of the grouping. This function uses `st_distance` from the `sf` package and therefore outputs in units of the CRS. In this example the distance is in meters.
+
 ```{r}
 summary_sftrack(my_sftrack)
 

@@ -25,6 +25,7 @@ To begin an `s_group` is a singular grouping. Its whats stored at the row level.
 A `c_grouping` is a collection of `s_groups` and exists at the column level. Groups also have an `active_group` argument, which turns on and off certain groups for analysis and plotting purposes.
 
 We start by looking at the structure of a `c_grouping`
+
 ```{r}
 library(sftrack)
 data('raccoon', package = 'sftrack')
@@ -64,7 +65,7 @@ str(singlegroup)
 ```
 
 ##### Column groupings (c_grouping) 
-C_groupings are a collection of s_groups with the same grouping names and one 'active_group' activated for all s_groups.
+C_groupings are a collection of s_groups with the same grouping names and an 'active_group' which is a subset of all the available group names.
 
 Similarly to s_group you can make a c_grouping with `make_s_group`. The argument `x` takes a list where each element is a vector indicating the named groupings as well as a vector of the active groups.
 
@@ -84,6 +85,7 @@ cg <- c(a, b , c)
 
 summary(cg)
 ```
+You'll notice sftrack warns if any grouping combination only has one relocation. This may be relevant for different kinds of analysis where you need more than one point to consider a movement. 
 
 You can also combine c_grouping together with `c()`. All names and active_groups must be the same.  
 
@@ -91,7 +93,7 @@ You can also combine c_grouping together with `c()`. All names and active_groups
 cg_combine <- c(cg,cg)
 summary(cg_combine)
 ```
-You can also edit groupings like a list, but you must replace it with an object of the appropriate class and active_group
+You can also edit groupings like a list, but you must replace it with an s_group object.
 ```{r}
 cg[1]
 cg[1] <- make_s_group(list(id=3,year=2019))
@@ -99,7 +101,7 @@ cg[1]
 
 ```
 
-And the group names must match the ones in the c_grouping
+And the group names must match the ones in the c_grouping or an error is returned
 ```{r}
 # Try to add an s_group with a month field when the original group had year instead 
 try( cg[1] <- make_s_group(list(id=3,month=2019)) )
@@ -107,7 +109,7 @@ try( cg[1] <- make_s_group(list(id=3,month=2019)) )
 
 ##### selecting a grouping
 
-As `c_groupings` are stored as lists, it can be difficult to refer to a single group or combination of groupings. This is where the sort_index can come in handy. The sort_index is a factor of the combined active_group variables for each row (where paste(id, name1,name2,...,sep='_')). The group label is remade every time the active group changes, and therefore can be used to subset. Using `group_label()` you can access the sort_index. 
+As `c_groupings` are stored as lists, it can be difficult to refer to a single group or combination of groupings. This is where the sort_index can come in handy. The sort_index is a factor of the combined active_group variables for each row where paste(id, name1,name2,...,sep='_')). The sort index is remade every time the active group changes, and therefore can be used to subset. You can access the sort index using `group_labels()`. 
 
 ```{r}
 group_list <- list(id = rep(1:2,10), year = rep(2020, 10))
@@ -116,7 +118,6 @@ group_labels(cg)[1:10]
 
 # Subsetting a particular sensor from our raccoon data
 
-#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
 raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
 
@@ -139,6 +140,14 @@ head(cg['1_2020'])
 sub <- my_sftraj['TTP-058_1',]
 print(sub,5, 3)
 ```
+
+You can refer to the levels of the sort index using `group_names`, this returns levels() of the sort index.
+
+```{r}
+group_names(cg)
+```
+
+
 ##### active group 
 The active_group is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active group of a column grouping with `active_group()`. Once changed, it recalculates the sort_index and in some cases recalculates the geometries.
 
@@ -148,11 +157,14 @@ Active groups can be changed for any sftrack/straj/c_grouping
 # sftrack
 active_group(my_sftraj)
 summary(my_sftraj, stats = T)
+
+# change the active group to id only
 active_group(my_sftraj) <- c('id')
 active_group(my_sftraj)
+
 summary(my_sftraj, stats = T)
 
-# column grouping
+# column groupings work the same way
 active_group(cg)
 active_group(cg) <- 'id'
 active_group(cg)
