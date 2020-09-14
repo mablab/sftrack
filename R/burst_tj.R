@@ -378,18 +378,28 @@ calc_sort_index <- function(x, active_group = NA) {
   }, character(1)))
 }
 
+#' @title Display the levels of the sort index
+#' @export
+#' @rdname group_name
+#' @param x sftrack/sftraj/c_grouping/s_group object
 group_names <- function(x) {
   UseMethod("group_names", object = x)
 }
 
+#' @export
+#' @name group_name
 group_names.c_grouping <- function(x) {
   levels(attr(x, "sort_index"))
 }
 
+#' @export
+#' @name group_name
 group_names.sftraj <- function(x) {
   levels(attr(x[[attr(x, "group_col")]], "sort_index"))
 }
 
+#' @export
+#' @name group_name
 group_names.sftrack <- function(x) {
   levels(attr(x[[attr(x, "group_col")]], "sort_index"))
 }

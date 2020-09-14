@@ -18,8 +18,7 @@ library(lwgeom)
 ```
 
 ```{r}
-#library(sftrack)
-
+library(sftrack)
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
@@ -36,7 +35,8 @@ my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = ti
 ```
 ## Geometry column  
 
-As stated earlier, the geometry column is built using `sf`, so functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is an `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
+As stated earlier, the geometry column is built using `sf`, so the column functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is an `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
+
 ```{r}
 my_sftrack$geometry
 ```
@@ -47,14 +47,15 @@ An `sftrack` object is simply an `sfc` of `sfc_POINTS`, this contrasts with an `
 my_sftraj$geometry
 ```
 
-This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. 
+This does mean that not all `sf` functions will handle an `sftraj` object like it would an `sftrack` if there are NAs in the data set. In these cases `st_is_empty()` can help to subset the points that contain geometry data.
 
 
 ## Working with sf
 
-As sftrack object is an sf object, all of the sf functions apply to it.
+As an sftrack object is an sf object essentially all of the sf functions will work on it.
 
 ```{r}
+library(sf)
 st_length(my_sftraj)[1:10]
 
 df1 <- data.frame(
@@ -91,19 +92,19 @@ st_is_within_distance(animal1, road, 1)
 st_distance(animal1, road)
 ```
 
-The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasionally a function may not work with it. In those cases is_linestring would be appropriate to filter out points with no t2, which is detailed later.  
+The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasionally a function may not work with it. In those cases `is_linestring()` can be used to filter out points that do not have a t2.
 
 ## Plotting
 
 ##### Base plotting 
-`sftrack` is built to work with `sf` base plot methods. This means you can use most of the `sf` plot methods, `sftrack` largely just controls the grouping of the plot then feeds it to `plot.sf()`. 
+`sftrack` is built to work with `sf` base plot methods. This means you can use most of the `sf` plot methods, `sftrack` largely just controls the grouping of the plot then feeds it back to `plot.sf()`. 
 
 
 ```{r}
 plot(my_sftraj)
 ```
 
-This means that evertyime you change the active_group, the plot view will change.
+This means that everytime you change the active_group, the plot view will change.
 
 ```{r}
 active_group(my_sftraj$sft_group) <- 'id'
@@ -119,14 +120,16 @@ plot(my_sftrack, axes = TRUE, cex=5)
 
 
 ##### ggplot
-This is a work in progress, but theres a geom_sftrack function that feeds `geom_sf` with the correct plotting information. Like `geom_sf` you input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_group is the grouping variable. Plots vary slightly based on if they're sftrack of sftraj class
+This is a work in progress, but theres a geom_sftrack function that feeds `geom_sf` with the correct plotting information. Like `geom_sf` you input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_group is the grouping variable. Plots vary slightly based on if they're sftrack of sftraj class.
+
+Geom_sftrack is essentially geom_sf(data = data, aes(color = group_labels(data))) with NULL points subetted out. This may help when a user requires more advanced modification than the geom_sftrack allows.
 
 ```{r}
  library(ggplot2)
  ggplot() + geom_sftrack(data = my_sftraj)
 ```
 
-And again, you can use geom_sftrack just like any other ggplot layer, which means you can continue to make manuscript quality plots.
+You can use geom_sftrack just like any other ggplot layer, which means you can continue to make manuscript quality plots.
 
 ```{r}
 
@@ -146,20 +149,21 @@ To help with working with more complex sftraj objects, there is a growing suite 
 
 ##### Step mode in plotting
 
-`sftraj` objects create linestrings for each row of data, as each row is not assumed to be related to the next row of data. This data structure may become inefficient to work with when handling large data sets, particularly when plotting. When appropriate these trajectories can be generalized as a series of linestrings between connective points. Where NAs and blank points create a new linestring. 
+`sftraj` objects create linestrings for each row of data, as each row is not assumed to be related to the next row of data. This data structure may become inefficient to work with when plotting large data sets. When appropriate these trajectories can be generalized by combining linestrings where lines meet.
 
 For plotting purposes we can create these linestrings quickly and plot them at much faster speeds than individual lines. 
 
-For `plot` and `geom_sftrack` there is an argument called **step_mode**, that refers to whether youd like to plot the lines individually (step_mode = T), or generalize them into connected linestrings (step_mode = F). By default step_mode is set to TRUE.
+For `plot` and `geom_sftrack` there is an argument called **step_mode** that refers to whether youd like to plot the lines individually (`step_mode = T`), or generalize them into connected linestrings (`step_mode = F`). By default step_mode is set to TRUE.
 
 ```{r}
  library(ggplot2)
  ggplot() + geom_sftrack(data = my_sftraj, step_mode = TRUE)
 ```
 
-You'll notice that the appearance of the plot changes as the POINTs are also displayed.
+You'll notice that the appearance of the plot changes as the POINTs are also displayed. This is because step mode adds POINTS to the plot that contain a fill as well as a color property.
 
 ##### coord_traj 
+
 This function returns a data.frame (x,y,z) of the point at t1 of each sftraj geometry. It works nearly identically to `sf::st_coordinates()`.
 
 ```{r}

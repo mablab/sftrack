@@ -20,42 +20,40 @@ Creating sftrack objects is relatively straight forward and can be read in a var
 
 ## Loading in raw data
 
-To create `sftrack` objects data we use the `as_sftrack()` or `as_sftraj()` function, depending on your desired output. Both have the same arguments but differ in the way the geometry field is calculated.  
+To create `sftrack` objects data we use the `as_sftrack()` (track) or `as_sftraj()` (trajectory) function, depending on your desired output. Both have the same arguments but differ in the way the geometry field is calculated.  
 
 ### Vector vs. data.frame inputs
 
-`as_sftrack()/as_sftraj` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or it the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable, and can mix types between arguments.
+`as_sftrack()/as_sftraj` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable, and can mix types between arguments.
 
 **Vector** inputs to `as_sftrack` generally involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule. If using entirely vector inputs for grouping, geometry, time, and error then `data` is not required. 
 
-**data.frame** inputs on the other hand are simply character vectors describing the column name in `data` where the appropriate data is found.
+**data.frame** inputs on the other hand are simply character vectors describing the column name in `data` where the information is found.
 
 ### Arguments 
 
-**data** - is a data.frame containing your data. You Data is optional if all inputs are done in vector mode where the appropriate vectors are given for geometry, grouping, and time. If inputting vector mode sftrack creates column names `sft_group`, `sft_timestamp`, and `sft_error` in data frame. Names can be manually changed using `group_name`, `time_name`, and `error_name` and changing overwrite_names to FALSE.
+**data** - is a data.frame containing your data. Data is optional if all inputs are done in vector mode where the appropriate vectors are given for geometry, grouping, and time. If inputting vector mode, sftrack creates column names `sft_group`, `sft_timestamp`, and `sft_error` in data frame. Names can be manually changed using `group_name`, `time_name`, and `error_name` and changing `overwrite_names` to FALSE will write over the data if the column already exists in `data`.
 
 **group** (required) - a list with named vectors to group the sftrack. One group must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for each grouping categories. If only one variable is given then that vector is assumed to be the id column.  
 
-**coords** (required) - The x,y,z coordinates to calculate geometries via `sf`. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown. Taken from `sf`.    
+**coords** (required) - The x,y,z coordinates to calculate geometries via `sf`. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown. This is the same argument from `sf` functions and feeds into `st_as_sf()` internally.    
 
-**time** (required) - Time information in either `POSIXct` or as an `integer`. Accepts either a vector of time, or the column name found in `data`. The outputed object will be sorted by the time column.  
+**time** (required) - Time information in either `POSIXct` or as an `integer`. Accepts either a vector of time, or the column name found in `data`. The outputted object will be sorted by the time column.  
 
 **error** - Error information for the associated xyz point. Accepts either a vector of the error, or the column name found in `data`. If not given, default = NA.
 
 **crs** - the coordinate references system/projection of the data, as implemented by rgdal. see ?rgdal::`CRS-class` for more information. If none is supplied crs is set as NA and can be set later using `sf::st_crs()` from `sf`.  
 
-**active_group** (required) - This is a vector containing what groups are 'active'. Meaning calculations and graphing will be grouped by these groupings. If no value is supplied it defaults to all grouping variables. Can change active_group later using `active_group() <- 'myvalue'`. 
+**active_group** (required) - This is a vector containing what groups are 'active'. Meaning calculations and graphing will use these groupings. If no value is supplied it defaults to all grouping variables. Can change active_group later using `active_group() <- 'myvalue'`. 
 
 
 ### Vector inputs
 
-In the case of vector inputs, the vectors are cbinded to `data` if data is supplied. Therefore you may experience duplicate columns if you did not subset appropriately. Column names are created when vector data is supplied where group = 'group', time = 'sft_timestamp', error = 'sft_error'. Geometry = 'Geometry' regardless of the input type. These names can be overwitten using `overwrite_names = TRUE` and changing the respective variable.
+In the case of vector inputs, the vectors are cbinded to `data` if data is supplied. Sftrack returns an error if the column name already exists in the data.frame and `overwrite_names` remains FALSE. Default column names are: group = 'sft_group', time = 'sft_timestamp', error = 'sft_error'. Names can be overwitten using `overwrite_names = TRUE`. At present Geometry defaults as 'Geometry' and at present can be changed later via `sf` but not via `sftrack` as we make a new sf object when we make an sftrack object. 
 
 
 ```{r}
-#devtools::load_all("/home/matt/r_programs/sftrack")
 library(sftrack)
-#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 
 #data
 data('raccoon', package = 'sftrack')
@@ -103,10 +101,11 @@ head(my_sftraj)
 
 ## Conversion mode
 
-`as_sftrack()` and `as_sftraj()` also accept other data types, and the arguments differ depending on the class. It currenly accepts, `sf`, `ltraj`, and eventually `tibbles`. 
+`as_sftrack()` and `as_sftraj()` also accept other data types, but the arguments for each differ depending on the class its converting from. It currently accepts, `sf`, `ltraj` (from adehabitatLT), and eventually `tibbles` (tidyverse) and `track` (trajectories). 
 
 ### Import from ltraj
-To read in an ltraj object all you need is an ltraj object created in `adehabitatLT`. All relevant information is taken from the object. The burst as defined in an ltraj is slightly different than in sftracks groupings, so it assumes the ltraj 'burst' is the `id` field of the sftrack grouping object.
+
+To read in an ltraj object all you need is an ltraj object created in `adehabitatLT`. All relevant information is taken from the object. The burst as defined in an ltraj is slightly different than sftracks groupings, so it assumes the ltraj 'burst' is the `id` field of the sftrack grouping object.
 
 ```{r, message = FALSE}
 library(adehabitatLT)
@@ -122,7 +121,8 @@ head(my_sf)
 ```
 
 ### sf objects
-`sf` objects are handled similarly as before except you do not need to input any information about the coordinates or projection. Grouping and time are still required.
+
+`sf` objects are handled similarly as data.frame inputs except you do not need to input any information about the coordinates or projection. Grouping and time are still required. The sf spatial object must be in an `sfc_POINT` column. 
 
 ```{r}
 library(sf)
@@ -139,8 +139,8 @@ head(new_sftrack)
 
 ```
 
-### Inter-class conversion
-Additionally `as_sftrack` and `as_sftraj` can convert back and forth between each other with no loss in information.
+### Intra-package conversion between classes
+Additionally `as_sftrack` and `as_sftraj` can convert back and forth between classes with no loss in information.
 
 ```{r}
 # Make tracks from raw data
@@ -162,6 +162,7 @@ identical(my_sftraj,new_sftraj)
 identical(my_sftrack,new_sftrack)
 ```
 ### Duplicated data
+
 A common issue with movement data is when duplicated gps time stamps are logged for a sensor. When this happens it can be impossible for `sftrack` to know which point to use. For this reason, sftrack returns an error if any `grouping` + `time` combinations are duplicated. 
 
 
