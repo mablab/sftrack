@@ -32,11 +32,11 @@ Depends:
 Imports:
     sf
 Description: Movement classes for tracking data and trajectories,
-    relying on 'sf' spatial infrastructure. Tracking data are series
+    relying on sf spatial infrastructure. Tracking data are series
     of locations with at least 2-dimensional spatial coordinates (x,y)
     and a time index (t); trajectories are the line representation of
     the path, composed by steps, i.e. the straightline segments
-    connecting successive locations. 'sftrack' is designed to handle
+    connecting successive locations. Sftrack is designed to handle
     movement of both living organisms and inanimate objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
