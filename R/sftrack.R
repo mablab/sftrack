@@ -473,10 +473,10 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   group_col <- attr(x, "group_col")
   sf_col <- attr(x, "sf_column")
   time_col <- attr(x, "time_col")
-  sf_attr <- attributes(st_geometry(x))
+  sf_attr <- attributes(sf::st_geometry(x))
   # time stuff
 
-  tcl <- attributes(x[[time_col]])$class[1]
+  tcl <- class(x[[time_col]])[1]
   if (tcl == "POSIXct") {
     tz <- attributes(x[[time_col]])$tzone
     if (is.null(tz) || tz == "") {

@@ -4,4 +4,4 @@
 .Ruserdata
 doc
 Meta
-.\.tar\.gz
+*.tar\.gz
