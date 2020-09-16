@@ -1,4 +1,7 @@
 NEWS
+## Ver 0.5.1 (2020-09-16)
+- Patched print error when using numeric time.
+- Vigentte updates
 
 ## Ver 0.5 (2020-09-13) : Major update.
 
