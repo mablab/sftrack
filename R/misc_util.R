@@ -249,13 +249,17 @@ which_duplicated <- function(data = data.frame(), group, time) {
     reloc_time <- data[[time]]
   }
   check_time(reloc_time)
+
   group <-
     make_c_grouping(x = group_list)
-  gl <- group_labels(group)
-  results <-
-    unlist(tapply(reloc_time, gl, duplicated))
 
-  rowz <- which(gl[results] == gl & reloc_time[results] == reloc_time)
+  dup_results <-
+   tapply(reloc_time, gl, function(x){
+     isDup <- duplicated(x)
+     if(any(isDup)) return(x[isDup])
+     })
+  ans <- dup_results[!vapply(dup_results, is.null, logical(1))]
+  rowz <- which(names(ans) == gl & ans == reloc_time)
   data.frame(group = gl[rowz], time = reloc_time[rowz], which_row = rowz)
 }
 
@@ -272,7 +276,7 @@ get_x2 <- function(time) {
 #' @param x an sftraj object
 merge_traj <- function(x) {
   group_col <- attr(x, "group_col")
-  x <- x[order(x[[attr(x, "time_col")]]), ]
+  x <- x[order(t1(x)), ]
   crs <- st_crs(x)
   ret <- stats::aggregate(st_geometry(x), list(group = group_labels(x)), function(y) {
     # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']

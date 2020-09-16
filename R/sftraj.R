@@ -235,6 +235,9 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   }
   data$geometry <- geom
 
+  # make time
+  timez <- mapply(function(x,y){c(start = I(x), end = I(y))},data[[time_col]], c(data[[time_col]][-1],NA), SIMPLIFY = FALSE)
+  data[[time_col]] <- sft_time(timez)
   ret <- new_sftraj(
     data = data,
     group_col = group_name,

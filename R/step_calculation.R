@@ -137,7 +137,7 @@ step_metrics <- function(sftraj) {
       dy <- get_dy(sub)
       dist <- as.numeric(st_length(sub))
 
-      time <- sub[[attr(sub, "time_col")]]
+      time <- t1(sub)
       dt <- c(unclass(time[-1]) - unclass(time[-length(time)]), NA)
 
       if (!is_latlong) {
@@ -194,7 +194,7 @@ step_recalc <- function(x, return = FALSE) {
     make_step_geom(
       group = x[[group_col]],
       geometry = geom,
-      time_data = x[[time_col]]
+      time_data = t1(x)
     )
   if (return) {
     return(step_geometry)

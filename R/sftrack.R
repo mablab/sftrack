@@ -229,6 +229,10 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   }
   data$geometry <- st_geometry(geom)
 
+  # make time
+  data[[time_col]] <- sft_time(data[[time_col]])
+
+
   ret <- new_sftrack(
     data = data,
     group_col = group_name,
