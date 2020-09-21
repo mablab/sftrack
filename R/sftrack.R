@@ -252,6 +252,40 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 #' @method as_sftrack sftraj
 #' @export
 as_sftrack.sftraj <- function(data, ...) {
+  # data = new_sftraj
+  # data = my_sftraj
+  ################################
+  group_col <- attr(data, "group_col")
+  error_col <- attr(data, "error_col")
+  time_col <- attr(data, "time_col")
+  sf_col <- attr(data, "sf_column")
+  # Check for missing columns
+  missing <- missing_next_pt(data)
+  if(!is.na(missing)){
+    message(paste0(
+      'Sftraj missing ', length(missing), ' beginning step point(s).',
+      '\nRecreating data points and adding to data.frame'
+    ))
+    missing_frame <- data[missing,]
+
+    error_col <- if(!is.na(error_col))error_col
+    missing_frame[,!colnames(missing_frame) %in%c(sf_col, group_col, time_col, error_col )] <- NA
+    missing_frame[[time_col]] <- sft_time(lapply(t2(missing_frame) , function(y) c(start = y, end = NA)))
+    # fix geom
+    x2 <- get_point(missing_frame$geometry,'x2')
+    y2 <- get_point(missing_frame$geometry,'y2')
+    new_geom <- mapply(function(x,y){
+      st_linestring(rbind(c(x[[1]],y[[1]]),c(x[[1]],y[[1]])))
+    },x2,y2, SIMPLIFY = FALSE)
+    missing_frame[[sf_col]] <- st_sfc(new_geom)
+    # add missing data where it used to be
+    row.names(missing_frame) <- paste0(row.names(missing_frame),'.1')
+    data <- rbind(data, missing_frame)
+    data <- data[order(as.numeric(row.names(data))),]
+  }
+  data[[time_col]] <- sft_time(t1(data))
+  ###########
+  # fix geom
   geometry <- st_geometry(data)
 
   # pull out first points from straj
@@ -259,19 +293,15 @@ as_sftrack.sftraj <- function(data, ...) {
   crs <- attr(geometry, "crs")
 
   geometry <- sf::st_sfc(new_geom, crs = crs)
-  group <- attr(data, "group_col")
-  error <- attr(data, "error")
-  time <- attr(data, "time")
-  sf_col <- attr(data, "sf_column")
   data[[sf_col]] <- geometry
 
-  new_data <- as.data.frame(data)
+  class(data) <- setdiff(class(data),c('sftraj','sf'))
   ret <- new_sftrack(
-    data = new_data,
-    group_col = group,
+    data = data,
+    group_col = group_col,
     sf_col = sf_col,
-    error_col = error,
-    time_col = time
+    error_col = error_col,
+    time_col = time_col
   )
 
   return(ret)
@@ -480,8 +510,8 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   sf_attr <- attributes(sf::st_geometry(x))
   # time stuff
 
-  tcl <- class(x[[time_col]])[1]
-  if (tcl == "POSIXct") {
+  tcl <- attr(x[[time_col]],'type')
+  if (!is.null(tcl) && tcl == "POSIXct") {
     tz <- attributes(x[[time_col]])$tzone
     if (is.null(tz) || tz == "") {
       tz <- paste("no timezone")
@@ -546,9 +576,9 @@ print.sftrack <- function(x, n_row, n_col, ...) {
 # print(my_track,10,10)
 
 # Sumary
-# summary.sftrack
 #' @export
 summary.sftrack <- function(object, ..., stats = FALSE) {
+  object[[attr(object, 'time_col')]] <- t1(object)
   if (stats) {
     summary_sftrack(object)
   } else {

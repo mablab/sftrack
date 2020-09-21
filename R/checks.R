@@ -9,8 +9,9 @@ check_ordered <- function(group, time_data, return = TRUE) {
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
     all(tapply(time_data, idz, function(x) {
-      identical(order(x[1]), seq_len(length(
-        x[1]
+
+      identical(order(x), seq_len(length(
+        x
       )))
     }))
   if (isOrdered & return) {

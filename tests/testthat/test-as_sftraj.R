@@ -63,7 +63,7 @@ test_that("sftraj is built correct", {
     c(27, 27, -80, -81, 27, 27, -81, -82, 27, -82, NA, NA, 29, 30, 83, 83, 30, 83)
   )
 
-  zerotraj <- my_sftraj[F, ]
+  zerotraj <- my_sftraj[FALSE, ]
   expect_equal(nrow(zerotraj), 0)
 })
 

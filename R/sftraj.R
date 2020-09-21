@@ -236,7 +236,8 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   data$geometry <- geom
 
   # make time
-  timez <- mapply(function(x,y){c(start = I(x), end = I(y))},data[[time_col]], c(data[[time_col]][-1],NA), SIMPLIFY = FALSE)
+
+  timez <-   make_time_list(data[[time_col]], c(data[[time_col]][-1],NA))
   data[[time_col]] <- sft_time(timez)
   ret <- new_sftraj(
     data = data,
@@ -246,7 +247,7 @@ If youd like to overwrite column use overwrite_names = TRUE"))
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
 
   check_z_coords(ret)
 
@@ -257,10 +258,15 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 #' @method as_sftraj sftrack
 #' @export
 as_sftraj.sftrack <- function(data, ...) {
+
   group_col <- attr(data, "group_col")
   error_col <- attr(data, "error_col")
   time_col <- attr(data, "time_col")
   sf_col <- attr(data, "sf_column")
+  ###########
+
+  tt <- make_time_list(t1(data), t2(data))
+  data[[time_col]] <- sft_time(tt)
   geometry <-
     make_step_geom(
       group = data[[group_col]],
@@ -270,9 +276,9 @@ as_sftraj.sftrack <- function(data, ...) {
 
   data[[sf_col]] <- st_geometry(geometry)
 
-  new_data <- as.data.frame(data)
+  class(data) <- setdiff(class(data),c('sftraj','sf'))
   ret <- new_sftraj(
-    data = new_data,
+    data = data,
     group_col = group_col,
     sf_col = sf_col,
     error_col = error_col,
@@ -496,8 +502,9 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   sf_attr <- attributes(st_geometry(x))
   # time stuff
 
-  tcl <- class(x[[time_col]])[1]
-  if (tcl == "POSIXct") {
+  # time
+  tcl <- attr(x[[time_col]],'type')
+  if (!is.null(tcl) && tcl == "POSIXct") {
     tz <- attributes(x[[time_col]])$tzone
     if (is.null(tz) || tz == "") {
       tz <- paste("no timezone")
@@ -560,8 +567,9 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   } else {
     ret <- x
   }
-
-  ret <- ret[1:row_l, ]
+  if(row_l>0){
+    ret <- ret[1:row_l, ]
+  }
   print(ret, ...)
 }
 
@@ -599,7 +607,7 @@ rbind.sftraj <- function(...) {
     make_step_geom(
       group = df1[[group_col]],
       geometry = geom,
-      time_data = df1[[time_col]]
+      time_data = t1(df1)
     )
   class(df1) <- setdiff(class(df1), c("sftraj", "sf"))
   ret <- new_sftraj(
@@ -617,7 +625,7 @@ rbind.sftraj <- function(...) {
 #' @export
 "[.sftraj" <- function(x, i, j, ..., drop = FALSE) {
   # x = my_sftraj
-  # i = 1:10
+  # i = F
   # j=c(1,2,3)
   # rm(j)
   sf_col <- attr(x, "sf_column")
