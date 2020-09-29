@@ -9,7 +9,6 @@ check_ordered <- function(group, time_data, return = TRUE) {
   # may not be as fast as something involving order(time_data, idz)
   isOrdered <-
     all(tapply(time_data, idz, function(x) {
-
       identical(order(x), seq_len(length(
         x
       )))
@@ -180,15 +179,28 @@ check_z_coords <- function(x) {
 #' @title Check if time is integer or posix
 #' @param time a vector of time
 #' @export
-check_time <- function(time) {
-  # This function was originally envisioned to contain all time checks
-  # Currently its not but can expand if we feel its necessary to have
+check_time <- function(time, return = FALSE) {
+
   # is integer or posixct
   if (inherits(time, c("sftrack", "sftraj"))) {
     time <- time[[attr(time, "time_col")]]
   }
-  if (!(inherits(time, "integer") | inherits(time, "POSIXct") | inherits(time, "numeric"))) {
-    stop("Time needs to be an integer or POSIXct")
+  # check numeric or POSIX
+  if (!all(vapply(time, function(x) inherits(x, c("POSIXct", "numeric", "integer")), logical(1)))) {
+    stop("Time must be a POSIX or numeric")
+  }
+  # check each element in list has same lengths
+  if (!length(rle(vapply(time, length, numeric(1)))$lengths) == 1) {
+    stop("Not all time lengths are the same")
+  }
+
+  # classes are all the same
+
+  if (length(unique(sapply(time, function(x) class(x)[1]))) != 1) {
+    stop("Time classes are not the same")
+  }
+  if (return) {
+    return(time)
   }
 }
 

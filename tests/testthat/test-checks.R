@@ -89,3 +89,4 @@ test_that("checks check successfully", {
     "time was not ordered for each burst"
   )
 })
+

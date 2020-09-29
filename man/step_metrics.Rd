@@ -4,7 +4,7 @@
 \alias{step_metrics}
 \title{Calculates step metrics including distance, dt, dx, and dy.}
 \usage{
-step_metrics(sftraj)
+step_metrics(x)
 }
 \arguments{
 \item{sftraj}{an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.}

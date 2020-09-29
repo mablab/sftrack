@@ -4,12 +4,12 @@
 \alias{make_step_geom}
 \title{Calculate step geometries given a set of groupings, time, and geometries}
 \usage{
-make_step_geom(group, time_data, geometry)
+make_step_geom(group, time, geometry)
 }
 \arguments{
 \item{group}{a c_grouping object}
 
-\item{time_data}{time vector}
+\item{time}{sft_timestamp class with start and end date}
 
 \item{geometry}{the geometery data from either sf or sf_track. Must be an sf geometry class}
 }
@@ -32,6 +32,6 @@ cg <- make_c_grouping(burst)
 make_step_geom(
   group = cg,
   geometry = geom$geometry,
-  time_data = time
+  time = time
 )
 }

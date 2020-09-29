@@ -2,7 +2,7 @@
 #'
 #' @description This calculates step geometries as individual line segments based on the active_group
 #' @param group a c_grouping object
-#' @param time_data time vector
+#' @param time sft_timestamp class with start and end date
 #' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
 #' @export make_step_geom
 #' @examples
@@ -21,69 +21,35 @@
 #' make_step_geom(
 #'   group = cg,
 #'   geometry = geom$geometry,
-#'   time_data = time
+#'   time = time
 #' )
-make_step_geom <- function(group, time_data, geometry) {
+make_step_geom <- function(group, time, geometry) {
   # burstz <- list(id = raccoon_data$animal_id, month = as.POSIXlt(raccoon_data$timestamp)$mon)
   # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$timestamp),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
   # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
-  # time_data = raccoon_data$timestamp
-
-  # if theres more than one burst, then we combine bursts
-  # if (length(burst[[1]]) > 1) {
-  #   message('more than one burst selected, bursts will be combined for step geometry')
-  # }
+  # time = raccoon_data$timestamp
 
   idz <- group_labels(group)
-  #
-  unique_idz <- levels(idz)[table(idz) > 0]
-
-  step_geometry <- rep(NA, length(geometry))
-
-  # check dimensions
-  point_d <- class(geometry[[1]])[1]
-  nd <- which(point_d == c(NA, "XY", "XYZ"))
-
-  for (i in unique_idz) {
-    #  i <- unique_idz[1]
-    subz <- idz == i
-    # need to order step geometry
-    order_t <- order(time_data[subz])
-
-    sub_geom <- geometry[subz]
-    sub_geom <- sub_geom[order_t]
-    # We cant actually inject a null point and have it convert to line string, so we have to deal with that later
-
-    x1 <- sub_geom[1:length(sub_geom)]
-    x2 <-
-      c(
-        sf::st_sfc(sub_geom[2:(length(sub_geom))]),
-        sf::st_sfc(st_point(rep(NA_real_, nd),
-          dim = point_d
-        ))
-      )
-    first_point <- min(which(subz))
-
-    x3 <- mapply(function(x, y) {
-      # x <- x1[[1]]
-      # y <- x2[[1]]
-      if (any(c(is.na(x), is.na(y)))) {
-        if (all(!is.na(x))) {
-          new_geom <- sf::st_point(x)
-        } else {
-          new_geom <- sf::st_point()
-        }
+  t1 <- t1(time)
+  t2 <- t2_by_group(t1, group)
+  step_geometry <- mapply(function(time2, sub_geom, ids) {
+    geom1 <- sub_geom
+    geom2 <- geometry[(ids == idz & time2 == t1)]
+    if (st_is_empty(geom1) || length(geom2) == 0 || st_is_empty(geom2)) {
+      if (all(!st_is_empty(geom1))) {
+        new_geom <- sf::st_point(geom1)
       } else {
-        new_geom <- sf::st_linestring(rbind(x, y))
+        new_geom <- sf::st_point()
       }
-      new_geom
-    }, x1, x2, SIMPLIFY = FALSE)
-    sf_x <- x3
-    step_geometry[subz] <- sf_x[order(order_t)]
-  }
+    } else {
+      new_geom <- st_cast(c(geom1, geom2[[1]]), "LINESTRING", ids = 1)
+    }
+    new_geom
+  }, time2 = t2, sub_geom = geometry, ids = idz, SIMPLIFY = FALSE)
 
   return(sf::st_sfc(step_geometry, crs = attr(geometry, "crs")))
 }
+
 
 # step function
 #' @title Calculates step metrics including distance, dt, dx, and dy.
@@ -101,78 +67,67 @@ make_step_geom <- function(group, time_data, geometry) {
 #' )
 #'
 #' step_metrics(my_sftraj)[1:10, ]
-step_metrics <- function(sftraj) {
-  if (inherits(sftraj, "sftrack")) {
-    sftraj <- as_sftraj(sftraj)
+step_metrics <- function(x) {
+  if (inherits(x, "sftrack")) {
+    x <- as_sftraj(x)
   }
-  group_col <- attr(sftraj, "group_col")
-  time_col <- attr(sftraj, "time_col")
-  sftraj$sftrack_id <-
-    paste0(group_labels(sftraj[[group_col]]), "_", sftraj[[time_col]])
-  order_t <- order(group_labels(sftraj[[group_col]]), sftraj[[time_col]])
-  sftraj <- sftraj[order_t, ]
-  is_latlong <- any(st_is_longlat(sftraj), na.rm = TRUE)
+  group_col <- attr(x, "group_col")
+  time_col <- attr(x, "time_col")
+  x$sftrack_id <-
+    paste0(group_labels(x[[group_col]]), "_", t1(x))
+  is_latlong <- any(st_is_longlat(x$geometry), na.rm = TRUE)
 
-
-  ret <-
-    lapply(levels(group_labels(sftraj[[group_col]])), function(index) {
-      # index = levels(burst_labels(sftraj$burst, factor = TRUE))[1]
-      sub <- sftraj[group_labels(sftraj[[group_col]]) == index, ]
-      # if only 1 row
-      if (nrow(sub) == 1) {
-        return(
-          data.frame(
-            dx = NA,
-            dy = NA,
-            dist = NA,
-            dt = NA,
-            abs_angle = NA,
-            speed = NA,
-            sftrack_id = sub$sftrack_id
-          )
-        )
-      }
-
-      dx <- get_dx(sub)
-      dy <- get_dy(sub)
-      dist <- as.numeric(st_length(sub))
-
-      time <- t1(sub)
-      dt <- c(unclass(time[-1]) - unclass(time[-length(time)]), NA)
-
-      if (!is_latlong) {
-        abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
-      } else {
-        x1 <- coord_traj(sub[[attr(sub, "sf_column")]])
-        x2 <- rbind(x1[-1, ], c(NA, NA))
-        abs_angle <- c((geosphere::bearing(x1[-nrow(x1), ], x2[-nrow(x2), ]) - 90) * -pi / 180, NA)
-        abs_angle[!is.na(abs_angle) & abs_angle > (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle > (pi)] - 2 * pi
-      }
-      dist[is.na(dx) | is.na(dy)] <- NA
-
-      speed <- ifelse(is.na(dist), NA, dist / dt)
-
-
-      rel_angle <- c(NA, abs_angle[-1] - abs_angle[-length(abs_angle)])
-      rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
-      rel_angle <- ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
-
-      so <- cbind.data.frame(
-        dx = dx,
-        dy = dy,
-        dist = dist,
-        dt = dt,
-        abs_angle = abs_angle,
-        rel_angle = rel_angle,
-        speed = speed
+  # if only 1 row
+  if (nrow(x) == 1) {
+    return(
+      data.frame(
+        dx = NA,
+        dy = NA,
+        dist = NA,
+        dt = NA,
+        abs_angle = NA,
+        speed = NA,
+        sftrack_id = x$sftrack_id
       )
-      so[nrow(so), c("dx", "dy", "dist", "dt", "abs_angle", "rel_angle", "speed")] <- NA
-      so$sftrack_id <- sub$sftrack_id
-      return(so)
-    })
-  ret <- do.call(rbind, ret)
+    )
+  }
 
-  ret[order(order_t), ]
+  dx <- get_dx(x)
+  dy <- get_dy(x)
+  dist <- as.numeric(st_length(x))
+
+  time <- t1(x)
+  if (attr(x[[time_col]], "type") == "POSIX") {
+    dt <- unclass(difftime(t2(x), time, units = "secs"))
+  } else {
+    dt <- t2(x) - time
+  }
+  if (!is_latlong) {
+    abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
+  } else {
+    xy1 <- get_point(x, "xy1")
+    xy2 <- get_point(x, "xy2")
+    abs_angle <- (geosphere::bearing(xy1, xy2) - 90) * -pi / 180
+    abs_angle[!is.na(abs_angle) & abs_angle > (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle > (pi)] - 2 * pi
+  }
+  dist[is.na(dx) | is.na(dy)] <- NA
+  speed <- ifelse(is.na(dist), NA, dist / dt)
+  rel_angle <- c(NA, abs_angle[-1] - abs_angle[-length(abs_angle)])
+  rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
+  rel_angle <- ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
+
+  ret <- cbind.data.frame(
+    dx = dx,
+    dy = dy,
+    dist = dist,
+    dt = dt,
+    abs_angle = abs_angle,
+    rel_angle = rel_angle,
+    speed = speed
+  )
+  ret[nrow(ret), c("dx", "dy", "dist", "dt", "abs_angle", "rel_angle", "speed")] <- NA
+  ret$sftrack_id <- x$sftrack_id
+  ret
 }
 
 #' @title recalculate step geometry
@@ -194,7 +149,7 @@ step_recalc <- function(x, return = FALSE) {
     make_step_geom(
       group = x[[group_col]],
       geometry = geom,
-      time_data = t1(x)
+      time = t1(x)
     )
   if (return) {
     return(step_geometry)

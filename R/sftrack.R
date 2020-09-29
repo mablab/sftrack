@@ -22,6 +22,7 @@
 #' @param timestamp_name (optional) new column name for time data
 #' @param error_name (optional) new column name for error data
 #' @param overwrite_names T/F Whether to overwrite data if a group/time/error column name is supplied but already in data
+#' @param fill_missing T/F When converting from sftraj, new lines may be added to the data.frame if t2 times are missing. Should the columns be filled in with information from t1?
 #' @param ... extra information to be passed on to as_sftrack
 #' @import sf
 #' @export
@@ -251,7 +252,7 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 #' @rdname as_sftrack
 #' @method as_sftrack sftraj
 #' @export
-as_sftrack.sftraj <- function(data, ...) {
+as_sftrack.sftraj <- function(data, ..., fill_missing = FALSE) {
   # data = new_sftraj
   # data = my_sftraj
   ################################
@@ -261,27 +262,36 @@ as_sftrack.sftraj <- function(data, ...) {
   sf_col <- attr(data, "sf_column")
   # Check for missing columns
   missing <- missing_next_pt(data)
-  if(!is.na(missing)){
+  if (!is.na(missing)) {
     message(paste0(
-      'Sftraj missing ', length(missing), ' beginning step point(s).',
-      '\nRecreating data points and adding to data.frame'
+      "Sftraj missing ", length(missing), " beginning step point(s).",
+      "\nRecreating data points and adding to data.frame"
     ))
-    missing_frame <- data[missing,]
+    missing_frame <- data[missing, ]
 
-    error_col <- if(!is.na(error_col))error_col
-    missing_frame[,!colnames(missing_frame) %in%c(sf_col, group_col, time_col, error_col )] <- NA
-    missing_frame[[time_col]] <- sft_time(lapply(t2(missing_frame) , function(y) c(start = y, end = NA)))
+    if (!is.na(error_col)) {
+      error_col <- error_col
+    }
+    if (!fill_missing) {
+      missing_frame[, !colnames(missing_frame) %in% c(sf_col, group_col, time_col, error_col)] <- NA
+    }
+    missing_frame[[time_col]] <- sft_time(lapply(t2(missing_frame), function(y) c(start = y, end = NA)))
     # fix geom
-    x2 <- get_point(missing_frame$geometry,'x2')
-    y2 <- get_point(missing_frame$geometry,'y2')
-    new_geom <- mapply(function(x,y){
-      st_linestring(rbind(c(x[[1]],y[[1]]),c(x[[1]],y[[1]])))
-    },x2,y2, SIMPLIFY = FALSE)
+    x2 <- get_point(missing_frame$geometry, "x2")
+    y2 <- get_point(missing_frame$geometry, "y2")
+    new_geom <- mapply(function(x, y) {
+      if (anyNA(x2, y2)) {
+        st_point()
+      } else {
+        st_linestring(rbind(c(x[[1]], y[[1]]), c(x[[1]], y[[1]])))
+      }
+    }, x2, y2, SIMPLIFY = FALSE)
+
     missing_frame[[sf_col]] <- st_sfc(new_geom)
     # add missing data where it used to be
-    row.names(missing_frame) <- paste0(row.names(missing_frame),'.1')
+    row.names(missing_frame) <- paste0(row.names(missing_frame), ".1")
     data <- rbind(data, missing_frame)
-    data <- data[order(as.numeric(row.names(data))),]
+    data <- data[order(as.numeric(row.names(data))), ]
   }
   data[[time_col]] <- sft_time(t1(data))
   ###########
@@ -295,7 +305,7 @@ as_sftrack.sftraj <- function(data, ...) {
   geometry <- sf::st_sfc(new_geom, crs = crs)
   data[[sf_col]] <- geometry
 
-  class(data) <- setdiff(class(data),c('sftraj','sf'))
+  class(data) <- setdiff(class(data), c("sftraj", "sf"))
   ret <- new_sftrack(
     data = data,
     group_col = group_col,
@@ -325,7 +335,7 @@ as_sftrack.ltraj <- function(data, ...) {
     data.frame(sub[[1]][, coords], id, burst, sft_timestamp, infolocs)
   })
   df1 <- do.call(rbind, new_data)
-  time <- "sft_timestamp"
+  time_col <- "sft_timestamp"
   group <- list(id = df1$id)
   crs <- attr(data, "proj4string")
   # pull out id and burst from ltraj object
@@ -347,8 +357,12 @@ as_sftrack.ltraj <- function(data, ...) {
       crs = crs,
       na.fail = FALSE
     )
-  # pull out other relevant info
+  # group
   df1$sft_group <- make_c_grouping(group)
+
+  # time
+  df1[[time_col]] <- sft_time(df1[[time_col]])
+
   error <- NA
   new_data <-
     cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(geom))
@@ -356,12 +370,12 @@ as_sftrack.ltraj <- function(data, ...) {
     data = new_data,
     group_col = "sft_group",
     error_col = error,
-    time_col = time,
+    time_col = time_col,
     sf_col = "geometry"
   )
   # Sanity check. Which are necessary?
   ret <-
-    ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
+    ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
   #
   return(ret)
 }
@@ -510,7 +524,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
   sf_attr <- attributes(sf::st_geometry(x))
   # time stuff
 
-  tcl <- attr(x[[time_col]],'type')
+  tcl <- attr(x[[time_col]], "type")
   if (!is.null(tcl) && tcl == "POSIXct") {
     tz <- attributes(x[[time_col]])$tzone
     if (is.null(tz) || tz == "") {
@@ -578,7 +592,7 @@ print.sftrack <- function(x, n_row, n_col, ...) {
 # Sumary
 #' @export
 summary.sftrack <- function(object, ..., stats = FALSE) {
-  object[[attr(object, 'time_col')]] <- t1(object)
+  object[[attr(object, "time_col")]] <- t1(object)
   if (stats) {
     summary_sftrack(object)
   } else {

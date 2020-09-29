@@ -9,7 +9,7 @@ test_that("step geometry calculates correctly", {
   geom_ans <- c(27, 27, -80, -81, 27, -81, 27, 27, -82, -83, 27, -83)
   my_track <- as_sftrack(data = df1, group = "id", time = "timez", coords = c("x", "y"))
 
-  my_step_geom <- make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time_data = my_track$timez)
+  my_step_geom <- make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time = my_track$timez)
   # order was done correctly
 
   expect_equal(unlist(my_step_geom), geom_ans)
@@ -27,7 +27,7 @@ test_that("step geometry calculates correctly", {
   )
   my_track <- as_sftrack(data = df1, group = c("id", "month"), time = "timez", coords = c("x", "y"))
 
-  my_step_geom <- suppressMessages(make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time_data = my_track$time))
+  my_step_geom <- suppressMessages(make_step_geom(group = my_track$sft_group, geometry = my_track$geometry, time = my_track$time))
 
   expect_equal(unlist(my_step_geom), geom_ans)
 

@@ -210,6 +210,9 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   # earliest reasonable time to check time stamps
   dup_timestamp(time = data[[time_col]], x = group)
 
+  # make time
+  data[[time_col]] <- make_timestamp(data[[time_col]], group)
+
   geom <-
     sf::st_as_sf(xyz,
       coords = names(xyz),
@@ -220,12 +223,14 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   attr(geom[, attr(geom, "sf_column")], "n_empty") <-
     sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
 
+  # Make step geom
   geom <-
     make_step_geom(
       group = group,
       geometry = st_geometry(geom),
-      time_data = data[[time_col]]
+      time = data[[time_col]]
     )
+
   # Decide whether to overwrite names or not
   if (group_name %in% colnames(data) && !overwrite_names) {
     stop(paste0("column name: \"", group_name, "\" already found in data.frame.
@@ -237,8 +242,7 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 
   # make time
 
-  timez <-   make_time_list(data[[time_col]], c(data[[time_col]][-1],NA))
-  data[[time_col]] <- sft_time(timez)
+
   ret <- new_sftraj(
     data = data,
     group_col = group_name,
@@ -258,25 +262,24 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 #' @method as_sftraj sftrack
 #' @export
 as_sftraj.sftrack <- function(data, ...) {
-
   group_col <- attr(data, "group_col")
   error_col <- attr(data, "error_col")
   time_col <- attr(data, "time_col")
   sf_col <- attr(data, "sf_column")
   ###########
 
-  tt <- make_time_list(t1(data), t2(data))
-  data[[time_col]] <- sft_time(tt)
+  data[[time_col]] <- make_timestamp(t1(data), data[[group_col]])
+
   geometry <-
     make_step_geom(
       group = data[[group_col]],
       geometry = data[[sf_col]],
-      time_data = data[[time_col]]
+      time = data[[time_col]]
     )
 
   data[[sf_col]] <- st_geometry(geometry)
 
-  class(data) <- setdiff(class(data),c('sftraj','sf'))
+  class(data) <- setdiff(class(data), c("sftrack", "sf"))
   ret <- new_sftraj(
     data = data,
     group_col = group_col,
@@ -383,8 +386,6 @@ If youd like to overwrite column use overwrite_names = TRUE"))
   group <-
     make_c_grouping(group_list, active_group = active_group)
 
-  # earliest reasonable time to check time stamps
-  dup_timestamp(time = data[[time_col]], x = group)
 
   # Decide whether to overwrite names or not
   if (group_name %in% colnames(data) && !overwrite_names) {
@@ -394,14 +395,21 @@ If youd like to overwrite column use overwrite_names = TRUE"))
     data[[group_name]] <- group
   }
 
+
+  # earliest reasonable time to check time stamps
+  dup_timestamp(time = data[[time_col]], x = group)
+
+  # Make step geom needs proper time data
+  data[[time_col]] <- make_timestamp(data[[time_col]], group)
+
   geom <-
     make_step_geom(
       group = group,
       geometry = geom,
-      time_data = data[[time_col]]
+      time = data[[time_col]]
     )
   data$geometry <- st_geometry(geom)
-  ret <- new_sftrack(
+  ret <- new_sftraj(
     data = data,
     group_col = group_name,
     sf_col = "geometry",
@@ -409,7 +417,7 @@ If youd like to overwrite column use overwrite_names = TRUE"))
     time_col = time_col
   )
   # Sanity checks
-  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
+  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
 
   check_z_coords(ret)
 
@@ -449,6 +457,11 @@ as_sftraj.ltraj <- function(data, ...) {
     group$group <- df1$burst
   }
   coords <- c("x", "y")
+  group <- make_c_grouping(group)
+  # time
+
+  df1[[time_col]] <- make_timestamp(df1[[time_col]], group)
+
   geom <-
     sf::st_as_sf(df1[, coords],
       coords = coords,
@@ -456,16 +469,17 @@ as_sftraj.ltraj <- function(data, ...) {
       na.fail = FALSE
     )
   #
-  group <- make_c_grouping(group)
+
 
   step_geometry <-
     make_step_geom(
       group = group,
       geometry = st_geometry(geom),
-      time_data = df1[[time_col]]
+      time = df1[[time_col]]
     )
   df1$sft_group <- make_c_grouping(group)
   error <- NA
+
   new_data <-
     cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(geom))
   ret <- new_sftraj(
@@ -477,7 +491,7 @@ as_sftraj.ltraj <- function(data, ...) {
   )
   # Sanity check. Which are necessary?
   ret <-
-    ret[check_ordered(ret[[attr(ret, "group_col")]], ret[[attr(ret, "time_col")]]), ]
+    ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
   #
   return(ret)
 }
@@ -503,7 +517,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   # time stuff
 
   # time
-  tcl <- attr(x[[time_col]],'type')
+  tcl <- attr(x[[time_col]], "type")
   if (!is.null(tcl) && tcl == "POSIXct") {
     tz <- attributes(x[[time_col]])$tzone
     if (is.null(tz) || tz == "") {
@@ -567,7 +581,7 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   } else {
     ret <- x
   }
-  if(row_l>0){
+  if (row_l > 0) {
     ret <- ret[1:row_l, ]
   }
   print(ret, ...)
@@ -607,7 +621,7 @@ rbind.sftraj <- function(...) {
     make_step_geom(
       group = df1[[group_col]],
       geometry = geom,
-      time_data = t1(df1)
+      time = df1[[time_col]]
     )
   class(df1) <- setdiff(class(df1), c("sftraj", "sf"))
   ret <- new_sftraj(

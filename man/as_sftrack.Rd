@@ -26,7 +26,7 @@ as_sftrack(data = data.frame(), ...)
   overwrite_names = FALSE
 )
 
-\method{as_sftrack}{sftraj}(data, ...)
+\method{as_sftrack}{sftraj}(data, ..., fill_missing = FALSE)
 
 \method{as_sftrack}{ltraj}(data, ...)
 
@@ -70,6 +70,8 @@ as_sftrack(data = data.frame(), ...)
 \item{error_name}{(optional) new column name for error data}
 
 \item{overwrite_names}{T/F Whether to overwrite data if a group/time/error column name is supplied but already in data}
+
+\item{fill_missing}{T/F When converting from sftraj, new lines may be added to the data.frame if t2 times are missing. Should the columns be filled in with information from t1?}
 }
 \description{
 This function converts x,y,z data into an sftrack object with a sf_geometry column of sf_POINTS.

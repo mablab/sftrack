@@ -4,7 +4,7 @@
 \alias{check_time}
 \title{Check if time is integer or posix}
 \usage{
-check_time(time)
+check_time(time, return = FALSE)
 }
 \arguments{
 \item{time}{a vector of time}

@@ -86,3 +86,4 @@ test_that("subset c_grouping", {
   mb_attr <- attributes(burst1[F])
   expect_equal(mb_attr, list(active_group = c("id", "col2"), sort_index = factor(NULL), class = "c_grouping"))
 })
+
