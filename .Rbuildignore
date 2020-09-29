@@ -11,3 +11,6 @@ tic.R
 ^doc$
 ^Meta$
 .\.tar\.gz
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

@@ -1,6 +1,6 @@
 Package: sftrack
-Title: Central Classes for Movement Data
-Version: 0.5.1
+Title: Central Classes for Tracking Data
+Version: 0.5
 Date: 2020-09-13
 Authors@R: 
     c(person(given = "Matthew",
@@ -31,13 +31,14 @@ Depends:
     R (>= 3.2.0),
 Imports:
     sf
-Description: Movement classes for tracking data and trajectories,
-    relying on sf spatial infrastructure. Tracking data are series
-    of locations with at least 2-dimensional spatial coordinates (x,y)
-    and a time index (t); trajectories are the line representation of
-    the path, composed by steps, i.e. the straightline segments
-    connecting successive locations. Sftrack is designed to handle
-    movement of both living organisms and inanimate objects.
+Description: Modern classes for tracking and movement data, relying on
+    `sf` spatial infrastructure. Tracking data are series of locations
+    with at least 2-dimensional spatial coordinates (x,y), a time
+    index (t), and individual identification (id) of the object being
+    monitored; movement data are made of trajectories, i.e. the line
+    representation of the path, composed by steps (the straight-line
+    segments connecting successive locations). `sftrack` is designed
+    to handle movement of both living organisms and inanimate objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

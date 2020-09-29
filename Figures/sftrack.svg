@@ -43,10 +43,10 @@
      inkscape:window-height="480"
      id="namedview149"
      showgrid="false"
-     inkscape:zoom="0.48834562"
-     inkscape:cx="462.86315"
-     inkscape:cy="263.02221"
-     inkscape:current-layer="layer1"
+     inkscape:zoom="0.690625"
+     inkscape:cx="198.30312"
+     inkscape:cy="-20.727872"
+     inkscape:current-layer="g4584"
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
@@ -54,6 +54,21 @@
      showborder="true" />
   <defs
      id="defs4">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker4636"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow2Sstart">
+      <path
+         transform="matrix(0.3,0,0,0.3,-0.69,0)"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         style="fill:#0365c0;fill-opacity:1;fill-rule:evenodd;stroke:#0365c0;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         id="path4634"
+         inkscape:connector-curvature="0" />
+    </marker>
     <marker
        inkscape:stockid="Arrow2Send"
        orient="auto"
@@ -76,7 +91,8 @@
        refX="0"
        id="marker4703"
        style="overflow:visible"
-       inkscape:isstock="true">
+       inkscape:isstock="true"
+       inkscape:collect="always">
       <path
          inkscape:connector-curvature="0"
          id="path4701"
@@ -183,7 +199,7 @@
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="social-border"
-     style="display:none">
+     style="display:inline">
     <rect
        transform="translate(237.53197,-449.52771)"
        style="display:inline;opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:0.98090689;stroke:#000000;stroke-width:0.99999982;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers stroke fill"
@@ -204,7 +220,8 @@
      inkscape:groupmode="layer"
      id="layer3"
      inkscape:label="social"
-     transform="translate(237.53197,-449.52771)">
+     transform="translate(237.53197,-449.52771)"
+     style="display:inline">
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:53.33333206px;line-height:60px;font-family:'Liberation Sans';-inkscape-font-specification:'Liberation Sans, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:center;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
@@ -362,5 +379,39 @@
        inkscape:export-filename="/home/mathieu/Work/Projects/Movement Ecology/sftrack/Figures/sftrack-logo-1024.png"
        inkscape:export-xdpi="46.419636"
        inkscape:export-ydpi="46.419636" />
+  </g>
+  <g
+     transform="translate(237.53197,-449.52771)"
+     style="display:inline"
+     inkscape:label="logo simple"
+     id="g4584"
+     inkscape:groupmode="layer">
+    <path
+       sodipodi:nodetypes="ccccccc"
+       inkscape:connector-curvature="0"
+       style="display:inline;fill:#fcf7f7;fill-opacity:1;stroke-width:0.65998042"
+       d="m 50.311135,1149.5277 -207.843105,120.0019 v 239.9973 L 50.311135,1629.5277 258.1542,1509.5269 V 1269.5297 C 188.875,1229.526 119.59241,1189.5277 50.311135,1149.5277 Z"
+       id="path9872"
+       inkscape:export-filename="/home/mathieu/Downloads/temp/sftrack/man/figures/logo.png"
+       inkscape:export-xdpi="236.39999"
+       inkscape:export-ydpi="236.39999" />
+    <path
+       sodipodi:nodetypes="cccc"
+       style="fill:none;fill-rule:evenodd;stroke:#0365c0;stroke-width:40;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:250;stroke-opacity:1;marker-start:url(#marker4636)"
+       d="M 16.209358,1498.8483 167.13135,1414.6858 -32.519277,1299.5004 106.34214,1220.2125"
+       id="path4580"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/mathieu/Downloads/temp/sftrack/man/figures/logo.png"
+       inkscape:export-xdpi="236.39999"
+       inkscape:export-ydpi="236.39999" />
+    <path
+       inkscape:export-ydpi="236.39999"
+       inkscape:export-xdpi="236.39999"
+       inkscape:export-filename="/home/mathieu/Downloads/temp/sftrack/man/figures/logo.png"
+       id="path4582"
+       d="m 50.311135,1149.5277 -207.843105,120.0019 v 239.9973 L 50.311135,1629.5277 258.1542,1509.5269 V 1269.5297 C 188.875,1229.526 119.59241,1189.5277 50.311135,1149.5277 Z m -0.0057,46.3072 165.546655,95.1279 v 198.2337 L 50.311135,1584.3244 -115.23,1489.1965 v -198.2614 z"
+       style="display:inline;fill:#949494;fill-opacity:1;stroke-width:0.65998042"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccccccc" />
   </g>
 </svg>
