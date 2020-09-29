@@ -1,12 +1,10 @@
-
-# df1 <- data.frame(
-#   id = rep(1,10),
-#   time = 1:10,
-#   weather = c('clear','windy','clear','windy','clear','clear','rainy','clear','cloudy','cloudy'),
-#   x = c(0,1,1,1,NA,2,3,1,2,2),
-#   y = c(0,0,1,1,NA,0,1,1,2,2)
-# )
-#
+#' @name time-class
+#' @title A class to store time and time intervals
+#' @description Time in movement data depends on if its a track (sftrack) or trajectory (sftraj).
+#' A track has a single timestamp for each data point where as a trajectory has a start and end point for each step.
+#' The sft_timestamp class is a column level class containing a list or vector for each point.
+#'
+#' @param x a list or vector containing time objects, either POSIXct or integer. If an sftraj must be a time interval where [[1]] ==start and [[2]] == end time for step.
 #' @export
 sft_time <- function(x = list()) {
   class(x) <- setdiff(class(x), "sft_timestamp")
@@ -66,9 +64,22 @@ c.sft_timestamp <- function(..., recursive = FALSE) {
   }
   NextMethod()
 }
-# df1$timestamp <- timez
-# df1$timestamp
 
+#' @title Functions to get start and end points of an sftrack object.
+#' @name get-time-functions
+#' @description The structure of time may be different depending on class, however, the method for extracting time from each object is the same.
+#' The `t1()` and `t2()` functions extract the start time (t1) and end time (t2) for each sftrack object posix and numeric classes.
+#' However this is context dependent. See details for more...
+#'
+#' @details The simplest function is t1, which extracts the start time for each data point. In an sftrack and sftraj object these are the same times.
+#'
+#' t2 may extract different times depending on the context:
+#'
+#' For an sftraj, t2 extracts the end time for each step. This is stored as [[2]] in each row. And is calculated when an sftraj object is created.
+#'
+#' For an sftrack/POSIX/numeric object, t2 is calculated as the lag(1) time for each time:group combination.
+#' These are not the same calculations as sftraj and may result in different results because of subsetting.
+#' @param x time object of sftrack/sftraj/sft_timestamp/POSIX/numeric
 #' @export
 t1 <- function(x) {
   UseMethod("t1")
@@ -122,6 +133,8 @@ t1.POSIXct <- function(x) {
 t1.numeric <- function(x) {
   x
 }
+
+#' @rdname get-time-functions
 #' @export
 t2 <- function(x) {
   UseMethod("t2")
@@ -245,6 +258,10 @@ missing_next_pt <- function(x) {
   ret
 }
 
+#' @title Make timestamp object from a vector of time
+#' @export
+#' @param t1 Vector of the time at start of each point
+#' @param group The sft_group object for grouping data.
 make_timestamp <- function(t1, group) {
   # t1 = data[[time_col]]
   idz <- group_labels(group)
@@ -267,6 +284,11 @@ make_timestamp <- function(t1, group) {
   sft_time(ret)
 }
 
+#' @title recalculate time objects from t1
+#' @param x an sftraj object
+#' @description Time at time2 maybe recalculated due to subsetting or converting to new objects. This function is for sftraj objects.
+#' If you need to recalculate a sft_timestamp on its own, you can use make_timestamp and feed it the new t1s.
+#' @export
 time_recalc <- function(x) {
   if (!inherits(x, c("sftraj"))) {
     stop("x must be an sftraj object, recalc not necessary otherwise")

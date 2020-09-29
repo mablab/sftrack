@@ -8,6 +8,8 @@ check_time(time, return = FALSE)
 }
 \arguments{
 \item{time}{a vector of time}
+
+\item{return}{T/F return the vector after checks have completed?}
 }
 \description{
 Check if time is integer or posix

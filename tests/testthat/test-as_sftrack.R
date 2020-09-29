@@ -148,3 +148,4 @@ test_that("subset works correctly", {
   active_group(my_sftrack2) <- "id"
   expect_equal(attr(my_sftrack2$sft_group, "active_group"), "id")
 })
+

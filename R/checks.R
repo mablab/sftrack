@@ -178,6 +178,7 @@ check_z_coords <- function(x) {
 # Time
 #' @title Check if time is integer or posix
 #' @param time a vector of time
+#' @param return T/F return the vector after checks have completed?
 #' @export
 check_time <- function(time, return = FALSE) {
 

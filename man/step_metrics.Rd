@@ -7,7 +7,7 @@
 step_metrics(x)
 }
 \arguments{
-\item{sftraj}{an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.}
+\item{x}{an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.}
 }
 \description{
 Calculates step metrics including distance, dt, dx, and dy.

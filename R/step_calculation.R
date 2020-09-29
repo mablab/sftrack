@@ -33,9 +33,17 @@ make_step_geom <- function(group, time, geometry) {
   t1 <- t1(time)
   t2 <- t2_by_group(t1, group)
   step_geometry <- mapply(function(time2, sub_geom, ids) {
+    # dots <- list(t2,geometry, idz)
+    # time2 = dots[[1L]][[2L]]
+    # sub_geom = dots[[2L]][[2L]]
+    # ids = dots[[3L]][[2L]]
     geom1 <- sub_geom
-    geom2 <- geometry[(ids == idz & time2 == t1)]
-    if (st_is_empty(geom1) || length(geom2) == 0 || st_is_empty(geom2)) {
+    geom2 <- if (!is.na(time2)) {
+      geometry[(ids == idz & time2 == t1)]
+    } else {
+      st_point()
+    }
+    if (st_is_empty(geom1) | length(geom2) == 0 | st_is_empty(geom2)) {
       if (all(!st_is_empty(geom1))) {
         new_geom <- sf::st_point(geom1)
       } else {
@@ -53,7 +61,7 @@ make_step_geom <- function(group, time, geometry) {
 
 # step function
 #' @title Calculates step metrics including distance, dt, dx, and dy.
-#' @param sftraj an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
+#' @param x an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
 #' @export
 #' @examples
 #' #'
