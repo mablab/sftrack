@@ -4,12 +4,14 @@
 \alias{make_timestamp}
 \title{Make timestamp object from a vector of time}
 \usage{
-make_timestamp(t1, group)
+make_timestamp(t1, group, interval = TRUE)
 }
 \arguments{
 \item{t1}{Vector of the time at start of each point}
 
-\item{group}{The sft_group object for grouping data.}
+\item{group}{(optional) The sft_group object for grouping data. Required if interval= TRUE}
+
+\item{interval}{Whether two create a one dimensional vector of time or a two dimensional with start and end points.}
 }
 \description{
 Make timestamp object from a vector of time

@@ -261,13 +261,16 @@ missing_next_pt <- function(x) {
 #' @title Make timestamp object from a vector of time
 #' @export
 #' @param t1 Vector of the time at start of each point
-#' @param group The sft_group object for grouping data.
-make_timestamp <- function(t1, group) {
+#' @param group (optional) The sft_group object for grouping data. Required if interval= TRUE
+#' @param interval Whether two create a one dimensional vector of time or a two dimensional with start and end points.
+make_timestamp <- function(t1, group, interval = TRUE) {
   # t1 = data[[time_col]]
-  idz <- group_labels(group)
-  ordert <- order(idz, t1)
-  t2 <- unlist(tapply(t1[ordert], idz[ordert], t2))
-  t2 <- t2[order(ordert)]
+
+  if (missing(group) | !interval) {
+    return(sft_time(t1))
+  }
+
+  t2 <- t2_by_group(t1, group)
   if (inherits(t1, "POSIXct")) {
     tzone <- attr(t1, "tzone")
     t2 <- as.POSIXct(t2, origin = "1970-01-01 00:00.00 UTC")
@@ -297,6 +300,10 @@ time_recalc <- function(x) {
   x
 }
 
+#' @title Calculate t2 based on groupings
+#' @param time time vector, either sft_timestamp, POSIXct, or numeric
+#' @param group c_grouping object
+#' @export
 t2_by_group <- function(time, group) {
   idz <- group_labels(group)
   t1 <- t1(time)
