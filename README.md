@@ -1,8 +1,15 @@
+# sftrack: Central classes for tracking and movement data  <img src="man/figures/sftrack-logo-200-transp-bg.png" align="right" width="200px"/>
+
+<!-- ![sftrack logo](Figures/sftrack-logo-200-transp-bg.png "sftrack logo") -->
+
+
+<!-- badges: start -->
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+<!-- [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) -->
+<!-- ![](https://cranlogs.r-pkg.org/badges/sftrack) -->
 [![Build Status](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) 
+<!-- badges: end -->
 
-# sftrack: Central classes for tracking and movement data
-
-![sftrack logo](Figures/sftrack-logo-200-transp-bg.png "sftrack logo")
 
 `sftrack` provides modern classes for **tracking and movement data**,
 relying on `sf` spatial infrastructure. Tracking data are made of
@@ -88,7 +95,7 @@ of tracking data:
 - coordinates of the locations in at least the `x` and `y` axes (can
   be UTM, lat/long, etc., as provided in `crs`);
 - timestamps of the locations as `POSIXct` (*or* as `integer`);
-- grouping information (referred to as a "burst"), providing at least the
+- grouping information (referred to as a "groups"), providing at least the
   identity of each individual.
 
 ```r
@@ -96,7 +103,7 @@ my_sftrack <- as_sftrack(
   data = raccoon,
   coords = c("longitude","latitude"),
   time = "timestamp",
-  burst = "animal_id",
+  group = "animal_id",
   crs = "+init=epsg:4326")
 head(my_sftrack)
 
@@ -106,7 +113,7 @@ head(my_sftrack)
 Sftrack with 6 features and 10 fields (3 empty geometries) 
 Geometry : "geometry" (XY, crs: +init=epsg:4326) 
 Timestamp : "timestamp" (POSIXct in UTC) 
-Burst : "burst" (*id*) 
+Groupings : "sft_group" (*id*) 
 -------------------------------
   animal_id latitude longitude           timestamp height hdop vdop fix
 1   TTP-058       NA        NA 2019-01-19 00:02:30     NA  0.0  0.0  NO
@@ -115,7 +122,7 @@ Burst : "burst" (*id*)
 4   TTP-058       NA        NA 2019-01-19 03:02:30     NA  0.0  0.0  NO
 5   TTP-058 26.06769 -80.27431 2019-01-19 04:02:30    858  5.1  3.2  2D
 6   TTP-058 26.06867 -80.27930 2019-01-19 05:02:30    350  1.9  3.2  3D
-          burst                   geometry
+      sft_group                   geometry
 1 (id: TTP-058)                POINT EMPTY
 2 (id: TTP-058) POINT (-80.27906 26.06945)
 3 (id: TTP-058)                POINT EMPTY
@@ -131,7 +138,7 @@ summary_sftrack(my_sftrack)
 ```
 
 ```
-    burst points NAs          begin_time            end_time length_m
+    group points NAs          begin_time            end_time length_m
 1 TTP-041    223   0 2019-01-19 00:02:30 2019-02-01 23:02:07 10195.75
 2 TTP-058    222   0 2019-01-19 00:02:30 2019-02-01 23:02:30 26832.51
 
@@ -144,7 +151,7 @@ plot(my_sftrack)
 
 ```
 
-![sftrack basic plot](Figures/plot_sftrack.png "sftrack basic plot")
+![sftrack basic plot](man/figures/plot_sftrack.png "sftrack basic plot")
 
 
 ## Roadmap
