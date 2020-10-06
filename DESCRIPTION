@@ -34,10 +34,12 @@ Imports:
 Description: Movement classes for tracking data and trajectories,
     relying on sf spatial infrastructure. Tracking data are series
     of locations with at least 2-dimensional spatial coordinates (x,y)
-    and a time index (t); trajectories are the line representation of
-    the path, composed by steps, i.e. the straightline segments
-    connecting successive locations. Sftrack is designed to handle
-    movement of both living organisms and inanimate objects.
+    and a time index (t); Sftrack is designed to handle
+    movement of both living organisms and inanimate objects. This package 
+    introduces classes to handle movement data as well as common functions
+    used in tracking studies. Classes can be used on their own or 
+    incorporated into package infrastructure to provide
+    convenient standards for working with tracking data.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

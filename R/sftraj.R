@@ -481,7 +481,7 @@ as_sftraj.ltraj <- function(data, ...) {
   error <- NA
 
   new_data <-
-    cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(geom))
+    cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(step_geometry))
   ret <- new_sftraj(
     data = new_data,
     group_col = "sft_group",
@@ -494,6 +494,120 @@ as_sftraj.ltraj <- function(data, ...) {
     ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
   #
   return(ret)
+}
+
+as_sftraj.trackeRdata <- function(data,..., include_units = FALSE){
+  att <- attributes(data)
+  nrow_len <- vapply(data,nrow, numeric(1))
+  df1 <- as.data.frame(data)
+
+  df1$sport <- rep(att$sport,each = nrow_len)
+  df1$file <- rep(att$file,each = nrow_len)
+
+  if(include_units){
+    colnames(df1)
+    sub_units <- att$unit[att$units$sport%in%att$sport,]
+    single_unit <- tapply(sub_units$unit,sub_units$variable ,function(x)length(unique(x))==1)
+    if(any(!single_unit)){
+      print(
+        paste('mismatch in units for variables: \n',
+              paste0(names(single_unit)[single_unit],collapse=', '),
+              'Not adding unit names to these columns','\n')
+      )
+    }
+    final_names <- names(single_unit)[single_unit]
+    for(i in final_names){
+      colnames(df1)[colnames(df1)==i] <- paste(colnames(df1)[colnames(df1)==i],sub_units$unit[sub_units$variable==i], sep='_')
+    }
+  }
+  time_col <- "time"
+  coords <- c("latitude", "longitude")
+  crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
+  group <- list(id = rep('id1',each = nrow_len), session = df1$session)
+
+  # group
+  df1$sft_group <- make_c_grouping(group)
+
+  # time
+  df1[[time_col]] <- sft_time(df1[[time_col]])
+
+  geom <-
+    sf::st_as_sf(df1[, coords],
+                 coords = coords,
+                 crs = crs,
+                 na.fail = FALSE
+    )
+  step_geometry <-
+    make_step_geom(
+      group = df1$sft_group,
+      geometry = st_geometry(geom),
+      time = df1[[time_col]]
+    )
+
+  error <- NA
+  new_data <-
+    cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(step_geometry))
+  ret <- new_sftrack(
+    data = new_data,
+    group_col = "sft_group",
+    error_col = error,
+    time_col = time_col,
+    sf_col = "geometry"
+  )
+  # Sanity check. Which are necessary?
+  ret <-
+    ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
+  #
+  return(ret)
+}
+
+as_sftraj.track_xy <- function(data,...){
+  if(inherits(data,'track_xyt')){coords <- c('x_','y_')}else{coords <- c('x_','y_','t_')}
+  crs <- attr(data, 'crs_')
+
+  data <- as.data.frame(data)
+  extra_col <- setdiff(colnames(data),c('x_','y_','t_','id'))
+
+  group_name <- 'sft_group'
+  group <-
+    make_c_grouping(list(id=data$id))
+  data[[group_name]] <- group
+  check_time(data$t_)
+  dup_timestamp(time = data$t_, x = group)
+  time_col <- 'sft_timestamp'
+  data[[time_col]] <- make_timestamp(data$t_, group)
+
+  geom <-
+    sf::st_as_sf(data[],
+                 coords = coords,
+                 crs = crs,
+                 na.fail = FALSE
+    )
+  # Force calculation of empty geometries.
+  attr(geom[, attr(geom, "sf_column")], "n_empty") <-
+    sum(vapply(st_geometry(geom), sfg_is_empty, TRUE))
+
+  # Make step geom
+  geom <-
+    make_step_geom(
+      group = group,
+      geometry = st_geometry(geom),
+      time = data[[time_col]]
+    )
+  data$geometry <- geom
+
+  ret <- new_sftraj(
+    data = data,
+    group_col = group_name,
+    sf_col = "geometry",
+    error_col = NA,
+    time_col = time_col
+  )
+  # Sanity checks
+  ret <- ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
+
+  check_z_coords(ret)
+  ret
 }
 
 #' @title Print methods for sftraj
