@@ -53,7 +53,7 @@ In the case of vector inputs, the vectors are cbinded to `data` if data is suppl
 
 
 ```{r}
-library(sftrack)
+#library(sftrack)
 
 #data
 data('raccoon', package = 'sftrack')

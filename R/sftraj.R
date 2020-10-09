@@ -425,163 +425,35 @@ If youd like to overwrite column use overwrite_names = TRUE"))
 }
 
 
-#' @rdname as_sftraj
-#' @method as_sftraj ltraj
-#' @export
-as_sftraj.ltraj <- function(data, ...) {
-  # This is done so we dont have to import adehabitat. (instead of ld())
-  # But it could go either way depending
-  new_data <- lapply(seq_along(data), function(x) {
-    sub <- data[x, ]
-    attributes(sub[[1]])
-    id <- attr(sub[[1]], "id")
-    burst <- attr(sub[[1]], "burst")
-    infolocs <- infolocs(data)[x]
-    sft_timestamp <- sub[[1]]$date
-    coords <- c("x", "y")
-    data.frame(sub[[1]][, coords], id, burst, sft_timestamp, infolocs)
-  })
-  df1 <- do.call(rbind, new_data)
-  time_col <- "sft_timestamp"
-  group <- list(id = df1$id)
-  crs <- attr(data, "proj4string")
-  # pull out id and burst from ltraj object
-  id_lt <- vapply(data, function(x) {
-    attr(x, "id")
-  }, NA_character_)
-  group_lt <-
-    vapply(data, function(x) {
-      attr(x, "burst")
-    }, NA_character_)
-  if (!all(group_lt == id_lt)) {
-    group$group <- df1$burst
+
+
+
+
+as_sftraj.track_xy <- function(data, ...) {
+  if (inherits(data, "track_xyt")) {
+    coords <- c("x_", "y_")
+  } else {
+    coords <- c("x_", "y_", "t_")
   }
-  coords <- c("x", "y")
-  group <- make_c_grouping(group)
-  # time
-
-  df1[[time_col]] <- make_timestamp(df1[[time_col]], group)
-
-  geom <-
-    sf::st_as_sf(df1[, coords],
-      coords = coords,
-      crs = crs,
-      na.fail = FALSE
-    )
-  #
-
-
-  step_geometry <-
-    make_step_geom(
-      group = group,
-      geometry = st_geometry(geom),
-      time = df1[[time_col]]
-    )
-  df1$sft_group <- make_c_grouping(group)
-  error <- NA
-
-  new_data <-
-    cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(step_geometry))
-  ret <- new_sftraj(
-    data = new_data,
-    group_col = "sft_group",
-    error_col = error,
-    time_col = time_col,
-    sf_col = "geometry"
-  )
-  # Sanity check. Which are necessary?
-  ret <-
-    ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
-  #
-  return(ret)
-}
-
-as_sftraj.trackeRdata <- function(data,..., include_units = FALSE){
-  att <- attributes(data)
-  nrow_len <- vapply(data,nrow, numeric(1))
-  df1 <- as.data.frame(data)
-
-  df1$sport <- rep(att$sport,each = nrow_len)
-  df1$file <- rep(att$file,each = nrow_len)
-
-  if(include_units){
-    colnames(df1)
-    sub_units <- att$unit[att$units$sport%in%att$sport,]
-    single_unit <- tapply(sub_units$unit,sub_units$variable ,function(x)length(unique(x))==1)
-    if(any(!single_unit)){
-      print(
-        paste('mismatch in units for variables: \n',
-              paste0(names(single_unit)[single_unit],collapse=', '),
-              'Not adding unit names to these columns','\n')
-      )
-    }
-    final_names <- names(single_unit)[single_unit]
-    for(i in final_names){
-      colnames(df1)[colnames(df1)==i] <- paste(colnames(df1)[colnames(df1)==i],sub_units$unit[sub_units$variable==i], sep='_')
-    }
-  }
-  time_col <- "time"
-  coords <- c("latitude", "longitude")
-  crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
-  group <- list(id = rep('id1',each = nrow_len), session = df1$session)
-
-  # group
-  df1$sft_group <- make_c_grouping(group)
-
-  # time
-  df1[[time_col]] <- sft_time(df1[[time_col]])
-
-  geom <-
-    sf::st_as_sf(df1[, coords],
-                 coords = coords,
-                 crs = crs,
-                 na.fail = FALSE
-    )
-  step_geometry <-
-    make_step_geom(
-      group = df1$sft_group,
-      geometry = st_geometry(geom),
-      time = df1[[time_col]]
-    )
-
-  error <- NA
-  new_data <-
-    cbind(df1[, !colnames(df1) %in% c("id")], geometry = st_geometry(step_geometry))
-  ret <- new_sftrack(
-    data = new_data,
-    group_col = "sft_group",
-    error_col = error,
-    time_col = time_col,
-    sf_col = "geometry"
-  )
-  # Sanity check. Which are necessary?
-  ret <-
-    ret[check_ordered(ret[[attr(ret, "group_col")]], t1(ret)), ]
-  #
-  return(ret)
-}
-
-as_sftraj.track_xy <- function(data,...){
-  if(inherits(data,'track_xyt')){coords <- c('x_','y_')}else{coords <- c('x_','y_','t_')}
-  crs <- attr(data, 'crs_')
+  crs <- attr(data, "crs_")
 
   data <- as.data.frame(data)
-  extra_col <- setdiff(colnames(data),c('x_','y_','t_','id'))
+  extra_col <- setdiff(colnames(data), c("x_", "y_", "t_", "id"))
 
-  group_name <- 'sft_group'
+  group_name <- "sft_group"
   group <-
-    make_c_grouping(list(id=data$id))
+    make_c_grouping(list(id = data$id))
   data[[group_name]] <- group
   check_time(data$t_)
   dup_timestamp(time = data$t_, x = group)
-  time_col <- 'sft_timestamp'
+  time_col <- "sft_timestamp"
   data[[time_col]] <- make_timestamp(data$t_, group)
 
   geom <-
     sf::st_as_sf(data[],
-                 coords = coords,
-                 crs = crs,
-                 na.fail = FALSE
+      coords = coords,
+      crs = crs,
+      na.fail = FALSE
     )
   # Force calculation of empty geometries.
   attr(geom[, attr(geom, "sf_column")], "n_empty") <-
@@ -816,4 +688,45 @@ rbind.sftraj <- function(...) {
 #' @export
 "[[<-.sftraj" <- function(x, i, value) {
   x <- structure(NextMethod(), class = c("sftraj", "sf", "data.frame"))
+}
+
+create_missing_traj <- function(data, fill_missing = FALSE) {
+  # Check for missing columns
+  missing <- missing_next_pt(data)
+  if (!is.na(missing)) {
+    message(paste0(
+      "Sftraj missing ", length(missing), " beginning step point(s).",
+      "\nRecreating data points and adding to data.frame"
+    ))
+    group_col <- attr(data, "group_col")
+    error_col <- attr(data, "error_col")
+    time_col <- attr(data, "time_col")
+    sf_col <- attr(data, "sf_column")
+
+    missing_frame <- data[missing, ]
+
+    if (!is.na(error_col)) {
+      error_col <- error_col
+    }
+    if (!fill_missing) {
+      missing_frame[, !colnames(missing_frame) %in% c(sf_col, group_col, time_col, error_col)] <- NA
+    }
+    missing_frame[[time_col]] <- sft_time(lapply(t2(missing_frame), function(y) c(start = y, end = NA)))
+    # fix geom
+    x2 <- get_point(missing_frame$geometry, "x2")
+    y2 <- get_point(missing_frame$geometry, "y2")
+    new_geom <- mapply(function(x, y) {
+      if (anyNA(x2, y2)) {
+        st_point()
+      } else {
+        st_linestring(rbind(c(x[[1]], y[[1]]), c(x[[1]], y[[1]])))
+      }
+    }, x2, y2, SIMPLIFY = FALSE)
+
+    missing_frame[[sf_col]] <- st_sfc(new_geom)
+    # add missing data where it used to be
+    row.names(missing_frame) <- paste0(row.names(missing_frame), ".1")
+    data <- rbind(data, missing_frame)
+  }
+  data[order(as.numeric(row.names(data))), ]
 }

@@ -4,7 +4,6 @@
 \alias{as_sftrack}
 \alias{as_sftrack.data.frame}
 \alias{as_sftrack.sftraj}
-\alias{as_sftrack.ltraj}
 \alias{as_sftrack.sf}
 \title{Convert objects into sftrack objects.}
 \usage{
@@ -27,8 +26,6 @@ as_sftrack(data = data.frame(), ...)
 )
 
 \method{as_sftrack}{sftraj}(data, ..., fill_missing = FALSE)
-
-\method{as_sftrack}{ltraj}(data, ...)
 
 \method{as_sftrack}{sf}(
   data,
@@ -97,17 +94,6 @@ my_track <- as_sftrack(raccoon,
   error = NA, coords = c("longitude", "latitude")
 )
 
-# Input is a ltraj
-library(adehabitatLT)
-ltraj_df <- as.ltraj(
-  xy = raccoon[, c("longitude", "latitude")],
-  date = as.POSIXct(raccoon$timestamp),
-  id = raccoon$animal_id, typeII = TRUE,
-  infolocs = raccoon[, 1:6]
-)
-
-my_sftrack <- as_sftrack(ltraj_df)
-head(my_sftrack)
 
 # Input is a sf object
 library(sf)

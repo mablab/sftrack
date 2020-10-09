@@ -5,7 +5,6 @@
 \alias{as_sftraj.data.frame}
 \alias{as_sftraj.sftrack}
 \alias{as_sftraj.sf}
-\alias{as_sftraj.ltraj}
 \title{Convert objects into sftrack objects.}
 \usage{
 as_sftraj(data = data.frame(), ...)
@@ -41,8 +40,6 @@ as_sftraj(data = data.frame(), ...)
   error_name = "sft_error",
   overwrite_names = FALSE
 )
-
-\method{as_sftraj}{ltraj}(data, ...)
 }
 \arguments{
 \item{data}{a data.frame of the movement data, if supplied all data.frame inputs, than is optional}

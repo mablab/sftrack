@@ -324,5 +324,9 @@ get_point <- function(x, position = "x1") {
       nchar(position) - 1
     )
   }
-  t(ret)
+  if (nchar(position) == 2) {
+    ret
+  } else {
+    t(ret)
+  }
 }
