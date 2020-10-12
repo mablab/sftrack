@@ -11,7 +11,7 @@ make_timestamp(t1, group, interval = TRUE)
 
 \item{group}{(optional) The sft_group object for grouping data. Required if interval= TRUE}
 
-\item{interval}{Whether two create a one dimensional vector of time or a two dimensional with start and end points.}
+\item{interval}{Whether to create a one dimensional vector of time or a two dimensional with start and end points.}
 }
 \description{
 Make timestamp object from a vector of time

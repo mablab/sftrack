@@ -262,7 +262,7 @@ missing_next_pt <- function(x) {
 #' @export
 #' @param t1 Vector of the time at start of each point
 #' @param group (optional) The sft_group object for grouping data. Required if interval= TRUE
-#' @param interval Whether two create a one dimensional vector of time or a two dimensional with start and end points.
+#' @param interval Whether to create a one dimensional vector of time or a two dimensional with start and end points.
 make_timestamp <- function(t1, group, interval = TRUE) {
   # t1 = data[[time_col]]
 

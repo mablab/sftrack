@@ -48,4 +48,4 @@ VignetteBuilder: knitr
 URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
 BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
-    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr, rmarkdown, lwgeom
+    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr, rmarkdown, lwgeom, trackeR, amt

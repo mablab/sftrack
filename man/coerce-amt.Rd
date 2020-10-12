@@ -2,10 +2,13 @@
 % Please edit documentation in R/amt.R
 \name{as_sftrack.track_xy}
 \alias{as_sftrack.track_xy}
+\alias{as_sftraj.track_xy}
 \alias{sftrack_to_track_xy}
 \title{convert to and from amt class 'track_xy'}
 \usage{
 \method{as_sftrack}{track_xy}(data, ...)
+
+\method{as_sftraj}{track_xy}(data, ...)
 
 sftrack_to_track_xy(data)
 }
@@ -16,4 +19,20 @@ sftrack_to_track_xy(data)
 }
 \description{
 convert to and from amt class 'track_xy'
+}
+\examples{
+
+library(amt)
+data(sh)
+
+sh$timestamp <- as.POSIXct(lubridate::ymd(sh$day) +
+                      lubridate::hms(sh$time))
+sh <- sh[!duplicated(sh$timestamp), ]
+
+# create new columns
+sh$id <- "Animal 1"
+tr1 <- make_track(sh,x_epsg31467, y_epsg31467, timestamp, id = id,
+                  crs = sp::CRS("+init=epsg:31467"))
+
+head(as_sftrack(tr1))
 }
