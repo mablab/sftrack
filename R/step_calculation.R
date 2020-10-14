@@ -58,7 +58,6 @@ make_step_geom <- function(group, time, geometry) {
   return(sf::st_sfc(step_geometry, crs = attr(geometry, "crs")))
 }
 
-
 # step function
 #' @title Calculates step metrics including distance, dt, dx, and dy.
 #' @param x an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
@@ -78,13 +77,12 @@ make_step_geom <- function(group, time, geometry) {
 step_metrics <- function(x) {
   if (inherits(x, "sftrack")) {
     x <- as_sftraj(x)
+    ## warning converting
   }
   group_col <- attr(x, "group_col")
   time_col <- attr(x, "time_col")
   x$sftrack_id <-
     paste0(group_labels(x[[group_col]]), "_", t1(x))
-  is_latlong <- any(st_is_longlat(x$geometry), na.rm = TRUE)
-
   # if only 1 row
   if (nrow(x) == 1) {
     return(
@@ -100,30 +98,13 @@ step_metrics <- function(x) {
     )
   }
 
-  dx <- get_dx(x)
-  dy <- get_dy(x)
-  dist <- as.numeric(st_length(x))
-
-  time <- t1(x)
-  if (attr(x[[time_col]], "type") == "POSIX") {
-    dt <- unclass(difftime(t2(x), time, units = "secs"))
-  } else {
-    dt <- t2(x) - time
-  }
-  if (!is_latlong) {
-    abs_angle <- ifelse(dist < 1e-07, NA, atan2(dy, dx))
-  } else {
-    xy1 <- get_point(x, "xy1")
-    xy2 <- get_point(x, "xy2")
-    abs_angle <- (geosphere::bearing(xy1, xy2) - 90) * -pi / 180
-    abs_angle[!is.na(abs_angle) & abs_angle > (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle > (pi)] - 2 * pi
-  }
-  dist[is.na(dx) | is.na(dy)] <- NA
-  speed <- ifelse(is.na(dist), NA, dist / dt)
-  rel_angle <- c(NA, abs_angle[-1] - abs_angle[-length(abs_angle)])
-  rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
-  rel_angle <- ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
-
+  dx <- calc_dx(x)
+  dy <- calc_dy(x)
+  dist <- as.numeric(calc_steplen(x))
+  dt <- calc_difftime(x)
+  abs_angle <- calc_absangle(x, dy = dy, dx = dx, len = dist)
+  speed <- calc_speed(x, len = dist, dt = dt)
+  rel_angle <- calc_relangle(abs_angle = abs_angle)
   ret <- cbind.data.frame(
     dx = dx,
     dy = dy,
@@ -167,7 +148,17 @@ step_recalc <- function(x, return = FALSE) {
   x
 }
 
-get_dx <- function(x) {
+#' @title step calculation functions
+#' @rdname step_calc_fun
+#' @param x an sftrack/sftraj object or in some cases a geometry
+#' @param dx (optional) output of calc_dx if already calculated. Otherwise will call `calc_dx()` internally
+#' @param dy (optional) output of calc_dy if already calculated. Otherwise will call `calc_dy()` internally
+#' @param len (optional) output of calc_steplen if already calculated. Otherwise will call `calc_steplen()` internally
+#' @param dt (optional) output of calc_difftime if already calculated. Otherwise will call `calc_difftime()` internally
+#' @param rel_angle (optional) output of calc_relangle if already calculated. Otherwise will call `calc_relangle()` internally
+#' @param ... ignored
+#' @export
+calc_dx <- function(x) {
   # position = 'x2'
   x <- st_geometry(x)
   crs <- st_crs(x)
@@ -186,8 +177,9 @@ get_dx <- function(x) {
   ret
 }
 
-
-get_dy <- function(x) {
+#' @rdname step_calc_fun
+#' @export
+calc_dy <- function(x) {
   # position = 'x2'
   x <- st_geometry(x)
   crs <- st_crs(x)
@@ -205,4 +197,85 @@ get_dy <- function(x) {
 
   ret[st_is_empty(x)] <- NA
   ret
+}
+
+#' @rdname step_calc_fun
+#' @export
+calc_difftime <- function(x) {
+  if (inherits(x, c("sftrack", "sftraj"))) {
+    type <- attr(x[[attr(x, "time_col")]], "type")
+  } else {
+    type <- attr(x, "type")
+  }
+  time <- t1(x)
+  if (type == "POSIX") {
+    dt <- unclass(difftime(t2(x), time, units = "secs"))
+  } else {
+    dt <- t2(x) - time
+  }
+  dt
+}
+
+#' @rdname step_calc_fun
+#' @export
+calc_steplen <- function(x) {
+  if (!inherits(x, "sftraj")) {
+    stop("object must be an sftraj")
+  }
+  step_len <- st_length(x)
+  step_len[!is_linestring(x)] <- NA
+  step_len
+}
+
+#' @rdname step_calc_fun
+#' @export
+calc_absangle <- function(x, ..., dx, dy, len) {
+  if (!inherits(x, c("sftraj", "sftrack"))) {
+    stop("object must be an sftraj or sftrack object")
+  }
+  if (!any(st_is_longlat(x), na.rm = TRUE)) {
+    if (missing(dy) | missing(dx)) {
+      dy <- calc_dy(x)
+      dx <- calc_dx(x)
+    }
+    if (missing(dy)) {
+      dy <- calc_dy(x)
+    }
+    if (missing(dx)) {
+      dy <- calc_dx(x)
+    }
+    if (missing(len)) {
+      len <- calc_steplen(x)
+    }
+    abs_angle <- ifelse(len < 1e-07, NA, atan2(dy, dx))
+  } else {
+    xy1 <- get_point(x, "xy1")
+    xy2 <- get_point(x, "xy2")
+    abs_angle <- (geosphere::bearing(xy1, xy2) - 90) * -pi / 180
+    abs_angle[!is.na(abs_angle) & abs_angle > (pi)] <- abs_angle[!is.na(abs_angle) & abs_angle > (pi)] - 2 * pi
+  }
+  abs_angle
+}
+
+#' @rdname step_calc_fun
+#' @export
+calc_speed <- function(..., x, len, dt) {
+  if (missing(len)) {
+    len <- calc_steplen(x)
+  }
+  if (missing(dt)) {
+    dt <- calc_difftime(x)
+  }
+  ifelse(is.na(len), NA, len / dt)
+}
+
+#' @rdname step_calc_fun
+#' @export
+calc_relangle <- function(..., x, abs_angle) {
+  if (missing(abs_angle)) {
+    abs_angle <- calc_absangle(x)
+  }
+  rel_angle <- c(NA, abs_angle[-1] - abs_angle[-length(abs_angle)])
+  rel_angle <- ifelse(rel_angle <= (-pi), 2 * pi + rel_angle, rel_angle)
+  ifelse(rel_angle > pi, rel_angle - 2 * pi, rel_angle)
 }

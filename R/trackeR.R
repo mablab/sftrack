@@ -160,11 +160,11 @@ as_sftraj.trackeRdata <- function(data, ..., include_units = FALSE) {
   return(ret)
 }
 
-#'#' @title Coerce methods
-#'#' @name as
-#'#' @rdname coerce-methods
-#'#' @aliases coerce,sftrack
-#'#' # setAs("sftrack", "trackeRdata",function(from){#   sftrack_to_trackeR(from,...)}
+#' #' @title Coerce methods
+#' #' @name as
+#' #' @rdname coerce-methods
+#' #' @aliases coerce,sftrack
+#' #' # setAs("sftrack", "trackeRdata",function(from){#   sftrack_to_trackeR(from,...)}
 
 #' @rdname coerce-trackeR
 #' @export

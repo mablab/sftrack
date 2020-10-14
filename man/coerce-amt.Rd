@@ -10,29 +10,31 @@
 
 \method{as_sftraj}{track_xy}(data, ...)
 
-sftrack_to_track_xy(data)
+sftrack_to_track_xy(data, ...)
 }
 \arguments{
-\item{data}{the data either sftrack,sftraj,or track_xy class to convert}
+\item{data}{the sftrack object}
 
-\item{...}{ignored}
+\item{...}{any arguments to be passed on to `amt::make_track()`. See the help file in `amt` for more details}
 }
 \description{
 convert to and from amt class 'track_xy'
 }
 \examples{
-
+#'
 library(amt)
 data(sh)
 
 sh$timestamp <- as.POSIXct(lubridate::ymd(sh$day) +
-                      lubridate::hms(sh$time))
+  lubridate::hms(sh$time))
 sh <- sh[!duplicated(sh$timestamp), ]
 
 # create new columns
 sh$id <- "Animal 1"
-tr1 <- make_track(sh,x_epsg31467, y_epsg31467, timestamp, id = id,
-                  crs = sp::CRS("+init=epsg:31467"))
+tr1 <- make_track(sh, x_epsg31467, y_epsg31467, timestamp,
+  id = id,
+  crs = sp::CRS("+init=epsg:31467")
+)
 
 head(as_sftrack(tr1))
 }

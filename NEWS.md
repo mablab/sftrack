@@ -8,3 +8,10 @@ NEWS
 - sort index returns and is an attribute of a column grouping. It is a factor that is recalculated everytime something in the data frame is changed like a subset or grouping is changed. This is to try to bring the sftrack grouping more inline with how  dplyr::group_by works internally. You can access this with burst_labels (return the factor) and burst_names (get just the levels()). 
 - Plotting is more streamlined in both base plot and ggplot. A step_mode has been added for sftraj so you can choose to display the individual line segments. Although the default is to calculate the merged trajectories, which is must faster.
 
+## Ver 0.5.2 (2020-10-08) : adding converters
+
+- We added converters to and from ltraj (adehabitatLT), trackeRdata (amt), and track_xyt (amt).
+- Tweaks to vignette 
+- amt, and trackeR included as suggests.
+
+
