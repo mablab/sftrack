@@ -1,12 +1,12 @@
 Package: sftrack
 Title: Central Classes for Movement Data
-Version: 0.5
+Version: 0.5.2
 Date: 2020-09-13
 Authors@R: 
     c(person(given = "Matthew",
              family = "Boone",
              role = c("aut", "cre"),
-             email = "m.boone@ufl.edu",
+             email = "mttboone@gmail.com",
              comment = c(ORCID = "0000-0002-8070-4715")),
       person(given = "Rocío",
              family = "Joo",
@@ -28,7 +28,7 @@ Authors@R:
              email = "basille@ufl.edu",
              comment = c(ORCID = "0000-0001-9366-7127")))
 Depends:
-    R (>= 3.2.0),
+    R (>= 3.2.0)
 Imports:
     sf
 Description: Movement classes for tracking data and trajectories,
