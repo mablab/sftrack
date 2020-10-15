@@ -1,6 +1,6 @@
 Package: sftrack
 Title: Central Classes for Movement Data
-Version: 0.5.2
+Version: 0.6.0
 Date: 2020-09-13
 Authors@R: 
     c(person(given = "Matthew",
@@ -28,7 +28,8 @@ Authors@R:
              email = "basille@ufl.edu",
              comment = c(ORCID = "0000-0001-9366-7127")))
 Depends:
-    R (>= 3.2.0),
+    methods,
+    R (>= 3.2.0)
 Imports:
     sf
 Description: Movement classes for tracking data and trajectories,
@@ -48,4 +49,4 @@ VignetteBuilder: knitr
 URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
 BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
-    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr, rmarkdown, lwgeom, trackeR, amt
+    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr, rmarkdown, lwgeom, trackeR, amt, lubridate, sp

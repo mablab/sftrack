@@ -37,7 +37,7 @@ calc_relangle(..., x, abs_angle)
 
 \item{dt}{(optional) output of calc_difftime if already calculated. Otherwise will call `calc_difftime()` internally}
 
-\item{rel_angle}{(optional) output of calc_relangle if already calculated. Otherwise will call `calc_relangle()` internally}
+\item{abs_angle}{(optional) output of calc_absangle if already calculated. Otherwise will call `calc_absangle()` internally}
 }
 \description{
 step calculation functions

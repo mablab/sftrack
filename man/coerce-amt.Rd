@@ -23,6 +23,8 @@ convert to and from amt class 'track_xy'
 \examples{
 #'
 library(amt)
+library(lubridate)
+library(sp)
 data(sh)
 
 sh$timestamp <- as.POSIXct(lubridate::ymd(sh$day) +

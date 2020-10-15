@@ -155,7 +155,7 @@ step_recalc <- function(x, return = FALSE) {
 #' @param dy (optional) output of calc_dy if already calculated. Otherwise will call `calc_dy()` internally
 #' @param len (optional) output of calc_steplen if already calculated. Otherwise will call `calc_steplen()` internally
 #' @param dt (optional) output of calc_difftime if already calculated. Otherwise will call `calc_difftime()` internally
-#' @param rel_angle (optional) output of calc_relangle if already calculated. Otherwise will call `calc_relangle()` internally
+#' @param abs_angle (optional) output of calc_absangle if already calculated. Otherwise will call `calc_absangle()` internally
 #' @param ... ignored
 #' @export
 calc_dx <- function(x) {
