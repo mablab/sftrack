@@ -7,19 +7,15 @@
 #' @examples
 #' #'
 #' library(amt)
-#' library(lubridate)
-#' library(sp)
 #' data(sh)
 #'
-#' sh$timestamp <- as.POSIXct(lubridate::ymd(sh$day) +
-#'   lubridate::hms(sh$time))
+#' sh$timestamp <- as.POSIXct(paste(sh$day,sh$time))
 #' sh <- sh[!duplicated(sh$timestamp), ]
 #'
 #' # create new columns
 #' sh$id <- "Animal 1"
 #' tr1 <- make_track(sh, x_epsg31467, y_epsg31467, timestamp,
-#'   id = id,
-#'   crs = sp::CRS("+init=epsg:31467")
+#'                   id = id
 #' )
 #'
 #' head(as_sftrack(tr1))
