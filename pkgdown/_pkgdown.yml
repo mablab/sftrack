@@ -8,7 +8,7 @@ template:
   params:
     bootswatch: cosmo
     docsearch:
-      api_key: "apiKey"
+      api_key: "409be5077b7b677f1d985eef0f7949e6"
       index_name: "sftrack"
   opengraph:
     image:
