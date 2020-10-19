@@ -1,4 +1,4 @@
-# sftrack: Central classes for tracking and movement data  <img src="man/figures/sftrack-logo-200-transp-bg.png" align="right" width="200px"/>
+# sftrack: Modern classes for tracking and movement data  <img src="man/figures/sftrack-logo-200-transp-bg.png" align="right" width="200px"/>
 
 <!-- ![sftrack logo](Figures/sftrack-logo-200-transp-bg.png "sftrack logo") -->
 
