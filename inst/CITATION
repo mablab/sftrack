@@ -15,6 +15,6 @@ citEntry(entry = "Manual",
   textVersion  = paste0(
       "Matthew Boone, Rocío Joo and Mathieu Basille (",
       year,
-      ,"). sftrack: Modern classes for tracking and movement data. ",
-      note, "https://mablab.org/sftrack/")
+      "). sftrack: Modern classes for tracking and movement data. ",
+      note, ". https://mablab.org/sftrack/")
 )
