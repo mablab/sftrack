@@ -6,13 +6,13 @@ Authors@R:
     c(person(given = "Matthew",
              family = "Boone",
              role = c("aut", "cre"),
-             email = "mttboone@gmail.com",
-             comment = c(ORCID = "0000-0002-8070-4715")),
+             email = "basille@ufl.edu",
+             comment = structure("0000-0002-8070-4715", .Names = "ORCID")),
       person(given = "Rocío",
              family = "Joo",
              role = "aut",
              email = "rocio.joo@ufl.edu",
-             comment = c(ORCID = "0000-0003-0319-4210")),
+             comment = structure("0000-0003-0319-4210", .Names = "ORCID")),
       person(given = "Clement",
              family = "Calenge",
              role = "ctb",
@@ -21,12 +21,12 @@ Authors@R:
              family = "Van Loon",
              role = "ctb",
              email = "e.e.vanloon@uva.nl",
-             comment = c(ORCID = "0000-0002-8895-0427")),
+             comment = structure("0000-0002-8895-0427", .Names = "ORCID")),
       person(given = "Mathieu",
              family = "Basille",
              role = "aut",
              email = "basille@ufl.edu",
-             comment = c(ORCID = "0000-0001-9366-7127")))
+             comment = structure("0000-0001-9366-7127", .Names = "ORCID")))
 Depends:
     R (>= 3.2.0)
 Imports:

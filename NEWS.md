@@ -1,6 +1,6 @@
 # sftrack 0.5.2 (2020-10-20)
 
-* Clean up for CRAN (description, version, license, …).
+* Clean up for CRAN (DESCRIPTION, version, LICENSE, vignettes…).
 * Added full pkgdown website.
 
 

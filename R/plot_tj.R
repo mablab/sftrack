@@ -9,6 +9,7 @@
 #' plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
 #' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 #' @method plot sftrack
+#' @importFrom graphics plot
 #' @examples
 #' #'
 #' library(sftrack)
@@ -51,6 +52,7 @@ plot.sftrack <- function(x, y, ...) {
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
+#' @importFrom graphics plot
 plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
   # x <- my_sftraj
   graphics::par(oma = c(1, 1, 1, 4))

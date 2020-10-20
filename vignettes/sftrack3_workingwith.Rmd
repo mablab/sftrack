@@ -1,27 +1,27 @@
 ---
 title: "3. Structure of sftrack/sftraj objects"
-output:
-  html_document:
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 2
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{3. Structure of sftrack/sftraj object}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(lwgeom)
+knitr::opts_chunk$set(
+                    echo = TRUE,
+                    fig.width = 6,
+                    fig.height = 6)
+library("lwgeom")
+
 ```
+
 This is section will go more depth into the structure of sftrack/sftraj objects and how to work with them.
 
 To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with the 3 required columns (group, geometry, and time). However, they are also of the subclass `sf`. This allows them to act like sf objects when working with functions in the `sf` package but act as `sftrack` objects for all other actions. It should be noted that when possible sftrack objects will mimic sf functionality and thus many of the same words and tactics are used.
 
 ```{r}
-library(sftrack)
+library("sftrack")
 
 # Make tracks from raw data
 data('raccoon', package = 'sftrack')

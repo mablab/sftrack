@@ -1,20 +1,20 @@
 ---
 title: "1. Overview of sftrack"
 output:
-  html_document:
+  rmarkdown::html_vignette:
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 3
 vignette: >
   %\VignetteIndexEntry{1. Overview of sftrack}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+                    echo = TRUE,
+                    fig.width = 6,
+                    fig.height = 6)
+
 ```
 
 ## Definitions of movement data

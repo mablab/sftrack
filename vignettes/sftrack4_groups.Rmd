@@ -1,19 +1,17 @@
 ---
 title: "4. Fantastic Groups and how to use them"
-output:
-  html_document:
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 2
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{4. Fantastic Groupss and how to use them}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+                    echo = TRUE,
+                    fig.width = 6,
+                    fig.height = 6)
 
 ```
 
@@ -27,7 +25,7 @@ A `c_grouping` is a collection of `s_groups` and exists at the column level. Gro
 We start by looking at the structure of a `c_grouping`
 
 ```{r}
-library(sftrack)
+library("sftrack")
 data('raccoon', package = 'sftrack')
 #raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 group_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)

@@ -1,24 +1,23 @@
 ---
 title: "5. Getting Spatial with sftrack"
-output:
-  html_document:
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 2
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{5. Getting Spatial with sftrack}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(lwgeom)
+knitr::opts_chunk$set(
+                    echo = TRUE,
+                    fig.width = 6,
+                    fig.height = 6)
+library("lwgeom")
+
 ```
 
 ```{r}
-library(sftrack)
+library("sftrack")
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
@@ -55,7 +54,7 @@ This does mean that not all `sf` functions will handle an `sftraj` object like i
 As an sftrack object is an sf object essentially all of the sf functions will work on it.
 
 ```{r}
-library(sf)
+library("sf")
 st_length(my_sftraj)[1:10]
 
 df1 <- data.frame(
@@ -125,8 +124,8 @@ This is a work in progress, but theres a geom_sftrack function that feeds `geom_
 Geom_sftrack is essentially geom_sf(data = data, aes(color = group_labels(data))) with NULL points subetted out. This may help when a user requires more advanced modification than the geom_sftrack allows.
 
 ```{r}
- library(ggplot2)
- ggplot() + geom_sftrack(data = my_sftraj)
+library("ggplot2")
+ggplot() + geom_sftrack(data = my_sftraj)
 ```
 
 You can use geom_sftrack just like any other ggplot layer, which means you can continue to make manuscript quality plots.
@@ -156,8 +155,8 @@ For plotting purposes we can create these linestrings quickly and plot them at m
 For `plot` and `geom_sftrack` there is an argument called **step_mode** that refers to whether youd like to plot the lines individually (`step_mode = T`), or generalize them into connected linestrings (`step_mode = F`). By default step_mode is set to TRUE.
 
 ```{r}
- library(ggplot2)
- ggplot() + geom_sftrack(data = my_sftraj, step_mode = TRUE)
+library("ggplot2")
+ggplot() + geom_sftrack(data = my_sftraj, step_mode = TRUE)
 ```
 
 You'll notice that the appearance of the plot changes as the POINTs are also displayed. This is because step mode adds POINTS to the plot that contain a fill as well as a color property.
