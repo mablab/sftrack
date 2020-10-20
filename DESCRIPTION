@@ -5,8 +5,8 @@ Date: 2020-10-19
 Authors@R: 
     c(person(given = "Matthew",
              family = "Boone",
-             role = c("aut", "cre"),
-             email = "basille@ufl.edu",
+             role = "aut",
+             email = "mttboone@gmail.com",
              comment = structure("0000-0002-8070-4715", .Names = "ORCID")),
       person(given = "Rocío",
              family = "Joo",
@@ -16,7 +16,7 @@ Authors@R:
       person(given = "Clement",
              family = "Calenge",
              role = "ctb",
-             email = "clement.calenge@oncfs.gouv.fr"),
+             email = "clement.calenge@ofb.gouv.fr"),
       person(given = "Emiel",
              family = "Van Loon",
              role = "ctb",
@@ -24,7 +24,7 @@ Authors@R:
              comment = structure("0000-0002-8895-0427", .Names = "ORCID")),
       person(given = "Mathieu",
              family = "Basille",
-             role = "aut",
+             role = c("aut", "cre"),
              email = "basille@ufl.edu",
              comment = structure("0000-0001-9366-7127", .Names = "ORCID")))
 Depends:
