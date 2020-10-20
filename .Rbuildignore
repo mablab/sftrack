@@ -16,3 +16,4 @@ tic.R
 ^pkgdown$
 ^README\.Rmd$
 ^cran-comments\.md$
+^CRAN-RELEASE$
