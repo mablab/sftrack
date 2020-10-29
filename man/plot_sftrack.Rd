@@ -2,13 +2,10 @@
 % Please edit documentation in R/plot_tj.R
 \name{plot_sftrack}
 \alias{plot_sftrack}
-\alias{plot.sftrack}
 \alias{plot.sftraj}
 \title{methods for plot sftrack/sftraj}
 \usage{
-\method{plot}{sftrack}(x, y, ...)
-
-\method{plot}{sftraj}(x, y, ..., step_mode = FALSE)
+\method{plot}{sftrack}(x, y, ..., step_mode = FALSE)
 }
 \arguments{
 \item{x}{sftrack/sftraj object}
@@ -30,9 +27,6 @@ plot each line & point individually. This approach is much slower to plot when n
 The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 }
 \examples{
-#'
-library(sftrack)
-
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- c(id = "animal_id")
@@ -42,12 +36,13 @@ my_sftrack <- as_sftrack(raccoon,
   group = burstz
 )
 
-# Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
+## Plotting with sftrack is just like sf. `...` will accept most
+## arguments as 'plot.sf':
 
 plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 
-# sftraj will as well for the most part, however as its a more
-# complex structure to speed up plotting.
+## sftraj will as well for the most part, however as its a more
+## complex structure to speed up plotting.
 my_sftraj <- as_sftraj(raccoon,
   time = "timestamp",
   coords = c("longitude", "latitude"),
@@ -56,4 +51,14 @@ my_sftraj <- as_sftraj(raccoon,
 
 plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
 #'
+plot.sftrack <- function(x, y, ...) {
+  # x <- my_sftrack
+  graphics::par(oma = c(1, 1, 1, 4))
+  group_col <- attr(x, "group_col")
+  x[["group"]] <- group_labels(x)
+  class(x) <- setdiff(class(x), c("sftrack"))
+  x <- x["group"]
+  plot(x, reset = FALSE, ...)
+}
+
 }

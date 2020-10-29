@@ -37,7 +37,7 @@
 #' )
 #'
 #' # Input is a ltraj
-#' library(adehabitatLT)
+#' library("adehabitatLT")
 #' ltraj_df <- as.ltraj(
 #'   xy = raccoon[, c("longitude", "latitude")],
 #'   date = as.POSIXct(raccoon$timestamp),
@@ -49,7 +49,7 @@
 #' head(my_sftrack)
 #'
 #' # Input is a sf object
-#' library(sf)
+#' library("sf")
 #' df1 <- raccoon[!is.na(raccoon$latitude), ]
 #' sf_df <- st_as_sf(df1, coords = c("longitude", "latitude"))
 #'
