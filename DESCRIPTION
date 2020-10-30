@@ -13,10 +13,10 @@ Authors@R:
              role = "aut",
              email = "rocio.joo@ufl.edu",
              comment = structure("0000-0003-0319-4210", .Names = "ORCID")),
-      person(given = "Clement",
-             family = "Calenge",
-             role = "ctb",
-             email = "clement.calenge@ofb.gouv.fr"),
+      # person(given = "Clement",
+      #        family = "Calenge",
+      #        role = "ctb",
+      #        email = "clement.calenge@ofb.gouv.fr"),
       person(given = "Emiel",
              family = "Van Loon",
              role = "ctb",
@@ -34,7 +34,7 @@ Imports:
 Description: Modern classes for tracking and movement data, building
     on 'sf' spatial infrastructure, and early theoretical work from
     Turchin (1998, ISBN: 9780878938476), and Calenge et al. (2009)
-    <doi: 10.1016/j.ecoinf.2008.10.002>. Tracking data are series of
+    <doi:10.1016/j.ecoinf.2008.10.002>. Tracking data are series of
     locations with at least 2-dimensional spatial coordinates (x,y), a
     time index (t), and individual identification (id) of the object
     being monitored; movement data are made of trajectories, i.e. the

@@ -2,15 +2,13 @@
 
 This is a resubmission. Relevant changes in this version:
 
-* In the file LICENSE: COPYRIGHT HOLDERs are now in one line.
-* In the file DESCRIPTION: We added references to seminal work
-  providing the foundations for this package.
-* In the file DESCRIPTION: The software name 'sftrack' is now single
-  quoted.
-
-Note: I, Mathieu Basille (basille@ufl.edu), am taking over Matt Boone
-(mttboone@gmail.com) as maintainer for this release. Matt is still
-first author of the package, but temporarily unavailable.
+  * DESCRIPTION: Removed the space within the doi specification to
+    make it clickable. 
+  * DESCRIPTION and LICENSE: Removed Calenge from contributors on his
+    request.
+  * README.md: Added HTTPS to problematic URL.
+  * plot_tj.R: Removed all calls to graphics::par that change user's
+    options.
 
 
 ## Test environments

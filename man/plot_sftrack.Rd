@@ -2,31 +2,41 @@
 % Please edit documentation in R/plot_tj.R
 \name{plot_sftrack}
 \alias{plot_sftrack}
+\alias{plot.sftrack}
 \alias{plot.sftraj}
-\title{methods for plot sftrack/sftraj}
+\title{Methods for plotting sftrack/sftraj}
 \usage{
-\method{plot}{sftrack}(x, y, ..., step_mode = FALSE)
+\method{plot}{sftrack}(x, y, ...)
+
+\method{plot}{sftraj}(x, y, ..., step_mode)
 }
 \arguments{
-\item{x}{sftrack/sftraj object}
+\item{x}{'sftrack' or 'sftraj' object}
 
 \item{y}{ignored}
 
-\item{...}{arguments to passed to plot}
+\item{...}{Further arguments passed to 'plot'.}
 
-\item{step_mode}{TRUE/FALSE, whether to plot in step_mode, See details}
+\item{step_mode}{Logical, whether to plot in step mode, see
+details, defaults to TRUE, unless there are more than 10,000
+steps.}
 }
 \description{
-methods for plot sftrack/sftraj
+Methods for plotting sftrack/sftraj
 
-methods for plot sftrack/sftraj
+Methods for plotting sftrack/sftraj
 }
 \details{
-step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
-plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
-The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
+Step mode refers to considering the trajectory as
+    individual 'steps', in the case of plot this means it will plot
+    each line & point individually. This approach is much slower to
+    plot with large objects, and is thus turned off when
+    n(steps)>10,000.  The alternative, much faster method is to
+    merge the steps into a multilinestring as continuous lines.
 }
 \examples{
+
+## Prepare an 'sftrack' object:
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- c(id = "animal_id")
@@ -38,27 +48,16 @@ my_sftrack <- as_sftrack(raccoon,
 
 ## Plotting with sftrack is just like sf. `...` will accept most
 ## arguments as 'plot.sf':
-
 plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 
-## sftraj will as well for the most part, however as its a more
-## complex structure to speed up plotting.
+## sftraj will as well for the most part; however it is a more complex
+## structure that combines points and steps (in step mode):
 my_sftraj <- as_sftraj(raccoon,
   time = "timestamp",
   coords = c("longitude", "latitude"),
   group = burstz
 )
 
-plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
-#'
-plot.sftrack <- function(x, y, ...) {
-  # x <- my_sftrack
-  graphics::par(oma = c(1, 1, 1, 4))
-  group_col <- attr(x, "group_col")
-  x[["group"]] <- group_labels(x)
-  class(x) <- setdiff(class(x), c("sftrack"))
-  x <- x["group"]
-  plot(x, reset = FALSE, ...)
-}
+plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 
 }

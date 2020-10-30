@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 
 
 <!-- badges: start -->
-[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](http://www.repostatus.org/badges/latest/active.svg)](http://www.repostatus.org/#active)
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 <!-- [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) -->
 <!-- ![](https://cranlogs.r-pkg.org/badges/sftrack) -->
@@ -119,7 +119,7 @@ summary_sftrack(my_sftrack)
 
 ```
 
-`sftrack` objects can easily be plotted with base R functions:
+`sftrack` objects can easily be plotted with basic plot functions:
 
 ```{r plot}
 plot(my_sftrack)
@@ -135,7 +135,8 @@ plot(my_sftrack)
   `as_sftrack`;
 * More plotting options for tracks and trajectories (in base R and
   `ggplot2`);
-* Provide Gantt chart-like or chronogram-like graphs.
+* Provide Gantt chart-like or chronogram-like graphs;
+* Dynamic exploration of trajectories.
 
 
 ## How can you help?
