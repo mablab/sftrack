@@ -1,0 +1,89 @@
+url: https://mablab.org/sftrack
+
+home:
+  title: "sftrack: Central Classes for Tracking Data"
+  description: "An R package providing modern classes for tracking and movement data, relying on `sf` spatial infrastructure."
+  
+template:
+  params:
+    bootswatch: cosmo
+    docsearch:
+      api_key: "409be5077b7b677f1d985eef0f7949e6"
+      index_name: "sftrack"
+  opengraph:
+    image:
+      src: man/figures/sftrack-social.png
+      alt: "sftrack: Central Classes for Movement Data"
+    twitter:
+      creator: "@birderboone"
+      site: "@MabLabUF"
+      card: summary_large_image
+
+navbar:
+  structure:
+    left:  [home, intro, reference, articles, tutorials, news, github]
+    right: [mablab]
+  components:
+    mablab: 
+      text: "→ MabLab.org"
+      href: https://mablab.org/
+
+authors:
+  Matthew Boone:
+    href: https://mablab.org/people/matt-boone/
+  Mathieu Basille:
+    href: https://mablab.org
+  Rocío Joo:
+    href: https://mablab.org/people/rocio-joo/
+
+figures:
+  fig.width: 6
+  fig.height: ~
+  fig.asp: 0.7
+
+reference:
+- title: "Creation/conversion"
+  contents:
+  - as_sftrack
+  - as_sftraj
+  - new_sftrack
+  - new_sftraj
+  - Print_sftrack_objects
+  - Print_sftraj_objects
+  - summary_sftrack
+- title: "Data checks and fixes"
+  contents:
+  - calc_sort_index
+  - check_NA_coords
+  - check_NA_group
+  - check_group_id
+  - check_group_names
+  - check_names_exist
+  - check_ordered
+  - check_t_regular
+  - check_time
+  - dup_timestamp
+  - fix_zero
+  - is_linestring
+  - which_duplicated
+- title: "Plotting"
+  contents:
+  - geom_sftrack
+  - plot_sftrack
+- title: "Group management"
+  contents:
+  - active_group
+  - active_group<-
+  - group_labels
+  - group_names 
+  - make_s_group
+- title: "Working with geometries"
+  contents:
+  - make_step_geom
+  - merge_traj
+  - step_metrics
+  - step_recalc
+  - pts_traj
+- title: "Datasets"
+  contents:
+  - raccoon

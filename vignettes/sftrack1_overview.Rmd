@@ -1,20 +1,21 @@
 ---
 title: "1. Overview of sftrack"
 output:
-  html_document:
+  rmarkdown::html_vignette:
     toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 2
 vignette: >
   %\VignetteIndexEntry{1. Overview of sftrack}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
+
 ```
 
 ## Definitions of movement data
@@ -23,12 +24,8 @@ We start by defining the main objects that `sftrack` is dealing
 with. At the top level, there is a **path**, i.e. the real-world
 (continuous) curve made by moving objects (Fig. 1).
 
-<!-- MB: Please use whichever form below that makes more sense for a -->
-<!-- vignette; and remove this comment. Do the same for all figures. -->
-
-![Fig. 1: Glossary introducing the main concepts.](glossary.png "Fig. 1: Glossary introducing the main concepts.")
-```{r, out.width = "75%", fig.align = "center", fig.cap = "Fig.1: Glossary introducing the main concepts."}
-knitr::include_graphics('glossary.png')
+```{r, out.width = "75%", fig.align = "center", fig.cap = "Fig.1: Glossary introducing the main concepts.", echo = FALSE}
+knitr::include_graphics("glossary.png")
 
 ```
 
@@ -65,6 +62,29 @@ significant information is lost. A sequence of steps from the same
 individual (not necessarily connected) finally forms a **trajectory**.
 
 [^martin]: Martin, J., Tolon, V., Van Moorter, B., Basille, M., & Calenge, C. (2009). On the use of telemetry in habitat selection studies. In D. Barculo, & J. Daniels (Eds.), Telemetry: Research, Technology and Applications (pp. 37–55). Nova Science Publishers Inc.
+
+
+### Tracking and movement data analyses
+
+Because of the dual nature of tracking and movement data, each data
+type allows different analyses based on the underlying geometric
+representation (points vs. steps). The following table summarizes in
+which case the use of tracking vs. movement data is appropriate:
+
+| Data                     | Tracking data                | Movement data                                       |
+|:-------------------------|:----------------------------:|:---------------------------------------------------:|
+| Geometric representation | Points                       | Steps                                               |
+| Applications             | Home ranges                  | Random walks                                        |
+|                          | Resource selection functions | Step selection functions                            |
+|                          | K-select                     | typical Hidden-Markov models and State-space models |
+|                          |                              | typical segmentation methods                        |
+|                          |                              | First passage time and Residence time               |
+Table: Table 1: Overview of applications based on tracking and movement data.
+
+While this is out of the scope of the `sftrack` package to provide
+methods for these space use analyses, the package however provide the
+underlying infrastructure for each case, and a few tools to handle
+movement of both living organisms and inanimate objects.
 
 
 ## A conceptual model for movement
@@ -207,7 +227,7 @@ my_sftrack <- as_sftrack(
   group = "animal_id",
   crs = "+init=epsg:4326")
 head(my_sftrack)
-plot(my_sftrack, axes= T)
+plot(my_sftrack)
 
 ```
 
@@ -216,16 +236,14 @@ plot(my_sftrack, axes= T)
 
 An `sftraj` object stores movement data (set of **trajectories**) in a
 `data.frame`, where the geometries are stored as a `LINESTRING` for
-each row. The linestring is a line built from the two points at t1 ->
-t2. This means that when an `sftraj` object is modified the steps
-likely need to be recalculated. Internally, anytime the active group
-is changed, then the geometry is recalculated.
+each row. The linestring is a line built from the two points at 
+$t_1 → t_2$. This means that when an `sftraj` object is modified the
+steps likely need to be recalculated. Internally, anytime the active
+group is changed, then the geometry is recalculated.
 
 ```{r sftraj-overview, echo = FALSE}
 my_sftraj <- as_sftraj(my_sftrack)
 head(my_sftraj)
-plot(my_sftraj, axes = TRUE)
+plot(my_sftraj)
 
 ```
-
-In the next vignettes we will go into more detail of sftrack objects, how to create them, an in-depth description of working with groupings, and how to plot with sftrack using base and ggplot.

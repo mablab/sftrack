@@ -4,35 +4,50 @@
 \alias{plot_sftrack}
 \alias{plot.sftrack}
 \alias{plot.sftraj}
-\title{methods for plot sftrack/sftraj}
+\title{Methods for plotting sftrack/sftraj}
 \usage{
-\method{plot}{sftrack}(x, y, ...)
+\method{plot}{sftrack}(x, y, key.pos, key.width, ...)
 
-\method{plot}{sftraj}(x, y, ..., step_mode = FALSE)
+\method{plot}{sftraj}(x, y, key.pos, key.width, ..., step_mode)
 }
 \arguments{
-\item{x}{sftrack/sftraj object}
+\item{x}{'sftrack' or 'sftraj' object}
 
 \item{y}{ignored}
 
-\item{...}{arguments to passed to plot}
+\item{key.pos}{Integer; side to plot a color key: 1 bottom, 2 left,
+3 top, 4 right; set to NULL to omit key, or -1 to select
+automatically (defaults to 4; see \code{\link[sf]{plot_sf}} for
+more details).}
 
-\item{step_mode}{TRUE/FALSE, whether to plot in step_mode, See details}
+\item{key.width}{Amount of space reserved for the key, including
+labels (see \code{\link[sf]{plot_sf}} for more details).)}
+
+\item{...}{Further arguments passed to 'plot.sf'. Among others,
+arguments for the key are set differently in 'sftrack' to allow
+for longer labels by default (but can be nevertheless
+adjusted).}
+
+\item{step_mode}{Logical; whether to plot in step mode, see
+details, defaults to TRUE, unless there are more than 10,000
+steps.}
 }
 \description{
-methods for plot sftrack/sftraj
+Methods for plotting sftrack/sftraj
 
-methods for plot sftrack/sftraj
+Methods for plotting sftrack/sftraj
 }
 \details{
-step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
-plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
-The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
+Step mode refers to considering the trajectory as
+    individual 'steps', in the case of plot this means it will plot
+    each line & point individually. This approach is much slower to
+    plot with large objects, and is thus turned off when
+    n(steps)>10,000.  The alternative, much faster method is to
+    merge the steps into a multilinestring as continuous lines.
 }
 \examples{
-#'
-library(sftrack)
 
+## Prepare an 'sftrack' object:
 data("raccoon")
 raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 burstz <- c(id = "animal_id")
@@ -42,18 +57,17 @@ my_sftrack <- as_sftrack(raccoon,
   group = burstz
 )
 
-# Plotting with sftrack is just like sf. `...` will accept most arguments as plot.sf
+## Plotting with sftrack is just like sf. `...` will accept most
+## arguments as 'plot.sf':
+plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray50")
 
-plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
-
-# sftraj will as well for the most part, however as its a more
-# complex structure to speed up plotting.
+## sftraj will as well for the most part; however it is a more complex
+## structure that combines points and steps (in step mode):
 my_sftraj <- as_sftraj(raccoon,
   time = "timestamp",
   coords = c("longitude", "latitude"),
   group = burstz
 )
+plot(my_sftraj, lwd = 5, cex = 5, bgc = "gray50", graticule = TRUE)
 
-plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
-#'
 }

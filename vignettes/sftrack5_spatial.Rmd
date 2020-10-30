@@ -1,24 +1,24 @@
 ---
 title: "5. Getting Spatial with sftrack"
-output:
-  html_document:
-    toc: true
-    toc_float:
-      collapsed: false
-      smooth_scroll: false
-    toc_depth: 2
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{5. Getting Spatial with sftrack}
-   %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
 ---
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(lwgeom)
+knitr::opts_chunk$set(
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
+library("lwgeom")
+
 ```
 
 ```{r}
-library(sftrack)
+library("sftrack")
 # Make tracks from raw data
 # raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
 data('raccoon', package = 'sftrack')
@@ -33,7 +33,9 @@ crs = '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error, crs = crs)
 ```
-## Geometry column  
+
+
+## Geometry column
 
 As stated earlier, the geometry column is built using `sf`, so the column functions exactly as it would in `sf`. You can modify it and redefine it using the `sf` tools. More specifically the geometry column of an sf_track object is an `sfc` column. The main difference between a standard `sf` object created using `st_as_sf` is that we automatically allow empty geometries, where as this option is turned off by default in `st_as_sf()`.  
 
@@ -55,7 +57,7 @@ This does mean that not all `sf` functions will handle an `sftraj` object like i
 As an sftrack object is an sf object essentially all of the sf functions will work on it.
 
 ```{r}
-library(sf)
+library("sf")
 st_length(my_sftraj)[1:10]
 
 df1 <- data.frame(
@@ -94,14 +96,19 @@ st_distance(animal1, road)
 
 The only thing to remember, is that a sftraj is a `GEOMETRY` column, and occasionally a function may not work with it. In those cases `is_linestring()` can be used to filter out points that do not have a t2.
 
+
 ## Plotting
 
-##### Base plotting 
+
+### Base plotting 
+
 `sftrack` is built to work with `sf` base plot methods. This means you can use most of the `sf` plot methods, `sftrack` largely just controls the grouping of the plot then feeds it back to `plot.sf()`. 
 
 
 ```{r}
 plot(my_sftraj)
+plot(my_sftraj, key.pos = 4, key.width = lcm(4), key.length = 1)
+get_key_pos(my_sftraj)
 ```
 
 This means that everytime you change the active_group, the plot view will change.
@@ -119,14 +126,15 @@ plot(my_sftrack, axes = TRUE, cex=5)
 ```
 
 
-##### ggplot
+### ggplot2
+
 This is a work in progress, but theres a geom_sftrack function that feeds `geom_sf` with the correct plotting information. Like `geom_sf` you input `data` into the geom_sftrack function and not into `ggplot()`.  Again ggplot assumes active_group is the grouping variable. Plots vary slightly based on if they're sftrack of sftraj class.
 
 Geom_sftrack is essentially geom_sf(data = data, aes(color = group_labels(data))) with NULL points subetted out. This may help when a user requires more advanced modification than the geom_sftrack allows.
 
 ```{r}
- library(ggplot2)
- ggplot() + geom_sftrack(data = my_sftraj)
+library("ggplot2")
+ggplot() + geom_sftrack(data = my_sftraj)
 ```
 
 You can use geom_sftrack just like any other ggplot layer, which means you can continue to make manuscript quality plots.
@@ -143,11 +151,13 @@ scale_color_manual(values = cols) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 ```
 
+
 ## Special functions for working with an sftraj
 
 To help with working with more complex sftraj objects, there is a growing suite of `sftraj` specific functions:
 
-##### Step mode in plotting
+
+### Step mode in plotting
 
 `sftraj` objects create linestrings for each row of data, as each row is not assumed to be related to the next row of data. This data structure may become inefficient to work with when plotting large data sets. When appropriate these trajectories can be generalized by combining linestrings where lines meet.
 
@@ -156,13 +166,14 @@ For plotting purposes we can create these linestrings quickly and plot them at m
 For `plot` and `geom_sftrack` there is an argument called **step_mode** that refers to whether youd like to plot the lines individually (`step_mode = T`), or generalize them into connected linestrings (`step_mode = F`). By default step_mode is set to TRUE.
 
 ```{r}
- library(ggplot2)
- ggplot() + geom_sftrack(data = my_sftraj, step_mode = TRUE)
+library("ggplot2")
+ggplot() + geom_sftrack(data = my_sftraj, step_mode = TRUE)
 ```
 
 You'll notice that the appearance of the plot changes as the POINTs are also displayed. This is because step mode adds POINTS to the plot that contain a fill as well as a color property.
 
-##### coord_traj 
+
+### coord_traj 
 
 This function returns a data.frame (x,y,z) of the point at t1 of each sftraj geometry. It works nearly identically to `sf::st_coordinates()`.
 
@@ -170,7 +181,9 @@ This function returns a data.frame (x,y,z) of the point at t1 of each sftraj geo
 coord_traj(my_sftraj$geometry)[1:10,]
 ```
 
-##### pts_traj 
+
+### pts_traj 
+
 If youd like to retain the geometries but still pull out t1 point you can use `pts_traj()`. This functions returns a list of the beginning point of each sftraj geometry, or an sfc column when using the argument `sfc = TRUE`.
 
 ```{r}
@@ -179,7 +192,8 @@ pts_traj(my_sftraj$geometry)[1:5]
 pts_traj(my_sftraj$geometry, sfc= TRUE)[1:5]
 ```
 
-##### is_linestring 
+### is_linestring 
+
 May help if you'd like to quickly filter an `sftraj` object to just contain pure linestrings. `is_linestring()` returns TRUE or FALSE if the geometry is a linestring. This does not recalculate anything, it just filters out steps that contained NAs in either phase. Its nearly identical to st_is(x,'LINESTRING'), but may be more intuitive for users.
 
 ```{r}
@@ -188,7 +202,9 @@ new_sftraj <- my_sftraj[is_linestring(my_sftraj$geometry),]
 head(new_sftraj)
 ```
 
-#### Calculating step metrics of an sftraj
+
+### Calculating step metrics of an sftraj
+
 For use in movement models, you may need to calculate the dx, dy, length, and turn angles of each step. You can do that in `sftrack` using `step_metrics()`. It should be noted it will accept an `sftrack` object, however, it first converts the geometries internally to `sftraj` geometries and then calculates step metrics. As with other `sf` objects, the return is assumed to be in the units of the `crs` when not specified. Absolute angle is measured in radians.
 
 ```{r}

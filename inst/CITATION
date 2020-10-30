@@ -1,0 +1,20 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+citHeader("To cite 'sftrack' in publications use:")
+
+citEntry(entry = "Manual",
+  title        = "{sftrack}: Modern Classes for Tracking and Movement Data",
+  author       = personList(as.person("Matthew Boone"),
+                   as.person("Rocío Joo"),
+                   as.person("Mathieu Basille")),
+  year         = year,
+  note         = note,
+  url          = "https://mablab.org/sftrack/",
+
+  textVersion  = paste0(
+      "Matthew Boone, Rocío Joo and Mathieu Basille (",
+      year,
+      "). sftrack: Modern classes for tracking and movement data. ",
+      note, ". https://mablab.org/sftrack/")
+)

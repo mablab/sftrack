@@ -94,9 +94,8 @@ my_track <- as_sftrack(raccoon,
   error = NA, coords = c("longitude", "latitude")
 )
 
-
 # Input is a sf object
-library(sf)
+library("sf")
 df1 <- raccoon[!is.na(raccoon$latitude), ]
 sf_df <- st_as_sf(df1, coords = c("longitude", "latitude"))
 

@@ -7,7 +7,7 @@
 #' @export make_step_geom
 #' @examples
 #' #'
-#' library(sf)
+#' library("sf")
 #' geom <- st_as_sf(data.frame(
 #'   x = c(1, 2, 2, 5),
 #'   y = c(0, 1, 5, 7)

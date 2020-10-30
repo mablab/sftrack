@@ -3,6 +3,8 @@
 LICENSE\.md
 \.github
 CODE_OF_CONDUCT.md
+archive
+builds
 Figures
 Proposal
 DevFlowDiagram
@@ -11,3 +13,9 @@ tic.R
 ^doc$
 ^Meta$
 .\.tar\.gz
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^cran-comments\.md$
+^CRAN-RELEASE$

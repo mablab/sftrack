@@ -1,46 +1,47 @@
 Package: sftrack
-Title: Central Classes for Movement Data
+Title: Modern Classes for Tracking and Movement Data
 Version: 0.6.0
-Date: 2020-09-13
+Date: 2020--
 Authors@R: 
     c(person(given = "Matthew",
              family = "Boone",
-             role = c("aut", "cre"),
+             role = "aut",
              email = "mttboone@gmail.com",
-             comment = c(ORCID = "0000-0002-8070-4715")),
+             comment = structure("0000-0002-8070-4715", .Names = "ORCID")),
       person(given = "Rocío",
              family = "Joo",
              role = "aut",
              email = "rocio.joo@ufl.edu",
-             comment = c(ORCID = "0000-0003-0319-4210")),
-      person(given = "Clement",
-             family = "Calenge",
-             role = "ctb",
-             email = "clement.calenge@oncfs.gouv.fr"),
+             comment = structure("0000-0003-0319-4210", .Names = "ORCID")),
+      # person(given = "Clement",
+      #        family = "Calenge",
+      #        role = "ctb",
+      #        email = "clement.calenge@ofb.gouv.fr"),
       person(given = "Emiel",
              family = "Van Loon",
              role = "ctb",
              email = "e.e.vanloon@uva.nl",
-             comment = c(ORCID = "0000-0002-8895-0427")),
+             comment = structure("0000-0002-8895-0427", .Names = "ORCID")),
       person(given = "Mathieu",
              family = "Basille",
-             role = "aut",
+             role = c("aut", "cre"),
              email = "basille@ufl.edu",
-             comment = c(ORCID = "0000-0001-9366-7127")))
+             comment = structure("0000-0001-9366-7127", .Names = "ORCID")))
 Depends:
-    methods,
     R (>= 3.2.0)
 Imports:
     sf
-Description: Movement classes for tracking data and trajectories,
-    relying on sf spatial infrastructure. Tracking data are series
-    of locations with at least 2-dimensional spatial coordinates (x,y)
-    and a time index (t); 'Sftrack' is designed to handle
-    movement of both living organisms and inanimate objects. This package 
-    introduces classes to handle movement data as well as common functions
-    used in tracking studies. Classes can be used on their own or 
-    incorporated into package infrastructure to provide
-    convenient standards for working with tracking data.
+Description: Modern classes for tracking and movement data, building
+    on 'sf' spatial infrastructure, and early theoretical work from
+    Turchin (1998, ISBN: 9780878938476), and Calenge et al. (2009)
+    <doi:10.1016/j.ecoinf.2008.10.002>. Tracking data are series of
+    locations with at least 2-dimensional spatial coordinates (x,y), a
+    time index (t), and individual identification (id) of the object
+    being monitored; movement data are made of trajectories, i.e. the
+    line representation of the path, composed by steps (the
+    straight-line segments connecting successive locations). 'sftrack'
+    is designed to handle movement of both living organisms and
+    inanimate objects.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -49,4 +50,6 @@ VignetteBuilder: knitr
 URL: https://mablab.org/sftrack/, https://github.com/mablab/sftrack
 BugReports: https://github.com/mablab/sftrack/issues
 Suggests: 
-    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr, geosphere, scales, covr, rmarkdown, lwgeom, trackeR, amt, lubridate, sp
+    testthat (>= 2.1.0), utils, ggplot2, adehabitatLT, knitr,
+    geosphere, scales, covr, rmarkdown, lwgeom, trackeR, amt,
+    lubridate, sp
