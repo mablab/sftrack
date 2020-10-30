@@ -1,16 +1,23 @@
-#' @title methods for plot sftrack/sftraj
+#' @title Methods for plotting sftrack/sftraj
 #' @name plot_sftrack
 #' @export
-#' @param x sftrack/sftraj object
+#' @param x 'sftrack' or 'sftraj' object
 #' @param y ignored
-#' @param step_mode TRUE/FALSE, whether to plot in step_mode, See details
-#' @param ... arguments to passed to plot
-#' @details step mode refers to considering the trajectory as individual 'steps', in the case of plot this means it will
-#' plot each line & point individually. This approach is much slower to plot when n(steps)>10,000.
-#' The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
+#' @param step_mode Logical, whether to plot in step mode, see
+#'     details, defaults to TRUE, unless there are more than 10,000
+#'     steps.
+#' @param ... Further arguments passed to 'plot'.
+#' @details Step mode refers to considering the trajectory as
+#'     individual 'steps', in the case of plot this means it will plot
+#'     each line & point individually. This approach is much slower to
+#'     plot with large objects, and is thus turned off when
+#'     n(steps)>10,000.  The alternative, much faster method is to
+#'     merge the steps into a multilinestring as continuous lines.
 #' @method plot sftrack
 #' @importFrom graphics plot
 #' @examples
+#'
+#' ## Prepare an 'sftrack' object:
 #' data("raccoon")
 #' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
 #' burstz <- c(id = "animal_id")
@@ -22,37 +29,39 @@
 #'
 #' ## Plotting with sftrack is just like sf. `...` will accept most
 #' ## arguments as 'plot.sf':
-#'
 #' plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
 #'
-#' ## sftraj will as well for the most part, however as its a more
-#' ## complex structure to speed up plotting.
+#' ## sftraj will as well for the most part; however it is a more complex
+#' ## structure that combines points and steps (in step mode):
 #' my_sftraj <- as_sftraj(raccoon,
 #'   time = "timestamp",
 #'   coords = c("longitude", "latitude"),
 #'   group = burstz
 #' )
 #'
-#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE, step_mode = TRUE)
-#' #'
-#' plot.sftrack <- function(x, y, ...) {
-#'   # x <- my_sftrack
-#'   graphics::par(oma = c(1, 1, 1, 4))
-#'   group_col <- attr(x, "group_col")
-#'   x[["group"]] <- group_labels(x)
-#'   class(x) <- setdiff(class(x), c("sftrack"))
-#'   x <- x["group"]
-#'   plot(x, reset = FALSE, ...)
-#' }
+#' plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
 #'
-#' @title methods for plot sftrack/sftraj
+plot.sftrack <- function(x, y, ...) {
+  group_col <- attr(x, "group_col")
+  x[[group_col]] <- group_labels(x)
+  class(x) <- setdiff(class(x), c("sftrack"))
+  x <- x[group_col]
+  plot(x, reset = FALSE, ...)
+}
+
+#' @title Methods for plotting sftrack/sftraj
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
 #' @importFrom graphics plot
-plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
-  # x <- my_sftraj
-  graphics::par(oma = c(1, 1, 1, 4))
+plot.sftraj <- function(x, y, ..., step_mode) {
+  if (missing(step_mode)) {
+    step_mode <- if (nrow(x) < 10000) {
+      TRUE
+    } else {
+      FALSE
+    }
+  }
   group_col <- attr(x, "group_col")
   if (step_mode) {
     x[[group_col]] <- group_labels(x)
@@ -61,7 +70,6 @@ plot.sftraj <- function(x, y, ..., step_mode = FALSE) {
   } else {
     x <- merge_traj(x)
   }
-
   plot(x, reset = FALSE, ...)
 }
 
