@@ -30,7 +30,7 @@ Authors@R:
 Depends:
     R (>= 3.2.0)
 Imports:
-    sf
+    sf, methods
 Description: Modern classes for tracking and movement data, building
     on 'sf' spatial infrastructure, and early theoretical work from
     Turchin (1998, ISBN: 9780878938476), and Calenge et al. (2009)

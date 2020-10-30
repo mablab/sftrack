@@ -69,7 +69,6 @@ plot.sftrack <- function(x, y, key.pos, key.width, ...) {
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
-#' @importFrom graphics plot
 plot.sftraj <- function(x, y, key.pos, key.width, ..., step_mode) {
   if (missing(key.pos))
     key.pos <- 4

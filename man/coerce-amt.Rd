@@ -6,7 +6,7 @@
 \alias{sftrack_to_track_xy}
 \title{convert to and from amt class 'track_xy'}
 \usage{
-\method{as_sftrack}{track_xy}(data, ...)
+\method{as_sftrack}{track_xy}(data, crs = attr(data, "crs_"), ...)
 
 \method{as_sftraj}{track_xy}(data, ...)
 
@@ -15,28 +15,27 @@ sftrack_to_track_xy(data, ...)
 \arguments{
 \item{data}{the sftrack object}
 
+\item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to the one provided by \code{data}.}
+
 \item{...}{any arguments to be passed on to `amt::make_track()`. See the help file in `amt` for more details}
 }
 \description{
 convert to and from amt class 'track_xy'
 }
 \examples{
-#'
-library(amt)
-library(lubridate)
-library(sp)
+
+library("amt")
 data(sh)
 
-sh$timestamp <- as.POSIXct(lubridate::ymd(sh$day) +
-  lubridate::hms(sh$time))
+## Add timestamp column and remove duplicated timestamps
+sh$timestamp <- as.POSIXct(paste(sh$day,sh$time))
 sh <- sh[!duplicated(sh$timestamp), ]
 
-# create new columns
+## Create new columns
 sh$id <- "Animal 1"
 tr1 <- make_track(sh, x_epsg31467, y_epsg31467, timestamp,
-  id = id,
-  crs = sp::CRS("+init=epsg:31467")
+                  id = id
 )
 
-head(as_sftrack(tr1))
+head(as_sftrack(tr1, crs = "+init=epsg:31467"))
 }

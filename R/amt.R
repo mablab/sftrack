@@ -1,32 +1,35 @@
 #' @title convert to and from amt class 'track_xy'
 #' @rdname coerce-amt
 #' @param data the data either sftrack,sftraj,or track_xy class to convert
+#' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to the one provided by \code{data}.
 #' @param ... ignored
 #' @method as_sftrack track_xy
 #' @export
 #' @examples
-#' #'
-#' library(amt)
+#'
+#' library("amt")
 #' data(sh)
 #'
+#' ## Add timestamp column, remove duplicated timestamps, and add ID
+#' #column:
 #' sh$timestamp <- as.POSIXct(paste(sh$day,sh$time))
 #' sh <- sh[!duplicated(sh$timestamp), ]
-#'
-#' # create new columns
 #' sh$id <- "Animal 1"
+#'
+#' ## Create the 'track_xyt' object:
 #' tr1 <- make_track(sh, x_epsg31467, y_epsg31467, timestamp,
 #'                   id = id
 #' )
 #'
-#' head(as_sftrack(tr1))
-as_sftrack.track_xy <- function(data, ...) {
+#' head(as_sftrack(tr1, crs = "+init=epsg:31467"))
+as_sftrack.track_xy <- function(data, crs = attr(data, "crs_"), ...) {
   if (!inherits(data, "track_xyt")) {
     stop("object needs to be of class track_xyt")
   }
 
   coords <- c("x_", "y_")
-  crs <- attr(data, "crs_")
-
+  if (is.null(crs))
+      stop("Data has no associated CRS.")
   data <- as.data.frame(data)
   extra_col <- setdiff(colnames(data), c("x_", "y_", "t_", "id"))
   # group
