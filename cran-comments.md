@@ -9,18 +9,19 @@ This is a resubmission. Relevant changes in this version:
   * README.md: Added HTTPS to problematic URL.
   * plot_tj.R: Removed all calls to graphics::par that change user's
     options.
+  * Vignettes: Adjusted figure size.
 
 
 ## Test environments
 
 * local Debian GNU/Linux 9 (stretch), R 3.3.3
 * Travis CI Ubuntu 16.04.6 LTS (xenial), R 4.0.2
-* win-builder, R 4.0.3 (release) +  (devel)
+* win-builder, R 4.0.3 (release) + 3.6.3 (old-release) + (devel)
 
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs, or NOTEs. 
+There were no ERRORs or WARNINGs. 
 
 There was one NOTE (win-builder):
 
