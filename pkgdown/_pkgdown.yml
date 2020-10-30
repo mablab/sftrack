@@ -36,6 +36,11 @@ authors:
   Rocío Joo:
     href: https://mablab.org/people/rocio-joo/
 
+figures:
+  fig.width: 6
+  fig.height: ~
+  fig.asp: 0.7
+
 reference:
 - title: "Creation/conversion"
   contents:

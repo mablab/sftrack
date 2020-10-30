@@ -6,18 +6,29 @@
 \alias{plot.sftraj}
 \title{Methods for plotting sftrack/sftraj}
 \usage{
-\method{plot}{sftrack}(x, y, ...)
+\method{plot}{sftrack}(x, y, key.pos, key.width, ...)
 
-\method{plot}{sftraj}(x, y, ..., step_mode)
+\method{plot}{sftraj}(x, y, key.pos, key.width, ..., step_mode)
 }
 \arguments{
 \item{x}{'sftrack' or 'sftraj' object}
 
 \item{y}{ignored}
 
-\item{...}{Further arguments passed to 'plot'.}
+\item{key.pos}{Integer; side to plot a color key: 1 bottom, 2 left,
+3 top, 4 right; set to NULL to omit key, or -1 to select
+automatically (defaults to 4; see \code{\link[sf]{plot_sf}} for
+more details).}
 
-\item{step_mode}{Logical, whether to plot in step mode, see
+\item{key.width}{Amount of space reserved for the key, including
+labels (see \code{\link[sf]{plot_sf}} for more details).)}
+
+\item{...}{Further arguments passed to 'plot.sf'. Among others,
+arguments for the key are set differently in 'sftrack' to allow
+for longer labels by default (but can be nevertheless
+adjusted).}
+
+\item{step_mode}{Logical; whether to plot in step mode, see
 details, defaults to TRUE, unless there are more than 10,000
 steps.}
 }
@@ -48,7 +59,7 @@ my_sftrack <- as_sftrack(raccoon,
 
 ## Plotting with sftrack is just like sf. `...` will accept most
 ## arguments as 'plot.sf':
-plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80")
+plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray50")
 
 ## sftraj will as well for the most part; however it is a more complex
 ## structure that combines points and steps (in step mode):
@@ -57,7 +68,6 @@ my_sftraj <- as_sftraj(raccoon,
   coords = c("longitude", "latitude"),
   group = burstz
 )
-
-plot(my_sftraj, axes = TRUE, lwd = 5, cex = 5, bgc = "gray80", graticule = TRUE)
+plot(my_sftraj, lwd = 5, cex = 5, bgc = "gray50", graticule = TRUE)
 
 }

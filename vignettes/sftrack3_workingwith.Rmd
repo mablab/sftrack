@@ -9,9 +9,10 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-                    echo = TRUE,
-                    fig.width = 6,
-                    fig.height = 6)
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
 library("lwgeom")
 
 ```
@@ -52,7 +53,7 @@ attributes(my_sftrack)[-(1:2)]
 
 The `sftrack` level attributes are simply pointers to the data. Any attributes relevant to the grouping or geometry are stored in those columns themselves. 
 
-### Geometry
+## Geometry
 
 The geometry column is an `sfc` object and contains the important spatial information for the track. As NA points are common and important in movement data, we create the `sfc` object with the option `na.fail = TRUE`. 
 ```{r}
@@ -76,22 +77,26 @@ The `sfc` column varies in structure dependent on the movement class. An `sftrac
   test_sftraj$geometry
 ```
 
-##### Grouping
 
-The grouping column is very specialized, and we will cover it in it's own section. To begin, the novel attributes it stores are the `active_group` and the `sort_index` which is a factor of the current active groups. The grouping class consists of single row level group: `s_groups` (a.k.a single groups) and a column level collection of s_groups called a `c_grouping` (a.k.a column/collection grouping). This column acts as a robust storage column for the groupings and is maintained across a `sftrack` object.
+## Grouping
+
+The grouping column is very specialized, and we will cover it in its own section. To begin, the novel attributes it stores are the `active_group` and the `sort_index` which is a factor of the current active groups. The grouping class consists of single row level group: `s_groups` (a.k.a single groups) and a column level collection of s_groups called a `c_grouping` (a.k.a column/collection grouping). This column acts as a robust storage column for the groupings and is maintained across a `sftrack` object.
 
 ```{r}
 attributes(my_sftrack$sft_group[1:10])
 summary(my_sftrack)
 ```
 
-### Time
+
+## Time
 
 The time column must be either an integer or POSIXct and the column must be of one type of time. Beyond that there is not much specialized functionality in the column. Sftrack uses the time column to order outputs for analysis, and attempts to order outputs when originally making an sftrack object, however, the data.frame is not required to be ordered for analysis. A call to `check_ordered()` is called before analysis, and otherwise it is assumed the order does not matter. This is particularly true for a sftraj, where the geometry level contains information about t1 and t2. 
 
-### Error
+
+## Error
 
 The error column is the column with the relevant error information for the spatial points in it. At present we have not built particular functionality but plan to in the future or reserve this for other developers to build upon.
+
 
 ## Subsetting
 
@@ -123,17 +128,19 @@ my_sftrack[1:3,c(1:3), drop = TRUE]
 If your subsetting will also change the end points for steps, then you can recalculate using `step_recalc()`. The output which is your original sftraj object but with the geometry column recalculated to the new t2s based on the timestamp. The results of which can be wildly different than the original subsetted data.frame. So be careful.
 
 ```{r}
-plot(my_sftraj, main ='original', axes = T)
+plot(my_sftraj, main = "Original")
 new_traj <- my_sftraj[seq(10,nrow(my_sftraj),10),]
 
-plot(new_traj, main ='before recalculation', axes = T)
+plot(new_traj, main = "Before recalculation")
 
-plot(step_recalc(new_traj),  main ='after recalculation', axes = T)
+plot(step_recalc(new_traj),  main = "After recalculation")
 ```
 
-### Some basic methods and functions of sftrack and sftraj objects
 
-##### print  
+## Some basic methods and functions of sftrack and sftraj objects
+
+
+### print
 
 The `print()` layout is a modified version of the `sf` print function. It returns important info summarazing the sftrack object like the geometry information and burst information. The print function defaults to printing 1000 rows and displaying all the columns. This can be modified using the `n_row` and `n_col` arguments, which subset the printed output in the repsective axis. When using `n_col` the display will show the `grouping` `geometry`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. `n_col` and `n_row` are optional arguments, and if values are not supplied they default to the data.frame defaults. Note : `n_row` is not a corrolary to `head()`, as `head()` physically subsets the data while the `n_row` option just modifies the printed output. 
 
@@ -144,14 +151,16 @@ If
 print(my_sftrack,5,10)
 ```
 
-##### summary  
+
+### summary
 
 `summary()` works as youd expect for a data.frame, except it displays the grouping column as a count of each active_group combination and the `active_group `for that column.  
 ```{r}
 summary(my_sftrack)
 ```
 
-##### summary_sftrack  
+
+### summary_sftrack
 
 `summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each grouping as well as the total distance of the grouping. This function uses `st_distance` from the `sf` package and therefore outputs in units of the CRS. In this example the distance is in meters.
 
@@ -165,6 +174,3 @@ You can also trigger this function by using `summary(data, stats = TRUE)`
 ```{r}
 summary(my_sftrack, stats = TRUE)
 ```
-
-
-

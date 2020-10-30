@@ -11,9 +11,10 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-                    echo = TRUE,
-                    fig.width = 6,
-                    fig.height = 6)
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
 
 ```
 
@@ -226,7 +227,7 @@ my_sftrack <- as_sftrack(
   group = "animal_id",
   crs = "+init=epsg:4326")
 head(my_sftrack)
-plot(my_sftrack, axes= T)
+plot(my_sftrack)
 
 ```
 
@@ -243,6 +244,6 @@ group is changed, then the geometry is recalculated.
 ```{r sftraj-overview, echo = FALSE}
 my_sftraj <- as_sftraj(my_sftrack)
 head(my_sftraj)
-plot(my_sftraj, axes = TRUE)
+plot(my_sftraj)
 
 ```

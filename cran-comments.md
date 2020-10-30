@@ -20,7 +20,7 @@ This is a resubmission. Relevant changes in this version:
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
+There were no ERRORs or WARNINGs, or NOTEs. 
 
 There was one NOTE (win-builder):
 

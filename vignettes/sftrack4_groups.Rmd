@@ -2,20 +2,20 @@
 title: "4. Fantastic Groups and how to use them"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{4. Fantastic Groupss and how to use them}
+  %\VignetteIndexEntry{4. Fantastic Groups and how to use them}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-                    echo = TRUE,
-                    fig.width = 6,
-                    fig.height = 6)
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
 
 ```
 
-## Groupings  
 
 Groupings are a big emphasis in `sftrack`. Structurally they are built with in the same vein as `sfc` and `sfg` classes in `sf`. 
 
@@ -39,9 +39,8 @@ A grouping contains group related information. The `id` of the subject/sensor is
 
 A c_grouping is simply a collection of `s_group`s. The `s_group` is where the grouping data is stored, and can be modified at the row level. The `s_groups` main job is to store row level grouping information and maintain consistency of the grouping variables.
 
-#### Basics
 
-##### single groups (s_group) 
+## Single groups (s_group) 
 An s_group is the grouping variables for a single row of data.  
 
 You can make an `s_group` object using `make_s_group()`, and giving it a list with the group variables named. In this example we have a single sensor named 'TTP_058' from a raccoon, and an additional grouping variable of month (entered as its numeric interpretation).
@@ -62,7 +61,9 @@ singlegroup$month <- '5'
 str(singlegroup)
 ```
 
-##### Column groupings (c_grouping) 
+
+## Column groupings (c_grouping) 
+
 C_groupings are a collection of s_groups with the same grouping names and an 'active_group' which is a subset of all the available group names.
 
 Similarly to s_group you can make a c_grouping with `make_s_group`. The argument `x` takes a list where each element is a vector indicating the named groupings as well as a vector of the active groups.
@@ -105,7 +106,8 @@ And the group names must match the ones in the c_grouping or an error is returne
 try( cg[1] <- make_s_group(list(id=3,month=2019)) )
 ```
 
-##### selecting a grouping
+
+## Selecting a grouping
 
 As `c_groupings` are stored as lists, it can be difficult to refer to a single group or combination of groupings. This is where the sort_index can come in handy. The sort_index is a factor of the combined active_group variables for each row where paste(id, name1,name2,...,sep='_')). The sort index is remade every time the active group changes, and therefore can be used to subset. You can access the sort index using `group_labels()`. 
 
@@ -146,7 +148,8 @@ group_names(cg)
 ```
 
 
-##### active group 
+## Active group 
+
 The active_group is a simple yet powerful feature. It dictates how your data is grouped for essentially all calculations. It can also be changed on the fly. You can view and change the active group of a column grouping with `active_group()`. Once changed, it recalculates the sort_index and in some cases recalculates the geometries.
 
 Active groups can be changed for any sftrack/straj/c_grouping

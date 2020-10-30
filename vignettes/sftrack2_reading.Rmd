@@ -9,9 +9,10 @@ vignette: >
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-                    echo = TRUE,
-                    fig.width = 6,
-                    fig.height = 6)
+    echo = TRUE,
+    fig.width = 6,
+    fig.asp = 0.7
+)
 
 ```
 
