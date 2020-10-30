@@ -81,7 +81,7 @@ understand it may still contain some bugs. Please submit any bug you
 find to the [issues](https://github.com/mablab/sftrack/issues) page.
 
 
-## Creating an `sftrack` object
+## A minimal introduction to `sftrack` and `sftraj` objects
 
 The easiest way to create `sftrack` objects is to start from a
 `data.frame` with all information as columns, typically the raw data
@@ -121,17 +121,29 @@ summary_sftrack(my_sftrack)
 
 ```
 
-`sftrack` objects can easily be plotted with basic plot functions:
+While `sftrack` objects contain tracking data (locations), they can
+easily be converted to movement data (with a step model instead) with
+`as_sftraj`:
 
-```{r plot}
-plot(my_sftrack)
+```{r sftraj}
+my_sftraj <- as_sftraj(my_sftrack)
+head(my_sftraj)
+
+```
+
+Both objects can easily be plotted with base R plot functions, which
+highlights the fundamental difference between tracking and movement
+data (`sftrack` on the left; `sftraj` on the right):
+
+```{r plot, fig.show = "hold", out.width = "50%"}
+plot(my_sftrack, main = "Tracking data (locations)")
+plot(my_sftraj, main = "Movement data (steps)")
 
 ```
 
 
 ## Roadmap
 
-* Submission to CRAN;
 * Data class converters from the main tracking packages, such as
   `move::Move` and `trackeR::trackeRdata`, integrated into
   `as_sftrack`;

@@ -34,8 +34,8 @@ remotes::install_github("mablab/sftrack", ref = "dev")
 
 The `dev` version is updated much more frequently and should pass the majority of CRAN checks. However, if you install the `dev` version, understand it may still contain some bugs. Please submit any bug you find to the [issues](https://github.com/mablab/sftrack/issues) page.
 
-Creating an `sftrack` object
-----------------------------
+A minimal introduction to `sftrack` and `sftraj` objects
+--------------------------------------------------------
 
 The easiest way to create `sftrack` objects is to start from a `data.frame` with all information as columns, typically the raw data extracted from telemetry devices:
 
@@ -96,18 +96,44 @@ summary_sftrack(my_sftrack)
 #> 2 TTP-058    222   0 2019-01-19 00:02:30 2019-02-01 23:02:30 26832.51
 ```
 
-`sftrack` objects can easily be plotted with basic plot functions:
+While `sftrack` objects contain tracking data (locations), they can easily be converted to movement data (with a step model instead) with `as_sftraj`:
 
 ``` r
-plot(my_sftrack)
+my_sftraj <- as_sftraj(my_sftrack)
+head(my_sftraj)
+#> Sftraj with 6 features and 10 fields (3 empty geometries) 
+#> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
+#> Timestamp : "timestamp" (POSIXct in UTC) 
+#> Grouping : "sft_group" (*id*) 
+#> -------------------------------
+#>   animal_id latitude longitude           timestamp height hdop vdop fix
+#> 1   TTP-058       NA        NA 2019-01-19 00:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-19 01:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-19 02:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-19 03:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-19 04:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 05:02:30    350  1.9  3.2  3D
+#>       sft_group                       geometry
+#> 1 (id: TTP-058)                    POINT EMPTY
+#> 2 (id: TTP-058)     POINT (-80.27906 26.06945)
+#> 3 (id: TTP-058)                    POINT EMPTY
+#> 4 (id: TTP-058)                    POINT EMPTY
+#> 5 (id: TTP-058) LINESTRING (-80.27431 26.06...
+#> 6 (id: TTP-058) LINESTRING (-80.2793 26.068...
 ```
 
-![](man/figures/README-plot-1.png)
+Both objects can easily be plotted with base R plot functions, which highlights the fundamental difference between tracking and movement data (`sftrack` on the left; `sftraj` on the right):
+
+``` r
+plot(my_sftrack, main = "Tracking data (locations)")
+plot(my_sftraj, main = "Movement data (steps)")
+```
+
+<img src="man/figures/README-plot-1.png" width="50%" /><img src="man/figures/README-plot-2.png" width="50%" />
 
 Roadmap
 -------
 
--   Submission to CRAN;
 -   Data class converters from the main tracking packages, such as `move::Move` and `trackeR::trackeRdata`, integrated into `as_sftrack`;
 -   More plotting options for tracks and trajectories (in base R and `ggplot2`);
 -   Provide Gantt chart-like or chronogram-like graphs;
