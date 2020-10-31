@@ -83,7 +83,7 @@ find to the [issues](https://github.com/mablab/sftrack/issues) page.
 
 ## A minimal introduction to `sftrack` and `sftraj` objects
 
-The easiest way to create `sftrack` objects is to start from a
+The easiest way to create an `sftrack` object is to start from a
 `data.frame` with all information as columns, typically the raw data
 extracted from telemetry devices:
 
@@ -100,7 +100,7 @@ function `as_sftrack()`. The function requires the three main elements
 of tracking data:
 
 - coordinates of the locations in at least the `x` and `y` axes (can
-  be UTM, lat/long, etc., as provided in `crs`);
+  be UTM, lat/long, etc., with projection provided in `crs`);
 - timestamps of the locations as `POSIXct` (*or* as `integer`);
 - grouping information (referred to as a "groups"), providing at least the
   identity of each individual.

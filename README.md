@@ -37,7 +37,7 @@ The `dev` version is updated much more frequently and should pass the majority o
 A minimal introduction to `sftrack` and `sftraj` objects
 --------------------------------------------------------
 
-The easiest way to create `sftrack` objects is to start from a `data.frame` with all information as columns, typically the raw data extracted from telemetry devices:
+The easiest way to create an `sftrack` object is to start from a `data.frame` with all information as columns, typically the raw data extracted from telemetry devices:
 
 ``` r
 library("sftrack")
@@ -55,7 +55,7 @@ head(raccoon)
 
 In order to convert your raw data into an `sftrack` object, use the function `as_sftrack()`. The function requires the three main elements of tracking data:
 
--   coordinates of the locations in at least the `x` and `y` axes (can be UTM, lat/long, etc., as provided in `crs`);
+-   coordinates of the locations in at least the `x` and `y` axes (can be UTM, lat/long, etc., with projection provided in `crs`);
 -   timestamps of the locations as `POSIXct` (*or* as `integer`);
 -   grouping information (referred to as a "groups"), providing at least the identity of each individual.
 
