@@ -90,7 +90,7 @@ extracted from telemetry devices:
 ```{r raccoon}
 library("sftrack")
 data(raccoon)
-raccoon$timestamp = as.POSIXct(raccoon$timestamp, tz = "EST5EDT")
+raccoon$timestamp <- as.POSIXct(as.POSIXlt(raccoon$timestamp, tz = "EST5EDT"))
 head(raccoon)
 
 ```
