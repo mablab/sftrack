@@ -42,15 +42,15 @@ The easiest way to create `sftrack` objects is to start from a `data.frame` with
 ``` r
 library("sftrack")
 data(raccoon)
-raccoon$timestamp = as.POSIXct(raccoon$timestamp, tz = "EST5EDT")
+raccoon$timestamp <- as.POSIXct(as.POSIXlt(raccoon$timestamp, tz = "EST5EDT"))
 head(raccoon)
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
-#> 1   TTP-058       NA        NA 2019-01-19 00:02:30     NA  0.0  0.0  NO
-#> 2   TTP-058 26.06945 -80.27906 2019-01-19 01:02:30      7  6.2  3.2  2D
-#> 3   TTP-058       NA        NA 2019-01-19 02:02:30     NA  0.0  0.0  NO
-#> 4   TTP-058       NA        NA 2019-01-19 03:02:30     NA  0.0  0.0  NO
-#> 5   TTP-058 26.06769 -80.27431 2019-01-19 04:02:30    858  5.1  3.2  2D
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 05:02:30    350  1.9  3.2  3D
+#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
 ```
 
 In order to convert your raw data into an `sftrack` object, use the function `as_sftrack()`. The function requires the three main elements of tracking data:
@@ -69,16 +69,16 @@ my_sftrack <- as_sftrack(
 head(my_sftrack)
 #> Sftrack with 6 features and 10 fields (3 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (POSIXct in UTC) 
+#> Timestamp : "timestamp" (POSIXct in EST5EDT) 
 #> Groupings : "sft_group" (*id*) 
 #> -------------------------------
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
-#> 1   TTP-058       NA        NA 2019-01-19 00:02:30     NA  0.0  0.0  NO
-#> 2   TTP-058 26.06945 -80.27906 2019-01-19 01:02:30      7  6.2  3.2  2D
-#> 3   TTP-058       NA        NA 2019-01-19 02:02:30     NA  0.0  0.0  NO
-#> 4   TTP-058       NA        NA 2019-01-19 03:02:30     NA  0.0  0.0  NO
-#> 5   TTP-058 26.06769 -80.27431 2019-01-19 04:02:30    858  5.1  3.2  2D
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 05:02:30    350  1.9  3.2  3D
+#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
 #>       sft_group                   geometry
 #> 1 (id: TTP-058)                POINT EMPTY
 #> 2 (id: TTP-058) POINT (-80.27906 26.06945)
@@ -92,8 +92,8 @@ head(my_sftrack)
 summary_sftrack(my_sftrack)
 #> Linking to GEOS 3.6.2, GDAL 2.1.2, PROJ 4.9.3
 #>     group points NAs          begin_time            end_time length_m
-#> 1 TTP-041    223   0 2019-01-19 00:02:30 2019-02-01 23:02:07 10195.75
-#> 2 TTP-058    222   0 2019-01-19 00:02:30 2019-02-01 23:02:30 26832.51
+#> 1 TTP-041    223   0 2019-01-18 19:02:30 2019-02-01 18:02:07 10195.75
+#> 2 TTP-058    222   0 2019-01-18 19:02:30 2019-02-01 18:02:30 26832.51
 ```
 
 While `sftrack` objects contain tracking data (locations), they can easily be converted to movement data (with a step model instead) with `as_sftraj`:
@@ -103,16 +103,16 @@ my_sftraj <- as_sftraj(my_sftrack)
 head(my_sftraj)
 #> Sftraj with 6 features and 10 fields (3 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (POSIXct in UTC) 
+#> Timestamp : "timestamp" (POSIXct in EST5EDT) 
 #> Grouping : "sft_group" (*id*) 
 #> -------------------------------
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
-#> 1   TTP-058       NA        NA 2019-01-19 00:02:30     NA  0.0  0.0  NO
-#> 2   TTP-058 26.06945 -80.27906 2019-01-19 01:02:30      7  6.2  3.2  2D
-#> 3   TTP-058       NA        NA 2019-01-19 02:02:30     NA  0.0  0.0  NO
-#> 4   TTP-058       NA        NA 2019-01-19 03:02:30     NA  0.0  0.0  NO
-#> 5   TTP-058 26.06769 -80.27431 2019-01-19 04:02:30    858  5.1  3.2  2D
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 05:02:30    350  1.9  3.2  3D
+#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
 #>       sft_group                       geometry
 #> 1 (id: TTP-058)                    POINT EMPTY
 #> 2 (id: TTP-058)     POINT (-80.27906 26.06945)
