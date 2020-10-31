@@ -87,14 +87,17 @@ plot.sftraj <- function(x, y, key.pos, key.width, ..., step_mode) {
     }
   }
   group_col <- attr(x, "group_col")
-  if (step_mode) {
+  if (step_mode)
+  {
     x[[group_col]] <- group_labels(x)
     class(x) <- setdiff(class(x), c("sftraj"))
     x <- x[group_col]
-  } else {
+  } else
+  {
+    warning("Step mode disabled. See details in the help of 'plot.sftraj'.")
     x <- merge_traj(x)
   }
-  plot(x, reset = FALSE, key.width = key.width, ...)
+  plot(x, reset = FALSE, key.pos = key.pos, key.width = key.width, ...)
 }
 
 #' @title Function to plot sftrack objects in ggplot
