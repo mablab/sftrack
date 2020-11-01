@@ -89,9 +89,7 @@ extracted from telemetry devices:
 
 ```{r raccoon}
 library("sftrack")
-data(raccoon)
-raccoon$timestamp <- as.POSIXct(as.POSIXlt(raccoon$timestamp, tz = "EST5EDT"))
-head(raccoon)
+head(raccoons)
 
 ```
 
@@ -106,18 +104,18 @@ of tracking data:
   identity of each individual.
 
 ```{r sftrack}
-my_sftrack <- as_sftrack(
-  data = raccoon,
+racc_track <- as_sftrack(
+  data = raccoons,
   coords = c("longitude","latitude"),
   time = "timestamp",
   group = "animal_id",
   crs = "+init=epsg:4326")
-head(my_sftrack)
+head(racc_track)
 
 ```
 
 ```{r summary}
-summary_sftrack(my_sftrack)
+summary_sftrack(racc_track)
 
 ```
 
@@ -126,8 +124,8 @@ easily be converted to movement data (with a step model instead) with
 `as_sftraj`:
 
 ```{r sftraj}
-my_sftraj <- as_sftraj(my_sftrack)
-head(my_sftraj)
+racc_traj <- as_sftraj(racc_track)
+head(racc_traj)
 
 ```
 
@@ -136,8 +134,8 @@ highlights the fundamental difference between tracking and movement
 data (`sftrack` on the left; `sftraj` on the right):
 
 ```{r plot, fig.show = "hold", out.width = "50%"}
-plot(my_sftrack, main = "Tracking data (locations)")
-plot(my_sftraj, main = "Movement data (steps)")
+plot(racc_track, main = "Tracking data (locations)")
+plot(racc_traj, main = "Movement data (steps)")
 
 ```
 
