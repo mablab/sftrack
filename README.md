@@ -41,9 +41,7 @@ The easiest way to create an `sftrack` object is to start from a `data.frame` wi
 
 ``` r
 library("sftrack")
-data(raccoon)
-raccoon$timestamp <- as.POSIXct(as.POSIXlt(raccoon$timestamp, tz = "EST5EDT"))
-head(raccoon)
+head(raccoons)
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
 #> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
 #> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
@@ -60,13 +58,13 @@ In order to convert your raw data into an `sftrack` object, use the function `as
 -   grouping information (referred to as a "groups"), providing at least the identity of each individual.
 
 ``` r
-my_sftrack <- as_sftrack(
-  data = raccoon,
+racc_track <- as_sftrack(
+  data = raccoons,
   coords = c("longitude","latitude"),
   time = "timestamp",
   group = "animal_id",
   crs = "+init=epsg:4326")
-head(my_sftrack)
+head(racc_track)
 #> Sftrack with 6 features and 10 fields (3 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
 #> Timestamp : "timestamp" (POSIXct in EST5EDT) 
@@ -89,7 +87,7 @@ head(my_sftrack)
 ```
 
 ``` r
-summary_sftrack(my_sftrack)
+summary_sftrack(racc_track)
 #> Linking to GEOS 3.6.2, GDAL 2.1.2, PROJ 4.9.3
 #>     group points NAs          begin_time            end_time length_m
 #> 1 TTP-041    223   0 2019-01-18 19:02:30 2019-02-01 18:02:07 10195.75
@@ -99,8 +97,8 @@ summary_sftrack(my_sftrack)
 While `sftrack` objects contain tracking data (locations), they can easily be converted to movement data (with a step model instead) with `as_sftraj`:
 
 ``` r
-my_sftraj <- as_sftraj(my_sftrack)
-head(my_sftraj)
+racc_traj <- as_sftraj(racc_track)
+head(racc_traj)
 #> Sftraj with 6 features and 10 fields (3 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
 #> Timestamp : "timestamp" (POSIXct in EST5EDT) 
@@ -125,8 +123,8 @@ head(my_sftraj)
 Both objects can easily be plotted with base R plot functions, which highlights the fundamental difference between tracking and movement data (`sftrack` on the left; `sftraj` on the right):
 
 ``` r
-plot(my_sftrack, main = "Tracking data (locations)")
-plot(my_sftraj, main = "Movement data (steps)")
+plot(racc_track, main = "Tracking data (locations)")
+plot(racc_traj, main = "Movement data (steps)")
 ```
 
 <img src="man/figures/README-plot-1.png" width="50%" /><img src="man/figures/README-plot-2.png" width="50%" />

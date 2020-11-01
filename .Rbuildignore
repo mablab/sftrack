@@ -3,6 +3,7 @@
 LICENSE\.md
 \.github
 CODE_OF_CONDUCT.md
+alba
 archive
 builds
 Figures
@@ -19,3 +20,4 @@ tic.R
 ^README\.Rmd$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
+^data-raw$
