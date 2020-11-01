@@ -18,12 +18,14 @@ raccoons$timestamp <- as.POSIXct(raccoon$timestamp, tz = "UTC") # Original time 
 attr(raccoons$timestamp, "tzone") <- "EST5EDT"                  # Converted to EST5EDT
 head(raccoons)
 
+group <- list(id = raccoons$animal_id, month = as.POSIXlt(raccoons$timestamp)$mon + 1)
+
 ## sftrack object
 racc_track <- as_sftrack(
     data = raccoons,
     coords = c("longitude", "latitude"),
     time = "timestamp",
-    group = "animal_id",
+    group = group,
     crs = "+init=epsg:4326")
 head(racc_track)
 
@@ -34,7 +36,7 @@ head(racc_traj)
 
 ## Export 'raccoons' dataset (raw, sftrack and sftraj):
 ## usethis::use_data(raccoons, overwrite = TRUE)
-save(raccoons, racc_track, racc_traj, file = "../data/raccoons.RData", compress = "bzip2")
+save(raccoons, racc_track, racc_traj, file = "../data/raccoons.RData", compress = "bzip2", version = 2)
 
 
 ## Test in empty environment:

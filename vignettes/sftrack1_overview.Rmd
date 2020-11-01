@@ -218,16 +218,8 @@ row.
 
 ```{r sftrack-overview, echo = FALSE}
 library("sftrack")
-data(raccoon)
-raccoon$timestamp = as.POSIXct(raccoon$timestamp, tz = "EST5EDT")
-my_sftrack <- as_sftrack(
-  data = raccoon,
-  coords = c("longitude","latitude"),
-  time = "timestamp",
-  group = "animal_id",
-  crs = "+init=epsg:4326")
-head(my_sftrack)
-plot(my_sftrack)
+print(racc_track, 6)
+plot(racc_track)
 
 ```
 
@@ -242,8 +234,8 @@ steps likely need to be recalculated. Internally, anytime the active
 group is changed, then the geometry is recalculated.
 
 ```{r sftraj-overview, echo = FALSE}
-my_sftraj <- as_sftraj(my_sftrack)
-head(my_sftraj)
-plot(my_sftraj)
+racc_traj <- as_sftraj(racc_track)
+print(racc_traj, 6)
+plot(racc_traj)
 
 ```

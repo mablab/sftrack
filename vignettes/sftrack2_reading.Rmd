@@ -56,128 +56,134 @@ In the case of vector inputs, the vectors are cbinded to `data` if data is suppl
 ```{r}
 library("sftrack")
 
-#data
-data('raccoon', package = 'sftrack')
+## Check raw data
+head(raccoons)
 
-#xyz
-coords = raccoon[,c('longitude','latitude')]
-crs = '+init=epsg:4326'
-#groupings
-group = list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon+1)
-active_group = c('id','month')
-#time
-time = as.POSIXct(raccoon$timestamp, tz='EST')
-#error
-error = raccoon$fix
-my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, 
+## Coordinates and projection
+coords <- raccoons[, c("longitude", "latitude")]
+crs <- "+init=epsg:4326"
+## Grouping
+group <- list(id = raccoons$animal_id,
+              month = as.POSIXlt(raccoons$timestamp)$mon + 1)
+active_group <- c("id", "month")
+## Time
+time <- raccoons$timestamp
+## Error
+error <- raccoons$fix
+racc_track <- as_sftrack(data = raccoons, coords = coords, group = group, 
                          active_group = active_group, time = time, 
                          crs = crs, error = error)
 
-head(my_sftrack)
+print(racc_track, 6)
 
 ```
 
 As you can see in this case the data is not overwritten, but extra columns added with the correct data.
 
--------------
 
-### data.frame inputs  
+### `data.frame` inputs
 
 Data.frame inputs generally describe the columns that represent the variables in `data`. If the columns are not found in `data`, an error is returned. 
 
 
 ```{r}
-raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
-raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
+raccoons$month <- as.POSIXlt(raccoons$timestamp)$mon + 1
 
-coords = c('longitude','latitude')
-group = c(id = 'animal_id', month = 'month')
-time = 'time'
-error = 'fix'
+coords <- c("longitude", "latitude")
+group <- c(id = "animal_id", month = "month")
+time <- "timestamp"
+error <- "fix"
 
-my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error)
+racc_traj <- as_sftraj(data = raccoons, coords = coords, group = group,
+                       time = time, error = error)
 
-head(my_sftraj)
+print(racc_traj, 6)
 ```
+
 
 ## Conversion mode
 
-`as_sftrack()` and `as_sftraj()` also accept other data types, but the arguments for each differ depending on the class its converting from. It currently accepts, `sf`, `ltraj` (from adehabitatLT), and eventually `tibbles` (tidyverse) and `track` (trajectories). 
+`as_sftrack()` and `as_sftraj()` also accept other data types, but the
+arguments for each differ depending on the class they're converting
+from. They currently accepts, `sf`, `ltraj` (from `adehabitatLT`),
+`trackeRdata` (from `trackeR`), and `track_xyt` (from `amt`).
 
-### Import from ltraj
 
-To read in an ltraj object all you need is an ltraj object created in `adehabitatLT`. All relevant information is taken from the object. The burst as defined in an ltraj is slightly different than sftracks groupings, so it assumes the ltraj 'burst' is the `id` field of the sftrack grouping object.
+### Import from `adehabitat::ltraj`
+
+To read in an `ltraj` object all you need is an actual `ltraj` object created in `adehabitatLT`. All relevant information is taken from the object. Bursts as defined in an `ltraj` are slightly different than `sftrack`'s groupings, so it assumes the `ltraj` burst is the `id` field of the `sftrack` grouping object.
 
 ```{r, message = FALSE}
 library("adehabitatLT")
 
-ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$timestamp),
- id = raccoon$animal_id, typeII = TRUE,
- infolocs = raccoon[,1:6] )
-
-my_sf <- as_sftrack(ltraj_df)
-head(my_sf)
-
+racc_ltraj <- as.ltraj(xy = raccoons[,c("longitude", "latitude")],
+                     date = raccoons$timestamp,
+                     id = raccoons$animal_id,
+                     infolocs = raccoons[,1:6])
+racc_from_ltraj <- as_sftrack(racc_ltraj)
+print(racc_from_ltraj, 6)
 
 ```
 
 ### sf objects
 
-`sf` objects are handled similarly as data.frame inputs except you do not need to input any information about the coordinates or projection. Grouping and time are still required. The sf spatial object must be in an `sfc_POINT` column. 
+`sf` objects are handled similarly as `data.frame` inputs except you do not need to input any information about the coordinates or projection. Grouping and time are still required. The `sf` GEOMETRY must be in an `sfc_POINT` column. 
 
 ```{r}
 library("sf")
-df1 <- raccoon[!is.na(raccoon$latitude),]
-sf_df <- st_as_sf(df1, coords=c('longitude','latitude'), crs = crs)
-group = c(id = 'animal_id')
-time_col = 'time'
+racc_sf <- st_as_sf(raccoons, coords = c("longitude","latitude"),
+                    crs = "+init=epsg:4326", remove = FALSE,
+                    na.fail = FALSE)
+group <- c(id = "animal_id")
+time_col <- "timestamp"
+print(racc_sf, n = 6)
 
-new_sftraj <- as_sftraj(sf_df, group = group, time = time_col) 
-head(new_sftraj)
-
-new_sftrack <- as_sftrack(sf_df, group = group, time= time_col) 
-head(new_sftrack)
+racc_from_sf <- as_sftraj(racc_sf, group = group, time= time_col) 
+print(racc_from_sf, 6)
 
 ```
 
+
 ### Intra-package conversion between classes
+
 Additionally `as_sftrack` and `as_sftraj` can convert back and forth between classes with no loss in information.
 
 ```{r}
-# Make tracks from raw data
-coords = c('longitude','latitude')
-group = c(id = 'animal_id', month = 'month')
-time = 'time'
-error = 'fix'
+## Convert between types
+new_sftrack <- as_sftrack(racc_traj)
+new_sftraj <- as_sftraj(racc_track)
 
-my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error)
-my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error)
-
-# Convert between types
-new_sftrack <- as_sftrack(my_sftraj)
-#head(new_sftrack)
-new_sftraj <- as_sftraj(my_sftrack)
-#head(new_sftraj)
-
-identical(my_sftraj,new_sftraj)
-identical(my_sftrack,new_sftrack)
+identical(racc_traj, new_sftraj)
+identical(racc_track, new_sftrack)
 ```
+
+
 ### Duplicated data
 
 A common issue with movement data is when duplicated gps time stamps are logged for a sensor. When this happens it can be impossible for `sftrack` to know which point to use. For this reason, sftrack returns an error if any `grouping` + `time` combinations are duplicated. 
 
 
 ```{r}
-
-raccoon$time[1] <- raccoon$time[2]
- try(as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error))
+raccoons$timestamp[1] <- raccoons$timestamp[2]
+try(as_sftrack(data = raccoons, coords = coords, group = group, time = time, error = error))
 
 ```
-To help determine which rows are duplicated you can use the `which_duplicated` function to check your inputs. After which you can delete the superfluous rows and try again:
+
+To help determine which rows are duplicated you can use the `which_duplicated()` function to check your inputs. After which you can delete the superfluous rows and try again:
 
 ```{r}
-which_duplicated(data = raccoon , group = group, time = time)
-raccoon <- raccoon[-2,]
-my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error)
+which_duplicated(data = raccoons , group = group, time = time)
+raccoons <- raccoons[-2, ]
+
+coords <- raccoons[, c("longitude", "latitude")]
+crs <- "+init=epsg:4326"
+group <- list(id = raccoons$animal_id,
+              month = as.POSIXlt(raccoons$timestamp)$mon + 1)
+active_group <- c("id", "month")
+time <- raccoons$timestamp
+error <- raccoons$fix
+racc_track <- as_sftrack(data = raccoons, coords = coords, group = group, 
+                         active_group = active_group, time = time, 
+                         crs = crs, error = error)
 
 ```

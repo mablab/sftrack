@@ -64,10 +64,10 @@ racc_track <- as_sftrack(
   time = "timestamp",
   group = "animal_id",
   crs = "+init=epsg:4326")
-head(racc_track)
-#> Sftrack with 6 features and 10 fields (3 empty geometries) 
+print(racc_track, 6)
+#> Sftrack with 445 features and 10 fields (168 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (POSIXct in EST5EDT) 
+#> Timestamp : "timestamp" (integer) 
 #> Groupings : "sft_group" (*id*) 
 #> -------------------------------
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
@@ -98,26 +98,26 @@ While `sftrack` objects contain tracking data (locations), they can easily be co
 
 ``` r
 racc_traj <- as_sftraj(racc_track)
-head(racc_traj)
-#> Sftraj with 6 features and 10 fields (3 empty geometries) 
+print(racc_traj, 6)
+#> Sftraj with 445 features and 10 fields (168 empty geometries) 
 #> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (POSIXct in EST5EDT) 
+#> Timestamp : "timestamp" (integer) 
 #> Grouping : "sft_group" (*id*) 
 #> -------------------------------
-#>   animal_id latitude longitude           timestamp height hdop vdop fix
-#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
-#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
-#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
-#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
-#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
-#>       sft_group                       geometry
-#> 1 (id: TTP-058)                    POINT EMPTY
-#> 2 (id: TTP-058)     POINT (-80.27906 26.06945)
-#> 3 (id: TTP-058)                    POINT EMPTY
-#> 4 (id: TTP-058)                    POINT EMPTY
-#> 5 (id: TTP-058) LINESTRING (-80.27431 26.06...
-#> 6 (id: TTP-058) LINESTRING (-80.2793 26.068...
+#>   animal_id latitude longitude                                     timestamp
+#> 1   TTP-058       NA        NA (2019-01-18 19:02:30 --> 2019-01-18 20:02:30)
+#> 2   TTP-058 26.06945 -80.27906 (2019-01-18 20:02:30 --> 2019-01-18 21:02:30)
+#> 3   TTP-058       NA        NA (2019-01-18 21:02:30 --> 2019-01-18 22:02:30)
+#> 4   TTP-058       NA        NA (2019-01-18 22:02:30 --> 2019-01-18 23:02:30)
+#> 5   TTP-058 26.06769 -80.27431 (2019-01-18 23:02:30 --> 2019-01-19 00:02:30)
+#> 6   TTP-058 26.06867 -80.27930 (2019-01-19 00:02:30 --> 2019-01-19 01:02:30)
+#>   height hdop vdop fix     sft_group                       geometry
+#> 1     NA  0.0  0.0  NO (id: TTP-058)                    POINT EMPTY
+#> 2      7  6.2  3.2  2D (id: TTP-058)     POINT (-80.27906 26.06945)
+#> 3     NA  0.0  0.0  NO (id: TTP-058)                    POINT EMPTY
+#> 4     NA  0.0  0.0  NO (id: TTP-058)                    POINT EMPTY
+#> 5    858  5.1  3.2  2D (id: TTP-058) LINESTRING (-80.27431 26.06...
+#> 6    350  1.9  3.2  3D (id: TTP-058) LINESTRING (-80.2793 26.068...
 ```
 
 Both objects can easily be plotted with base R plot functions, which highlights the fundamental difference between tracking and movement data (`sftrack` on the left; `sftraj` on the right):

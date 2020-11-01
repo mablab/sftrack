@@ -27,12 +27,13 @@ convert to and from amt class 'track_xy'
 library("amt")
 data(sh)
 
-## Add timestamp column and remove duplicated timestamps
+## Add timestamp column, remove duplicated timestamps, and add ID
+#column:
 sh$timestamp <- as.POSIXct(paste(sh$day,sh$time))
 sh <- sh[!duplicated(sh$timestamp), ]
-
-## Create new columns
 sh$id <- "Animal 1"
+
+## Create the 'track_xyt' object:
 tr1 <- make_track(sh, x_epsg31467, y_epsg31467, timestamp,
                   id = id
 )

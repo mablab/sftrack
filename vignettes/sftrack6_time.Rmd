@@ -1,0 +1,167 @@
+---
+title: "6. Time, time, time"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: false
+    toc_depth: 2
+vignette: >
+  %\VignetteIndexEntry{6. Time, time, time}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+## Time-class: `sft_timestamp`
+
+One requirement for a movement object is it must have a measurement of
+time. This unit can be sequential numbers dictating the order in which
+points were taken, or actual time. For the sake of `sftrack`, we allow
+either measurement of time. Time objects are stored in a column as an
+`sft_timestamp` class. This class is at the column level and is a
+collection of time measurements for a set of spatial points or steps.
+
+
+```{r}
+library("sftrack")
+head(raccoons)
+
+time <- make_timestamp(raccoons$timestamp)
+time[1:10]
+
+```
+
+When time is represented by a vector with one timestamp for each
+point, the time class acts just like a POSIXct or numeric object (and
+actually supersedes both).
+
+```{r}
+time[1:10] + 60
+class(time)
+
+```
+
+The only difference is it retains a few extra attributes at the column
+level for ease of calculating upon the entire list. These include
+retaining the timezone information and a descriptor if the list
+contains `POSIX` or `numeric` measurement of time. These attributes
+are only used by `sftrack` functions. The real `tzone` attribute
+reamains in each row level object.
+
+```{r}
+attributes(time)
+attributes(time[[1]])
+
+```
+
+Timestamp classes are automatically created in `sftrack` and `sftraj`
+objects, though they differ in the structure of time. An `sftrack`
+object only requires the start time ($t_1$) and thus stores only one
+measurement of time similar as seen above.
+
+```{r}
+print(racc_track, 6)
+
+```
+
+Trajectories, require a start and end time for each step. This
+requires a multi-dimensional time object. 
+
+```{r}
+print(racc_traj, 6)
+
+```
+
+Each row is a time interval that is independent of the other rows. So
+deleting a step (for instance with the same start time as a previous
+entries end time) does not affect the previous step in any way. 
+
+```{r}
+print(racc_traj[-2, ], 6)
+
+```
+
+
+## Functions to help access time
+
+
+### `t1` and `t2`
+
+**`t1`** is a basic function to grab the starting point of any
+`sftrack` or `sftraj` object, as well as `sft_timestamp` classes
+directly. In most cases this is simply 
+`lapply(timestamp, function(x) x[[1]])`.
+
+```{r}
+# sftrack
+t1(racc_track[1:5, ])
+
+# sftraj
+t1(racc_traj[1:5, ])
+
+# sft_timestamp
+t1(racc_traj$timestamp[1:5])
+
+```
+
+**`t2`** is a more complex function. `t2` is inherently easy in an
+`sftraj` where the true end point is stored in the timestamp, and in
+this case `t2` is thus simply `lapply(timestamp, function(x) x[[2]])`.
+
+```{r}
+t2(racc_traj[1:5,])
+
+```
+
+`sftrack`, `POSIXt`, or `numeric` vectors do not obviously have a
+$t_2$. In these cases, because it is useful internally, and possibly
+to the user, `t2` computes a lag of "time1" (i.e. takes the next
+record). When supplied with a `sftrack` the grouping is used to
+compute a more accurate $t_2$ with the grouping considered. When a
+single vector is supplied with either `sft_timestamp`, `POSIX`, or
+`numeric` a simple lag of 1 is computed with time.
+
+```{r}
+t2(racc_track[1:5, ])
+
+t2(Sys.time() + 1:10)
+
+t2(1:10)
+
+```
+
+If you'd like to calculate $t_2$ with grouping considered on these 1
+dimensional vectors, you can use `t2_by_group`, which requires $t_1$
+and the grouping. 
+
+```{r}
+grouping <- make_c_grouping(list(id = rep(1:2, 5)))
+t2 <- t2_by_group(1:10, grouping)
+
+data.frame(t1 = 1:10, t2 = t2, group = grouping)
+
+```
+
+
+### Recalculate time in an `sftraj` object
+
+While a step model of a `sftraj` generally assumes that both $t_1$ and
+$t_2$ of a step are independent of other steps, occasionally $t_2$ may
+need to be recalculated in an `sftraj` (for instance because of
+outliers or subsetting). In order to do this you can use
+`time_recalc()`. This function only works on `sftraj` objects:
+
+```{r}
+sub_traj <- racc_traj[-2, ]
+new_traj <- time_recalc(sub_traj)
+print(new_traj, 6)
+
+```
+
+This does not recalculate the geometries, that must be done separately
+with `step_recalc`.

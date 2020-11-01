@@ -1,10 +1,14 @@
-## sftrack 0.6.0 (2020--) : Time column and converters
+# sftrack 0.6.0 (2020--): Time column, converters, and raccoons dataset
 
-* The time column is now of its own class.
+* The time column is now of its own `sft_timestamp` class.
 * Added converters to and from `adehabitatLT::ltraj`,
   `trackeR::trackeRdata`, and `amt::track_xyt`.
 * `amt`, and `trackeR` included as suggests.
-* Tweaks to vignettes.
+* Added 'raccoons' dataset, available as raw data (`data.frame`
+  "raccoons"), tracking data (`sftrack` "racc_track"), and movement
+  data (`straj` "racc_traj").
+* [Removed old 'raccoon' dataset] + updated vignettes (with other minor
+  tweaks) [+ updated documentation].
 
 
 # sftrack 0.5.2 (2020-10-20)
@@ -19,7 +23,7 @@
 * Vignette updates.
 
 
-# sftrack 0.5 (2020-09-13) : Major update.
+# sftrack 0.5 (2020-09-13): Grouping and plots
 
 * Changed from 'burst' name to 'group' name. This includes changing
   `ind_burst` -> `s_group` (single group) and `multi_burst` ->

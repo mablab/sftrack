@@ -110,7 +110,7 @@ racc_track <- as_sftrack(
   time = "timestamp",
   group = "animal_id",
   crs = "+init=epsg:4326")
-head(racc_track)
+print(racc_track, 6)
 
 ```
 
@@ -125,7 +125,7 @@ easily be converted to movement data (with a step model instead) with
 
 ```{r sftraj}
 racc_traj <- as_sftraj(racc_track)
-head(racc_traj)
+print(racc_traj, 6)
 
 ```
 
