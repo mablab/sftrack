@@ -31,20 +31,9 @@ plot each line & point individually. This approach is much slower to plot when n
 The alternative method is to merge the steps into a multilinestring of continuous lines. This is much faster to plot.
 }
 \examples{
-#'
+
 require("ggplot2")
-data("raccoon")
-raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-burstz <- c(id = "animal_id")
-
-# sftraj will as well for the most part, however as its a more complex
-# structure to speed up plotting.
-my_sftraj <- as_sftraj(raccoon,
-  time = "timestamp",
-  coords = c("longitude", "latitude"),
-  group = burstz
-)
-
 ggplot() +
-  geom_sftrack(data = my_sftraj)
+  geom_sftrack(data = racc_traj)
+
 }

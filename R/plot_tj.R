@@ -26,28 +26,13 @@
 #' @importFrom graphics plot lcm
 #' @examples
 #'
-#' ## Prepare an 'sftrack' object:
-#' data("raccoon")
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-#' burstz <- c(id = "animal_id")
-#' my_sftrack <- as_sftrack(raccoon,
-#'   time = "timestamp",
-#'   coords = c("longitude", "latitude"),
-#'   group = burstz
-#' )
-#'
 #' ## Plotting with sftrack is just like sf. `...` will accept most
 #' ## arguments as 'plot.sf':
-#' plot(my_sftrack, axes = TRUE, lwd = 5, cex = 5, bgc = "gray50")
+#' plot(racc_track, axes = TRUE, lwd = 5, cex = 5, bgc = "gray50")
 #'
 #' ## sftraj will as well for the most part; however it is a more complex
 #' ## structure that combines points and steps (in step mode):
-#' my_sftraj <- as_sftraj(raccoon,
-#'   time = "timestamp",
-#'   coords = c("longitude", "latitude"),
-#'   group = burstz
-#' )
-#' plot(my_sftraj, lwd = 5, cex = 5, bgc = "gray50", graticule = TRUE)
+#' plot(racc_traj, lwd = 5, cex = 5, bgc = "gray50", graticule = TRUE)
 #'
 plot.sftrack <- function(x, y, key.pos, key.width, ...) {
   if (missing(key.pos))
@@ -112,22 +97,11 @@ plot.sftraj <- function(x, y, key.pos, key.width, ..., step_mode) {
 #' @param ... arguments to passed to ggplot
 #' @param step_mode TRUE/FALSE, whether to plot in step_mode, See details
 #' @examples
-#' #'
+#'
 #' require("ggplot2")
-#' data("raccoon")
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-#' burstz <- c(id = "animal_id")
-#'
-#' # sftraj will as well for the most part, however as its a more complex
-#' # structure to speed up plotting.
-#' my_sftraj <- as_sftraj(raccoon,
-#'   time = "timestamp",
-#'   coords = c("longitude", "latitude"),
-#'   group = burstz
-#' )
-#'
 #' ggplot() +
-#'   geom_sftrack(data = my_sftraj)
+#'   geom_sftrack(data = racc_traj)
+#'
 #' @export
 geom_sftrack <- function(mapping, data, ...) {
   UseMethod("geom_sftrack")

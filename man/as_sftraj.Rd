@@ -83,22 +83,20 @@ Convert objects into sftrack objects.
 }
 \examples{
 #'
-data("raccoon")
-raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
+group <- list(id = raccoons$animal_id, month = as.POSIXlt(raccoons$timestamp)$mon+1)
 # Input is a data.frame
-my_track <- as_sftraj(raccoon,
-  group = burstz, time = "timestamp",
+my_track <- as_sftraj(raccoons,
+  group = group, time = "timestamp",
   error = NA, coords = c("longitude", "latitude")
 )
 
 # Input is a ltraj
 library("adehabitatLT")
 ltraj_df <- as.ltraj(
-  xy = raccoon[, c("longitude", "latitude")],
-  date = as.POSIXct(raccoon$timestamp),
-  id = raccoon$animal_id, typeII = TRUE,
-  infolocs = raccoon[, 1:6]
+  xy = raccoons[, c("longitude", "latitude")],
+  date = raccoons$timestamp,
+  id = raccoons$animal_id, typeII = TRUE,
+  infolocs = raccoons[, 1:6]
 )
 
 my_sftrack <- as_sftraj(ltraj_df)
@@ -106,17 +104,17 @@ head(my_sftrack)
 
 # Input is a sf object
 library("sf")
-df1 <- raccoon[!is.na(raccoon$latitude), ]
+df1 <- raccoons[!is.na(raccoons$latitude), ]
 sf_df <- st_as_sf(df1, coords = c("longitude", "latitude"))
 
 new_sftrack <- as_sftrack(sf_df, group = c(id = "animal_id"), time = "timestamp")
 head(new_sftrack)
 
 # Input is an sftrack object
-my_track <- as_sftrack(raccoon,
+my_track <- as_sftrack(raccoons,
   time = "timestamp",
   error = NA, coords = c("longitude", "latitude"),
-  group = burstz
+  group = group
 )
 
 new_traj <- as_sftraj(my_track)

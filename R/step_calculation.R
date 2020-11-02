@@ -6,17 +6,17 @@
 #' @param geometry the geometery data from either sf or sf_track. Must be an sf geometry class
 #' @export make_step_geom
 #' @examples
-#' #'
+#'
 #' library("sf")
 #' geom <- st_as_sf(data.frame(
 #'   x = c(1, 2, 2, 5),
 #'   y = c(0, 1, 5, 7)
 #' ), coords = c("x", "y"))
 #'
-#' burst <- list(id = rep(1, 4))
+#' group <- list(id = rep(1, 4))
 #' time <- 1:4
 #'
-#' cg <- make_c_grouping(burst)
+#' cg <- make_c_grouping(group)
 #'
 #' make_step_geom(
 #'   group = cg,
@@ -24,9 +24,9 @@
 #'   time = time
 #' )
 make_step_geom <- function(group, time, geometry) {
-  # burstz <- list(id = raccoon_data$animal_id, month = as.POSIXlt(raccoon_data$timestamp)$mon)
-  # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$timestamp),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',burst =burstz)
-  # burst = burst_select(make_multi_burst(burstz, active_burst = c('id')))
+  # group <- list(id = raccoon_data$animal_id, month = as.POSIXlt(raccoon_data$timestamp)$mon)
+  # #data_sf <- new_sftrack(raccoon_data, time =as.POSIXct(raccoon_data$timestamp),error = NA, coords = c('longitude','latitude','height'), tz = 'UTC',group =group)
+  # group = burst_select(make_multi_group(group, active_group = c('id')))
   # time = raccoon_data$timestamp
 
   idz <- group_labels(group)
@@ -63,17 +63,9 @@ make_step_geom <- function(group, time, geometry) {
 #' @param x an sftrack/sftraj object. sftrack objects will be converted to sftraj internally for calculation.
 #' @export
 #' @examples
-#' #'
-#' data("raccoon")
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-#' burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
-#' # Input is a data.frame
-#' my_sftraj <- as_sftraj(raccoon,
-#'   group = burstz, time = "timestamp",
-#'   error = NA, coords = c("longitude", "latitude")
-#' )
 #'
-#' step_metrics(my_sftraj)[1:10, ]
+#' step_metrics(racc_traj)[1:10, ]
+#'
 step_metrics <- function(x) {
   if (inherits(x, "sftrack")) {
     x <- as_sftraj(x)

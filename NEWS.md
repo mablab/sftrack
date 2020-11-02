@@ -6,9 +6,8 @@
 * `amt`, and `trackeR` included as suggests.
 * Added 'raccoons' dataset, available as raw data (`data.frame`
   "raccoons"), tracking data (`sftrack` "racc_track"), and movement
-  data (`straj` "racc_traj").
-* [Removed old 'raccoon' dataset] + updated vignettes (with other minor
-  tweaks) [+ updated documentation].
+  data (`straj` "racc_traj"). Removed old 'raccoon' dataset + updated
+  vignettes (with other minor tweaks) + updated documentation.
 
 
 # sftrack 0.5.2 (2020-10-20)

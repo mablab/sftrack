@@ -6,23 +6,14 @@
 #' @param traj a trajectory geometery from sf_traj
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
-#' #'
-#' data("raccoon")
-#' raccoon$timestamp <- as.POSIXct(raccoon$timestamp, "EST")
-#' burstz <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon)
-#' # Input is a data.frame
-#' my_traj <- as_sftraj(raccoon,
-#'   time = "timestamp",
-#'   error = NA, coords = c("longitude", "latitude"),
-#'   group = burstz
-#' )
-#' print(my_traj, 5, 10)
+#'
+#' print(racc_traj, 5, 10)
 #'
 #' # extract a list of points
-#' pts_traj(my_traj)[1:10]
+#' pts_traj(racc_traj)[1:10]
 #'
 #' # or a data.frame of points
-#' coord_traj(my_traj)[1:10]
+#' coord_traj(racc_traj)[1:10]
 #' @export
 pts_traj <- function(traj, sfc = FALSE) {
   pts <- st_geometry(traj)

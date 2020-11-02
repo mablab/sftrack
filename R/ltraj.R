@@ -10,10 +10,10 @@
 #' # Input is a ltraj
 #' library(adehabitatLT)
 #' ltraj_df <- as.ltraj(
-#'   xy = raccoon[, c("longitude", "latitude")],
-#'   date = as.POSIXct(raccoon$timestamp),
-#'   id = raccoon$animal_id, typeII = TRUE,
-#'   infolocs = raccoon[, 1:6]
+#'   xy = raccoons[, c("longitude", "latitude")],
+#'   date = raccoons$timestamp,
+#'   id = raccoons$animal_id, typeII = TRUE,
+#'   infolocs = raccoons[, 1:6]
 #' )
 #' my_sftrack <- as_sftrack(ltraj_df)
 #' head(my_sftrack)

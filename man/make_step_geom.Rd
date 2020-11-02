@@ -17,17 +17,17 @@ make_step_geom(group, time, geometry)
 This calculates step geometries as individual line segments based on the active_group
 }
 \examples{
-#'
+
 library("sf")
 geom <- st_as_sf(data.frame(
   x = c(1, 2, 2, 5),
   y = c(0, 1, 5, 7)
 ), coords = c("x", "y"))
 
-burst <- list(id = rep(1, 4))
+group <- list(id = rep(1, 4))
 time <- 1:4
 
-cg <- make_c_grouping(burst)
+cg <- make_c_grouping(group)
 
 make_step_geom(
   group = cg,
