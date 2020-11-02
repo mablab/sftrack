@@ -128,7 +128,7 @@ cg <- make_c_grouping(x = group_list, active_group = c("id","year"))
 group_labels(cg)[1:10]
 
 ## Selecting group "TTP-058_2"
-print(racc_traj[group_labels(racc_traj) %in% c("TTP-058_2"), ], 6)
+racc_traj[group_labels(racc_traj) %in% c("TTP-058_2"), ]
 
 ```
 
@@ -137,7 +137,7 @@ You can also subset by entering the group label of the group itself in either th
 ```{r}
 head(cg["1_2020"])
 
-print(racc_traj["TTP-058_2", ], 6)
+racc_traj["TTP-058_2", ]
 
 ```
 

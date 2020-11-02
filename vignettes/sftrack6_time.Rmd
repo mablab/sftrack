@@ -65,7 +65,7 @@ object only requires the start time ($t_1$) and thus stores only one
 measurement of time similar as seen above.
 
 ```{r}
-print(racc_track, 6)
+racc_track
 
 ```
 
@@ -73,7 +73,7 @@ Trajectories, require a start and end time for each step. This
 requires a multi-dimensional time object. 
 
 ```{r}
-print(racc_traj, 6)
+racc_traj
 
 ```
 
@@ -82,7 +82,7 @@ deleting a step (for instance with the same start time as a previous
 entries end time) does not affect the previous step in any way. 
 
 ```{r}
-print(racc_traj[-2, ], 6)
+racc_traj[-2, ]
 
 ```
 
@@ -158,8 +158,7 @@ outliers or subsetting). In order to do this you can use
 
 ```{r}
 sub_traj <- racc_traj[-2, ]
-new_traj <- time_recalc(sub_traj)
-print(new_traj, 6)
+(new_traj <- time_recalc(sub_traj))
 
 ```
 

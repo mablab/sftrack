@@ -218,7 +218,7 @@ row.
 
 ```{r sftrack-overview, echo = FALSE}
 library("sftrack")
-print(racc_track, 6)
+racc_track
 plot(racc_track)
 
 ```
@@ -235,7 +235,7 @@ group is changed, then the geometry is recalculated.
 
 ```{r sftraj-overview, echo = FALSE}
 racc_traj <- as_sftraj(racc_track)
-print(racc_traj, 6)
+racc_traj
 plot(racc_traj)
 
 ```

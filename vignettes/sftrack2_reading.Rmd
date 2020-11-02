@@ -73,8 +73,7 @@ error <- raccoons$fix
 racc_track <- as_sftrack(data = raccoons, coords = coords, group = group, 
                          active_group = active_group, time = time, 
                          crs = crs, error = error)
-
-print(racc_track, 6)
+racc_track
 
 ```
 
@@ -96,8 +95,8 @@ error <- "fix"
 
 racc_traj <- as_sftraj(data = raccoons, coords = coords, group = group,
                        time = time, error = error)
+racc_traj
 
-print(racc_traj, 6)
 ```
 
 
@@ -120,8 +119,7 @@ racc_ltraj <- as.ltraj(xy = raccoons[,c("longitude", "latitude")],
                      date = raccoons$timestamp,
                      id = raccoons$animal_id,
                      infolocs = raccoons[,1:6])
-racc_from_ltraj <- as_sftrack(racc_ltraj)
-print(racc_from_ltraj, 6)
+as_sftrack(racc_ltraj)
 
 ```
 
@@ -136,10 +134,9 @@ racc_sf <- st_as_sf(raccoons, coords = c("longitude","latitude"),
                     na.fail = FALSE)
 group <- c(id = "animal_id")
 time_col <- "timestamp"
-print(racc_sf, n = 6)
+racc_sf
 
-racc_from_sf <- as_sftraj(racc_sf, group = group, time= time_col) 
-print(racc_from_sf, 6)
+as_sftraj(racc_sf, group = group, time= time_col)
 
 ```
 

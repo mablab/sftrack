@@ -483,16 +483,15 @@ as_sftraj.track_xy <- function(data, ...) {
 #' @title Print methods for sftraj
 #' @name Print_sftraj_objects
 #' @param x sftraj object
-#' @param n_row Integer of number of rows to display. Defaults to global option default if non supplied
+#' @param n Integer of number of records to display. Defaults to 6,
+#'     can be set globally by the \code{sf} option
+#'     \code{options(sf_max_print = ...)}
 #' @param n_col Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied
 #' @param ... other arguments passed onto print
 #' @export
-print.sftraj <- function(x, n_row, n_col, ...) {
+print.sftraj <- function(x, n = getOption("sf_max_print", default = 6), n_col, ...) {
   if (missing(n_col)) {
     n_col <- ncol(x)
-  }
-  if (missing(n_row)) {
-    n_row <- nrow(x)
   }
   group_col <- attr(x, "group_col")
   sf_col <- attr(x, "sf_column")
@@ -526,29 +525,30 @@ print.sftraj <- function(x, n_row, n_col, ...) {
   # print
   cat(
     paste0(
-      "Sftraj with ",
+      "sftraj (*steps*) with ",
       nrow(x),
       " features and ",
       ncol(x),
-      " fields (",
-      sf_attr$n_empty,
-      " empty geometries) \n"
+      " fields\n"
+      ## " fields (",
+      ## sf_attr$n_empty,
+      ## " empty geometries)\n"
     )
   )
   cat(paste0(
-    'Geometry : \"',
+    'geometry:   \"',
     sf_col,
     '\" (',
     geomxy,
-    ", crs: ",
+    ", CRS: ",
     format(sf_attr$crs),
-    ") \n"
+    ")\n"
   ))
-  cat(paste0('Timestamp : \"', time_col, '\" (', time_mes, ") \n"))
-  cat(paste0('Grouping : \"', group_col, '\" (', group_mes, ") \n"))
+  cat(paste0('timestamps: \"', time_col, '\" (', time_mes, ")\n"))
+  cat(paste0('groupings:  \"', group_col, '\" (', group_mes, ")\n"))
   cat("-------------------------------\n")
   # Figure out the row and columns
-  row_l <- ifelse(nrow(x) > n_row, n_row, nrow(x))
+  row_l <- ifelse(nrow(x) > n, n, nrow(x))
   sub_col_names <-
     colnames(x)[!colnames(x) %in% c(group_col, sf_col, time_col)]
   col_l <- length(sub_col_names)

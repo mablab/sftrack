@@ -23,8 +23,8 @@ To begin, `sftrack` and `sftraj` objects are essentially data.frame objects with
 
 ```{r}
 library("sftrack")
-print(racc_track, 6)
-print(racc_traj, 6)
+racc_track
+racc_traj
 
 ```
 
@@ -140,8 +140,19 @@ plot(step_recalc(new_traj),  main = "After recalculation")
 
 ### `print`
 
-The `print()` layout is a modified version of the `sf` print function. It returns important info summarazing the sftrack object like the geometry information and burst information. The print function defaults to printing 1000 rows and displaying all the columns. This can be modified using the `n_row` and `n_col` arguments, which subset the printed output in the repsective axis. When using `n_col` the display will show the `grouping` `geometry`, and `time` fields as well as any other columns starting from column 1 until **#columns + 3 = n_col**. `n_col` and `n_row` are optional arguments, and if values are not supplied they default to the data.frame defaults. Note : `n_row` is not a corrolary to `head()`, as `head()` physically subsets the data while the `n_row` option just modifies the printed output. 
-
+The `print()` layout is a modified version of the `sf` print
+function. It returns important info summarizing the `sftrack` object
+like the geometry information and grouping information. The print
+function defaults to printing 6 rows and displaying all the
+columns. This can be modified using the `n` and `n_col` arguments,
+which subset the printed output in the respective dimensions (use 
+`n = Inf` to print all rows). When using `n_col` the display will show
+the `grouping` `geometry`, and `time` fields as well as any other
+columns starting from column 1 until **#columns + 3 = n_col**. `n` and
+`n_col` are optional arguments, and if values are not supplied they
+default to the data.frame defaults. Note: `n` is not a corrolary to
+`head()`, as `head()` physically subsets the data while the `n` option
+just modifies the printed output.
 
 ```{r}
 print(racc_track, 5, 10)

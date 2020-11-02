@@ -22,8 +22,8 @@ the `raccoons` dataset:
 
 ```{r}
 library("sftrack")
-print(racc_track, 6)
-print(racc_traj, 6)
+racc_track
+racc_traj
 
 ```
 
@@ -215,8 +215,7 @@ This function may help if you'd like to quickly filter an `sftraj` object to jus
 
 ```{r}
 is_linestring(racc_traj$geometry)[1:10]
-new_sftraj <- racc_traj[is_linestring(racc_traj$geometry), ]
-print(new_sftraj, 6)
+(new_sftraj <- racc_traj[is_linestring(racc_traj$geometry), ])
 
 ```
 

@@ -5,12 +5,14 @@
 \alias{print.sftrack}
 \title{Print methods for sftrack}
 \usage{
-\method{print}{sftrack}(x, n_row, n_col, ...)
+\method{print}{sftrack}(x, n = getOption("sf_max_print", default = 6), n_col, ...)
 }
 \arguments{
 \item{x}{sftraj object}
 
-\item{n_row}{Integer of number of rows to display. Defaults to global option default if non supplied}
+\item{n}{Integer of number of records to display. Defaults to 6,
+can be set globally by the \code{sf} option
+\code{options(sf_max_print = ...)}}
 
 \item{n_col}{Integer of number of columns to display + required sftrack columns (burst, geometry, time, and error). Defaults to global option default if non supplied}
 

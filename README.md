@@ -64,11 +64,11 @@ racc_track <- as_sftrack(
   time = "timestamp",
   group = "animal_id",
   crs = "+init=epsg:4326")
-print(racc_track, 6)
-#> Sftrack with 445 features and 10 fields (168 empty geometries) 
-#> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (integer) 
-#> Groupings : "sft_group" (*id*) 
+racc_track
+#> sftrack (*locations*) with 445 features and 10 fields
+#> geometry:   "geometry" (XY, CRS: +init=epsg:4326)
+#> timestamps: "timestamp" (integer)
+#> groupings:  "sft_group" (*id*)
 #> -------------------------------
 #>   animal_id latitude longitude           timestamp height hdop vdop fix
 #> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
@@ -97,12 +97,11 @@ summary_sftrack(racc_track)
 While `sftrack` objects contain tracking data (locations), they can easily be converted to movement data (with a step model instead) with `as_sftraj`:
 
 ``` r
-racc_traj <- as_sftraj(racc_track)
-print(racc_traj, 6)
-#> Sftraj with 445 features and 10 fields (168 empty geometries) 
-#> Geometry : "geometry" (XY, crs: +init=epsg:4326) 
-#> Timestamp : "timestamp" (integer) 
-#> Grouping : "sft_group" (*id*) 
+(racc_traj <- as_sftraj(racc_track))
+#> sftraj (*steps*) with 445 features and 10 fields
+#> geometry:   "geometry" (XY, CRS: +init=epsg:4326)
+#> timestamps: "timestamp" (integer)
+#> groupings:  "sft_group" (*id*)
 #> -------------------------------
 #>   animal_id latitude longitude                                     timestamp
 #> 1   TTP-058       NA        NA (2019-01-18 19:02:30 --> 2019-01-18 20:02:30)
