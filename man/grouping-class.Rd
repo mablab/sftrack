@@ -34,7 +34,7 @@ Can be any number of groups after that.
 }
 \details{
 A grouping is a list of possible categories to group the data. The 'active group'
-of these is the current grouping variables to be considered for analysis. The 'active group' can be any combination of the categories in a burst,
+of these is the current grouping variables to be considered for analysis. The 'active group' can be any combination of the categories in a group,
 and can change with the use of `active_group()`.
 
 An `s_group` is a single row group. It is a 1xn dimensional list with any length(n) > 1.
@@ -44,7 +44,7 @@ A `c_grouping` is a collection of `s_groups`s, it is a data.frame with dimension
 One c_grouping has one 'active group' which describes the set of names in each s_group to group the data. When you change the 'active group', calculations and plots change accordingly
 to the new grouping levels.
 
-You can create bursts with make_s_group and make_c_grouping.
+You can create groups with make_s_group and make_c_grouping.
 }
 \examples{
 
@@ -56,7 +56,7 @@ group <- list(id = raccoons$animal_id, month = as.POSIXlt(raccoons$timestamp)$mo
 mb1 <- make_c_grouping(x = group, active_group = c("id", "month"))
 str(mb1)
 
-# Make a multi_burst from many ind_bursts
+# Make a c_grouping from many s_groups
 a <- make_s_group(list(id = 1, year = 2020))
 b <- make_s_group(list(id = 1, year = 2020))
 c <- make_s_group(list(id = 2, year = 2020))
