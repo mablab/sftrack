@@ -22,14 +22,11 @@ Getting started
 To get started, install `sftrack` from GitHub with the [remotes](https://cran.r-project.org/package=remotes) package:
 
 ``` r
-# To install the stable version
-remotes::install_github("mablab/sftrack")
+# To install the stable version with vignettes:
+remotes::install_github("mablab/sftrack", build_vignettes = TRUE)
 
-# To install with built vignettes
-remotes::install_github("mablab/sftrack", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
-
-# To install the dev version:
-remotes::install_github("mablab/sftrack", ref = "dev")
+# To install the dev version with vignettes:
+remotes::install_github("mablab/sftrack", ref = "dev", build_vignettes = TRUE)
 ```
 
 The `dev` version is updated much more frequently and should pass the majority of CRAN checks. However, if you install the `dev` version, understand it may still contain some bugs. Please submit any bug you find to the [issues](https://github.com/mablab/sftrack/issues) page.
