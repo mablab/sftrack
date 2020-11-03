@@ -8,6 +8,8 @@
   "raccoons"), tracking data (`sftrack` "racc_track"), and movement
   data (`straj` "racc_traj"). Removed old 'raccoon' dataset + updated
   vignettes (with other minor tweaks) + updated documentation.
+* Changed 'summary_sftrack' to 'group_summary', and added area
+  covered. Fixed counting of NAs in this function.
 
 
 # sftrack 0.5.2 (2020-10-20)
