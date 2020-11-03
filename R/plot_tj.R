@@ -9,19 +9,23 @@
 #'     more details).
 #' @param key.width Amount of space reserved for the key, including
 #'     labels (see \code{\link[sf]{plot_sf}} for more details).)
-#' @param step_mode Logical; whether to plot in step mode, see
-#'     details, defaults to TRUE, unless there are more than 10,000
-#'     steps.
+#' @param mode Character; either of \code{"steps+points"},
+#'     \code{"steps"}, or \code{"trajectories"}, defaults to
+#'     \code{"steps+points"}, and switch to \code{"steps"} if there
+#'     are more than 10,000 steps.
 #' @param ... Further arguments passed to 'plot.sf'. Among others,
 #'     arguments for the key are set differently in 'sftrack' to allow
 #'     for longer labels by default (but can be nevertheless
 #'     adjusted).
-#' @details Step mode refers to considering the trajectory as
-#'     individual 'steps', in the case of plot this means it will plot
-#'     each line & point individually. This approach is much slower to
-#'     plot with large objects, and is thus turned off when
-#'     n(steps)>10,000.  The alternative, much faster method is to
-#'     merge the steps into a multilinestring as continuous lines.
+#' @details Plotting mode refers to considering the trajectory as
+#'     connected elements. For \code{"steps+points"}, this means it
+#'     will plot each step & point individually. The alternative,
+#'     faster \code{"steps"} mode merges connected steps into
+#'     multilinestrings, which are plotted as continuous lines.  This
+#'     approach is much faster to plot with large objects, and is thus
+#'     turned automatically on when n(steps)>10,000. Finally,
+#'     \code{"trajectories"} merges the full trajectory as a continuous
+#'     line (i.e. ignores gaps).
 #' @method plot sftrack
 #' @importFrom graphics plot lcm
 #' @examples
@@ -54,7 +58,7 @@ plot.sftrack <- function(x, y, key.pos, key.width, ...) {
 #' @export
 #' @rdname plot_sftrack
 #' @method plot sftraj
-plot.sftraj <- function(x, y, key.pos, key.width, ..., step_mode) {
+plot.sftraj <- function(x, y, key.pos, key.width, ..., mode) {
   if (missing(key.pos))
     key.pos <- 4
   if (missing(key.width))
@@ -63,23 +67,33 @@ plot.sftraj <- function(x, y, key.pos, key.width, ..., step_mode) {
       key.width <- lcm(4)
     else key.width <- lcm(1.8)
   }
-  if (missing(step_mode)) {
-    step_mode <- if (nrow(x) < 10000) {
-      TRUE
+  if (missing(mode)) {
+    mode <- if (nrow(x) < 10000) {
+      "steps+points"
     } else {
-      FALSE
+      "steps"
     }
+  } else {
+    if (!mode %in% c("steps+points", "steps", "trajectories"))
+      stop("Invalid 'mode'.")
   }
+
   group_col <- attr(x, "group_col")
-  if (step_mode)
+  if (mode == "steps+points")
   {
     x[[group_col]] <- group_labels(x)
     class(x) <- setdiff(class(x), c("sftraj"))
     x <- x[group_col]
-  } else
+  }
+  if (mode == "steps")
   {
-    warning("Step mode disabled. See details in the help of 'plot.sftraj'.")
-    x <- merge_traj(x)
+    warning("Plotting in 'steps' mode. See details in the help of 'plot.sftraj'.")
+    x <- merge_traj(x, mode = "steps")
+  }
+  if (mode == "trajectories")
+  {
+    warning("Plotting in 'trajectories' mode. See details in the help of 'plot.sftraj'.")
+    x <- merge_traj(x, mode = "trajectories")
   }
   plot(x, reset = FALSE, key.pos = key.pos, key.width = key.width, ...)
 }

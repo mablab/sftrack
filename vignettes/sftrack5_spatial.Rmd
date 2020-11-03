@@ -77,7 +77,7 @@ road <- st_linestring(rbind(
 
 animal1 <- as_sftraj(df1)
 plot(animal1)
-plot(road,  col = 'red', add = T)
+plot(road,  col = "red", add = T)
 
 # Does the animal cross the road?
 any(st_intersects(animal1, road, sparse = FALSE))

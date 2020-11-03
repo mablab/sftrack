@@ -8,7 +8,7 @@
 \usage{
 \method{plot}{sftrack}(x, y, key.pos, key.width, ...)
 
-\method{plot}{sftraj}(x, y, key.pos, key.width, ..., step_mode)
+\method{plot}{sftraj}(x, y, key.pos, key.width, ..., mode)
 }
 \arguments{
 \item{x}{'sftrack' or 'sftraj' object}
@@ -28,9 +28,10 @@ arguments for the key are set differently in 'sftrack' to allow
 for longer labels by default (but can be nevertheless
 adjusted).}
 
-\item{step_mode}{Logical; whether to plot in step mode, see
-details, defaults to TRUE, unless there are more than 10,000
-steps.}
+\item{mode}{Character; either of \code{"steps+points"},
+\code{"steps"}, or \code{"trajectories"}, defaults to
+\code{"steps+points"}, and switch to \code{"steps"} if there
+are more than 10,000 steps.}
 }
 \description{
 Methods for plotting sftrack/sftraj
@@ -38,12 +39,15 @@ Methods for plotting sftrack/sftraj
 Methods for plotting sftrack/sftraj
 }
 \details{
-Step mode refers to considering the trajectory as
-    individual 'steps', in the case of plot this means it will plot
-    each line & point individually. This approach is much slower to
-    plot with large objects, and is thus turned off when
-    n(steps)>10,000.  The alternative, much faster method is to
-    merge the steps into a multilinestring as continuous lines.
+Plotting mode refers to considering the trajectory as
+    connected elements. For \code{"steps+points"}, this means it
+    will plot each step & point individually. The alternative,
+    faster \code{"steps"} mode merges connected steps into
+    multilinestrings, which are plotted as continuous lines.  This
+    approach is much faster to plot with large objects, and is thus
+    turned automatically on when n(steps)>10,000. Finally,
+    \code{"trajectories"} merges the full trajectory as a continuous
+    line (i.e. ignores gaps).
 }
 \examples{
 

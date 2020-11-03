@@ -4,11 +4,15 @@
 \alias{merge_traj}
 \title{Merge connected lines and create an sf object}
 \usage{
-merge_traj(x)
+merge_traj(x, mode = c("steps", "trajectories"))
 }
 \arguments{
 \item{x}{an sftraj object}
+
+\item{mode}{Character; either of \code{"steps"} (default), or
+\code{"trajectories"}.}
 }
 \description{
-This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each grouping
+This function returns a sf object grouped with a
+    MULTILINESTRING for each grouping in a geometry column.
 }

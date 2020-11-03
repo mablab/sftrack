@@ -20,7 +20,7 @@ Return a list of sf_POINTS or a data.frame from a sftraj object
 }
 \examples{
 
-print(racc_traj, 5, 10)
+print(racc_traj, 10, 5)
 
 # extract a list of points
 pts_traj(racc_traj)[1:10]

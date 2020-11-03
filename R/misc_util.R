@@ -7,7 +7,7 @@
 #' @param sfc TRUE/FALSE should the return by an sfc or a list of points. Defaults to FALSE
 #' @examples
 #'
-#' print(racc_traj, 5, 10)
+#' print(racc_traj, 10, 5)
 #'
 #' # extract a list of points
 #' pts_traj(racc_traj)[1:10]
@@ -112,7 +112,7 @@ is_linestring <- function(x) {
 #' @export
 group_summary <- function(x) {
   if (!inherits(x, c("sftrack", "sftraj")))
-      stop("Object of class 'sftrack' or 'sftraj' expected")
+    stop("Object of class 'sftrack' or 'sftraj' expected")
   time_col <- attr(x, "time_col")
   error_col <- attr(x, "error_col")
   sf_col <- attr(x, "sf_column")
@@ -128,37 +128,37 @@ group_summary <- function(x) {
     })
 
   if (inherits(x, "sftrack")) {
-      NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
-          sum(st_is_empty(sf_grp))
-      })
-  }
-  if (inherits(x, "sftraj")) {
-      NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
-          sum(!is_linestring(sf_grp))
-      })
-  }
+    NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+      sum(st_is_empty(sf_grp))
+    })
 
-  if (inherits(x, "sftrack")) {
     my_crs <- attr(x[[sf_col]], "crs")
-    lenz <- tapply(x[[sf_col]], levelz, function(pts) {
-      new_pts <- pts[!vapply(pts, sf::st_is_empty, NA)]
+    lenz <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+      new_pts <- sf_grp[!vapply(sf_grp, sf::st_is_empty, NA)]
       my_sfc <-
         st_sfc(st_linestring(st_coordinates(new_pts)), crs = my_crs)
       st_length(my_sfc)
     }, simplify = FALSE)
     lenz_unit <- as.character(attr(lenz[[1]], "units"))
+    lenz <- unlist(lenz)
   }
+
   if (inherits(x, "sftraj")) {
-    lenz <- tapply(x[[sf_col]], levelz, function(pts) {
-      sum(st_length(pts))
-    }, simplify = FALSE)
+    NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+      sum(!is_linestring(sf_grp))
+    })
+
+    x_merged <- merge_traj(x, mode = "trajectories")
+    lenz <- st_length(x_merged)
     lenz_unit <- as.character(attr(lenz[[1]], "units"))
+    lenz <- unclass(lenz)
   }
 
   area <- tapply(x[[sf_col]], levelz, function(sf_grp) {
       st_area(st_convex_hull(st_combine(sf_grp[!st_is_empty(sf_grp)])))
   }, simplify = FALSE)
   area_unit <- as.character(attr(area[[1]], "units"))
+  area <- unlist(area)
 
   n_rec <- vapply(
     statz,
@@ -268,23 +268,47 @@ get_x2 <- function(time) {
 }
 
 #' @title Merge connected lines and create an sf object
-#' @description This function returns a sf object grouped by each burst with a geometry column of multilinestrings for each grouping
+#' @description This function returns a sf object grouped with a
+#'     MULTILINESTRING for each grouping in a geometry column.
+#' @param mode Character; either of \code{"steps"} (default), or
+#'     \code{"trajectories"}.
 #' @export
 #' @importFrom stats aggregate
 #' @param x an sftraj object
-merge_traj <- function(x) {
-  group_col <- attr(x, "group_col")
+merge_traj <- function(x, mode = c("steps", "trajectories")) {
+  if (!inherits(x, c("sftraj")))
+      stop("Object of class 'sftraj' expected")
+  mode <- match.arg(mode)
   x <- x[order(t1(x)), ]
   crs <- st_crs(x)
-  ret <- stats::aggregate(st_geometry(x), list(group = group_labels(x)), function(y) {
-    # y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
-    geom <- y[st_is(y, "LINESTRING")]
-    if (length(geom) > 1) {
-      st_line_merge(st_combine(geom))
-    } else {
-      st_multilinestring(list(st_linestring()))
-    }
-  })
+
+  if (mode == "steps")
+  {
+      ret <- stats::aggregate(st_geometry(x), list(group = group_labels(x)), function(y) {
+          ## y = st_geometry(x)[burst_labels(x, factor = TRUE)=='TTP-041_s']
+          geom <- y[st_is(y, "LINESTRING")]
+          if (length(geom) > 1) {
+              st_line_merge(st_combine(geom))
+          } else {
+              st_multilinestring(list(st_linestring()))
+          }
+      })
+  }
+
+  if (mode == "trajectories")
+  {
+      pts <- pts_traj(x, sfc = TRUE)
+      ret <- stats::aggregate(st_geometry(pts), list(group = group_labels(x)), function(y) {
+          geom <- y[!st_is_empty(y)]
+          if (length(geom) > 1) {
+              st_sfc(st_multilinestring(st_combine(geom)))
+          } else {
+              st_multilinestring(list(st_linestring()))
+          }
+      })
+
+  }
+
   ret$geometry <- st_sfc(ret$geometry, crs = crs)
   st_sf(ret, sf_column_name = "geometry")
 }
