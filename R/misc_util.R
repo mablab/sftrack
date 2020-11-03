@@ -108,56 +108,62 @@ is_linestring <- function(x) {
 }
 
 #' @title Summarize sftrack objects
-#' @param x an sftrack object
+#' @param x an \code{sftrack} or \code{sftraj} object
 #' @export
-summary_sftrack <- function(x) {
-  track_class <- class(x)[1]
-  # x = my_sftrack
+group_summary <- function(x) {
+  if (!inherits(x, c("sftrack", "sftraj")))
+      stop("Object of class 'sftrack' or 'sftraj' expected")
   time_col <- attr(x, "time_col")
   error_col <- attr(x, "error_col")
   sf_col <- attr(x, "sf_column")
   group_col <- attr(x, "group_col")
-  sub <- x[, ]
   levelz <- group_labels(x[[group_col]])
   statz <-
-    tapply(t1(sub), levelz, function(x) {
+    tapply(t1(x), levelz, function(x) {
       list(
         "begin" = min(x),
         "end" = max(x),
-        "points" = length(x),
-        "NAs" = sum(is.na(x))
+        "n_rec" = length(x)
       )
     })
 
-  if (!track_class %in% c("sftrack", "sftraj")) {
-    stop(paste0("input class not sftrack or sftraj: ", track_class))
+  if (inherits(x, "sftrack")) {
+      NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+          sum(st_is_empty(sf_grp))
+      })
   }
-  if (track_class == "sftrack") {
-    my_crs <- attr(sub[[sf_col]], "crs")
-    lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
+  if (inherits(x, "sftraj")) {
+      NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+          sum(!is_linestring(sf_grp))
+      })
+  }
+
+  if (inherits(x, "sftrack")) {
+    my_crs <- attr(x[[sf_col]], "crs")
+    lenz <- tapply(x[[sf_col]], levelz, function(pts) {
       new_pts <- pts[!vapply(pts, sf::st_is_empty, NA)]
       my_sfc <-
         st_sfc(st_linestring(st_coordinates(new_pts)), crs = my_crs)
       st_length(my_sfc)
-    })
+    }, simplify = FALSE)
+    lenz_unit <- as.character(attr(lenz[[1]], "units"))
   }
-  if (track_class == "sftraj") {
-    lenz <- tapply(sub[[sf_col]], levelz, function(pts) {
+  if (inherits(x, "sftraj")) {
+    lenz <- tapply(x[[sf_col]], levelz, function(pts) {
       sum(st_length(pts))
-    })
+    }, simplify = FALSE)
+    lenz_unit <- as.character(attr(lenz[[1]], "units"))
   }
 
-  points <- vapply(
+  area <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+      st_area(st_convex_hull(st_combine(sf_grp[!st_is_empty(sf_grp)])))
+  }, simplify = FALSE)
+  area_unit <- as.character(attr(area[[1]], "units"))
+
+  n_rec <- vapply(
     statz,
     FUN = function(x) {
-      x$points
-    },
-    numeric(1)
-  )
-  NAs <- vapply(
-    statz,
-    FUN = function(x) {
-      x$NAs
+      x$n_rec
     },
     numeric(1)
   )
@@ -167,18 +173,17 @@ summary_sftrack <- function(x) {
   end_time <- lapply(statz, function(x) {
     x$end
   })
+
   class(begin_time) <- class(end_time) <- c("POSIXct", "POSIXt")
   attr(begin_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
   attr(end_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
-  data.frame(
-    group = levels(levelz),
-    points,
-    NAs,
-    begin_time,
-    end_time,
-    length_m = lenz,
-    row.names = NULL
+
+  as.data.frame(
+      list(levels(levelz), n_rec, NAs, begin_time, end_time, lenz, area),
+      col.names = c("group", "n_records", "NAs", "begin_time", "end_time", paste("length", lenz_unit), paste("area", area_unit)),
+      row.names = 1:length(n_rec)
   )
+
 }
 
 # recalculates empty geometries (take from sf as it is an internal as well)

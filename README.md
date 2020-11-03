@@ -84,11 +84,14 @@ racc_track
 ```
 
 ``` r
-summary_sftrack(racc_track)
+group_summary(racc_track)
 #> Linking to GEOS 3.6.2, GDAL 2.1.2, PROJ 4.9.3
-#>     group points NAs          begin_time            end_time length_m
-#> 1 TTP-041    223   0 2019-01-18 19:02:30 2019-02-01 18:02:07 10195.75
-#> 2 TTP-058    222   0 2019-01-18 19:02:30 2019-02-01 18:02:30 26832.51
+#>     group n_records NAs          begin_time            end_time length.m
+#> 1 TTP-041       223 101 2019-01-18 19:02:30 2019-02-01 18:02:07 10195.75
+#> 2 TTP-058       222  67 2019-01-18 19:02:30 2019-02-01 18:02:30 26832.51
+#>   area.m.2
+#> 1 509765.7
+#> 2 611161.9
 ```
 
 While `sftrack` objects contain tracking data (locations), they can easily be converted to movement data (with a step model instead) with `as_sftraj`:

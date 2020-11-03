@@ -172,18 +172,23 @@ summary(racc_track)
 ```
 
 
-### `summary_sftrack`
+### `group_summary`
 
-`summary_sftrack()` is a special summary function specific for sftrack objects. It summarizes the data based on the beginning and end of each grouping as well as the total distance of the grouping. This function uses `st_distance` from the `sf` package and therefore outputs in units of the CRS. In this example the distance is in meters.
+`group_summary()` is a special summary function specific for `sftrack`
+and `sftraj` objects. It summarizes the data based on the beginning
+and end of each grouping as well as the total distance and area
+covered by the grouping. This function uses `st_distance`
+and`st_convex_hull` from the `sf` package and therefore outputs in
+units of the CRS. In this example the distance is in meters.
 
 ```{r}
-summary_sftrack(racc_track)
+group_summary(racc_track)
 
 ```
 
-You can also trigger this function by using `summary(<data>, stats = TRUE)`
+You can also trigger this function by using `summary(<data>, by_group = TRUE)`
 
 ```{r}
-summary(racc_track, stats = TRUE)
+summary(racc_track, by_group = TRUE)
 
 ```

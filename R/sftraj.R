@@ -572,9 +572,9 @@ print.sftraj <- function(x, n = getOption("sf_max_print", default = 6), n_col, .
 }
 
 #' @export
-summary.sftraj <- function(object, ..., stats = FALSE) {
-  if (stats) {
-    summary_sftrack(object)
+summary.sftraj <- function(object, ..., by_group = FALSE) {
+  if (by_group) {
+    group_summary(object)
   } else {
     (NextMethod())
   }

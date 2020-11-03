@@ -112,7 +112,7 @@ racc_track
 ```
 
 ```{r summary}
-summary_sftrack(racc_track)
+group_summary(racc_track)
 
 ```
 
