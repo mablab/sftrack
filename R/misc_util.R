@@ -109,8 +109,9 @@ is_linestring <- function(x) {
 
 #' @title Summarize sftrack objects
 #' @param x an \code{sftrack} or \code{sftraj} object
+#' @param spatial Logical; whether to compute spatial statistics
 #' @export
-group_summary <- function(x) {
+group_summary <- function(x, spatial = TRUE) {
   if (!inherits(x, c("sftrack", "sftraj")))
     stop("Object of class 'sftrack' or 'sftraj' expected")
   time_col <- attr(x, "time_col")
@@ -127,38 +128,46 @@ group_summary <- function(x) {
       )
     })
 
-  if (inherits(x, "sftrack")) {
+  if (inherits(x, "sftrack"))
+  {
     NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
       sum(st_is_empty(sf_grp))
     })
-
-    my_crs <- attr(x[[sf_col]], "crs")
-    lenz <- tapply(x[[sf_col]], levelz, function(sf_grp) {
-      new_pts <- sf_grp[!vapply(sf_grp, sf::st_is_empty, NA)]
-      my_sfc <-
-        st_sfc(st_linestring(st_coordinates(new_pts)), crs = my_crs)
-      st_length(my_sfc)
-    }, simplify = FALSE)
-    lenz_unit <- as.character(attr(lenz[[1]], "units"))
-    lenz <- unlist(lenz)
   }
-
-  if (inherits(x, "sftraj")) {
+  if (inherits(x, "sftraj"))
+  {
     NAs <- tapply(x[[sf_col]], levelz, function(sf_grp) {
       sum(!is_linestring(sf_grp))
     })
-
-    x_merged <- merge_traj(x, mode = "trajectories")
-    lenz <- st_length(x_merged)
-    lenz_unit <- as.character(attr(lenz[[1]], "units"))
-    lenz <- unclass(lenz)
   }
 
-  area <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+  if (spatial)
+  {
+    if (inherits(x, "sftrack")) {
+      my_crs <- attr(x[[sf_col]], "crs")
+      lenz <- tapply(x[[sf_col]], levelz, function(sf_grp) {
+        new_pts <- sf_grp[!vapply(sf_grp, sf::st_is_empty, NA)]
+        my_sfc <-
+          st_sfc(st_linestring(st_coordinates(new_pts)), crs = my_crs)
+        st_length(my_sfc)
+      }, simplify = FALSE)
+      lenz_unit <- as.character(attr(lenz[[1]], "units"))
+      lenz <- unlist(lenz)
+    }
+
+    if (inherits(x, "sftraj")) {
+      x_merged <- merge_traj(x, mode = "trajectories")
+      lenz <- st_length(x_merged)
+      lenz_unit <- as.character(attr(lenz[[1]], "units"))
+      lenz <- unclass(lenz)
+    }
+
+    area <- tapply(x[[sf_col]], levelz, function(sf_grp) {
       st_area(st_convex_hull(st_combine(sf_grp[!st_is_empty(sf_grp)])))
-  }, simplify = FALSE)
-  area_unit <- as.character(attr(area[[1]], "units"))
-  area <- unlist(area)
+    }, simplify = FALSE)
+    area_unit <- as.character(attr(area[[1]], "units"))
+    area <- unlist(area)
+  }
 
   n_rec <- vapply(
     statz,
@@ -178,12 +187,20 @@ group_summary <- function(x) {
   attr(begin_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
   attr(end_time, "tzone") <- attr(x[[attr(x, "time_col")]], "tzone")
 
-  as.data.frame(
+  if (spatial)
+  {
+    as.data.frame(
       list(levels(levelz), n_rec, NAs, begin_time, end_time, lenz, area),
       col.names = c("group", "n_records", "NAs", "begin_time", "end_time", paste("length", lenz_unit), paste("area", area_unit)),
       row.names = 1:length(n_rec)
-  )
-
+    )
+  } else {
+    as.data.frame(
+      list(levels(levelz), n_rec, NAs, begin_time, end_time),
+      col.names = c("group", "n_records", "NAs", "begin_time", "end_time"),
+      row.names = 1:length(n_rec)
+    )
+  }
 }
 
 # recalculates empty geometries (take from sf as it is an internal as well)

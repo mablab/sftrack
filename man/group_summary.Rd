@@ -4,10 +4,12 @@
 \alias{group_summary}
 \title{Summarize sftrack objects}
 \usage{
-group_summary(x)
+group_summary(x, spatial = TRUE)
 }
 \arguments{
 \item{x}{an \code{sftrack} or \code{sftraj} object}
+
+\item{spatial}{Logical; whether to compute spatial statistics}
 }
 \description{
 Summarize sftrack objects

@@ -484,14 +484,15 @@ print.sftrack <- function(x, n = getOption("sf_max_print", default = 6), n_col, 
 
 # Sumary
 #' @export
-summary.sftrack <- function(object, ..., by_group = FALSE) {
+summary.sftrack <- function(object, ..., by_group = FALSE, spatial = TRUE) {
   object[[attr(object, "time_col")]] <- t1(object)
   if (by_group) {
-    group_summary(object)
+      group_summary(object, spatial = spatial)
   } else {
-    (NextMethod())
+      (NextMethod())
   }
 }
+
 # summary(my_sftrack,stats=TRUE)
 #' @export
 `[.sftrack` <- function(x, i, j, ..., drop = FALSE) {
