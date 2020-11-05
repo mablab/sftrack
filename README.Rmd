@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
-<!-- [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) -->
-<!-- ![](https://cranlogs.r-pkg.org/badges/sftrack) -->
+[![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) 
 [![Build Status:
 dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack) 
@@ -60,18 +60,16 @@ simple principles:
 
 ## Getting started
 
-To get started, install `sftrack` from GitHub with the
+To get started, install `sftrack` directly from CRAN, or check the
+development version on GitHub with the
 [remotes](https://cran.r-project.org/package=remotes) package:
 
 ```r
-# To install the stable version
-remotes::install_github("mablab/sftrack")
+# To install the stable version from CRAN
+install.packages("sftrack")
 
-# To install with built vignettes
-remotes::install_github("mablab/sftrack", build_opts = c("--no-resave-data", "--no-manual"), build_vignettes = TRUE)
-
-# To install the dev version:
-remotes::install_github("mablab/sftrack", ref = "dev")
+# To install the dev version with built vignettes
+remotes::install_github("mablab/sftrack", ref = "dev", build_vignettes = TRUE)
 
 ```
 
