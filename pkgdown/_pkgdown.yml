@@ -3,7 +3,14 @@ url: https://mablab.org/sftrack
 home:
   title: "sftrack: Central Classes for Tracking Data"
   description: "An R package providing modern classes for tracking and movement data, relying on `sf` spatial infrastructure."
-  
+
+development:
+  mode: devel
+  # mode: auto
+  # destination: dev
+  version_label: warning
+  # version_tooltip: "Custom message here"
+
 template:
   params:
     bootswatch: cosmo
@@ -21,9 +28,12 @@ template:
 
 navbar:
   structure:
-    left:  [home, intro, reference, articles, tutorials, news, github]
+    left:  [home, intro, reference, articles, tutorials, news, cran, github]
     right: [mablab]
   components:
+    cran:
+      icon: "fab fa-r-project fa-lg"
+      href: https://cran.r-project.org/package=sftrack
     mablab: 
       text: "→ MabLab.org"
       href: https://mablab.org/
@@ -50,10 +60,13 @@ reference:
   - new_sftraj
   - Print_sftrack_objects
   - Print_sftraj_objects
-  - summary_sftrack
+  - as_sftrack.track_xy
+  - as_sftrack.ltraj
+  - as_sftrack.trackeRdata
 - title: "Data checks and fixes"
   contents:
   - calc_sort_index
+  - calc_dx
   - check_NA_coords
   - check_NA_group
   - check_group_id
@@ -76,7 +89,15 @@ reference:
   - active_group<-
   - group_labels
   - group_names 
+  - group_summary
   - make_s_group
+- title: "Time management"
+  contents:
+  - get-time-functions
+  - make_timestamp
+  - t2_by_group
+  - time-class
+  - time_recalc 
 - title: "Working with geometries"
   contents:
   - make_step_geom
@@ -86,4 +107,4 @@ reference:
   - pts_traj
 - title: "Datasets"
   contents:
-  - raccoon
+  - raccoons

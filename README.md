@@ -4,11 +4,11 @@ sftrack: Modern classes for tracking and movement data <img src="man/figures/sft
 ==========================================================================================================================================
 
 <!-- badges: start -->
-[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT) <!-- [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) --> <!-- ![](https://cranlogs.r-pkg.org/badges/sftrack) --> [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) [![Build Status: dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack) <!-- badges: end -->
+[![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT) [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) [![CRAN downloads](https://cranlogs.r-pkg.org/badges/sftrack)](https://CRAN.R-project.org/package=sftrack) [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) [![Build Status: dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack) <!-- badges: end -->
 
 `sftrack` provides modern classes for **tracking and movement data**, relying on `sf` spatial infrastructure. Tracking data are made of tracks, i.e. series of locations with at least 2-dimensional spatial coordinates (x,y), a time index (t), and individual identification (id) of the object being monitored; movement data are made of trajectories, i.e. the line representation of the path, composed by steps (the straight-line segments connecting successive locations). `sftrack` is designed to handle movement of both living organisms and inanimate objects.
 
-![data definitions](Figures/definitions-512.png "data definitions")
+<img src="man/figures/definitions.png" width="50%" style="display: block; margin: auto;" />
 
 The development and design of the `sftrack` package follow three simple principles:
 
@@ -19,13 +19,12 @@ The development and design of the `sftrack` package follow three simple principl
 Getting started
 ---------------
 
-To get started, install `sftrack` from GitHub with the [remotes](https://cran.r-project.org/package=remotes) package:
+To get started, install `sftrack` directly from CRAN, or check the development version on GitHub with the [remotes](https://cran.r-project.org/package=remotes) package:
 
 ``` r
-# To install the stable version with vignettes:
-remotes::install_github("mablab/sftrack", build_vignettes = TRUE)
-
-# To install the dev version with vignettes:
+# To install the stable version from CRAN
+install.packages("sftrack")
+# To install the dev version with built vignettes
 remotes::install_github("mablab/sftrack", ref = "dev", build_vignettes = TRUE)
 ```
 

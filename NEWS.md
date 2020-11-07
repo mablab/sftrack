@@ -10,6 +10,8 @@
   vignettes (with other minor tweaks) + updated documentation.
 * Changed 'summary_sftrack' to 'group_summary', and added area
   covered. Fixed counting of NAs in this function.
+* `plot.sftraj`: Argument `step_mode` changed to `mode` with more
+  flexibility.
 
 
 # sftrack 0.5.2 (2020-10-20)

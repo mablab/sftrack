@@ -22,8 +22,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
-<!-- [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack) -->
-<!-- ![](https://cranlogs.r-pkg.org/badges/sftrack) -->
+[![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
+[![CRAN downloads](https://cranlogs.r-pkg.org/badges/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) 
 [![Build Status:
 dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack) 
@@ -40,7 +40,10 @@ steps (the straight-line segments connecting successive
 locations). `sftrack` is designed to handle movement of both living
 organisms and inanimate objects.
 
-![data definitions](Figures/definitions-512.png "data definitions")
+```{r, out.width = "50%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("man/figures/definitions.png")
+
+```
 
 The development and design of the `sftrack` package follow three
 simple principles:
@@ -60,16 +63,15 @@ simple principles:
 
 ## Getting started
 
-To get started, install `sftrack` from GitHub with the
+To get started, install `sftrack` directly from CRAN, or check the
+development version on GitHub with the
 [remotes](https://cran.r-project.org/package=remotes) package:
 
 ```r
-# To install the stable version with vignettes:
-remotes::install_github("mablab/sftrack", build_vignettes = TRUE)
-
-# To install the dev version with vignettes:
+# To install the stable version from CRAN
+install.packages("sftrack")
+# To install the dev version with built vignettes
 remotes::install_github("mablab/sftrack", ref = "dev", build_vignettes = TRUE)
-
 ```
 
 The `dev` version is updated much more frequently and should pass the
