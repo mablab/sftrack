@@ -5,10 +5,9 @@ home:
   description: "An R package providing modern classes for tracking and movement data, relying on `sf` spatial infrastructure."
 
 development:
-  mode: devel
-  # mode: auto
-  # destination: dev
+  mode: auto
   version_label: warning
+  # destination: dev
   # version_tooltip: "Custom message here"
 
 template:

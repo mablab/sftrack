@@ -15,7 +15,7 @@
 #' @param group a list of named vectors describing multiple grouping variables or  a character vector naming the other grouping columns in `data`.
 #' @param active_group a character vector of the burst names to be 'active' to group data by for analysis
 #' @param time a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located
-#' @param error (optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located
+#' @param error (optional) a vector of error information for the movement data, or a character string naming the column in `data` where the error information is located
 #' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
 #' @param group_name (optional) new column name for grouping data

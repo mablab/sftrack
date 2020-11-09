@@ -1,6 +1,6 @@
 Package: sftrack
 Title: Modern Classes for Tracking and Movement Data
-Version: 0.5.999-1
+Version: 0.5.999.2
 Date: 2020-11-03
 Authors@R: 
     c(person(given = "Matthew",
