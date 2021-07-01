@@ -1,3 +1,8 @@
+# sftrack 0.5.3 (2021-07-01): CRAN update
+
+* Minor bug in `geom_sftrack.sftrack` that caused an error.
+
+
 # sftrack 0.5.2 (2020-10-20)
 
 * Clean up for CRAN (DESCRIPTION, version, LICENSE, vignettes…).
@@ -10,7 +15,7 @@
 * Vignette updates.
 
 
-# sftrack 0.5 (2020-09-13) : Major update.
+# sftrack 0.5 (2020-09-13): Major update.
 
 * Changed from 'burst' name to 'group' name. This includes changing
   `ind_burst` -> `s_group` (single group) and `multi_burst` ->

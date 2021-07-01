@@ -2,19 +2,19 @@
 
 This is a resubmission. Relevant changes in this version:
 
-  * DESCRIPTION: Removed the space within the doi specification to
-    make it clickable. 
-  * DESCRIPTION and LICENSE: Removed Calenge from contributors on his
-    request.
-  * README.md: Added HTTPS to problematic URL.
-  * plot_tj.R: Removed all calls to graphics::par that change user's
-    options.
-  * Vignettes: Adjusted figure size.
+  * plot_tj.R: solved a bug that caused an error and prevented vignette #5 to be
+    generated.
 
 
 ## Test environments
 
-* local Debian GNU/Linux 9 (stretch), R 3.3.3
+Distributor ID:	Ubuntu
+Description:	Ubuntu 21.04
+Release:	21.04
+Codename:	hirsute
+
+
+* local Ubuntu 21.04 (hirsute), R 4.0.4
 * Travis CI Ubuntu 16.04.6 LTS (xenial), R 4.0.2
 * win-builder, R 4.0.3 (release) + 3.6.3 (old-release) + (devel)
 
