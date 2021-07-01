@@ -54,7 +54,7 @@ as_sftrack(data = data.frame(), ...)
 
 \item{time}{a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located}
 
-\item{error}{(optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located}
+\item{error}{(optional) a vector of error information for the movement data, or a character string naming the column in `data` where the error information is located}
 
 \item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
 

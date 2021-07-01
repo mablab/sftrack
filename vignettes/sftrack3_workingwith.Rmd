@@ -2,7 +2,7 @@
 title: "3. Structure of sftrack/sftraj objects"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Structure of sftrack/sftraj object}
+  %\VignetteIndexEntry{3. Structure of sftrack/sftraj objects}
   %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
 ---

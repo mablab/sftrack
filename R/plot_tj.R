@@ -128,6 +128,7 @@ geom_sftrack.sftrack <-
            data = NULL,
            ...) {
     group <- group_labels(data)
+    class(data) <- class(data)[2:3]
     list(
       ggplot2::geom_sf(data = data, ggplot2::aes(color = group), ...)
     )

@@ -24,9 +24,9 @@ knitr::opts_chunk$set(
 [![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
 [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/sftrack)](https://CRAN.R-project.org/package=sftrack)
-[![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack) 
-[![Build Status:
-dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack) 
+<!-- [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack)  -->
+<!-- [![Build Status: -->
+<!-- dev](https://img.shields.io/travis/mablab/sftrack/dev.svg?label=dev+build)](https://travis-ci.org/mablab/sftrack)  --> [![R-CMD-check](https://github.com/mablab/sftrack/workflows/R-CMD-check/badge.svg)](https://github.com/mablab/sftrack/actions)
 <!-- badges: end -->
 
 

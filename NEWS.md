@@ -14,6 +14,12 @@
   flexibility.
 
 
+# sftrack 0.5.3 (2021-07-01): CRAN update
+
+* Minor bug in `geom_sftrack.sftrack` that caused an error.
+* Updated email addresses for 2 authors, including maintainer.
+
+
 # sftrack 0.5.2 (2020-10-20)
 
 * Clean up for CRAN (DESCRIPTION, version, LICENSE, vignettes…).
