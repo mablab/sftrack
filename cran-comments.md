@@ -4,6 +4,7 @@ This is a resubmission. Relevant changes in this version:
 
   * plot_tj.R: solved a bug that caused an error and prevented vignette #5 to be
     generated.
+  * Updated email addresses of 2 authors, including maintainer.
 
 
 ## Test environments
@@ -15,7 +16,13 @@ Codename:	hirsute
 
 
 * local Ubuntu 21.04 (hirsute), R 4.0.4
-* Travis CI Ubuntu 16.04.6 LTS (xenial), R 4.0.2
+* GitHub Actions on 
+
+windows-latest (release)
+macOS-latest (release)
+ubuntu-20.04 (release)
+ubuntu-20.04 (devel)
+
 * win-builder, R 4.0.3 (release) + 3.6.3 (old-release) + (devel)
 
 
