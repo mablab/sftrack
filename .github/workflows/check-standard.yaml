@@ -63,6 +63,13 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04"))')
 
+      - name: MacOS brew system dependencies
+        if: runner.os == 'macOS' && matrix.config.binary == 'brew'
+        run: |
+           brew install proj
+           brew install geos
+           brew install gdal
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)

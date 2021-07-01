@@ -9,21 +9,10 @@ This is a resubmission. Relevant changes in this version:
 
 ## Test environments
 
-Distributor ID:	Ubuntu
-Description:	Ubuntu 21.04
-Release:	21.04
-Codename:	hirsute
-
-
 * local Ubuntu 21.04 (hirsute), R 4.0.4
-* GitHub Actions on 
-
-windows-latest (release)
-macOS-latest (release)
-ubuntu-20.04 (release)
-ubuntu-20.04 (devel)
-
-* win-builder, R 4.0.3 (release) + 3.6.3 (old-release) + (devel)
+* GitHub Actions on windows-latest (R release), macOS-latest (R release), and
+  ubuntu-20.04 (R release and devel)
+* win-builder, R 4.1.0 (release) + 4.0.5 (old-release) + (devel)
 
 
 ## R CMD check results
@@ -33,19 +22,14 @@ There were no ERRORs or WARNINGs.
 There was one NOTE (win-builder):
 
     * checking CRAN incoming feasibility ... NOTE
-    Maintainer: 'Mathieu Basille <basille@ufl.edu>'
+    Maintainer: 'Mathieu Basille <mathieu@basille.org>'
     
-    New submission
-    
-    Possibly mis-spelled words in DESCRIPTION:
-      Calenge (34:46)
-      Turchin (34:5)
-      al (34:57)
-      et (34:54)
+    New maintainer:
+      Mathieu Basille <mathieu@basille.org>
+    Old maintainer(s):
+      Mathieu Basille <basille@ufl.edu>
 
-→ This is a resubmission of an unreleased package, with Mathieu
-Basille as maintainer  (also all highlighted words are correctly
-spelled).
+→ I actually updated my email address, but this is still the same maintainer.
 
 
 ## Downstream dependencies

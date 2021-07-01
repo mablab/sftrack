@@ -17,6 +17,7 @@ tic.R
 ^docs$
 ^pkgdown$
 ^README\.Rmd$
+^README\.html$
 ^cran-comments\.md$
 ^CRAN-RELEASE$
 ^\.github$
