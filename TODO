@@ -1,0 +1,9 @@
+* Ideally: Compatibility with `dplyr` (check https://github.com/r-spatial/sf/blob/main/R/tidyverse.R and https://github.com/r-spatial/sf/blob/main/R/tidyverse-vctrs.R). See also: https://github.com/mablab/sftrack/issues/13
+* Use `sfheaders`?
+* Compatibility with `|>`
+* Check interest of `sftime`, especially for intervals: https://r-spatial.github.io/sftime/articles/sftime.html#user-defined-time-columns
+* Check compatibility with `mapview`: https://github.com/mablab/sftrack/issues/39
+* Elements of an 's_group' should be atomic: https://github.com/mablab/sftrack/issues/32
+* Error model: https://github.com/mablab/sftrack/issues/3
+* Differentiate between point-based and segment-based attributes: https://github.com/mablab/sftrack/issues/6
+* 3D coordinates? https://github.com/mablab/sftrack/issues/14
