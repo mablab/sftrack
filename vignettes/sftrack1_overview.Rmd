@@ -225,7 +225,7 @@ my_sftrack <- as_sftrack(
   coords = c("longitude","latitude"),
   time = "timestamp",
   group = "animal_id",
-  crs = "+init=epsg:4326")
+  crs = 4326)
 head(my_sftrack)
 plot(my_sftrack)
 

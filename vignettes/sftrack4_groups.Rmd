@@ -26,11 +26,11 @@ We start by looking at the structure of a `c_grouping`
 
 ```{r}
 library("sftrack")
-data('raccoon', package = 'sftrack')
-#raccoon <- read.csv(system.file('extdata/raccoon_data.csv', package='sftrack'))
-group_list = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+data("raccoon", package = "sftrack")
+#raccoon <- read.csv(system.file("extdata/raccoon_data.csv", package="sftrack"))
+group_list <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon + 1)
 
-cg1 <- make_c_grouping(x=group_list, active_group=c('id','month'))
+cg1 <- make_c_grouping(x = group_list, active_group = c("id", "month"))
 str(cg1)
 cg1[[1]]
 ```
@@ -49,15 +49,15 @@ All grouping information is converted and stored as a character in the s_group.
 
 ```{r}
 
-singlegroup <- make_s_group(list(id='TTP_058', month = 4))
+singlegroup <- make_s_group(list(id = "TTP_058", month = 4))
 str(singlegroup)
 ```
 
 Because `s_group`s are simply lists, you can edit individual elements in an s_group
 ```{r}
 singlegroup 
-singlegroup[1] <- 'CJ15'
-singlegroup$month <- '5'
+singlegroup[1] <- "CJ15"
+singlegroup$month <- "5"
 str(singlegroup)
 ```
 
@@ -69,8 +69,8 @@ C_groupings are a collection of s_groups with the same grouping names and an 'ac
 Similarly to s_group you can make a c_grouping with `make_s_group`. The argument `x` takes a list where each element is a vector indicating the named groupings as well as a vector of the active groups.
 
 ```{r}
-group_list <- list(id = rep(1:2,10), year = rep(2020, 10))
-cg <- make_c_grouping(x=group_list, active_group=c('id','year'))
+group_list <- list(id = rep(1:2, 10), year = rep(2020, 10))
+cg <- make_c_grouping(x = group_list, active_group = c("id", "year"))
 str(cg)
 ```
 
@@ -95,7 +95,7 @@ summary(cg_combine)
 You can also edit groupings like a list, but you must replace it with an s_group object.
 ```{r}
 cg[1]
-cg[1] <- make_s_group(list(id=3,year=2019))
+cg[1] <- make_s_group(list(id = 3, year = 2019))
 cg[1]
 
 ```
@@ -103,7 +103,7 @@ cg[1]
 And the group names must match the ones in the c_grouping or an error is returned
 ```{r}
 # Try to add an s_group with a month field when the original group had year instead 
-try( cg[1] <- make_s_group(list(id=3,month=2019)) )
+try( cg[1] <- make_s_group(list(id = 3, month = 2019)) )
 ```
 
 
@@ -112,33 +112,32 @@ try( cg[1] <- make_s_group(list(id=3,month=2019)) )
 As `c_groupings` are stored as lists, it can be difficult to refer to a single group or combination of groupings. This is where the sort_index can come in handy. The sort_index is a factor of the combined active_group variables for each row where paste(id, name1,name2,...,sep='_')). The sort index is remade every time the active group changes, and therefore can be used to subset. You can access the sort index using `group_labels()`. 
 
 ```{r}
-group_list <- list(id = rep(1:2,10), year = rep(2020, 10))
-cg <- make_c_grouping(x=group_list, active_group=c('id','year'))
+group_list <- list(id = rep(1:2, 10), year = rep(2020, 10))
+cg <- make_c_grouping(x = group_list, active_group = c("id", "year"))
 group_labels(cg)[1:10]
 
 # Subsetting a particular sensor from our raccoon data
 
-data('raccoon', package = 'sftrack')
-raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
+data("raccoon", package = "sftrack")
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
 
-raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
-coords = c('longitude','latitude')
-group = list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
-time = 'time'
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+coords <- c("longitude","latitude")
+group <- list(id = raccoon$animal_id, month = as.POSIXlt(raccoon$timestamp)$mon+1)
+time <- "time"
 
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time)
-head(my_sftraj[group_labels(my_sftraj) %in% c('TTP-058_1'), ])
-
+head(my_sftraj[group_labels(my_sftraj) %in% c("TTP-058_1"), ])
 
 ```
 
 You can also subset by entering the group label of the group itself in either the c_grouping or the sftrack/sftraj object:
 
 ```{r}
-head(cg['1_2020'])
+head(cg["1_2020"])
 
-sub <- my_sftraj['TTP-058_1',]
-print(sub,5, 3)
+sub <- my_sftraj["TTP-058_1", ]
+print(sub, 5, 3)
 ```
 
 You can refer to the levels of the sort index using `group_names`, this returns levels() of the sort index.
@@ -157,17 +156,17 @@ Active groups can be changed for any sftrack/straj/c_grouping
 ```{r}
 # sftrack
 active_group(my_sftraj)
-summary(my_sftraj, stats = T)
+summary(my_sftraj, stats = TRUE)
 
 # change the active group to id only
-active_group(my_sftraj) <- c('id')
+active_group(my_sftraj) <- c("id")
 active_group(my_sftraj)
 
-summary(my_sftraj, stats = T)
+summary(my_sftraj, stats = TRUE)
 
 # column groupings work the same way
 active_group(cg)
-active_group(cg) <- 'id'
+active_group(cg) <- "id"
 active_group(cg)
 
 ```

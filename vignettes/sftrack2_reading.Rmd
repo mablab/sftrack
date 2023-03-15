@@ -25,7 +25,7 @@ To create `sftrack` objects data we use the `as_sftrack()` (track) or `as_sftraj
 
 ### Vector vs. data.frame inputs
 
-`as_sftrack()/as_sftraj` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable, and can mix types between arguments.
+`as_sftrack()`/`as_sftraj` accepts 2 kinds of raw data for each of the 4 required parts. Either a vector/list representing the data where length = nrow(data), or the column name where the data exists. For any `sftrack` component you can input either vector data or the column name for any variable, and can mix types between arguments.
 
 **Vector** inputs to `as_sftrack` generally involve feeding as_sftrack the data itself where length(vector) == nrow(data). Or a list where each component adheres to this rule. If using entirely vector inputs for grouping, geometry, time, and error then `data` is not required. 
 
@@ -33,19 +33,21 @@ To create `sftrack` objects data we use the `as_sftrack()` (track) or `as_sftraj
 
 ### Arguments 
 
-**data** - is a data.frame containing your data. Data is optional if all inputs are done in vector mode where the appropriate vectors are given for geometry, grouping, and time. If inputting vector mode, sftrack creates column names `sft_group`, `sft_timestamp`, and `sft_error` in data frame. Names can be manually changed using `group_name`, `time_name`, and `error_name` and changing `overwrite_names` to FALSE will write over the data if the column already exists in `data`.
+**data**: A data.frame containing your data. Data is optional if all inputs are done in vector mode where the appropriate vectors are given for geometry, grouping, and time. If inputting vector mode, sftrack creates column names `sft_group`, `sft_timestamp`, and `sft_error` in data frame. Names can be manually changed using `group_name`, `time_name`, and `error_name` and changing `overwrite_names` to FALSE will write over the data if the column already exists in `data`.
 
-**group** (required) - a list with named vectors to group the sftrack. One group must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for each grouping categories. If only one variable is given then that vector is assumed to be the id column.  
+**group** (required): A list with named vectors to group the sftrack. One group must be named `id`, but otherwise can be infinite number of grouping variables. Or a vector naming the column names for each grouping categories. If only one variable is given then that vector is assumed to be the id column.  
 
-**coords** (required) - The x,y,z coordinates to calculate geometries via `sf`. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown. This is the same argument from `sf` functions and feeds into `st_as_sf()` internally.    
+**coords** (required): The x,y,z coordinates to calculate geometries via `sf`. Accepts either a vector of `c(x,y,z)` describing which column the coordinates can be found, or a list(x=, y=, z=) with vectors for each coordinate. z is optional. NAs are allowed, alhough NAs must exist through the entire row otherwise an error is thrown. This is the same argument from `sf` functions and feeds into `st_as_sf()` internally.    
 
-**time** (required) - Time information in either `POSIXct` or as an `integer`. Accepts either a vector of time, or the column name found in `data`. The outputted object will be sorted by the time column.  
+**time** (required): Time information in either `POSIXct` or as an `integer`. Accepts either a vector of time, or the column name found in `data`. The outputted object will be sorted by the time column.  
 
-**error** - Error information for the associated xyz point. Accepts either a vector of the error, or the column name found in `data`. If not given, default = NA.
+**error**: Error information for the associated xyz point. Accepts either a
+vector of the error, or the column name found in `data`. If not given, defaults to `NA`.
 
-**crs** - the coordinate references system/projection of the data, as implemented by rgdal. see ?rgdal::`CRS-class` for more information. If none is supplied crs is set as NA and can be set later using `sf::st_crs()` from `sf`.  
+**crs**: The coordinate references system/projection of the data, as
+implemented by `sf`. It accepts an integer with the EPSG code, or a character with proj4string. If none is supplied `crs` is set as `NA` and can be set later using `sf::st_crs()` from `sf`.
 
-**active_group** (required) - This is a vector containing what groups are 'active'. Meaning calculations and graphing will use these groupings. If no value is supplied it defaults to all grouping variables. Can change active_group later using `active_group() <- 'myvalue'`. 
+**active_group** (required): A vector containing what groups are 'active'. Meaning calculations and graphing will use these groupings. If no value is supplied it defaults to all grouping variables. Can change active_group later using `active_group() <- 'myvalue'`. 
 
 
 ### Vector inputs
@@ -57,18 +59,18 @@ In the case of vector inputs, the vectors are cbinded to `data` if data is suppl
 library("sftrack")
 
 #data
-data('raccoon', package = 'sftrack')
+data("raccoon", package = "sftrack")
 
 #xyz
-coords = raccoon[,c('longitude','latitude')]
-crs = '+init=epsg:4326'
+coords <- raccoon[,c("longitude", "latitude")]
+crs <- 4326
 #groupings
-group = list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon+1)
-active_group = c('id','month')
+group <- list(id = raccoon$animal_id,month = as.POSIXlt(raccoon$timestamp)$mon+1)
+active_group <- c("id","month")
 #time
-time = as.POSIXct(raccoon$timestamp, tz='EST')
+time <- as.POSIXct(raccoon$timestamp, tz = "EST")
 #error
-error = raccoon$fix
+error <- raccoon$fix
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, 
                          active_group = active_group, time = time, 
                          crs = crs, error = error)
@@ -87,13 +89,13 @@ Data.frame inputs generally describe the columns that represent the variables in
 
 
 ```{r}
-raccoon$time <- as.POSIXct(raccoon$timestamp, tz='EST')
-raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon+1
+raccoon$time <- as.POSIXct(raccoon$timestamp, tz = "EST")
+raccoon$month <- as.POSIXlt(raccoon$timestamp)$mon + 1
 
-coords = c('longitude','latitude')
-group = c(id = 'animal_id', month = 'month')
-time = 'time'
-error = 'fix'
+coords <- c("longitude", "latitude")
+group <- c(id = "animal_id", month = "month")
+time <- "time"
+error <- "fix"
 
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error)
 
@@ -111,13 +113,12 @@ To read in an ltraj object all you need is an ltraj object created in `adehabita
 ```{r, message = FALSE}
 library("adehabitatLT")
 
-ltraj_df <- as.ltraj(xy=raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$timestamp),
+ltraj_df <- as.ltraj(xy = raccoon[,c('longitude','latitude')], date = as.POSIXct(raccoon$timestamp),
  id = raccoon$animal_id, typeII = TRUE,
- infolocs = raccoon[,1:6] )
+ infolocs = raccoon[,1:6])
 
 my_sf <- as_sftrack(ltraj_df)
 head(my_sf)
-
 
 ```
 
@@ -128,27 +129,28 @@ head(my_sf)
 ```{r}
 library("sf")
 df1 <- raccoon[!is.na(raccoon$latitude),]
-sf_df <- st_as_sf(df1, coords=c('longitude','latitude'), crs = crs)
-group = c(id = 'animal_id')
-time_col = 'time'
+sf_df <- st_as_sf(df1, coords=c("longitude","latitude"), crs = crs)
+group <- c(id = "animal_id")
+time_col <- "time"
 
 new_sftraj <- as_sftraj(sf_df, group = group, time = time_col) 
 head(new_sftraj)
 
-new_sftrack <- as_sftrack(sf_df, group = group, time= time_col) 
+new_sftrack <- as_sftrack(sf_df, group = group, time = time_col) 
 head(new_sftrack)
 
 ```
 
 ### Intra-package conversion between classes
+
 Additionally `as_sftrack` and `as_sftraj` can convert back and forth between classes with no loss in information.
 
 ```{r}
 # Make tracks from raw data
-coords = c('longitude','latitude')
-group = c(id = 'animal_id', month = 'month')
-time = 'time'
-error = 'fix'
+coords <- c("longitude","latitude")
+group <- c(id = "animal_id", month = "month")
+time <- "time"
+error <- "fix"
 
 my_sftraj <- as_sftraj(data = raccoon, coords = coords, group = group, time = time, error = error)
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error)
@@ -170,12 +172,13 @@ A common issue with movement data is when duplicated gps time stamps are logged 
 ```{r}
 
 raccoon$time[1] <- raccoon$time[2]
- try(as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error))
+try(as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error))
 
 ```
 To help determine which rows are duplicated you can use the `which_duplicated` function to check your inputs. After which you can delete the superfluous rows and try again:
 
 ```{r}
+
 which_duplicated(data = raccoon , group = group, time = time)
 raccoon <- raccoon[-2,]
 my_sftrack <- as_sftrack(data = raccoon, coords = coords, group = group, time = time, error = error)

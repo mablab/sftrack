@@ -60,7 +60,7 @@ make_step_geom <- function(group, time_data, geometry) {
         sf::st_sfc(sub_geom[2:(length(sub_geom))]),
         sf::st_sfc(st_point(rep(NA_real_, nd),
           dim = point_d
-        ))
+        ), crs = sf::st_crs(sub_geom))
       )
     first_point <- min(which(subz))
 

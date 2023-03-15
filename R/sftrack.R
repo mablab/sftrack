@@ -16,7 +16,7 @@
 #' @param active_group a character vector of the burst names to be 'active' to group data by for analysis
 #' @param time a vector of time information, can be either POSIX or an integer or a character string naming the column in `data` where the time information is located
 #' @param error (optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located
-#' @param crs a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA
+#' @param crs Coordinate reference system to be assigned; object of class `crs`. Defaults to NA
 #' @param zeroNA logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.
 #' @param group_name (optional) new column name for grouping data
 #' @param timestamp_name (optional) new column name for time data
@@ -114,7 +114,7 @@ as_sftrack.data.frame <- function(data = data.frame(),
   # coords = sub_gps[,c('longitude','latitude')]
   # burst = list(id=sub_gps$id, numSat = sub_gps$numSat)
   # time = sub_gps[,'timez']
-  # crs='+init=epsg:4326'
+  # crs=4326
   # error = NA
   # zeroNA = FALSE
   # active_burst = NA

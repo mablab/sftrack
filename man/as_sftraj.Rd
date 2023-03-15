@@ -59,7 +59,7 @@ as_sftraj(data = data.frame(), ...)
 
 \item{error}{(optional) a vector of error information for the movement dataa character string naming the column in `data` where the error information is located}
 
-\item{crs}{a crs string from rgdal of the crs and projection information for the spatial data. Defaults to NA}
+\item{crs}{Coordinate reference system to be assigned; object of class `crs`. Defaults to NA}
 
 \item{zeroNA}{logical whether to convert 0s in spatial data into NAs. Defaults to FALSE.}
 

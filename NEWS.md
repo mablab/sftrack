@@ -1,3 +1,8 @@
+# sftrack 0.5.4 (2023-03-15): CRAN update
+
+* Fixed update of `sf` with regards to CRS.
+
+
 # sftrack 0.5.3 (2021-07-01): CRAN update
 
 * Minor bug in `geom_sftrack.sftrack` that caused an error.

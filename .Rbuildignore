@@ -21,3 +21,4 @@ tic.R
 ^cran-comments\.md$
 ^CRAN-RELEASE$
 ^\.github$
+notes.md
