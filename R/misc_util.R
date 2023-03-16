@@ -70,7 +70,7 @@ coord_traj <- function(traj) {
 }
 
 #' @export
-st_coordinates.sftraj <- function(x, return = "all") {
+st_coordinates.sftraj <- function(x, return = "all", ...) {
   # x = my_sftraj
   pts <- sf::st_geometry(x)
 

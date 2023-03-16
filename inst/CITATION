@@ -3,18 +3,31 @@ note <- sprintf("R package version %s", meta$Version)
 
 citHeader("To cite 'sftrack' in publications use:")
 
-citEntry(entry = "Manual",
-  title        = "{sftrack}: Modern Classes for Tracking and Movement Data",
-  author       = personList(as.person("Matthew Boone"),
-                   as.person("Rocío Joo"),
-                   as.person("Mathieu Basille")),
-  year         = year,
-  note         = note,
-  url          = "https://mablab.org/sftrack/",
+bibentry("Manual",
+    title = "{sftrack}: Modern Classes for Tracking and Movement Data",
+    author = c(
+        person(given = "Matthew",
+            family = "Boone",
+            role = "aut",
+            email = "mttboone@gmail.com",
+            comment = structure("0000-0002-8070-4715", .Names = "ORCID")),
+        person(given = "Rocío",
+            family = "Joo",
+            role = "aut",
+            email = "rocio.joo@globalfishingwatch.org",
+            comment = structure("0000-0003-0319-4210", .Names = "ORCID")),
+        person(given = "Mathieu",
+            family = "Basille",
+            role = c("aut", "cre"),
+            email = "mathieu@basille.org",
+            comment = structure("0000-0001-9366-7127", .Names = "ORCID"))),
+    year = year,
+    note = note,
+    url = "https://mablab.org/sftrack/",
 
-  textVersion  = paste0(
-      "Matthew Boone, Rocío Joo and Mathieu Basille (",
-      year,
-      "). sftrack: Modern classes for tracking and movement data. ",
-      note, ". https://mablab.org/sftrack/")
+    textVersion = paste0(
+        "Matthew Boone, Rocío Joo and Mathieu Basille (",
+        year,
+        "). sftrack: Modern classes for tracking and movement data. ",
+        note, ". https://mablab.org/sftrack/")
 )
