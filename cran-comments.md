@@ -1,35 +1,23 @@
 ## Resubmission
 
-This is a resubmission. Relevant changes in this version:
+This is a resubmission. Relevant change in this version:
 
-  * plot_tj.R: solved a bug that caused an error and prevented vignette #5 to be
-    generated.
-  * Updated email addresses of 2 authors, including maintainer.
+  * Fixed update of `sf` with regards to CRS.
+  
+This solves the issue mentioned by CRAN maintainers on 2023-03-08 and
+2023-03-12.
 
 
 ## Test environments
 
-* local Ubuntu 21.04 (hirsute), R 4.0.4
-* GitHub Actions on windows-latest (R release), macOS-latest (R release), and
-  ubuntu-20.04 (R release and devel)
-* win-builder, R 4.1.0 (release) + 4.0.5 (old-release) + (devel)
+* local: Ubuntu 22.04.2 LTS, R version 4.2.2 Patched (2022-11-10 r83330)
+* win-builder: R-release (R-4.2.2), R-oldrelease (R-4.1.3), R-devel (to be
+  R-4.3.0)
 
 
 ## R CMD check results
 
-There were no ERRORs or WARNINGs. 
-
-There was one NOTE (win-builder):
-
-    * checking CRAN incoming feasibility ... NOTE
-    Maintainer: 'Mathieu Basille <mathieu@basille.org>'
-    
-    New maintainer:
-      Mathieu Basille <mathieu@basille.org>
-    Old maintainer(s):
-      Mathieu Basille <basille@ufl.edu>
-
-→ I actually updated my email address, but this is still the same maintainer.
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
 
 ## Downstream dependencies

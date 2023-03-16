@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![Project Status: Active - The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/license/mit/)
 [![CRAN Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![CRAN downloads](https://cranlogs.r-pkg.org/badges/sftrack)](https://CRAN.R-project.org/package=sftrack)
 <!-- [![Build Status: master](https://travis-ci.org/mablab/sftrack.svg?branch=master)](https://travis-ci.org/mablab/sftrack)  -->
@@ -110,7 +110,7 @@ my_sftrack <- as_sftrack(
   coords = c("longitude","latitude"),
   time = "timestamp",
   group = "animal_id",
-  crs = "+init=epsg:4326")
+  crs = 4326)
 head(my_sftrack)
 
 ```

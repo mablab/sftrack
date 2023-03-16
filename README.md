@@ -8,7 +8,7 @@
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/licenses/MIT)
+[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/license/mit/)
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![CRAN
@@ -89,11 +89,13 @@ In order to convert your raw data into an `sftrack` object, use the
 function `as_sftrack()`. The function requires the three main elements
 of tracking data:
 
--   coordinates of the locations in at least the `x` and `y` axes (can
+  - coordinates of the locations in at least the `x` and `y` axes (can
     be UTM, lat/long, etc., with projection provided in `crs`);
--   timestamps of the locations as `POSIXct` (*or* as `integer`);
--   grouping information (referred to as a “groups”), providing at least
+  - timestamps of the locations as `POSIXct` (*or* as `integer`);
+  - grouping information (referred to as a “groups”), providing at least
     the identity of each individual.
+
+<!-- end list -->
 
 ``` r
 my_sftrack <- as_sftrack(
@@ -101,29 +103,27 @@ my_sftrack <- as_sftrack(
   coords = c("longitude","latitude"),
   time = "timestamp",
   group = "animal_id",
-  crs = "+init=epsg:4326")
-#> Warning in CPL_crs_from_input(x): GDAL Message 1: +init=epsg:XXXX syntax is deprecated.
-#> It might return a CRS with a non-EPSG compliant axis order.
+  crs = 4326)
 head(my_sftrack)
 #> Sftrack with 6 features and 10 fields (3 empty geometries) 
 #> Geometry : "geometry" (XY, crs: WGS 84) 
 #> Timestamp : "timestamp" (POSIXct in EST5EDT) 
 #> Groupings : "sft_group" (*id*) 
 #> -------------------------------
-#>   animal_id latitude longitude           timestamp height hdop vdop fix     sft_group
-#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D (id: TTP-058)
-#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D (id: TTP-058)
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D (id: TTP-058)
-#>                     geometry
-#> 1                POINT EMPTY
-#> 2 POINT (-80.27906 26.06945)
-#> 3                POINT EMPTY
-#> 4                POINT EMPTY
-#> 5 POINT (-80.27431 26.06769)
-#> 6  POINT (-80.2793 26.06867)
+#>   animal_id latitude longitude           timestamp height hdop vdop fix
+#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
+#>       sft_group                   geometry
+#> 1 (id: TTP-058)                POINT EMPTY
+#> 2 (id: TTP-058) POINT (-80.27906 26.06945)
+#> 3 (id: TTP-058)                POINT EMPTY
+#> 4 (id: TTP-058)                POINT EMPTY
+#> 5 (id: TTP-058) POINT (-80.27431 26.06769)
+#> 6 (id: TTP-058)  POINT (-80.2793 26.06867)
 ```
 
 ``` r
@@ -145,20 +145,20 @@ head(my_sftraj)
 #> Timestamp : "timestamp" (POSIXct in EST5EDT) 
 #> Grouping : "sft_group" (*id*) 
 #> -------------------------------
-#>   animal_id latitude longitude           timestamp height hdop vdop fix     sft_group
-#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D (id: TTP-058)
-#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO (id: TTP-058)
-#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D (id: TTP-058)
-#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D (id: TTP-058)
-#>                         geometry
-#> 1                    POINT EMPTY
-#> 2     POINT (-80.27906 26.06945)
-#> 3                    POINT EMPTY
-#> 4                    POINT EMPTY
-#> 5 LINESTRING (-80.27431 26.06...
-#> 6 LINESTRING (-80.2793 26.068...
+#>   animal_id latitude longitude           timestamp height hdop vdop fix
+#> 1   TTP-058       NA        NA 2019-01-18 19:02:30     NA  0.0  0.0  NO
+#> 2   TTP-058 26.06945 -80.27906 2019-01-18 20:02:30      7  6.2  3.2  2D
+#> 3   TTP-058       NA        NA 2019-01-18 21:02:30     NA  0.0  0.0  NO
+#> 4   TTP-058       NA        NA 2019-01-18 22:02:30     NA  0.0  0.0  NO
+#> 5   TTP-058 26.06769 -80.27431 2019-01-18 23:02:30    858  5.1  3.2  2D
+#> 6   TTP-058 26.06867 -80.27930 2019-01-19 00:02:30    350  1.9  3.2  3D
+#>       sft_group                       geometry
+#> 1 (id: TTP-058)                    POINT EMPTY
+#> 2 (id: TTP-058)     POINT (-80.27906 26.06945)
+#> 3 (id: TTP-058)                    POINT EMPTY
+#> 4 (id: TTP-058)                    POINT EMPTY
+#> 5 (id: TTP-058) LINESTRING (-80.27431 26.06...
+#> 6 (id: TTP-058) LINESTRING (-80.2793 26.068...
 ```
 
 Both objects can easily be plotted with base R plot functions, which
@@ -174,13 +174,13 @@ plot(my_sftraj, main = "Movement data (steps)")
 
 ## Roadmap
 
--   Data class converters from the main tracking packages, such as
+  - Data class converters from the main tracking packages, such as
     `move::Move` and `trackeR::trackeRdata`, integrated into
     `as_sftrack`;
--   More plotting options for tracks and trajectories (in base R and
+  - More plotting options for tracks and trajectories (in base R and
     `ggplot2`);
--   Provide Gantt chart-like or chronogram-like graphs;
--   Dynamic exploration of trajectories.
+  - Provide Gantt chart-like or chronogram-like graphs;
+  - Dynamic exploration of trajectories.
 
 ## How can you help?
 
@@ -189,7 +189,7 @@ plot(my_sftraj, main = "Movement data (steps)")
 2.  Address open questions (see below);
 3.  Contribute use cases (see below).
 
-### Address open questions: *We need your feedback!*
+### Address open questions: *We need your feedback\!*
 
 While the foundations of the package are now pretty solid, we are still
 dealing with open questions about several aspects of the package,
@@ -201,7 +201,7 @@ If you have strong opinions or simply want to help on the technical
 side, we invite you to comment on those [open issues
 here](https://github.com/mablab/sftrack/labels/question).
 
-### Contribute use cases: *We need your feedback!*
+### Contribute use cases: *We need your feedback\!*
 
 We also need to precisely understand what is expected from such a
 package. The idea here is to collect all possible use cases for a
@@ -220,54 +220,54 @@ it, and the input and output of the use case. Such use case could look
 like this:
 
 > **\[Use case\] Amazing plot for trajectory**
->
+> 
 > **Use case:**
->
+> 
 > Plot a trajectory using my `special_trajplot` function, which shows
 > \[something amazing\].
->
+> 
 > **Requirements:**
->
-> -   spatial coordinates (x,y) as geographic coordinates with
+> 
+>   - spatial coordinates (x,y) as geographic coordinates with
 >     projection information
->
-> -   a time (t) as POSIXt object, ordered in time
->
-> -   information that identifies individuals (e.g. animal) for each
+> 
+>   - a time (t) as POSIXt object, ordered in time
+> 
+>   - information that identifies individuals (e.g. animal) for each
 >     location
->
-> -   data associated to each location directly accessible
->
+> 
+>   - data associated to each location directly accessible
+> 
 > **Input:** a `sftrack` object
->
+> 
 > **Output:** a plot with \[something amazing\] about the trajectory
->
+> 
 > **Additional information:** See my `special_trajplot` function here
 > \[with link\].
 
 Another example could be like this:
 
 > **\[Use case\] Fill in missing locations in a sequence**
->
+> 
 > **Use case:** Fill in the missing locations of a trajectory that
 > contains spatial or temporal gaps. (for instance coming from GPS with
 > failed fixes); In other words add in the missing values of a
 > trajectory, i.e. timestamps with no geographic coordinates.
->
+> 
 > **Requirements:**
->
-> -   a time (t) as POSIXt object, ordered in time
->
-> -   information that identifies sequences of locations (optional, if
+> 
+>   - a time (t) as POSIXt object, ordered in time
+> 
+>   - information that identifies sequences of locations (optional, if
 >     several sequences), which could be different circuits of one
 >     individual, or different individuals, etc.
->
-> -   `sftrack` should be capable of handling/storing missing values
->
+> 
+>   - `sftrack` should be capable of handling/storing missing values
+> 
 > **Input:** a `sftrack` object
->
+> 
 > **Output:** a `sftrack` object with additional timestamps for gaps
 > (but otherwise identical in every way to the original `sftrack`)
->
+> 
 > **Additional information:** See `adehabitatLT::setNA`, which does
 > exactly that on `ltraj` objects.

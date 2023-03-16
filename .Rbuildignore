@@ -22,3 +22,4 @@ tic.R
 ^CRAN-RELEASE$
 ^\.github$
 notes.md
+^revdep$
