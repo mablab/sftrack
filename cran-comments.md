@@ -2,7 +2,7 @@
 
 This is a resubmission. Relevant change in this version:
 
-  * Fixed update of `sf` with regards to CRS.
+* Fixed update of `sf` with regards to CRS.
   
 This solves the issue mentioned by CRAN maintainers on 2023-03-08 and
 2023-03-12.
@@ -23,8 +23,11 @@ This solves the issue mentioned by CRAN maintainers on 2023-03-08 and
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
+* GitHub Actions (all platforms):
 
-* win-builder (R-release):
+0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+
+* win-builder (R-release & R-devel):
 
 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
