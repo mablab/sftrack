@@ -1,9 +1,56 @@
-* Ideally: Compatibility with `dplyr` (check https://github.com/r-spatial/sf/blob/main/R/tidyverse.R and https://github.com/r-spatial/sf/blob/main/R/tidyverse-vctrs.R). See also: https://github.com/mablab/sftrack/issues/13
-* Use `sfheaders`?
-* Compatibility with `|>`
-* Check interest of `sftime`, especially for intervals: https://r-spatial.github.io/sftime/articles/sftime.html#user-defined-time-columns
-* Check compatibility with `mapview`: https://github.com/mablab/sftrack/issues/39
-* Elements of an 's_group' should be atomic: https://github.com/mablab/sftrack/issues/32
-* Error model: https://github.com/mablab/sftrack/issues/3
-* Differentiate between point-based and segment-based attributes: https://github.com/mablab/sftrack/issues/6
-* 3D coordinates? https://github.com/mablab/sftrack/issues/14
+To-do list
+==========
+
+
+Roughly by order of importance:
+
+- [ ] Build PDF vignettes (see below).
+- [ ] Ideally: Compatibility with `dplyr` (see below).
+- [ ] Compatibility with `|>`
+- [ ] Check interest of `sftime`, especially for intervals:
+  https://r-spatial.github.io/sftime/articles/sftime.html#user-defined-time-columns
+- [ ] Use `sfheaders`?
+- [ ] Check compatibility with `mapview`:
+  https://github.com/mablab/sftrack/issues/39
+- [ ] Elements of an 's_group' should be atomic:
+  https://github.com/mablab/sftrack/issues/32
+- [ ] Error model: https://github.com/mablab/sftrack/issues/3
+- [ ] Differentiate between point-based and segment-based attributes:
+  https://github.com/mablab/sftrack/issues/6
+- [ ] 3D coordinates? https://github.com/mablab/sftrack/issues/14
+
+
+# PDF vignettes
+
+I don't see an automated/easy way to have two versions of the same vignette
+alongside (i.e. HTML + PDF). Alternatively, we could build PDF vignettes easily
+from the RMD source, e.g. using:
+
+rmarkdown::render("vignettes/my_vignette.Rmd", output_format = "pdf_document",
+    output_dir = "inst/doc/", output_options = list(toc = "true"))
+
+That does not require changing anything in the YAML of the vignette source (for
+instance, no need to add 'pdf_document' in the list of outputs). I chose
+'inst/doc/' as output directory, as all files from 'inst' are simply copied to
+the root of the package upon install. That would move the PDF into '/doc/',
+where all HTML vignettes built automatically are actually copied when the
+package is installed.
+
+The main benefit of this approach is that there is an up-to-date version of the
+vignette available at any time, that can easily be added to version control and
+provided over GitHub for instance.
+
+I did not test it all the way to install, but that should do it. Now, that means
+running the command above manually for every vignette, every time there is an
+update of the package. As a solution, I'm pretty sure this could be automated
+with GitHub Actions — although I need to get familiar with these.
+
+
+# Compatibility with `dplyr`
+
+Check:
+* https://github.com/r-spatial/sf/blob/main/R/tidyverse.R
+* https://github.com/r-spatial/sf/blob/main/R/tidyverse-vctrs.R
+
+See also:
+* https://github.com/mablab/sftrack/issues/13
