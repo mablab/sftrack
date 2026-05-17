@@ -1,6 +1,6 @@
 # sftrack 0.5.5 (2026-05-17): CRAN update
 
-* Fixed DESCRIPTION with respect to new ORCID format.
+* Fixed DESCRIPTION with respect to new ORCID format + license URL fix.
 
 
 # sftrack 0.5.4 (2023-03-15): CRAN update

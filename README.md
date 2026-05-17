@@ -8,7 +8,7 @@
 [![Project Status: Active - The project has reached a stable, usable
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
-[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/license/mit/)
+[![Licence](https://img.shields.io/badge/license-MIT-green)](https://opensource.org/license/mit)
 [![CRAN
 Status](http://www.r-pkg.org/badges/version/sftrack)](https://CRAN.R-project.org/package=sftrack)
 [![CRAN
@@ -29,7 +29,11 @@ straight-line segments connecting successive locations). `sftrack` is
 designed to handle movement of both living organisms and inanimate
 objects.
 
-![data definitions](man/figures/definitions-512.png "data definitions")
+<figure>
+<img src="man/figures/definitions-512.png" title="data definitions"
+alt="data definitions" />
+<figcaption aria-hidden="true">data definitions</figcaption>
+</figure>
 
 The development and design of the `sftrack` package follow three simple
 principles:
@@ -89,13 +93,11 @@ In order to convert your raw data into an `sftrack` object, use the
 function `as_sftrack()`. The function requires the three main elements
 of tracking data:
 
-  - coordinates of the locations in at least the `x` and `y` axes (can
-    be UTM, lat/long, etc., with projection provided in `crs`);
-  - timestamps of the locations as `POSIXct` (*or* as `integer`);
-  - grouping information (referred to as a “groups”), providing at least
-    the identity of each individual.
-
-<!-- end list -->
+- coordinates of the locations in at least the `x` and `y` axes (can be
+  UTM, lat/long, etc., with projection provided in `crs`);
+- timestamps of the locations as `POSIXct` (*or* as `integer`);
+- grouping information (referred to as a “groups”), providing at least
+  the identity of each individual.
 
 ``` r
 my_sftrack <- as_sftrack(
@@ -170,17 +172,16 @@ plot(my_sftrack, main = "Tracking data (locations)")
 plot(my_sftraj, main = "Movement data (steps)")
 ```
 
-<img src="man/figures/README-plot-1.png" width="50%" /><img src="man/figures/README-plot-2.png" width="50%" />
+<img src="man/figures/README-plot-1.png" alt="" width="50%" /><img src="man/figures/README-plot-2.png" alt="" width="50%" />
 
 ## Roadmap
 
-  - Data class converters from the main tracking packages, such as
-    `move::Move` and `trackeR::trackeRdata`, integrated into
-    `as_sftrack`;
-  - More plotting options for tracks and trajectories (in base R and
-    `ggplot2`);
-  - Provide Gantt chart-like or chronogram-like graphs;
-  - Dynamic exploration of trajectories.
+- Data class converters from the main tracking packages, such as
+  `move::Move` and `trackeR::trackeRdata`, integrated into `as_sftrack`;
+- More plotting options for tracks and trajectories (in base R and
+  `ggplot2`);
+- Provide Gantt chart-like or chronogram-like graphs;
+- Dynamic exploration of trajectories.
 
 ## How can you help?
 
@@ -189,7 +190,7 @@ plot(my_sftraj, main = "Movement data (steps)")
 2.  Address open questions (see below);
 3.  Contribute use cases (see below).
 
-### Address open questions: *We need your feedback\!*
+### Address open questions: *We need your feedback!*
 
 While the foundations of the package are now pretty solid, we are still
 dealing with open questions about several aspects of the package,
@@ -201,7 +202,7 @@ If you have strong opinions or simply want to help on the technical
 side, we invite you to comment on those [open issues
 here](https://github.com/mablab/sftrack/labels/question).
 
-### Contribute use cases: *We need your feedback\!*
+### Contribute use cases: *We need your feedback!*
 
 We also need to precisely understand what is expected from such a
 package. The idea here is to collect all possible use cases for a
@@ -220,54 +221,54 @@ it, and the input and output of the use case. Such use case could look
 like this:
 
 > **\[Use case\] Amazing plot for trajectory**
-> 
+>
 > **Use case:**
-> 
+>
 > Plot a trajectory using my `special_trajplot` function, which shows
 > \[something amazing\].
-> 
+>
 > **Requirements:**
-> 
->   - spatial coordinates (x,y) as geographic coordinates with
->     projection information
-> 
->   - a time (t) as POSIXt object, ordered in time
-> 
->   - information that identifies individuals (e.g. animal) for each
->     location
-> 
->   - data associated to each location directly accessible
-> 
+>
+> - spatial coordinates (x,y) as geographic coordinates with projection
+>   information
+>
+> - a time (t) as POSIXt object, ordered in time
+>
+> - information that identifies individuals (e.g. animal) for each
+>   location
+>
+> - data associated to each location directly accessible
+>
 > **Input:** a `sftrack` object
-> 
+>
 > **Output:** a plot with \[something amazing\] about the trajectory
-> 
+>
 > **Additional information:** See my `special_trajplot` function here
 > \[with link\].
 
 Another example could be like this:
 
 > **\[Use case\] Fill in missing locations in a sequence**
-> 
+>
 > **Use case:** Fill in the missing locations of a trajectory that
 > contains spatial or temporal gaps. (for instance coming from GPS with
 > failed fixes); In other words add in the missing values of a
 > trajectory, i.e. timestamps with no geographic coordinates.
-> 
+>
 > **Requirements:**
-> 
->   - a time (t) as POSIXt object, ordered in time
-> 
->   - information that identifies sequences of locations (optional, if
->     several sequences), which could be different circuits of one
->     individual, or different individuals, etc.
-> 
->   - `sftrack` should be capable of handling/storing missing values
-> 
+>
+> - a time (t) as POSIXt object, ordered in time
+>
+> - information that identifies sequences of locations (optional, if
+>   several sequences), which could be different circuits of one
+>   individual, or different individuals, etc.
+>
+> - `sftrack` should be capable of handling/storing missing values
+>
 > **Input:** a `sftrack` object
-> 
+>
 > **Output:** a `sftrack` object with additional timestamps for gaps
 > (but otherwise identical in every way to the original `sftrack`)
-> 
+>
 > **Additional information:** See `adehabitatLT::setNA`, which does
 > exactly that on `ltraj` objects.
